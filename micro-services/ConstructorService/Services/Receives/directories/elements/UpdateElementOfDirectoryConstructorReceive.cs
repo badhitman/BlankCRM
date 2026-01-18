@@ -10,7 +10,7 @@ namespace Transmission.Receives.constructor;
 /// <summary>
 /// Обновить элемент справочника
 /// </summary>
-public class UpdateElementOfDirectoryConstructorReceive(IConstructorService conService, IFilesIndexing indexingRepo)
+public class UpdateElementOfDirectoryConstructorReceive(IConstructorService conService, ITracesIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<EntryDescriptionModel>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>

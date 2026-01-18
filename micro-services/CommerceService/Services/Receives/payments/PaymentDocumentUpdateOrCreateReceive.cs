@@ -10,7 +10,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// PaymentDocumentUpdateOrCreate
 /// </summary>
-public class PaymentDocumentUpdateOrCreateReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo)
+public class PaymentDocumentUpdateOrCreateReceive(ICommerceService commerceRepo, ITracesIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<PaymentDocumentBaseModel>?, TResponseModel<int>?>
 {
     /// <inheritdoc/>

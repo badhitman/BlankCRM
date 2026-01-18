@@ -10,7 +10,7 @@ namespace Transmission.Receives.indexing;
 /// <summary>
 /// TracesSelect
 /// </summary>
-public class TracesSelectHandle(IFilesIndexing indexingFileRepo)
+public class TracesSelectHandle(ITracesIndexing indexingFileRepo)
     : IResponseReceive<TPaginationRequestStandardModel<SelectTraceReceivesRequestModel>?, TPaginationResponseStandardModel<TraceReceiverRecord>?>
 {
     /// <inheritdoc/>
@@ -20,6 +20,7 @@ public class TracesSelectHandle(IFilesIndexing indexingFileRepo)
     public async Task<TPaginationResponseStandardModel<TraceReceiverRecord>?> ResponseHandleActionAsync(TPaginationRequestStandardModel<SelectTraceReceivesRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await indexingFileRepo.TracesSelectAsync(req, token);
+        TPaginationResponseStandardModel<TraceReceiverRecord> res = await indexingFileRepo.TracesSelectAsync(req, token);
+        return res;
     }
 }

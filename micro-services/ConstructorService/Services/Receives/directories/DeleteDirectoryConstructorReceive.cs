@@ -10,7 +10,7 @@ namespace Transmission.Receives.constructor;
 /// <summary>
 /// DeleteDirectoryReceive
 /// </summary>
-public class DeleteDirectoryConstructorReceive(IConstructorService conService, IFilesIndexing indexingRepo)
+public class DeleteDirectoryConstructorReceive(IConstructorService conService, ITracesIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<int>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>

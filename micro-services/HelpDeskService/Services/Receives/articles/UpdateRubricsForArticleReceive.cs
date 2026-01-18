@@ -10,7 +10,7 @@ namespace Transmission.Receives.helpdesk;
 /// <summary>
 /// UpdateRubricsForArticleReceive
 /// </summary>
-public class UpdateRubricsForArticleReceive(IArticlesService artRepo, IFilesIndexing indexingRepo)
+public class UpdateRubricsForArticleReceive(IArticlesService artRepo, ITracesIndexing indexingRepo)
     : IResponseReceive<ArticleRubricsSetModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>

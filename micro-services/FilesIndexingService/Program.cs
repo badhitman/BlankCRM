@@ -124,8 +124,8 @@ public class Program
 
         builder.Services
             .AddScoped<IFilesIndexing, IndexingFilesImpl>()
+            .AddScoped<ITracesIndexing, TracesImpl>()
             ;
-
         // Custom metrics for the application
         Meter greeterMeter = new($"OTel.{appName}", "1.0.0");
         OpenTelemetryBuilder otel = builder.Services.AddOpenTelemetry();

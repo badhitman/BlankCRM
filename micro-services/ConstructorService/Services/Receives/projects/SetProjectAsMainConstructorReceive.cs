@@ -10,7 +10,7 @@ namespace Transmission.Receives.constructor;
 /// <summary>
 /// SetProjectAsMainReceive
 /// </summary>
-public class SetProjectAsMainConstructorReceive(IConstructorService conService, IFilesIndexing indexingRepo)
+public class SetProjectAsMainConstructorReceive(IConstructorService conService, ITracesIndexing indexingRepo)
     : IResponseReceive<UserProjectModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>

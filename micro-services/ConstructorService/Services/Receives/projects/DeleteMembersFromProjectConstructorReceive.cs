@@ -10,7 +10,7 @@ namespace Transmission.Receives.constructor;
 /// <summary>
 /// DeleteMembersFromProjectReceive
 /// </summary>
-public class DeleteMembersFromProjectConstructorReceive(IConstructorService conService, IFilesIndexing indexingRepo)
+public class DeleteMembersFromProjectConstructorReceive(IConstructorService conService, ITracesIndexing indexingRepo)
     : IResponseReceive<UsersProjectModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>

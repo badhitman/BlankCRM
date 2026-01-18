@@ -10,7 +10,7 @@ namespace Transmission.Receives.Identity;
 /// <summary>
 /// InitChangePhoneUser
 /// </summary>
-public class InitChangePhoneUserReceive(IIdentityTools idRepo, IFilesIndexing indexingRepo)
+public class InitChangePhoneUserReceive(IIdentityTools idRepo, ITracesIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<string>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>

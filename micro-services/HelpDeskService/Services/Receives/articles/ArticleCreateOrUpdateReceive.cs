@@ -10,7 +10,7 @@ namespace Transmission.Receives.helpdesk;
 /// <summary>
 /// Создать/обновить статью
 /// </summary>
-public class ArticleCreateOrUpdateReceive(IArticlesService artRepo, IFilesIndexing indexingRepo)
+public class ArticleCreateOrUpdateReceive(IArticlesService artRepo, ITracesIndexing indexingRepo)
     : IResponseReceive<ArticleModelDB?, TResponseModel<int>?>
 {
     /// <inheritdoc/>

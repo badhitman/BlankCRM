@@ -10,7 +10,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// Organization offer-contract update (toggle)
 /// </summary>
-public class OrganizationOfferContractSetReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo)
+public class OrganizationOfferContractSetReceive(ICommerceService commerceRepo, ITracesIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<OrganizationOfferToggleModel>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>

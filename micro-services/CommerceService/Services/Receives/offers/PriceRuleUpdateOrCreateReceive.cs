@@ -10,7 +10,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// PriceRuleUpdateOrCreate
 /// </summary>
-public class PriceRuleUpdateOrCreateReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo)
+public class PriceRuleUpdateOrCreateReceive(ICommerceService commerceRepo, ITracesIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<PriceRuleForOfferModelDB>?, TResponseModel<int>?>
 {
     /// <inheritdoc/>

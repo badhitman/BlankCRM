@@ -101,9 +101,9 @@ public partial class RetailService : IRetailService
             await transaction.CommitAsync(token);
             return new()
             {
-
+                Response = req.Payload.Id,
+                DocumentNewVersion = _nv,
             };
-            //return new() { Response = new(req.Payload.Id, docDb) };
         }
 
         List<OfferAvailabilityModelDB> offerAvailabilityDB = await context
@@ -125,10 +125,10 @@ public partial class RetailService : IRetailService
         }
 
         await transaction.CommitAsync(token);
-        docDb = await context.OrdersRetail
-                .Include(x => x.Rows)
-                .Include(x => x.Statuses)
-                .FirstAsync(x => x.Id == req.Payload.OrderDocumentId, cancellationToken: token);
+        //docDb = await context.OrdersRetail
+        //        .Include(x => x.Rows)
+        //        .Include(x => x.Statuses)
+        //        .FirstAsync(x => x.Id == req.Payload.OrderDocumentId, cancellationToken: token);
 
         return new()
         {

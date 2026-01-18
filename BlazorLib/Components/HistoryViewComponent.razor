@@ -1,0 +1,42 @@
+﻿@using MudBlazor
+
+@inherits BlazorBusyComponentBaseModel
+
+<MudTable ServerData="ServerReload" Dense Hover>
+    @* <ToolBarContent>
+        <MudText Typo="Typo.h6">Periodic Elements</MudText>
+    </ToolBarContent> *@
+    <HeaderContent>
+        <MudTh>DateTime</MudTh>
+        <MudTh>Receiver</MudTh>
+        <MudTh>Request</MudTh>
+        <MudTh>Response</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="DateTime">@context.UTCTimestampInitReceive</MudTd>
+        <MudTd DataLabel="Receiver">@context.ReceiverName</MudTd>
+        <MudTd DataLabel="Request">
+            <pre>
+            <code class="language-json">
+                    @context.RequestBody
+                </code>
+            </pre>
+        </MudTd>
+        <MudTd DataLabel="Response">
+            <pre>
+            <code class="language-json">
+                    @context.ResponseBody
+                </code>
+            </pre>
+        </MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>No matching records found</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>

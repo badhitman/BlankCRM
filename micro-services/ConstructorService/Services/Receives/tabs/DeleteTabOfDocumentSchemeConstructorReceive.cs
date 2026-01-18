@@ -10,7 +10,7 @@ namespace Transmission.Receives.constructor;
 /// <summary>
 /// Удалить страницу опроса/анкеты
 /// </summary>
-public class DeleteTabOfDocumentSchemeConstructorReceive(IConstructorService conService, IFilesIndexing indexingRepo)
+public class DeleteTabOfDocumentSchemeConstructorReceive(IConstructorService conService, ITracesIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<int>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>

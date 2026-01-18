@@ -13,7 +13,7 @@ namespace Transmission.Receives.commerce;
 /// <remarks>
 /// Бронирует слоты (свободные)
 /// </remarks>
-public class AttendanceRecordsCreateReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo)
+public class AttendanceRecordsCreateReceive(ICommerceService commerceRepo, ITracesIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<CreateAttendanceRequestModel>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>

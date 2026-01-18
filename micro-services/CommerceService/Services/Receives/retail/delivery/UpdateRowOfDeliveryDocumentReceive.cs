@@ -10,7 +10,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// UpdateRowOfDeliveryDocument
 /// </summary>
-public class UpdateRowOfDeliveryDocumentReceive(IRetailService commRepo, IFilesIndexing indexingRepo)
+public class UpdateRowOfDeliveryDocumentReceive(IRetailService commRepo, ITracesIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<RowOfDeliveryRetailDocumentModelDB>?, TResponseModel<Guid?>?>
 {
     /// <inheritdoc/>

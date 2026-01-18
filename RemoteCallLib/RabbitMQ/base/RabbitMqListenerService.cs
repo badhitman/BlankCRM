@@ -115,11 +115,10 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex);
-                }
-                finally
-                {
-                    await _channel.BasicAckAsync(ea.DeliveryTag, false, cancellationToken: stoppingToken);
+                    LoggerRepo.LogError(ex, "bus answer error");
+                    ResponseBaseModel _rbm = new();
+                    _rbm.Messages.InjectException(ex);
+                    await _channel.BasicPublishAsync(exchange: "", routingKey: ea.BasicProperties.ReplyTo, mandatory: true, body: Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(_rbm)), cancellationToken: stoppingToken);
                 }
             }
             else

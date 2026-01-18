@@ -10,7 +10,7 @@ namespace Transmission.Receives.helpdesk;
 /// <summary>
 /// Subscribe update - of context user
 /// </summary>
-public class ExecuterUpdateReceive(IHelpDeskService hdRepo, IFilesIndexing indexingRepo)
+public class ExecuterUpdateReceive(IHelpDeskService hdRepo, ITracesIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<UserIssueModel>?, TResponseModel<bool>?>
 {
     /// <inheritdoc/>

@@ -10,7 +10,7 @@ namespace Transmission.Receives.bank;
 /// <summary>
 /// GetTBankAccountsReceive
 /// </summary>
-public class GetTBankAccountsReceive(IBankService bankRepo, IFilesIndexing indexingRepo)
+public class GetTBankAccountsReceive(IBankService bankRepo, ITracesIndexing indexingRepo)
     : IResponseReceive<GetTBankAccountsRequestModel?, TResponseModel<List<TBankAccountModelDB>>?>
 {
     /// <inheritdoc/>

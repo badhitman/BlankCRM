@@ -10,7 +10,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// RowsDeleteFromOrder
 /// </summary>
-public class RowsDeleteFromOrderReceive(ICommerceService commRepo, IFilesIndexing indexingRepo)
+public class RowsDeleteFromOrderReceive(ICommerceService commRepo, ITracesIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<int[]>?, TResponseModel<RowOrderDocumentRecord[]>?>
 {
     /// <inheritdoc/>

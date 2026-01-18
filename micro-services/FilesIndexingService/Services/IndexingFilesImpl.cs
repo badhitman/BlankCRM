@@ -6,7 +6,6 @@ using DocumentFormat.OpenXml.Packaging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver.GridFS;
-using Newtonsoft.Json;
 using MongoDB.Driver;
 using MongoDB.Bson;
 using SharedLib;
@@ -22,56 +21,6 @@ public class IndexingFilesImpl(
     IOptions<MongoConfigModel> mongoConf,
     IStorageTransmission storageRepo) : IFilesIndexing
 {
-    /// <inheritdoc/>
-    public async Task<ResponseBaseModel> SaveTraceForReceiverAsync(TraceReceiverRecord req, CancellationToken token = default)
-    {
-        if (req.RequestBody is not null)
-            req.RequestBody = MongoDB.Bson.Serialization.BsonSerializer.Deserialize<BsonDocument>(JsonConvert.SerializeObject(req.RequestBody));
-
-        if (req.ResponseBody is not null)
-            req.ResponseBody = MongoDB.Bson.Serialization.BsonSerializer.Deserialize<BsonDocument>(JsonConvert.SerializeObject(req.ResponseBody));
-
-        IMongoDatabase mongoFs = new MongoClient(mongoConf.Value.ToString()).GetDatabase($"{mongoConf.Value.BusTracesSystemName}{GlobalStaticConstantsTransmission.GetModePrefix}");
-        IMongoCollection<TraceReceiverRecord> traceReceiverRecords = mongoFs.GetCollection<TraceReceiverRecord>(nameof(TraceReceiverRecord));
-
-        CreateIndexOptions indexOptions = new();
-        IndexKeysDefinition<TraceReceiverRecord> indexKeys = Builders<TraceReceiverRecord>.IndexKeys.Ascending(x => x.ReceiverName);
-        CreateIndexModel<TraceReceiverRecord> indexModel = new(indexKeys, indexOptions);
-        await traceReceiverRecords.Indexes.CreateOneAsync(indexModel, cancellationToken: token);
-
-        indexKeys = Builders<TraceReceiverRecord>.IndexKeys.Ascending(x => x.UTCTimestampInitReceive);
-        indexModel = new(indexKeys, indexOptions);
-        await traceReceiverRecords.Indexes.CreateOneAsync(indexModel, cancellationToken: token);
-
-        await traceReceiverRecords.InsertOneAsync(req, cancellationToken: token);
-        return ResponseBaseModel.CreateSuccess("Ok");
-    }
-
-    /// <inheritdoc/>
-    public async Task<TPaginationResponseStandardModel<TraceReceiverRecord>> TracesSelectAsync(TPaginationRequestStandardModel<SelectTraceReceivesRequestModel> req, CancellationToken token = default)
-    {
-        IMongoDatabase mongoFs = new MongoClient(mongoConf.Value.ToString()).GetDatabase($"{mongoConf.Value.BusTracesSystemName}{GlobalStaticConstantsTransmission.GetModePrefix}");
-        IMongoCollection<TraceReceiverRecord> traceReceiverRecords = mongoFs.GetCollection<TraceReceiverRecord>(nameof(TraceReceiverRecord));
-
-        IQueryable<TraceReceiverRecord> query = traceReceiverRecords
-            .AsQueryable()
-            .Where(x => req.Payload == null || req.Payload.ReceiversNames == null || req.Payload.ReceiversNames.Contains(x.ReceiverName));
-
-        Task<int> totalTask = query.CountAsync(cancellationToken: token);
-        Task<List<TraceReceiverRecord>> itemsTask = query.Skip(0).Take(10).ToListAsync(cancellationToken: token);
-        await Task.WhenAll(totalTask, itemsTask);
-
-        return new()
-        {
-            PageNum = req.PageNum,
-            PageSize = req.PageSize,
-            TotalRowsCount = totalTask.Result,
-            Response = itemsTask.Result,
-            SortBy = req.SortBy,
-            SortingDirection = req.SortingDirection,
-        };
-    }
-
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> IndexingFileAsync(StorageFileMiddleModel req, CancellationToken token = default)
     {

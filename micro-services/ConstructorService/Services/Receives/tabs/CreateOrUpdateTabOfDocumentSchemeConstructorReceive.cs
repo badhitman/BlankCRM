@@ -10,7 +10,7 @@ namespace Transmission.Receives.constructor;
 /// <summary>
 /// Обновить/создать таб/вкладку схемы документа
 /// </summary>
-public class CreateOrUpdateTabOfDocumentSchemeConstructorReceive(IConstructorService conService, IFilesIndexing indexingRepo)
+public class CreateOrUpdateTabOfDocumentSchemeConstructorReceive(IConstructorService conService, ITracesIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<EntryDescriptionOwnedModel>?, TResponseModel<TabOfDocumentSchemeConstructorModelDB>?>
 {
     /// <inheritdoc/>

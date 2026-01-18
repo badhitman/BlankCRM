@@ -10,7 +10,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// StatusesOrdersAttendancesChangeByHelpDeskDocumentId
 /// </summary>
-public class StatusesOrdersAttendancesChangeByHelpDeskDocumentIdReceive(ICommerceService commRepo, IFilesIndexing indexingRepo)
+public class StatusesOrdersAttendancesChangeByHelpDeskDocumentIdReceive(ICommerceService commRepo, ITracesIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<StatusChangeRequestModel>?, TResponseModel<List<RecordsAttendanceModelDB>>?>
 {
     /// <inheritdoc/>

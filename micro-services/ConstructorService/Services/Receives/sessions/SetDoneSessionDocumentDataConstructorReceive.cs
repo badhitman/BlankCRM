@@ -10,7 +10,7 @@ namespace Transmission.Receives.constructor;
 /// <summary>
 /// Отправить опрос на проверку (от клиента)
 /// </summary>
-public class SetDoneSessionDocumentDataConstructorReceive(IConstructorService conService, IFilesIndexing indexingRepo)
+public class SetDoneSessionDocumentDataConstructorReceive(IConstructorService conService, ITracesIndexing indexingRepo)
     : IResponseReceive<string?, ResponseBaseModel?>
 {
     /// <inheritdoc/>

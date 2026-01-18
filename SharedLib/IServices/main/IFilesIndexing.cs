@@ -17,10 +17,4 @@ public interface IFilesIndexing
 
     /// <inheritdoc/>
     public Task<TResponseModel<WordprocessingDocumentIndexingFileResponseModel>> WordprocessingDocumentGetIndexAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default);
-
-    /// <inheritdoc/>
-    public Task<ResponseBaseModel> SaveTraceForReceiverAsync(TraceReceiverRecord req, CancellationToken token = default);
-
-    /// <inheritdoc/>
-    public Task<TPaginationResponseStandardModel<TraceReceiverRecord>> TracesSelectAsync(TPaginationRequestStandardModel<SelectTraceReceivesRequestModel> req, CancellationToken token = default);
 }

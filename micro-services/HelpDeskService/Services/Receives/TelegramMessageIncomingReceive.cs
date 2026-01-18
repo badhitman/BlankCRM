@@ -10,7 +10,7 @@ namespace Transmission.Receives.helpdesk;
 /// <summary>
 /// TelegramMessageIncomingReceive
 /// </summary>
-public class TelegramMessageIncomingReceive(IHelpDeskService hdRepo, IFilesIndexing indexingRepo)
+public class TelegramMessageIncomingReceive(IHelpDeskService hdRepo, ITracesIndexing indexingRepo)
     : IResponseReceive<TelegramIncomingMessageModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>

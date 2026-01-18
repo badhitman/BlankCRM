@@ -10,7 +10,7 @@ namespace Transmission.Receives.bank;
 /// <summary>
 /// InitPaymentMerchantTBankReceive
 /// </summary>
-public class InitPaymentMerchantTBankReceive(IMerchantService merchantRepo, IFilesIndexing indexingRepo)
+public class InitPaymentMerchantTBankReceive(IMerchantService merchantRepo, ITracesIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<InitMerchantTBankRequestModel>?, TResponseModel<PaymentInitTBankResultModelDB>?>
 {
     /// <inheritdoc/>

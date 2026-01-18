@@ -159,6 +159,9 @@
   <data name="Logout" xml:space="preserve">
     <value>Logout</value>
   </data>
+  <data name="Monitoring.LeftMainMenu" xml:space="preserve">
+    <value>Monitoring</value>
+  </data>
   <data name="Navigation" xml:space="preserve">
     <value>Navigation</value>
   </data>

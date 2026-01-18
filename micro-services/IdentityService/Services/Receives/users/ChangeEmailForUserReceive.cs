@@ -10,7 +10,7 @@ namespace Transmission.Receives.Identity;
 /// <summary>
 /// Обновляет адрес Email, если токен действительный для пользователя.
 /// </summary>
-public class ChangeEmailForUserReceive(IIdentityTools idRepo, IFilesIndexing indexingRepo)
+public class ChangeEmailForUserReceive(IIdentityTools idRepo, ITracesIndexing indexingRepo)
     : IResponseReceive<IdentityEmailTokenModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>

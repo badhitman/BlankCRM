@@ -130,8 +130,9 @@ public class Program
         .AddScoped<StoreTelegramService>()
         .AddScoped<UpdateHandler>()
         .AddScoped<IFilesIndexing, FileIndexingTransmission>()
+        .AddScoped<ITracesIndexing, TracesTransmission>()
         .AddScoped<ReceiverService>();
-
+        
         builder.Services.AddHostedService<PollingService>();
 
         #region Telegram dialog - handlers answer to incoming messages

@@ -10,7 +10,7 @@ namespace Transmission.Receives.helpdesk;
 /// <summary>
 /// StatusChangeReceive
 /// </summary>
-public class StatusIssueChangeReceive(IHelpDeskService hdRepo, IFilesIndexing indexingRepo)
+public class StatusIssueChangeReceive(IHelpDeskService hdRepo, ITracesIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<StatusChangeRequestModel>?, TResponseModel<bool>?>
 {
     /// <inheritdoc/>

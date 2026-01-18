@@ -10,7 +10,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// OfficeOrganizationDelete
 /// </summary>
-public class OfficeOrganizationDeleteReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo)
+public class OfficeOrganizationDeleteReceive(ICommerceService commerceRepo, ITracesIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<int>?, TResponseModel<OfficeOrganizationModelDB>?>
 {
     /// <inheritdoc/>

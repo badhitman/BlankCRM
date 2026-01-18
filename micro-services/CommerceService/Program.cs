@@ -97,7 +97,9 @@ builder.Services
 builder.Services
     .AddScoped<ICommerceService, CommerceImplementService>()
     .AddScoped<IRetailService, RetailService>()
-    .AddScoped<IFilesIndexing, FileIndexingTransmission>();
+    .AddScoped<IFilesIndexing, FileIndexingTransmission>()
+    .AddScoped<ITracesIndexing, TracesTransmission>()
+    ;
 
 builder.Services.AddSingleton<WebConfigModel>();
 builder.Services.AddOptions();

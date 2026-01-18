@@ -97,7 +97,9 @@ public class Program
 
         builder.Services
             .AddScoped<IArticlesService, ArticlesService>()
-            .AddScoped<IFilesIndexing, FileIndexingTransmission>();
+            .AddScoped<IFilesIndexing, FileIndexingTransmission>()
+            .AddScoped<ITracesIndexing, TracesTransmission>()
+            ;
 
         builder.Services.AddStackExchangeRedisCache(options =>
         {

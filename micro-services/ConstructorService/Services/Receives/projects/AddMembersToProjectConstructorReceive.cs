@@ -10,7 +10,7 @@ namespace Transmission.Receives.constructor;
 /// <summary>
 /// AddMembersToProjectReceive
 /// </summary>
-public class AddMembersToProjectConstructorReceive(IConstructorService conService, IFilesIndexing indexingRepo)
+public class AddMembersToProjectConstructorReceive(IConstructorService conService, ITracesIndexing indexingRepo)
     : IResponseReceive<UsersProjectModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>

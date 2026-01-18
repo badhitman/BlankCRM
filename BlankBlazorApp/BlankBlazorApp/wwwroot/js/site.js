@@ -26,6 +26,15 @@ window.FrameHeightUpdate = (() => {
     };
 })();
 
+window.HighlightBlock = (() => {
+    return {
+        Init(dom_id, dotNetReference) {
+            hljs.highlightAll();
+            /*hljs.highlightBlock(document.querySelector('code'));*/
+        }
+    };
+})();
+
 window.BoundingClientRect = (() => {
     return {
         Height(id) {

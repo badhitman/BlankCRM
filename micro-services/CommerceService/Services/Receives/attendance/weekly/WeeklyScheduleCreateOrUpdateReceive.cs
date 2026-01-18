@@ -10,7 +10,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// WeeklyScheduleCreateOrUpdate
 /// </summary>
-public class WeeklyScheduleCreateOrUpdateReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo)
+public class WeeklyScheduleCreateOrUpdateReceive(ICommerceService commerceRepo, ITracesIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<WeeklyScheduleModelDB>?, TResponseModel<int>?>
 {
     /// <inheritdoc/>

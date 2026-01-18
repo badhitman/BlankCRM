@@ -10,7 +10,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// UpdateConversionDocument
 /// </summary>
-public class UpdateConversionDocumentReceive(IRetailService commRepo, IFilesIndexing indexingRepo)
+public class UpdateConversionDocumentReceive(IRetailService commRepo, ITracesIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<WalletConversionRetailDocumentModelDB>?, TResponseModel<Guid?>?>
 {
     /// <inheritdoc/>

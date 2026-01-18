@@ -171,7 +171,9 @@ public class Program
         // Scoped
         builder.Services
             .AddScoped<IIdentityTools, IdentityTools>()
-            .AddScoped<IFilesIndexing, FileIndexingTransmission>();
+            .AddScoped<IFilesIndexing, FileIndexingTransmission>()
+            .AddScoped<ITracesIndexing, TracesTransmission>()
+            ;
 
         string appName = typeof(Program).Assembly.GetName().Name ?? "AssemblyName";
         #region MQ Transmission (remote methods call)

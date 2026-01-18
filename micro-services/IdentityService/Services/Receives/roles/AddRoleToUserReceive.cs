@@ -10,7 +10,7 @@ namespace Transmission.Receives.Identity;
 /// <summary>
 /// Добавить роль пользователю (включить пользователя в роль)
 /// </summary>
-public class AddRoleToUserReceive(IIdentityTools idRepo, IFilesIndexing indexingRepo)
+public class AddRoleToUserReceive(IIdentityTools idRepo, ITracesIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<RoleEmailModel>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>

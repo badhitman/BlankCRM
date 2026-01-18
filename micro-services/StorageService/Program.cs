@@ -128,6 +128,7 @@ public class Program
             .AddScoped<ICommerceTransmission, CommerceTransmission>()
             .AddScoped<IWebTransmission, WebTransmission>()
             .AddScoped<IFilesIndexing, FileIndexingTransmission>()
+            .AddScoped<ITracesIndexing, TracesTransmission>()
             ;
         //
         builder.Services.StorageRegisterMqListeners();

@@ -10,7 +10,7 @@ namespace Transmission.Receives.bank;
 /// <summary>
 /// CustomerBankCreateOrUpdate
 /// </summary>
-public class CustomerBankCreateOrUpdateReceive(IBankService bankRepo, IFilesIndexing indexingRepo)
+public class CustomerBankCreateOrUpdateReceive(IBankService bankRepo, ITracesIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<CustomerBankIdModelDB>?, TResponseModel<int>?>
 {
     /// <inheritdoc/>

@@ -11,7 +11,7 @@ namespace Transmission.Receives.bank;
 /// <summary>
 /// IncomingTBankMerchantPayment
 /// </summary>
-public class IncomingTBankMerchantPaymentReceive(IMerchantService merchantRepo, IFilesIndexing indexingRepo)
+public class IncomingTBankMerchantPaymentReceive(IMerchantService merchantRepo, ITracesIndexing indexingRepo)
     : IResponseReceive<JObject?, ResponseBaseModel?>
 {
     /// <inheritdoc/>

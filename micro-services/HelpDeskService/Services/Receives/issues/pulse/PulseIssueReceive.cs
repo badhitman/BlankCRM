@@ -13,7 +13,7 @@ namespace Transmission.Receives.helpdesk;
 /// <remarks>
 /// Плюс рассылка уведомлений участникам события.
 /// </remarks>
-public class PulseIssueReceive(IHelpDeskService hdRepo, IFilesIndexing indexingRepo)
+public class PulseIssueReceive(IHelpDeskService hdRepo, ITracesIndexing indexingRepo)
     : IResponseReceive<PulseRequestModel?, TResponseModel<bool>?>
 {
     /// <inheritdoc/>

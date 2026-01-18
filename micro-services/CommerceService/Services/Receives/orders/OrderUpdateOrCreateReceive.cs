@@ -10,7 +10,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// OrderUpdateOrCreate
 /// </summary>
-public class OrderUpdateOrCreateReceive(ICommerceService commRepo, IFilesIndexing indexingRepo)
+public class OrderUpdateOrCreateReceive(ICommerceService commRepo, ITracesIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<OrderDocumentModelDB>?, DocumentNewVersionResponseModel?>
 {
     /// <inheritdoc/>

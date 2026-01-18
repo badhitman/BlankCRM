@@ -245,6 +245,7 @@ builder.Services
     .AddScoped<IFeedsHaierProffRuService, HaierProffRuTransmission>()
     .AddScoped<IBreezRuApiTransmission, BreezRuTransmission>()
     .AddScoped<IFilesIndexing, FileIndexingTransmission>()
+    .AddScoped<ITracesIndexing, TracesTransmission>()
     .AddScoped<IKladrService, KladrServiceTransmission>()
     .AddScoped<IKladrParseService, ParseImplementDBF>()
     ;

@@ -11,7 +11,7 @@ namespace Transmission.Receives.Identity;
 /// <summary>
 /// Регистрация нового email/пользователя без пароля (Identity)
 /// </summary>
-public class CreateNewUserReceive(IIdentityTools idRepo, IFilesIndexing indexingRepo)
+public class CreateNewUserReceive(IIdentityTools idRepo, ITracesIndexing indexingRepo)
     : IResponseReceive<string?, RegistrationNewUserResponseModel?>
 {
     /// <inheritdoc/>

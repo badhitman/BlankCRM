@@ -12,7 +12,10 @@ public class Program
         var builder = Host.CreateApplicationBuilder(args);
         builder.Services.AddHostedService<Worker>();
 
-        builder.Services.AddScoped<IFilesIndexing, FileIndexingTransmission>();
+        builder.Services
+            .AddScoped<IFilesIndexing, FileIndexingTransmission>()
+            .AddScoped<ITracesIndexing, TracesTransmission>()
+            ;
 
         var host = builder.Build();
         host.Run();

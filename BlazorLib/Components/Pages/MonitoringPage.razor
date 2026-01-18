@@ -1,0 +1,16 @@
+@page "/monitoring-tools"
+
+@using BlazorLib.Components.HelpDesk
+@using MudBlazor
+
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@attribute [Authorize(Roles = GlobalStaticConstantsRoles.Roles.Admin)]
+
+<MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-6">
+    <MudTabPanel Text="Logs">
+        <LogsComponent />
+    </MudTabPanel>
+    <MudTabPanel Text="История">
+        <HistoryViewComponent />
+    </MudTabPanel>
+</MudTabs>

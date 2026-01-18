@@ -10,7 +10,7 @@ namespace Transmission.Receives.constructor;
 /// <summary>
 /// Удалить сессию опроса/анкеты
 /// </summary>
-public class DeleteSessionDocumentConstructorReceive(IConstructorService conService, IFilesIndexing indexingRepo)
+public class DeleteSessionDocumentConstructorReceive(IConstructorService conService, ITracesIndexing indexingRepo)
     : IResponseReceive<int, ResponseBaseModel?>
 {
     /// <inheritdoc/>

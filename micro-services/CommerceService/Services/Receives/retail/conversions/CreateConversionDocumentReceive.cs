@@ -10,7 +10,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// CreateConversionDocument
 /// </summary>
-public class CreateConversionDocumentReceive(IRetailService commRepo, IFilesIndexing indexingRepo)
+public class CreateConversionDocumentReceive(IRetailService commRepo, ITracesIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<CreateWalletConversionRetailDocumentRequestModel>?, TResponseModel<int>?>
 {
     /// <inheritdoc/>

@@ -10,7 +10,7 @@ namespace Transmission.Receives.constructor;
 /// <summary>
 /// Удалить форму
 /// </summary>
-public class FormDeleteConstructorReceive(IConstructorService conService, IFilesIndexing indexingRepo)
+public class FormDeleteConstructorReceive(IConstructorService conService, ITracesIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<int>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>

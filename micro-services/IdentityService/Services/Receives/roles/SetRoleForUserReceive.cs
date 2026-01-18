@@ -10,7 +10,7 @@ namespace Transmission.Receives.Identity;
 /// <summary>
 /// SetRoleForUser
 /// </summary>
-public class SetRoleForUserReceive(IIdentityTools identityRepo, IFilesIndexing indexingRepo)
+public class SetRoleForUserReceive(IIdentityTools identityRepo, ITracesIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<SetRoleForUserRequestModel>?, TResponseModel<string[]>?>
 {
     /// <inheritdoc/>

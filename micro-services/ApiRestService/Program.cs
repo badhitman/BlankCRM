@@ -122,7 +122,9 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddTransient<UnhandledExceptionAttribute>();
 builder.Services
     .AddScoped<RolesAuthorizationFilter>()
-    .AddScoped<IFilesIndexing, FileIndexingTransmission>();
+    .AddScoped<IFilesIndexing, FileIndexingTransmission>()
+    .AddScoped<ITracesIndexing, TracesTransmission>()
+    ;
 
 builder.Services.AddScoped<ExpressUserPermissionModel>();
 

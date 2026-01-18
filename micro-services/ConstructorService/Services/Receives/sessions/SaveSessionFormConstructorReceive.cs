@@ -10,7 +10,7 @@ namespace Transmission.Receives.constructor;
 /// <summary>
 /// Сохранить данные формы документа из сессии
 /// </summary>
-public class SaveSessionFormConstructorReceive(IConstructorService conService, IFilesIndexing indexingRepo)
+public class SaveSessionFormConstructorReceive(IConstructorService conService, ITracesIndexing indexingRepo)
     : IResponseReceive<SaveConstructorSessionRequestModel?, TResponseModel<ValueDataForSessionOfDocumentModelDB[]>?>
 {
     /// <inheritdoc/>

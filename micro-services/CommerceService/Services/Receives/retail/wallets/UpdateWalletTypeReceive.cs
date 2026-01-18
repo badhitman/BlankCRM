@@ -10,7 +10,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// UpdateWalletType
 /// </summary>
-public class UpdateWalletTypeReceive(IRetailService commRepo, IFilesIndexing indexingRepo)
+public class UpdateWalletTypeReceive(IRetailService commRepo, ITracesIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<WalletRetailTypeModelDB>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>

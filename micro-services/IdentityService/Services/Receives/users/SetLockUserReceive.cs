@@ -10,7 +10,7 @@ namespace Transmission.Receives.Identity;
 /// <summary>
 /// Установить блокировку пользователю
 /// </summary>
-public class SetLockUserReceive(IIdentityTools idRepo, IFilesIndexing indexingRepo)
+public class SetLockUserReceive(IIdentityTools idRepo, ITracesIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<IdentityBooleanModel>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>

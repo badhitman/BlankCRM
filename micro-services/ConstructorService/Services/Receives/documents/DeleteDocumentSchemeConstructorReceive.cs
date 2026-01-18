@@ -10,7 +10,7 @@ namespace Transmission.Receives.constructor;
 /// <summary>
 /// Удалить схему документа
 /// </summary>
-public class DeleteDocumentSchemeConstructorReceive(IConstructorService conService, IFilesIndexing indexingRepo)
+public class DeleteDocumentSchemeConstructorReceive(IConstructorService conService, ITracesIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<int>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>

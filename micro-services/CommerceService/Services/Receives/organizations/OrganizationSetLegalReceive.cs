@@ -10,7 +10,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// Organization set legal
 /// </summary>
-public class OrganizationSetLegalReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo)
+public class OrganizationSetLegalReceive(ICommerceService commerceRepo, ITracesIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<OrganizationLegalModel>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
