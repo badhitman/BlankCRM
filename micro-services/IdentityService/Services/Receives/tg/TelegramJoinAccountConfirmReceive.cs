@@ -10,7 +10,7 @@ namespace Transmission.Receives.web;
 /// <summary>
 /// TelegramJoinAccountConfirm receive
 /// </summary>
-public class TelegramJoinAccountConfirmReceive(IIdentityTools identityRepo, IFilesIndexing indexingRepo)
+public class TelegramJoinAccountConfirmReceive(IIdentityTools identityRepo)
     : IResponseReceive<TelegramJoinAccountConfirmModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
@@ -20,9 +20,6 @@ public class TelegramJoinAccountConfirmReceive(IIdentityTools identityRepo, IFil
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TelegramJoinAccountConfirmModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
-        ResponseBaseModel res = await identityRepo.TelegramJoinAccountConfirmTokenFromTelegramAsync(req, token: token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
-        return res;
+        return await identityRepo.TelegramJoinAccountConfirmTokenFromTelegramAsync(req, token: token);
     }
 }
