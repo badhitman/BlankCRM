@@ -14,7 +14,12 @@
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="DateTime">@context.UTCTimestampInitReceive</MudTd>
-        <MudTd DataLabel="Receiver">@context.ReceiverName</MudTd>
+        <MudTd DataLabel="Receiver">
+            <div class="stack">
+                <span>@context.ReceiverName</span>
+                <span>@((this.UsersCache.FirstOrDefault(x => x.UserId == context.SenderActionUserId)?.ToString() ?? context.SenderActionUserId))</span>
+            </div>
+        </MudTd>
         <MudTd DataLabel="Request">
             <pre style="max-height: 250px;"><code class="language-json">@context.RequestBody</code></pre>
         </MudTd>

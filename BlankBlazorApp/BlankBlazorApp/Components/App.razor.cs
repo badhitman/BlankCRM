@@ -27,10 +27,6 @@ public partial class App
     NavigationManager NavigatorRepo { get; set; } = default!;
 
 
-    static string? _headerHtmlDomInject;
-    static MarkupString myMarkup => new(_headerHtmlDomInject ?? "");
-
-
     static bool _isLoaded = false;
     static bool _includeTelegramBotWebAppScript = false;
     Uri? _uri;
@@ -50,16 +46,6 @@ public partial class App
 
         if (WebConfig.Value.BaseUri is null)
             WebConfig.Value.BaseUri = NavigatorRepo.BaseUri;
-
-        if (_headerHtmlDomInject is null)
-        {
-            TResponseModel<string?> resHeaderDom = await StoreRepo.ReadParameterAsync<string?>(GlobalStaticCloudStorageMetadata.HeaderHtmlDomInject);
-            if (resHeaderDom.Success())
-            {
-                _headerHtmlDomInject = resHeaderDom.Response;
-                StateHasChanged();
-            }
-        }
 
         if (!_isLoaded)
         {

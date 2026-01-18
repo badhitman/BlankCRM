@@ -45,6 +45,11 @@ public partial class HistoryViewComponent : BlazorBusyComponentUsersCachedModel
         };
         await SetBusyAsync(token: token);
         TPaginationResponseStandardModel<TraceReceiverRecord> res = await IndexingRepo.TracesSelectAsync(req, token);
+
+        IEnumerable<string?>? usersIds = res.Response?.Select(x => x.SenderActionUserId);
+        if (usersIds is not null)
+            await CacheUsersUpdate([.. usersIds.Where(x => !string.IsNullOrWhiteSpace(x))!]);
+
         await SetBusyAsync(false, token: token);
         return new TableData<TraceReceiverRecord>() { TotalItems = res.TotalRowsCount, Items = res.Response };
     }
