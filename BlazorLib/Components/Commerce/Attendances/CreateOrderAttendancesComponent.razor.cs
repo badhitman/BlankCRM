@@ -2,11 +2,10 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using static SharedLib.GlobalStaticConstantsRoutes;
 using Microsoft.AspNetCore.Components;
-using BlazorLib;
 using SharedLib;
 using MudBlazor;
-using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace BlazorLib.Components.Commerce.Attendances;
 
@@ -151,7 +150,7 @@ public partial class CreateOrderAttendancesComponent : BlazorBusyComponentBaseAu
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
-        await Task.WhenAll([LoadOffers(0), OnInitializedAsync()]);
+        await Task.WhenAll([LoadOffers(0), base.OnInitializedAsync()]);
         await ServerReload();
         SelectedOfferId = AllOffers.FirstOrDefault()?.Id;
     }
