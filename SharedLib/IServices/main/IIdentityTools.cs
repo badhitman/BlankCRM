@@ -134,14 +134,14 @@ public interface IIdentityTools
     public Task<ResponseBaseModel> ChangeEmailAsync(IdentityEmailTokenModel req, CancellationToken token = default);
 
     /// <summary>
-    /// Обновить пользователю поля: FirstName и LastName
+    /// Обновить анкету пользователя: FirstName, LastName, Patronymic, а так же адрес и "внешний" идентификатор
     /// </summary>
-    public Task<ResponseBaseModel> UpdateUserDetailsAsync(IdentityDetailsModel req, CancellationToken token = default);
+    public Task<ResponseBaseModel> UpdateUserDetailsAsync(TAuthRequestStandardModel<IdentityDetailsModel> req, CancellationToken token = default);
 
     /// <summary>
     /// Установить блокировку пользователю
     /// </summary>
-    public Task<ResponseBaseModel> SetLockUserAsync(IdentityBooleanModel req, CancellationToken token = default);
+    public Task<ResponseBaseModel> SetLockUserAsync(TAuthRequestStandardModel<IdentityBooleanModel> req, CancellationToken token = default);
 
     /// <summary>
     /// Пользователи

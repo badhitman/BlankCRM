@@ -11,7 +11,7 @@ namespace Transmission.Receives.Identity;
 /// Установить блокировку пользователю
 /// </summary>
 public class SetLockUserReceive(IIdentityTools idRepo, IFilesIndexing indexingRepo)
-    : IResponseReceive<IdentityBooleanModel?, ResponseBaseModel?>
+    : IResponseReceive<TAuthRequestStandardModel<IdentityBooleanModel>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.SetLockUserReceive;
@@ -19,7 +19,7 @@ public class SetLockUserReceive(IIdentityTools idRepo, IFilesIndexing indexingRe
     /// <summary>
     /// Установить блокировку пользователю
     /// </summary>
-    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(IdentityBooleanModel? req, CancellationToken token = default)
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestStandardModel<IdentityBooleanModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);

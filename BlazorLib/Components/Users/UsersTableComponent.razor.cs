@@ -99,7 +99,13 @@ public partial class UsersTableComponent : BlazorBusyComponentBaseAuthModel
 
     async Task SetUserLock(string userId, bool locked_set)
     {
-        ResponseBaseModel rest = await IdentityRepo.SetLockUserAsync(new() { Set = locked_set, UserId = userId });
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
+
+        ResponseBaseModel rest = await IdentityRepo.SetLockUserAsync(new() { SenderActionUserId = CurrentUserSession.UserId, Payload = new() { Set = locked_set, UserId = userId } });
         Messages = rest.Messages;
         if (myGrid is not null)
             await myGrid.RefreshDataAsync();

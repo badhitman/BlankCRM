@@ -109,7 +109,7 @@ public class IdentityTransmission(IRabbitClient rabbitClient) : IIdentityTransmi
         => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.ChangeEmailForUserReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> UpdateUserDetailsAsync(IdentityDetailsModel req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> UpdateUserDetailsAsync(TAuthRequestStandardModel<IdentityDetailsModel> req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.UpdateUserDetailsReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
@@ -125,7 +125,7 @@ public class IdentityTransmission(IRabbitClient rabbitClient) : IIdentityTransmi
         => await rabbitClient.MqRemoteCallAsync<List<ClaimBaseModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.GetClaimsReceive, req, token: token) ?? [];
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> SetLockUserAsync(IdentityBooleanModel req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> SetLockUserAsync(TAuthRequestStandardModel<IdentityBooleanModel> req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.SetLockUserReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>

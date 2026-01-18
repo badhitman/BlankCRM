@@ -752,19 +752,22 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> UpdateUserDetailsAsync(IdentityDetailsModel req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> UpdateUserDetailsAsync(TAuthRequestStandardModel<IdentityDetailsModel> req, CancellationToken token = default)
     {
-        req.FirstName ??= "";
-        req.LastName ??= "";
-        req.Patronymic ??= "";
+        if (req.Payload is null)
+            return ResponseBaseModel.CreateError("req.Payload is null");
 
-        req.FirstName = req.FirstName.Trim();
-        req.LastName = req.LastName.Trim();
-        req.Patronymic = req.Patronymic.Trim();
+        req.Payload.FirstName ??= "";
+        req.Payload.LastName ??= "";
+        req.Payload.Patronymic ??= "";
 
-        req.AddressUserComment = req.AddressUserComment?.Trim();
+        req.Payload.FirstName = req.Payload.FirstName.Trim();
+        req.Payload.LastName = req.Payload.LastName.Trim();
+        req.Payload.Patronymic = req.Payload.Patronymic.Trim();
 
-        if (!string.IsNullOrWhiteSpace(req.PhoneNum) && !GlobalTools.IsPhoneNumber(req.PhoneNum))
+        req.Payload.AddressUserComment = req.Payload.AddressUserComment?.Trim();
+
+        if (!string.IsNullOrWhiteSpace(req.Payload.PhoneNum) && !GlobalTools.IsPhoneNumber(req.Payload.PhoneNum))
             return ResponseBaseModel.CreateError("Телефон должен быть в формате: +79994440011 (можно без +)");
 
         using IdentityAppDbContext identityContext = await identityDbFactory.CreateDbContextAsync(token);
@@ -772,9 +775,9 @@ public class IdentityTools(
 
         IQueryable<ApplicationUser> _findUserQuery = identityContext
             .Users
-            .Where(x => x.Id == req.UserId &&
-                (x.FirstName != req.FirstName || x.LastName != req.LastName || x.Patronymic != req.Patronymic ||
-                x.KladrCode != req.KladrCode || x.KladrTitle != req.KladrTitle || x.AddressUserComment != req.AddressUserComment));
+            .Where(x => x.Id == req.Payload.UserId &&
+                (x.FirstName != req.Payload.FirstName || x.LastName != req.Payload.LastName || x.Patronymic != req.Payload.Patronymic ||
+                x.KladrCode != req.Payload.KladrCode || x.KladrTitle != req.Payload.KladrTitle || x.AddressUserComment != req.Payload.AddressUserComment));
 
         user_db = await _findUserQuery
             .FirstOrDefaultAsync(cancellationToken: token);
@@ -784,25 +787,25 @@ public class IdentityTools(
 
         IQueryable<ApplicationUser> q = identityContext
             .Users
-            .Where(x => x.Id == req.UserId);
+            .Where(x => x.Id == req.Payload.UserId);
 
         await q
             .ExecuteUpdateAsync(set => set
-                .SetProperty(p => p.ExternalUserId, req.ExternalUserId)
-                .SetProperty(p => p.FirstName, req.FirstName)
-                .SetProperty(p => p.NormalizedFirstNameUpper, req.FirstName.ToUpper())
-                .SetProperty(p => p.LastName, req.LastName)
-                .SetProperty(p => p.NormalizedLastNameUpper, req.LastName.ToUpper())
-                .SetProperty(p => p.Patronymic, req.Patronymic)
-                .SetProperty(p => p.NormalizedPatronymicUpper, req.Patronymic.ToUpper()), cancellationToken: token);
+                .SetProperty(p => p.ExternalUserId, req.Payload.ExternalUserId)
+                .SetProperty(p => p.FirstName, req.Payload.FirstName)
+                .SetProperty(p => p.NormalizedFirstNameUpper, req.Payload.FirstName.ToUpper())
+                .SetProperty(p => p.LastName, req.Payload.LastName)
+                .SetProperty(p => p.NormalizedLastNameUpper, req.Payload.LastName.ToUpper())
+                .SetProperty(p => p.Patronymic, req.Payload.Patronymic)
+                .SetProperty(p => p.NormalizedPatronymicUpper, req.Payload.Patronymic.ToUpper()), cancellationToken: token);
 
-        if (req.UpdateAddress)
+        if (req.Payload.UpdateAddress)
         {
             await q
             .ExecuteUpdateAsync(set => set
-                .SetProperty(p => p.KladrTitle, req.KladrTitle)
-                .SetProperty(p => p.KladrCode, req.KladrCode)
-                .SetProperty(p => p.AddressUserComment, req.AddressUserComment), cancellationToken: token);
+                .SetProperty(p => p.KladrTitle, req.Payload.KladrTitle)
+                .SetProperty(p => p.KladrCode, req.Payload.KladrCode)
+                .SetProperty(p => p.AddressUserComment, req.Payload.AddressUserComment), cancellationToken: token);
         }
 
         await ClaimsUserFlushAsync(user_db.Id, token);
@@ -917,16 +920,19 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> SetLockUserAsync(IdentityBooleanModel req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> SetLockUserAsync(TAuthRequestStandardModel<IdentityBooleanModel> req, CancellationToken token = default)
     {
+        if (req.Payload is null)
+            return ResponseBaseModel.CreateError("req.Payload is null");
+
         using IServiceScope scope = serviceScopeFactory.CreateScope();
         using UserManager<ApplicationUser> userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-        ApplicationUser? user = await userManager.FindByIdAsync(req.UserId);
+        ApplicationUser? user = await userManager.FindByIdAsync(req.Payload.UserId);
         if (user is null)
-            return ResponseBaseModel.CreateError($"Пользователь не найден: {req.UserId}");
+            return ResponseBaseModel.CreateError($"Пользователь не найден: {req.Payload.UserId}");
 
-        await userManager.SetLockoutEndDateAsync(user, req.Set ? DateTimeOffset.MaxValue : null);
-        return ResponseBaseModel.CreateSuccess($"Пользователь успешно [{user.Email}] {(req.Set ? "заблокирован" : "разблокирован")}");
+        await userManager.SetLockoutEndDateAsync(user, req.Payload.Set ? DateTimeOffset.MaxValue : null);
+        return ResponseBaseModel.CreateSuccess($"Пользователь успешно [{user.Email}] {(req.Payload.Set ? "заблокирован" : "разблокирован")}");
     }
 
     /// <inheritdoc/>

@@ -128,13 +128,17 @@ public partial class IndexPage : BlazorBusyComponentBaseAuthModel
         Messages = [];
         await SetBusyAsync();
 
-        ResponseBaseModel rest = await IdentityRepo.UpdateUserDetailsAsync(new IdentityDetailsModel()
+        ResponseBaseModel rest = await IdentityRepo.UpdateUserDetailsAsync(new()
         {
-            UserId = CurrentUserSession.UserId,
-            FirstName = firstName,
-            LastName = lastName,
-            PhoneNum = phoneNum,
-            Patronymic = patronymic,
+            SenderActionUserId = CurrentUserSession.UserId,
+            Payload = new IdentityDetailsModel()
+            {
+                UserId = CurrentUserSession.UserId,
+                FirstName = firstName,
+                LastName = lastName,
+                PhoneNum = phoneNum,
+                Patronymic = patronymic,
+            }
         });
 
         await SetBusyAsync(false);

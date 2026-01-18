@@ -11,7 +11,7 @@ namespace Transmission.Receives.Identity;
 /// Обновить пользователю поля: FirstName и LastName
 /// </summary>
 public class UpdateUserDetailsReceive(IIdentityTools idRepo, IFilesIndexing indexingRepo)
-    : IResponseReceive<IdentityDetailsModel?, ResponseBaseModel?>
+    : IResponseReceive<TAuthRequestStandardModel<IdentityDetailsModel>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.UpdateUserDetailsReceive;
@@ -19,7 +19,7 @@ public class UpdateUserDetailsReceive(IIdentityTools idRepo, IFilesIndexing inde
     /// <summary>
     /// Обновить пользователю поля: FirstName и LastName
     /// </summary>
-    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(IdentityDetailsModel? req, CancellationToken token = default)
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestStandardModel<IdentityDetailsModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);

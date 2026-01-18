@@ -118,6 +118,12 @@ public partial class ClientAboutComponent : BlazorBusyComponentBaseAuthModel
         if (editClientCopy is null)
             return;
 
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
+
         IdentityDetailsModel req = new()
         {
             UserId = ClientId,
@@ -132,7 +138,7 @@ public partial class ClientAboutComponent : BlazorBusyComponentBaseAuthModel
         };
 
         await SetBusyAsync();
-        ResponseBaseModel res = await IdentityRepo.UpdateUserDetailsAsync(req);
+        ResponseBaseModel res = await IdentityRepo.UpdateUserDetailsAsync(new() { SenderActionUserId = CurrentUserSession.UserId, Payload = req });
         SnackBarRepo.ShowMessagesResponse(res.Messages);
 
         if (res.Success())
@@ -149,8 +155,8 @@ public partial class ClientAboutComponent : BlazorBusyComponentBaseAuthModel
     /// <inheritdoc/>
     protected async override Task OnInitializedAsync()
     {
-        await base.OnInitializedAsync();
         await SetBusyAsync();
+        await base.OnInitializedAsync();
         TResponseModel<UserInfoModel[]> getUser = await IdentityRepo.GetUsersOfIdentityAsync([ClientId]);
         SnackBarRepo.ShowMessagesResponse(getUser.Messages);
         currentUser = getUser.Response?.FirstOrDefault(x => x.UserId == ClientId);
