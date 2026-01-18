@@ -20,7 +20,7 @@ public class DeleteMembersFromProjectConstructorReceive(IConstructorService conS
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(UsersProjectModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, null, req);
         ResponseBaseModel res = await conService.DeleteMembersFromProjectAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;

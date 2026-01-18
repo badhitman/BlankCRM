@@ -20,7 +20,7 @@ public class StatusesOrdersAttendancesChangeByHelpDeskDocumentIdReceive(ICommerc
     public async Task<TResponseModel<List<RecordsAttendanceModelDB>>?> ResponseHandleActionAsync(TAuthRequestStandardModel<StatusChangeRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req?.Payload);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.SenderActionUserId, req.Payload);
         TResponseModel<List<RecordsAttendanceModelDB>> res = await commRepo.StatusesOrdersAttendancesChangeByHelpDeskDocumentIdAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;

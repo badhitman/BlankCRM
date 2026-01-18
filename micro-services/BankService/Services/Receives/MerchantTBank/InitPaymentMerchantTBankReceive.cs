@@ -20,7 +20,7 @@ public class InitPaymentMerchantTBankReceive(IMerchantService merchantRepo, ITra
     public async Task<TResponseModel<PaymentInitTBankResultModelDB>?> ResponseHandleActionAsync(TAuthRequestStandardModel<InitMerchantTBankRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.SenderActionUserId, req.Payload);
         TResponseModel<PaymentInitTBankResultModelDB> res = await merchantRepo.InitPaymentMerchantTBankAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;

@@ -20,7 +20,7 @@ public class UpdateConversionOrderLinkDocumentReceive(IRetailService commRepo, I
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestStandardModel<OrderConversionAmountModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.SenderActionUserId, req.Payload);
         ResponseBaseModel res = await commRepo.UpdateConversionOrderLinkDocumentRetailAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;

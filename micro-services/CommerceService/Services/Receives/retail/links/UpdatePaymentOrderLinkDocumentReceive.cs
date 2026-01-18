@@ -20,7 +20,7 @@ public class UpdatePaymentOrderLinkDocumentReceive(IRetailService commRepo, ITra
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestStandardModel<PaymentOrderRetailLinkModelDB>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.SenderActionUserId, req.Payload);
         ResponseBaseModel res = await commRepo.UpdatePaymentOrderLinkDocumentAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace, token);
         return res;

@@ -22,7 +22,7 @@ public class UpdateUserDetailsReceive(IIdentityTools idRepo, ITracesIndexing ind
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestStandardModel<IdentityDetailsModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.SenderActionUserId, req.Payload);
         ResponseBaseModel res = await idRepo.UpdateUserDetailsAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;

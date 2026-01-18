@@ -22,7 +22,7 @@ public class ClaimUpdateOrCreateReceive(IIdentityTools idRepo, ITracesIndexing i
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(ClaimUpdateModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, null, req);
         ResponseBaseModel res = await idRepo.ClaimUpdateOrCreateAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;

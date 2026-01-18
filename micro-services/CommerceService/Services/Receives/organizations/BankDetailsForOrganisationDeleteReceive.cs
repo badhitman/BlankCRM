@@ -20,7 +20,7 @@ public class BankDetailsForOrganizationDeleteReceive(ICommerceService commerceRe
     public async Task<TResponseModel<BankDetailsModelDB>?> ResponseHandleActionAsync(TAuthRequestStandardModel<int>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.SenderActionUserId, req.Payload);
         TResponseModel<BankDetailsModelDB> res = await commerceRepo.BankDetailsForOrganizationDeleteAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;

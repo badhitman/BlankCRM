@@ -21,7 +21,7 @@ public class DeleteValuesFieldsByGroupSessionDocumentDataByRowNumConstructorRece
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(ValueFieldSessionDocumentDataBaseModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, null, req);
         ResponseBaseModel res = await conService.DeleteValuesFieldsByGroupSessionDocumentDataByRowNumAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;

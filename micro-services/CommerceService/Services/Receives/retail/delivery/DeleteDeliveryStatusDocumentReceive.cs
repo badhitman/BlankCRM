@@ -20,7 +20,7 @@ public class DeleteDeliveryStatusDocumentReceive(IRetailService commRepo, ITrace
     public async Task<DeleteDeliveryStatusDocumentResponseModel?> ResponseHandleActionAsync(TAuthRequestStandardModel<int>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.SenderActionUserId, req.Payload);
         DeleteDeliveryStatusDocumentResponseModel res = await commRepo.DeleteDeliveryStatusDocumentAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;

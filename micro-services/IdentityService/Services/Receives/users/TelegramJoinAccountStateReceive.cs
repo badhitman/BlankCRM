@@ -24,7 +24,7 @@ public class TelegramJoinAccountStateReceive(IIdentityTools idRepo, ITracesIndex
     public async Task<TResponseModel<TelegramJoinAccountModelDb>?> ResponseHandleActionAsync(TelegramJoinAccountStateRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, null, req);
         TResponseModel<TelegramJoinAccountModelDb> res = await idRepo.TelegramJoinAccountStateAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;

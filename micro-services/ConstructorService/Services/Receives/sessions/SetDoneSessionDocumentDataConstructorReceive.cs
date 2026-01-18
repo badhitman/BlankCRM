@@ -20,7 +20,7 @@ public class SetDoneSessionDocumentDataConstructorReceive(IConstructorService co
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(string? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, null, req);
         ResponseBaseModel res = await conService.SetDoneSessionDocumentDataAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;

@@ -20,7 +20,7 @@ public class SetRoleForUserReceive(IIdentityTools identityRepo, ITracesIndexing 
     public async Task<TResponseModel<string[]>?> ResponseHandleActionAsync(TAuthRequestStandardModel<SetRoleForUserRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.SenderActionUserId, req.Payload);
         TResponseModel<string[]> res = await identityRepo.SetRoleForUserAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;

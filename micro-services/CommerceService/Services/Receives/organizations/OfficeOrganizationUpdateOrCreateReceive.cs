@@ -20,7 +20,7 @@ public class OfficeOrganizationUpdateOrCreateReceive(ICommerceService commerceRe
     public async Task<TResponseModel<int>?> ResponseHandleActionAsync(TAuthRequestStandardModel<AddressOrganizationBaseModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.SenderActionUserId, req.Payload);
         TResponseModel<int> res = await commerceRepo.OfficeOrganizationUpdateOrCreateAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;

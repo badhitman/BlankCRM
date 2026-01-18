@@ -20,7 +20,7 @@ public class IssueCreateOrUpdateReceive(IHelpDeskService hdRepo, ITracesIndexing
     public async Task<TResponseModel<int>?> ResponseHandleActionAsync(TAuthRequestStandardModel<UniversalUpdateRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req?.Payload);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.SenderActionUserId, req.Payload);
         TResponseModel<int> res = await hdRepo.IssueCreateOrUpdateAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;

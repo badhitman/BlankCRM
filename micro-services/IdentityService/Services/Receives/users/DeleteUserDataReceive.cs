@@ -22,7 +22,7 @@ public class DeleteUserDataReceive(IIdentityTools idRepo, ITracesIndexing indexi
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(DeleteUserDataRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, new { req.UserId });
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, null, new { req.UserId });
         ResponseBaseModel res = await idRepo.DeleteUserDataAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;

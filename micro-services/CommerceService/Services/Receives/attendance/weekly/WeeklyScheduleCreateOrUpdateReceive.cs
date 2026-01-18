@@ -20,7 +20,7 @@ public class WeeklyScheduleCreateOrUpdateReceive(ICommerceService commerceRepo, 
     public async Task<TResponseModel<int>?> ResponseHandleActionAsync(TAuthRequestStandardModel<WeeklyScheduleModelDB>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.SenderActionUserId, req.Payload);
         TResponseModel<int> res = await commerceRepo.WeeklyScheduleCreateOrUpdateAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;

@@ -20,7 +20,7 @@ public class CreatePaymentDocumentReceive(IRetailService commRepo, ITracesIndexi
     public async Task<TResponseModel<int>?> ResponseHandleActionAsync(TAuthRequestStandardModel<CreatePaymentRetailDocumentRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.SenderActionUserId, req.Payload);
         TResponseModel<int> res = await commRepo.CreatePaymentDocumentAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;

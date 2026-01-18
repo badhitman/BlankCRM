@@ -21,6 +21,11 @@ public class TraceReceiverRecord
     public DateTime UTCTimestampFinalReceive { get; set; }
 
     /// <summary>
+    /// AuthorIdentity
+    /// </summary>
+    public string? SenderActionUserId { get; set; }
+
+    /// <summary>
     /// Имя обработчика
     /// </summary>
     public required string ReceiverName { get; set; }
@@ -36,7 +41,7 @@ public class TraceReceiverRecord
     /// <summary>
     /// TraceReceiverRecord
     /// </summary>
-    public static TraceReceiverRecord Build(string _receiverName, object? _requestBody = null)
+    public static TraceReceiverRecord Build(string _receiverName, string? _authorId, object? _requestBody = null)
     {
         if (_receiverName.StartsWith(GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix))
             _receiverName = _receiverName[GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix.Length..];
@@ -46,6 +51,7 @@ public class TraceReceiverRecord
             UTCTimestampInitReceive = DateTime.UtcNow,
             RequestBody = _requestBody is null ? null : JObject.FromObject(_requestBody),
             ReceiverName = _receiverName,
+            SenderActionUserId = _authorId,
         };
     }
 

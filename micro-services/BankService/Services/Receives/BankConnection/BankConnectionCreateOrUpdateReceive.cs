@@ -20,7 +20,7 @@ public class BankConnectionCreateOrUpdateReceive(IBankService bankRepo, ITracesI
     public async Task<TResponseModel<int>?> ResponseHandleActionAsync(TAuthRequestStandardModel<BankConnectionModelDB>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.SenderActionUserId, req.Payload);
         TResponseModel<int> res = await bankRepo.BankConnectionCreateOrUpdateAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;

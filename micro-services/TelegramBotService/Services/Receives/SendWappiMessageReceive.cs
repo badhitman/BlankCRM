@@ -25,7 +25,7 @@ public class SendWappiMessageReceive(
     public async Task<TResponseModel<SendMessageResponseModel?>?> ResponseHandleActionAsync(EntryAltExtModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, null, req);
         TResponseModel<SendMessageResponseModel?> res = new();
 
         TResponseModel<string?> wappiToken = default!, wappiProfileId = default!;

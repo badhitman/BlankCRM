@@ -20,7 +20,7 @@ public class CreateRetailDocumentReceive(IRetailService commRepo, ITracesIndexin
     public async Task<TResponseModel<int>?> ResponseHandleActionAsync(TAuthRequestStandardModel<CreateDocumentRetailRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.SenderActionUserId, req.Payload);
         TResponseModel<int> res = await commRepo.CreateRetailDocumentAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;

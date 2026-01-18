@@ -20,7 +20,7 @@ public class CreateElementForDirectoryConstructorReceive(IConstructorService con
     public async Task<TResponseModel<int>?> ResponseHandleActionAsync(TAuthRequestStandardModel<OwnedNameModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req?.Payload);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.SenderActionUserId, req.Payload);
         TResponseModel<int> res = await conService.CreateElementForDirectoryAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;

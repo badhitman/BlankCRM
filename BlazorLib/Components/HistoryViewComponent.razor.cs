@@ -12,7 +12,7 @@ namespace BlazorLib.Components;
 /// <summary>
 /// HistoryViewComponent
 /// </summary>
-public partial class HistoryViewComponent
+public partial class HistoryViewComponent : BlazorBusyComponentUsersCachedModel
 {
     [Inject]
     ITracesIndexing IndexingRepo { get; set; } = default!;

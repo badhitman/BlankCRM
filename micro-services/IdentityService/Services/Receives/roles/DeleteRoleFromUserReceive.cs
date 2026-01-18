@@ -22,7 +22,7 @@ public class DeleteRoleFromUserReceive(IIdentityTools idRepo, ITracesIndexing in
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestStandardModel<RoleEmailModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.SenderActionUserId, req.Payload);
         ResponseBaseModel res = await idRepo.DeleteRoleFromUserAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
