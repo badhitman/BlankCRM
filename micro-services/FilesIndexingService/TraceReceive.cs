@@ -3,17 +3,15 @@
 ////////////////////////////////////////////////
 
 using MongoDB.Bson.Serialization.Attributes;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using SharedLib;
 using System.Runtime.Serialization;
+using SharedLib;
 
 namespace FilesIndexingService;
 
 /// <summary>
-/// TraceReceiverRecordBsonModel
+/// TraceReceive
 /// </summary>
-public class TraceReceiverRecordBsonModel : TraceReceiverRecord
+public class TraceReceive : TraceReceiverRecord
 {
     /// <summary>
     /// _id
@@ -22,7 +20,7 @@ public class TraceReceiverRecordBsonModel : TraceReceiverRecord
     public MongoDB.Bson.ObjectId _id { get; set; }
 
     /// <inheritdoc/>
-    public static TraceReceiverRecordBsonModel Build(TraceReceiverRecord sender)
+    public static TraceReceive Build(TraceReceiverRecord sender)
     {
         return new()
         {

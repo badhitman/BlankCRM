@@ -29,18 +29,18 @@ public class TracesImpl(IOptions<MongoConfigModel> mongoConf) : ITracesIndexing
             req.ResponseBody = MongoDB.Bson.Serialization.BsonSerializer.Deserialize<BsonDocument>(JsonConvert.SerializeObject(req.ResponseBody));
 
         IMongoDatabase mongoFs = new MongoClient(mongoConf.Value.ToString()).GetDatabase($"{mongoConf.Value.BusTracesSystemName}{GlobalStaticConstantsTransmission.GetModePrefix}");
-        IMongoCollection<TraceReceiverRecordBsonModel> traceReceiverRecords = mongoFs.GetCollection<TraceReceiverRecordBsonModel>(nameof(TraceReceiverRecordBsonModel));
+        IMongoCollection<TraceReceive> traceReceiverRecords = mongoFs.GetCollection<TraceReceive>(nameof(TraceReceive));
 
         CreateIndexOptions indexOptions = new();
-        IndexKeysDefinition<TraceReceiverRecordBsonModel> indexKeys = Builders<TraceReceiverRecordBsonModel>.IndexKeys.Ascending(x => x.ReceiverName);
-        CreateIndexModel<TraceReceiverRecordBsonModel> indexModel = new(indexKeys, indexOptions);
+        IndexKeysDefinition<TraceReceive> indexKeys = Builders<TraceReceive>.IndexKeys.Ascending(x => x.ReceiverName);
+        CreateIndexModel<TraceReceive> indexModel = new(indexKeys, indexOptions);
         await traceReceiverRecords.Indexes.CreateOneAsync(indexModel, cancellationToken: token);
 
-        indexKeys = Builders<TraceReceiverRecordBsonModel>.IndexKeys.Ascending(x => x.UTCTimestampInitReceive);
+        indexKeys = Builders<TraceReceive>.IndexKeys.Ascending(x => x.UTCTimestampInitReceive);
         indexModel = new(indexKeys, indexOptions);
         await traceReceiverRecords.Indexes.CreateOneAsync(indexModel, cancellationToken: token);
 
-        await traceReceiverRecords.InsertOneAsync(TraceReceiverRecordBsonModel.Build(req), cancellationToken: token);
+        await traceReceiverRecords.InsertOneAsync(TraceReceive.Build(req), cancellationToken: token);
         return ResponseBaseModel.CreateSuccess("Ok");
     }
 
@@ -48,15 +48,15 @@ public class TracesImpl(IOptions<MongoConfigModel> mongoConf) : ITracesIndexing
     public async Task<TPaginationResponseStandardModel<TraceReceiverRecord>> TracesSelectAsync(TPaginationRequestStandardModel<SelectTraceReceivesRequestModel> req, CancellationToken token = default)
     {
         IMongoDatabase mongoFs = new MongoClient(mongoConf.Value.ToString()).GetDatabase($"{mongoConf.Value.BusTracesSystemName}{GlobalStaticConstantsTransmission.GetModePrefix}");
-        IMongoCollection<TraceReceiverRecordBsonModel> traceReceiverRecords = mongoFs.GetCollection<TraceReceiverRecordBsonModel>(nameof(TraceReceiverRecordBsonModel));
+        IMongoCollection<TraceReceive> traceReceiverRecords = mongoFs.GetCollection<TraceReceive>(nameof(TraceReceive));
 
-        IMongoQueryable<TraceReceiverRecordBsonModel> query = traceReceiverRecords
+        IMongoQueryable<TraceReceive> query = traceReceiverRecords
             .AsQueryable()
             .Where(x => req.Payload == null || req.Payload.ReceiversNames == null || req.Payload.ReceiversNames.Contains(x.ReceiverName))
             ;
 
         Task<int> totalTask = query.CountAsync(cancellationToken: token);
-        Task<List<TraceReceiverRecordBsonModel>> itemsTask = query.Skip(req.PageNum * req.PageSize).Take(req.PageSize).ToListAsync(cancellationToken: token);
+        Task<List<TraceReceive>> itemsTask = query.Skip(req.PageNum * req.PageSize).Take(req.PageSize).ToListAsync(cancellationToken: token);
         await Task.WhenAll(totalTask, itemsTask);
 
         return new()
@@ -64,7 +64,7 @@ public class TracesImpl(IOptions<MongoConfigModel> mongoConf) : ITracesIndexing
             PageNum = req.PageNum,
             PageSize = req.PageSize,
             TotalRowsCount = totalTask.Result,
-            Response = [..itemsTask.Result.Select(x=> new TraceReceiverRecordBsonModel()
+            Response = [..itemsTask.Result.Select(x=> new TraceReceive()
             {
                 UTCTimestampFinalReceive = x.UTCTimestampFinalReceive,
                 UTCTimestampInitReceive = x.UTCTimestampInitReceive,
