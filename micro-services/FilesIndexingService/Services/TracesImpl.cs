@@ -40,6 +40,10 @@ public class TracesImpl(IOptions<MongoConfigModel> mongoConf) : ITracesIndexing
         indexModel = new(indexKeys, indexOptions);
         await traceReceiverRecords.Indexes.CreateOneAsync(indexModel, cancellationToken: token);
 
+        indexKeys = Builders<TraceReceive>.IndexKeys.Ascending(x => x.SenderActionUserId);
+        indexModel = new(indexKeys, indexOptions);
+        await traceReceiverRecords.Indexes.CreateOneAsync(indexModel, cancellationToken: token);
+
         await traceReceiverRecords.InsertOneAsync(TraceReceive.Build(req), cancellationToken: token);
         return ResponseBaseModel.CreateSuccess("Ok");
     }
