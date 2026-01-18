@@ -16,18 +16,10 @@
         <MudTd DataLabel="DateTime">@context.UTCTimestampInitReceive</MudTd>
         <MudTd DataLabel="Receiver">@context.ReceiverName</MudTd>
         <MudTd DataLabel="Request">
-            <pre>
-            <code class="language-json">
-                    @context.RequestBody
-                </code>
-            </pre>
+            <pre style="max-height: 250px;"><code class="language-json">@context.RequestBody</code></pre>
         </MudTd>
         <MudTd DataLabel="Response">
-            <pre>
-            <code class="language-json">
-                    @context.ResponseBody
-                </code>
-            </pre>
+            <pre style="max-height: 250px;"><code class="language-json">@context.ResponseBody</code></pre>
         </MudTd>
     </RowTemplate>
     <NoRecordsContent>
