@@ -123,7 +123,7 @@ public class TracesImpl(IOptions<MongoConfigModel> mongoConf) : ITracesIndexing
             filterBuilder.Eq($"{nameof(TraceReceiverRecord.RequestBody)}._v.{nameof(OrderStatusRetailDocumentModelDB.OrderDocumentId)}", req.Payload.FilterId))
             | filterBuilder.And(
                 filterBuilder.Eq(nameof(TraceReceiverRecord.ReceiverName), GlobalStaticConstantsTransmission.TransmissionQueues.DeleteOrderStatusDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()),
-                filterBuilder.Eq($"{nameof(TraceReceiverRecord.ResponseBody)}._v.{nameof(TResponseModel<>.Response)}.{nameof(TResponseModel<>.Response)}", req.Payload.FilterId))
+                filterBuilder.Eq($"{nameof(TraceReceiverRecord.ResponseBody)}._v.{nameof(TResponseModel<>.Response)}", req.Payload.FilterId))
             | filterBuilder.And(
                 filterBuilder.Eq(nameof(TraceReceiverRecord.ReceiverName), GlobalStaticConstantsTransmission.TransmissionQueues.UpdateRowDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()),
                 filterBuilder.Eq($"{nameof(TraceReceiverRecord.RequestBody)}._v.{nameof(RowOfRetailOrderDocumentModelDB.OrderId)}", req.Payload.FilterId));
