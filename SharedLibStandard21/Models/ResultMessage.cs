@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using Newtonsoft.Json.Converters;
 using System;
 
 namespace SharedLib;
@@ -14,6 +15,7 @@ public class ResultMessage : IEquatable<ResultMessage>
     /// <summary>
     /// Тип сообщения (ошибка, инфо и т.п.)
     /// </summary>
+    [Newtonsoft.Json.JsonConverter(typeof(StringEnumConverter))]
     public MessagesTypesEnum TypeMessage { get; set; }
 
     /// <summary>
