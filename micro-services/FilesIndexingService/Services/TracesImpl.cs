@@ -118,8 +118,6 @@ public class TracesImpl(IOptions<MongoConfigModel> mongoConf) : ITracesIndexing
         //filter = filterBuilder.And(filter, filterBuilder.Eq("ReceiverName", GlobalStaticConstantsTransmission.TransmissionQueues.UpdateOrderStatusDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()));
         //filter = filterBuilder.And(filter, filterBuilder.Eq("ReceiverName", GlobalStaticConstantsTransmission.TransmissionQueues.UpdateDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()));
 
-        //filter = filterBuilder.And(filter, filterBuilder.Eq("ReceiverName", GlobalStaticConstantsTransmission.TransmissionQueues.UpdateRowDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()));
-
         filter = filterBuilder.And(
             filterBuilder.Eq(nameof(TraceReceiverRecord.ReceiverName), GlobalStaticConstantsTransmission.TransmissionQueues.CreateOrderStatusDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()),
             filterBuilder.Eq($"{nameof(TraceReceiverRecord.RequestBody)}._v.{nameof(OrderStatusRetailDocumentModelDB.OrderDocumentId)}", req.Payload.FilterId))
