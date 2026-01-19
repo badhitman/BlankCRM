@@ -24,6 +24,7 @@ public class TraceReceive : TraceReceiverRecord
     {
         return new()
         {
+            SenderActionUserId = sender.SenderActionUserId,
             ReceiverName = sender.ReceiverName,
             RequestBody = sender.RequestBody,
             ResponseBody = sender.ResponseBody,
