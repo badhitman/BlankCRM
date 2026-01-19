@@ -59,6 +59,12 @@ public class TracesImpl(IOptions<MongoConfigModel> mongoConf) : ITracesIndexing
             .Where(x => req.Payload == null || req.Payload.ReceiversNames == null || req.Payload.ReceiversNames.Contains(x.ReceiverName))
             ;
 
+        if (req.Payload?.PeriodStart.HasValue == true)
+            query = query.Where(x => x.UTCTimestampInitReceive >= req.Payload.PeriodStart.Value.Date);
+
+        if (req.Payload?.PeriodEnd.HasValue == true)
+            query = query.Where(x => x.UTCTimestampInitReceive <= req.Payload.PeriodEnd.Value.Date.AddHours(23).AddMinutes(59).AddSeconds(59));
+
         Task<int> totalTask = query.CountAsync(cancellationToken: token);
         Task<List<TraceReceive>> itemsTask = query.Skip(req.PageNum * req.PageSize).Take(req.PageSize).ToListAsync(cancellationToken: token);
         await Task.WhenAll(totalTask, itemsTask);

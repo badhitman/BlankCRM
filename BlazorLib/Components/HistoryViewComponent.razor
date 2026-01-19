@@ -2,10 +2,18 @@
 
 @inherits BlazorBusyComponentUsersCachedModel
 
-<MudTable ServerData="ServerReload" Dense Hover>
-    @* <ToolBarContent>
-        <MudText Typo="Typo.h6">Periodic Elements</MudText>
-    </ToolBarContent> *@
+<MudTable ServerData="ServerReload" Dense Hover @ref="tableRef">
+    <ToolBarContent>
+        <MudSpacer />
+        <MudDateRangePicker PickerVariant="PickerVariant.Dialog"
+                            @bind-DateRange="@DateRangePeriod"
+                            PlaceholderStart="Start Date"
+                            PlaceholderEnd="End Date"
+                            Margin="Margin.Dense"
+                            Editable
+                            Label="Период"
+                            Clearable />
+    </ToolBarContent>
     <HeaderContent>
         <MudTh>DateTime</MudTh>
         <MudTh>Receiver</MudTh>
@@ -13,7 +21,10 @@
         <MudTh>Response</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="DateTime">@context.UTCTimestampInitReceive</MudTd>
+        <MudTd DataLabel="DateTime">
+            @context.UTCTimestampInitReceive
+            <sup title="время на выполнение операции">@(context.UTCTimestampFinalReceive - context.UTCTimestampInitReceive)</sup>
+        </MudTd>
         <MudTd DataLabel="Receiver">
             <div class="vstack">
                 <code>@context.ReceiverName</code>

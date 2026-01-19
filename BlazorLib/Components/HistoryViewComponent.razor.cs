@@ -23,6 +23,19 @@ public partial class HistoryViewComponent : BlazorBusyComponentUsersCachedModel
     [Inject]
     IJSRuntime JS { get; set; } = default!;
 
+    DateRange? _dateRangePeriod;
+    DateRange? DateRangePeriod
+    {
+        get => _dateRangePeriod;
+        set
+        {
+            _dateRangePeriod = value;
+            if (tableRef is not null)
+                InvokeAsync(tableRef.ReloadServerData);
+        }
+    }
+    MudTable<TraceReceiverRecord>? tableRef;
+
 
     /// <inheritdoc/>
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -40,7 +53,8 @@ public partial class HistoryViewComponent : BlazorBusyComponentUsersCachedModel
             SortingDirection = state.SortDirection.Convert(),
             Payload = new()
             {
-
+                PeriodStart = DateRangePeriod?.Start,
+                PeriodEnd = DateRangePeriod?.End,
             }
         };
         await SetBusyAsync(token: token);
