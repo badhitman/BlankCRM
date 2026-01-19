@@ -88,8 +88,11 @@
             ? (rubrics.Min(x => x.SortIndex), rubrics.Where(x => x.SortIndex != uint.MaxValue).Max(x => x.SortIndex))
             : (0, 0);
 
-        return [.. rubrics.Select(x => {
-                MoveRowStatesEnum mhp;
+        List<TreeItemData<UniversalBaseModel>> res = [];
+
+        foreach (UniversalBaseModel x in rubrics)
+        {            
+              MoveRowStatesEnum mhp;
             if(x.SortIndex == min && x.SortIndex == max)
                 mhp = MoveRowStatesEnum.Singleton;
             else if(x.SortIndex == min)
@@ -108,8 +111,11 @@
             if(SingleLevelMode)
                 _ri.Expandable = false;
 
-            return _ri;
-        })];
+            res.Add( _ri!);
+             
+        }
+
+        return res;
     }
 
     void ItemUpdAction(UniversalBaseModel sender)
