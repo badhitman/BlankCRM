@@ -74,6 +74,7 @@ public class TracesImpl(IOptions<MongoConfigModel> mongoConf) : ITracesIndexing
                 UTCTimestampInitReceive = x.UTCTimestampInitReceive,
 
                 ReceiverName = x.ReceiverName,
+                SenderActionUserId = x.SenderActionUserId,
 
                 RequestBody = JObject.Parse(x.RequestBody.ToBsonDocument().ToJson()),
                 ResponseBody = JObject.Parse(x.ResponseBody.ToBsonDocument().ToJson()),
