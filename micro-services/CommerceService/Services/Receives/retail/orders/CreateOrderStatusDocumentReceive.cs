@@ -19,7 +19,11 @@ public class CreateOrderStatusDocumentReceive(IRetailService commRepo, ITracesIn
     /// <inheritdoc/>
     public async Task<DocumentNewVersionResponseModel?> ResponseHandleActionAsync(TAuthRequestStandardModel<OrderStatusRetailDocumentModelDB>? req, CancellationToken token = default)
     {
-        ArgumentNullException.ThrowIfNull(req);
+        ArgumentNullException.ThrowIfNull(req?.Payload);
+        
+        if (req.Payload.OrderDocument?.Rows is not null)
+            req.Payload.OrderDocument.Rows = null;
+        
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.SenderActionUserId, req.Payload);
         DocumentNewVersionResponseModel res = await commRepo.CreateOrderStatusDocumentAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);

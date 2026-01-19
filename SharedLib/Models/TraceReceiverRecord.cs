@@ -44,14 +44,11 @@ public class TraceReceiverRecord
     /// </summary>
     public static TraceReceiverRecord Build<T>(string _receiverName, string? _authorId, T? _requestBody = null) where T : class
     {
-        if (_receiverName.StartsWith(GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix))
-            _receiverName = _receiverName[GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix.Length..];
-
         return new()
         {
             UTCTimestampInitReceive = DateTime.UtcNow,
             RequestBody = _requestBody is null ? null : JObject.FromObject(_requestBody),
-            ReceiverName = _receiverName,
+            ReceiverName = _receiverName.WithoutTransmissionQueueNamePrefix(),
             SenderActionUserId = _authorId,
         };
     }

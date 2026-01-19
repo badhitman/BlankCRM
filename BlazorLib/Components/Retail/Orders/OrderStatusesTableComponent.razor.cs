@@ -57,7 +57,7 @@ public partial class OrderStatusesTableComponent : BlazorBusyComponentBaseAuthMo
 
         await SetBusyAsync();
 
-        TResponseModel<Guid?> res = await RetailRepo.DeleteOrderStatusDocumentAsync(new()
+        TResponseModel<DocumentNewVersionResponseModel?> res = await RetailRepo.DeleteOrderStatusDocumentAsync(new()
         {
             SenderActionUserId = CurrentUserSession.UserId,
             Payload = new()
@@ -67,8 +67,8 @@ public partial class OrderStatusesTableComponent : BlazorBusyComponentBaseAuthMo
         });
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         initDeleteRowStatusId = null;
-        if (res.Response.HasValue)
-            Document.Version = res.Response.Value;
+        if (res.Response?.DocumentNewVersion is not null)
+            Document.Version = res.Response.DocumentNewVersion;
 
         if (tableRef is not null)
             await tableRef.ReloadServerData();

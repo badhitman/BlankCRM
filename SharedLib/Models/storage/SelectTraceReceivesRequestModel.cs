@@ -2,8 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using System.ComponentModel.DataAnnotations;
-
 namespace SharedLib;
 
 /// <summary>

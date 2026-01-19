@@ -247,7 +247,7 @@ public partial class RetailService : IRetailService
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<Guid?>> DeleteOrderStatusDocumentAsync(TAuthRequestStandardModel<DeleteOrderStatusDocumentRequestModel> req, CancellationToken token = default)
+    public async Task<TResponseModel<DocumentNewVersionResponseModel?>> DeleteOrderStatusDocumentAsync(TAuthRequestStandardModel<DeleteOrderStatusDocumentRequestModel> req, CancellationToken token = default)
     {
         if (req.Payload is null)
             return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "req.Payload is null" }] };
@@ -263,9 +263,13 @@ public partial class RetailService : IRetailService
                 .Select(x => x.OrderDocument!)
                 .FirstAsync(cancellationToken: token);
 
-        TResponseModel<Guid?> res = new()
+        TResponseModel<DocumentNewVersionResponseModel?> res = new()
         {
-            Response = Guid.NewGuid(),
+            Response = new()
+            {
+                DocumentNewVersion = Guid.NewGuid(),
+                Response = orderDb.Id,
+            },
         };
 
         StatusesDocumentsEnum? _oldStatus = orderDb.StatusDocument;
@@ -278,7 +282,7 @@ public partial class RetailService : IRetailService
         await context.OrdersRetail
             .Where(x => x.Id == orderDb.Id)
             .ExecuteUpdateAsync(set => set
-                .SetProperty(p => p.Version, res.Response)
+                .SetProperty(p => p.Version, res.Response.DocumentNewVersion)
                 .SetProperty(p => p.StatusDocument, context.OrdersStatusesRetails.Where(y => y.OrderDocumentId == orderDb.Id).OrderByDescending(z => z.DateOperation).ThenByDescending(os => os.Id).Select(s => s.StatusDocument).FirstOrDefault()), cancellationToken: token);
 
         StatusesDocumentsEnum _newStatus = await context.OrdersStatusesRetails

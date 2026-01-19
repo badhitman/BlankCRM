@@ -37,6 +37,14 @@ public static partial class GlobalStaticConstantsTransmission
     /// </summary>
     public static string TransmissionQueueNamePrefixMQTT { get; set; } = "MQTT.Receives";
 
+    /// <inheritdoc/>
+    public static string WithoutTransmissionQueueNamePrefix(this string _receiverPrefixName)
+    {
+        if (_receiverPrefixName.StartsWith(GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix))
+            _receiverPrefixName = _receiverPrefixName[GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix.Length..];
+        return _receiverPrefixName;
+    }
+
     /// <summary>
     /// Transmission MQ queues
     /// </summary>
@@ -1119,6 +1127,9 @@ public static partial class GlobalStaticConstantsTransmission
 
         /// <inheritdoc/>
         public readonly static string TracesSelectReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.INDEXING_CONTROLLER_NAME, Routes.TRACES_CONTROLLER_NAME, Routes.SELECT_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string TracesSelectForOrdersRetailReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.INDEXING_CONTROLLER_NAME}-{Routes.RETAIL_CONTROLLER_NAME}", Routes.ORDER_CONTROLLER_NAME, Routes.TRACES_CONTROLLER_NAME);
 
         /// <inheritdoc/>
         public readonly static string WordprocessingDocumentGetIndexFileReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.INDEXING_CONTROLLER_NAME, Routes.FILE_CONTROLLER_NAME, $"{Routes.WORDPROCESSING_CONTROLLER_NAME}-{Routes.DOCUMENT_CONTROLLER_NAME}", Routes.GET_ACTION_NAME);

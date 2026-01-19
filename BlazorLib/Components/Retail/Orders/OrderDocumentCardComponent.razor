@@ -112,6 +112,16 @@ else
                                                Title="Вложения"
                                                ManageMode />
                 </MudTabPanel>
+                @if (OrderId > 0)
+                {
+                    <AuthorizeView Context="col" Roles="@($"{GlobalStaticConstantsRoles.Roles.Admin}")">
+                        <Authorized>
+                            <MudTabPanel Text="История" Icon="@Icons.Material.Filled.BugReport">
+                                <HistoryOrdersWrapperComponent OrderId="OrderId" />
+                            </MudTabPanel>
+                        </Authorized>
+                    </AuthorizeView>
+                }
             </MudTabs>
 
             <p class="card-text">
