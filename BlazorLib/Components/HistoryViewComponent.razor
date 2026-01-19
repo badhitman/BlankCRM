@@ -1,8 +1,8 @@
 ﻿@using MudBlazor
 
-@inherits BlazorBusyComponentUsersCachedModel
+@inherits HistoryViewBaseComponent
 
-<MudTable ServerData="ServerReload" Dense Hover @ref="tableRef">
+<MudTable ServerData="ServerReload" Dense Hover Loading="IsBusyProgress" @ref="tableRef">
     <ToolBarContent>
         <MudSpacer />
         <MudDateRangePicker PickerVariant="PickerVariant.Dialog"
@@ -10,9 +10,9 @@
                             PlaceholderStart="Start Date"
                             PlaceholderEnd="End Date"
                             Margin="Margin.Dense"
-                            Editable
                             Label="Период"
-                            Clearable />
+                            Clearable
+                            Editable />
     </ToolBarContent>
     <HeaderContent>
         <MudTh>DateTime</MudTh>
@@ -28,7 +28,7 @@
         <MudTd DataLabel="Receiver">
             <div class="vstack">
                 <code>@context.ReceiverName</code>
-                <span>@((this.UsersCache.FirstOrDefault(x => x.UserId == context.SenderActionUserId)?.ToString() ?? context.SenderActionUserId))</span>
+                <span>@((OwnerBase.UsersCache.FirstOrDefault(x => x.UserId == context.SenderActionUserId)?.ToString() ?? context.SenderActionUserId))</span>
             </div>
         </MudTd>
         <MudTd DataLabel="Request">

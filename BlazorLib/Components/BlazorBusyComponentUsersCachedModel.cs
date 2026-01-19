@@ -15,15 +15,15 @@ public abstract class BlazorBusyComponentUsersCachedModel : BlazorBusyComponentB
     /// <summary>
     /// UsersCache
     /// </summary>
-    protected List<UserInfoModel> UsersCache = [];
+    protected internal List<UserInfoModel> UsersCache = [];
 
 
     /// <summary>
     /// CacheUsersUpdate
     /// </summary>
-    protected async Task CacheUsersUpdate(string[] usersIds)
+    protected internal async Task CacheUsersUpdate(string[] usersIds)
     {
-        usersIds = [..usersIds.Where(x => !string.IsNullOrWhiteSpace(x) && !UsersCache.Any(y => y.UserId == x)).Distinct()];
+        usersIds = [.. usersIds.Where(x => !string.IsNullOrWhiteSpace(x) && !UsersCache.Any(y => y.UserId == x)).Distinct()];
         if (usersIds.Length == 0)
             return;
 

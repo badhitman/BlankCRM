@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace SharedLib;
@@ -10,7 +9,7 @@ namespace SharedLib;
 /// <summary>
 /// SelectTraceReceivesRequestModel
 /// </summary>
-public class SelectTraceReceivesRequestModel
+public class SelectTraceReceivesRequestModel : PeriodBaseModel
 {
     /// <inheritdoc/>
     public string[]? ReceiversNames { get; set; }
@@ -18,12 +17,5 @@ public class SelectTraceReceivesRequestModel
     /// <summary>
     /// IdentityUserId
     /// </summary>
-    [Required]
     public string[]? IdentityUsersIds { get; set; }
-
-    /// <inheritdoc/>
-    public DateTime? PeriodStart { get; set; }
-
-    /// <inheritdoc/>
-    public DateTime? PeriodEnd { get; set; }
 }
