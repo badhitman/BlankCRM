@@ -11,13 +11,13 @@ namespace Transmission.Receives.commerce;
 /// DeleteRowOfDeliveryDocument
 /// </summary>
 public class DeleteRowOfDeliveryDocumentReceive(IRetailService commRepo, ITracesIndexing indexingRepo)
-    : IResponseReceive<TAuthRequestStandardModel<int>?, TResponseModel<Guid?>?>
+    : IResponseReceive<TAuthRequestStandardModel<DeleteRowOfDeliveryDocumentRequestModel>?, TResponseModel<Guid?>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.DeleteRowOfDeliveryDocumentRetailReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<Guid?>?> ResponseHandleActionAsync(TAuthRequestStandardModel<int>? req, CancellationToken token = default)
+    public async Task<TResponseModel<Guid?>?> ResponseHandleActionAsync(TAuthRequestStandardModel<DeleteRowOfDeliveryDocumentRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.SenderActionUserId, req.Payload);

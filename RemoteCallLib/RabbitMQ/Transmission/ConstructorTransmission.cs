@@ -97,7 +97,7 @@ public class ConstructorTransmission(IRabbitClient rabbitClient) : IConstructorT
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(GlobalStaticConstantsTransmission.TransmissionQueues.UpdateOrCreateDirectoryConstructorReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DeleteDirectoryAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> DeleteDirectoryAsync(TAuthRequestStandardModel<DeleteDirectoryRequestModel> req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.DeleteDirectoryConstructorReceive, req, token: token) ?? new();
     #endregion
     #region elements of directories
@@ -118,7 +118,7 @@ public class ConstructorTransmission(IRabbitClient rabbitClient) : IConstructorT
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<EntryDescriptionModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.GetElementOfDirectoryConstructorReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DeleteElementFromDirectoryAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> DeleteElementFromDirectoryAsync(TAuthRequestStandardModel<DeleteElementFromDirectoryRequestModel> req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.DeleteElementFromDirectoryConstructorReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
@@ -148,7 +148,7 @@ public class ConstructorTransmission(IRabbitClient rabbitClient) : IConstructorT
      => await rabbitClient.MqRemoteCallAsync<TResponseModel<FormConstructorModelDB>>(GlobalStaticConstantsTransmission.TransmissionQueues.FormUpdateOrCreateConstructorReceive, req, token: cancellationToken) ?? new();
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> FormDeleteAsync(TAuthRequestStandardModel<int> req, CancellationToken cancellationToken = default)
+    public async Task<ResponseBaseModel> FormDeleteAsync(TAuthRequestStandardModel<FormDeleteRequestModel> req, CancellationToken cancellationToken = default)
      => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.FormDeleteConstructorReceive, req, token: cancellationToken) ?? new();
     #endregion
     #region fiealds
@@ -165,7 +165,7 @@ public class ConstructorTransmission(IRabbitClient rabbitClient) : IConstructorT
      => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.FormFieldUpdateOrCreateConstructorReceive, req, token: cancellationToken) ?? new();
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> FormFieldDeleteAsync(TAuthRequestStandardModel<int> req, CancellationToken cancellationToken = default)
+    public async Task<ResponseBaseModel> FormFieldDeleteAsync(TAuthRequestStandardModel<FormFieldDeleteRequestModel> req, CancellationToken cancellationToken = default)
      => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.FormFieldDeleteConstructorReceive, req, token: cancellationToken) ?? new();
 
     /// <inheritdoc/>
@@ -173,7 +173,7 @@ public class ConstructorTransmission(IRabbitClient rabbitClient) : IConstructorT
      => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.FormFieldDirectoryUpdateOrCreateConstructorReceive, req, token: cancellationToken) ?? new();
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> FormFieldDirectoryDeleteAsync(TAuthRequestStandardModel<int> req, CancellationToken cancellationToken = default)
+    public async Task<ResponseBaseModel> FormFieldDirectoryDeleteAsync(TAuthRequestStandardModel<FormFieldDirectoryDeleteRequestModel> req, CancellationToken cancellationToken = default)
      => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.FormFieldDirectoryDeleteConstructorReceive, req, token: cancellationToken) ?? new();
     #endregion
 
@@ -191,7 +191,7 @@ public class ConstructorTransmission(IRabbitClient rabbitClient) : IConstructorT
      => await rabbitClient.MqRemoteCallAsync<TResponseModel<DocumentSchemeConstructorModelDB>>(GlobalStaticConstantsTransmission.TransmissionQueues.GetDocumentSchemeConstructorReceive, req, token: cancellationToken) ?? new();
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DeleteDocumentSchemeAsync(TAuthRequestStandardModel<int> req, CancellationToken cancellationToken = default)
+    public async Task<ResponseBaseModel> DeleteDocumentSchemeAsync(TAuthRequestStandardModel<DeleteDocumentSchemeRequestModel> req, CancellationToken cancellationToken = default)
      => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.DeleteDocumentSchemeConstructorReceive, req, token: cancellationToken) ?? new();
     #endregion
     #region табы документов
@@ -208,7 +208,7 @@ public class ConstructorTransmission(IRabbitClient rabbitClient) : IConstructorT
      => await rabbitClient.MqRemoteCallAsync<TResponseModel<TabOfDocumentSchemeConstructorModelDB>>(GlobalStaticConstantsTransmission.TransmissionQueues.GetTabOfDocumentSchemeConstructorReceive, req, token: cancellationToken) ?? new();
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DeleteTabOfDocumentSchemeAsync(TAuthRequestStandardModel<int> req, CancellationToken cancellationToken = default)
+    public async Task<ResponseBaseModel> DeleteTabOfDocumentSchemeAsync(TAuthRequestStandardModel<DeleteTabOfDocumentSchemeRequestModel> req, CancellationToken cancellationToken = default)
      => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.DeleteTabOfDocumentSchemeConstructorReceive, req, token: cancellationToken) ?? new();
 
     /// <inheritdoc/>
@@ -224,7 +224,7 @@ public class ConstructorTransmission(IRabbitClient rabbitClient) : IConstructorT
      => await rabbitClient.MqRemoteCallAsync<TResponseModel<TabOfDocumentSchemeConstructorModelDB>>(GlobalStaticConstantsTransmission.TransmissionQueues.MoveTabDocumentSchemeJoinFormConstructorReceive, req, token: cancellationToken) ?? new();
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DeleteTabDocumentSchemeJoinFormAsync(TAuthRequestStandardModel<int> req, CancellationToken cancellationToken = default)
+    public async Task<ResponseBaseModel> DeleteTabDocumentSchemeJoinFormAsync(TAuthRequestStandardModel<DeleteTabDocumentSchemeJoinFormRequestModel> req, CancellationToken cancellationToken = default)
      => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.DeleteTabDocumentSchemeJoinFormConstructorReceive, req, token: cancellationToken) ?? new();
     #endregion
 
@@ -258,7 +258,7 @@ public class ConstructorTransmission(IRabbitClient rabbitClient) : IConstructorT
      => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.ClearValuesForFieldNameConstructorReceive, req, token: cancellationToken) ?? new();
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DeleteSessionDocumentAsync(int req, CancellationToken cancellationToken = default)
+    public async Task<ResponseBaseModel> DeleteSessionDocumentAsync(DeleteSessionDocumentRequestModel req, CancellationToken cancellationToken = default)
      => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.DeleteSessionDocumentConstructorReceive, req, token: cancellationToken) ?? new();
     #endregion
 }

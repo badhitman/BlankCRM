@@ -183,7 +183,7 @@ public partial class TabOfDocumentEditViewComponent : BlazorBusyComponentBaseAut
         }
         await SetBusyAsync();
 
-        ResponseBaseModel rest = await ConstructorRepo.DeleteTabOfDocumentSchemeAsync(new() { Payload = DocumentPage.Id, SenderActionUserId = CurrentUserSession.UserId });
+        ResponseBaseModel rest = await ConstructorRepo.DeleteTabOfDocumentSchemeAsync(new() { Payload = new() { DeleteTabOfDocumentSchemeId = DocumentPage.Id }, SenderActionUserId = CurrentUserSession.UserId });
         
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())

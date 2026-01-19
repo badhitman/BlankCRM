@@ -114,7 +114,7 @@ public partial class DirectoryNavComponent : BlazorBusyComponentBaseAuthModel
 
         await SetBusyAsync();
 
-        ResponseBaseModel rest = await ConstructorRepo.DeleteDirectoryAsync(new() { Payload = SelectedDirectoryId, SenderActionUserId = CurrentUserSession.UserId });
+        ResponseBaseModel rest = await ConstructorRepo.DeleteDirectoryAsync(new() { Payload = new() { DeleteDirectoryId = SelectedDirectoryId }, SenderActionUserId = CurrentUserSession.UserId });
         await SetBusyAsync(false);
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
 

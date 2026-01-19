@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace SharedLib;
@@ -39,9 +40,9 @@ public class TraceReceiverRecord
     public object? ResponseBody { get; set; }
 
     /// <summary>
-    /// TraceReceiverRecord
+    /// TraceReceiverRecord 
     /// </summary>
-    public static TraceReceiverRecord Build(string _receiverName, string? _authorId, object? _requestBody = null)
+    public static TraceReceiverRecord Build<T>(string _receiverName, string? _authorId, T? _requestBody = null) where T : class
     {
         if (_receiverName.StartsWith(GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix))
             _receiverName = _receiverName[GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix.Length..];

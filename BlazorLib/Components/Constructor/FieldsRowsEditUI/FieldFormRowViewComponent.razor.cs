@@ -448,9 +448,9 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
         await SetBusyAsync();
         ResponseBaseModel rest;
         if (_field_master is FieldFormConstructorModelDB sf)
-            rest = await ConstructorRepo.FormFieldDeleteAsync(new() { Payload = sf.Id, SenderActionUserId = CurrentUserSession.UserId });
+            rest = await ConstructorRepo.FormFieldDeleteAsync(new() { Payload = new() { FormFieldDeleteId = sf.Id }, SenderActionUserId = CurrentUserSession.UserId });
         else if (_field_master is FieldFormAkaDirectoryConstructorModelDB df)
-            rest = await ConstructorRepo.FormFieldDirectoryDeleteAsync(new() { Payload = df.Id, SenderActionUserId = CurrentUserSession.UserId });
+            rest = await ConstructorRepo.FormFieldDirectoryDeleteAsync(new() { Payload = new() { FormFieldDirectoryDeleteId = df.Id }, SenderActionUserId = CurrentUserSession.UserId });
         else
         {
             SnackBarRepo.Error($"{_field_master.GetType().FullName}. ошибка 1BCDEFB4-55F5-4A5A-BA61-3EAD2E9063D2");

@@ -84,10 +84,16 @@ public partial class CommerceImplementService : ICommerceService
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<OfficeOrganizationModelDB>> OfficeOrganizationDeleteAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default)
+    public async Task<TResponseModel<OfficeOrganizationModelDB>> OfficeOrganizationDeleteAsync(TAuthRequestStandardModel<OfficeOrganizationDeleteRequestModel> req, CancellationToken token = default)
     {
         TResponseModel<OfficeOrganizationModelDB> res = new();
-        int addressOfficeId = req.Payload;
+        if (req.Payload is null)
+        {
+            res.AddError("req.Payload is null");
+            return res;
+        }
+
+        int addressOfficeId = req.Payload.OfficeOrganizationDeleteId;
         if (addressOfficeId <= 0)
         {
             res.AddError("addressOfficeId <= 0");
@@ -582,10 +588,13 @@ public partial class CommerceImplementService : ICommerceService
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<BankDetailsModelDB>> BankDetailsForOrganizationDeleteAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default)
+    public async Task<TResponseModel<BankDetailsModelDB>> BankDetailsForOrganizationDeleteAsync(TAuthRequestStandardModel<BankDetailsForOrganizationDeleteRequestModel> req, CancellationToken token = default)
     {
         if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
             return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "string.IsNullOrWhiteSpace(req.SenderActionUserId)" }] };
+
+        if (req.Payload is null)
+            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "req.Payload is null" }] };
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         TResponseModel<BankDetailsModelDB> res = new();
@@ -601,7 +610,7 @@ public partial class CommerceImplementService : ICommerceService
             {
                 res.Response = await context.BanksDetails
                 .Include(x => x.Organization)
-                .FirstAsync(x => x.Id == req.Payload );
+                .FirstAsync(x => x.Id == req.Payload.BankDetailsForOrganizationId );
 
             }, token)
         ]);
@@ -613,11 +622,11 @@ public partial class CommerceImplementService : ICommerceService
         }
 
         await context.Organizations
-            .Where(x => x.BankMainAccount == req.Payload)
+            .Where(x => x.BankMainAccount == req.Payload.BankDetailsForOrganizationId)
             .ExecuteUpdateAsync(set => set
                 .SetProperty(p => p.BankMainAccount, 0), cancellationToken: token);
 
-        res.AddInfo($"Удалено: {await context.BanksDetails.Where(x => x.Id == req.Payload).ExecuteDeleteAsync(cancellationToken: token)}");
+        res.AddInfo($"Удалено: {await context.BanksDetails.Where(x => x.Id == req.Payload.BankDetailsForOrganizationId).ExecuteDeleteAsync(cancellationToken: token)}");
 
         return res;
     }

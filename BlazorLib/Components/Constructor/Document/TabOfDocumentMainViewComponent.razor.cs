@@ -67,8 +67,15 @@ public partial class TabOfDocumentMainViewComponent : BlazorBusyComponentBaseAut
             throw new Exception("CurrentUserSession is null");
 
         await SetBusyAsync();
-        ResponseBaseModel rest = await ConstructorRepo.DeleteTabDocumentSchemeJoinFormAsync(new() { Payload = PageJoinForm.Id, SenderActionUserId = CurrentUserSession.UserId });
-        
+        ResponseBaseModel rest = await ConstructorRepo.DeleteTabDocumentSchemeJoinFormAsync(new()
+        {
+            Payload = new()
+            {
+                DeleteTabDocumentSchemeJoinFormId = PageJoinForm.Id
+            },
+            SenderActionUserId = CurrentUserSession.UserId
+        });
+
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
@@ -127,7 +134,7 @@ public partial class TabOfDocumentMainViewComponent : BlazorBusyComponentBaseAut
 
         await SetBusyAsync();
         TResponseModel<TabOfDocumentSchemeConstructorModelDB> rest = await ConstructorRepo.MoveTabDocumentSchemeJoinFormAsync(new() { Payload = new() { Id = PageJoinForm.Id, Direct = direct }, SenderActionUserId = CurrentUserSession.UserId });
-       
+
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
@@ -161,7 +168,7 @@ public partial class TabOfDocumentMainViewComponent : BlazorBusyComponentBaseAut
         await SetBusyAsync();
 
         ResponseBaseModel rest = await ConstructorRepo.CreateOrUpdateTabDocumentSchemeJoinFormAsync(new() { Payload = req, SenderActionUserId = CurrentUserSession.UserId });
-        
+
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
@@ -202,7 +209,7 @@ public partial class TabOfDocumentMainViewComponent : BlazorBusyComponentBaseAut
             LoggerRepo.LogWarning("Дозагрузка [Form] для [PageJoinForm]...");
             await SetBusyAsync();
             TResponseModel<FormConstructorModelDB> rest = await ConstructorRepo.GetFormAsync(PageJoinForm.FormId);
-            
+
             SnackBarRepo.ShowMessagesResponse(rest.Messages);
             PageJoinForm.Form = rest.Response;
             await SetBusyAsync(false);

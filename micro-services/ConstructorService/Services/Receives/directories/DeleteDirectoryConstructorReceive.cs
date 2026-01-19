@@ -11,13 +11,13 @@ namespace Transmission.Receives.constructor;
 /// DeleteDirectoryReceive
 /// </summary>
 public class DeleteDirectoryConstructorReceive(IConstructorService conService, ITracesIndexing indexingRepo)
-    : IResponseReceive<TAuthRequestStandardModel<int>?, ResponseBaseModel?>
+    : IResponseReceive<TAuthRequestStandardModel<DeleteDirectoryRequestModel>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.DeleteDirectoryConstructorReceive;
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestStandardModel<int>? req, CancellationToken token = default)
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestStandardModel<DeleteDirectoryRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.SenderActionUserId, req.Payload);

@@ -62,7 +62,7 @@ public class RetailTransmission(IRabbitClient rabbitClient) : IRetailService
         => await rabbitClient.MqRemoteCallAsync<TPaginationResponseStandardModel<OrderStatusRetailDocumentModelDB>>(TransmissionQueues.SelectOrderDocumentStatusesRetailReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<Guid?>> DeleteOrderStatusDocumentAsync(TAuthRequestStandardModel<int> statusId, CancellationToken token = default)
+    public async Task<TResponseModel<Guid?>> DeleteOrderStatusDocumentAsync(TAuthRequestStandardModel<DeleteOrderStatusDocumentRequestModel> statusId, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<Guid?>>(TransmissionQueues.DeleteOrderStatusDocumentRetailReceive, statusId, token: token) ?? new();
     #endregion
 
@@ -101,7 +101,7 @@ public class RetailTransmission(IRabbitClient rabbitClient) : IRetailService
         => await rabbitClient.MqRemoteCallAsync<TPaginationResponseStandardModel<RowOfDeliveryRetailDocumentModelDB>>(TransmissionQueues.SelectRowsOfDeliveryDocumentsRetailReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<Guid?>> DeleteRowOfDeliveryDocumentAsync(TAuthRequestStandardModel<int> rowId, CancellationToken token = default)
+    public async Task<TResponseModel<Guid?>> DeleteRowOfDeliveryDocumentAsync(TAuthRequestStandardModel<DeleteRowOfDeliveryDocumentRequestModel> rowId, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<Guid?>>(TransmissionQueues.DeleteRowOfDeliveryDocumentRetailReceive, rowId, token: token) ?? new();
     #endregion
 
@@ -119,7 +119,7 @@ public class RetailTransmission(IRabbitClient rabbitClient) : IRetailService
         => await rabbitClient.MqRemoteCallAsync<TPaginationResponseStandardModel<DeliveryStatusRetailDocumentModelDB>>(TransmissionQueues.SelectDeliveryStatusesDocumentsRetailReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<DeleteDeliveryStatusDocumentResponseModel> DeleteDeliveryStatusDocumentAsync(TAuthRequestStandardModel<int> statusId, CancellationToken token = default)
+    public async Task<DeleteDeliveryStatusDocumentResponseModel> DeleteDeliveryStatusDocumentAsync(TAuthRequestStandardModel<DeleteDeliveryStatusDocumentRequestModel> statusId, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<DeleteDeliveryStatusDocumentResponseModel>(TransmissionQueues.DeleteDeliveryStatusDocumentRetailReceive, statusId, token: token) ?? new();
     #endregion
 
@@ -247,7 +247,7 @@ public class RetailTransmission(IRabbitClient rabbitClient) : IRetailService
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<WalletConversionRetailDocumentModelDB[]>>(TransmissionQueues.GetConversionsDocumentsRetailReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<Guid?>> DeleteToggleConversionRetailAsync(TAuthRequestStandardModel<int> conversionId, CancellationToken token = default)
+    public async Task<TResponseModel<Guid?>> DeleteToggleConversionRetailAsync(TAuthRequestStandardModel<DeleteToggleConversionRequestModel> conversionId, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<Guid?>>(TransmissionQueues.DeleteToggleConversionRetailReceive, conversionId, token: token) ?? new();
     #endregion
 

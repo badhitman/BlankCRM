@@ -311,9 +311,12 @@ public partial class RetailService : IRetailService
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<Guid?>> DeleteRowOfDeliveryDocumentAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default)
+    public async Task<TResponseModel<Guid?>> DeleteRowOfDeliveryDocumentAsync(TAuthRequestStandardModel<DeleteRowOfDeliveryDocumentRequestModel> req, CancellationToken token = default)
     {
-        int rowId = req.Payload;
+        if (req.Payload is null)
+            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "req.Payload is null" }] };
+
+        int rowId = req.Payload.DeleteRowOfDeliveryDocumentId;
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         RowOfDeliveryRetailDocumentModelDB rowDb = await context.RowsDeliveryDocumentsRetail.Include(x => x.Document).FirstAsync(x => x.Id == rowId, cancellationToken: token);
         TResponseModel<Guid?> res = new()

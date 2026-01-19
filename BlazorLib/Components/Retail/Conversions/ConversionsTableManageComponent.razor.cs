@@ -80,7 +80,7 @@ public partial class ConversionsTableManageComponent : BlazorBusyComponentUsersC
         await SetBusyAsync();
         TResponseModel<Guid?> res = await RetailRepo.DeleteToggleConversionRetailAsync(new()
         {
-            Payload = conversionId,
+            Payload = new() { DeleteToggleConversionId = conversionId },
             SenderActionUserId = CurrentUserSession.UserId
         });
 

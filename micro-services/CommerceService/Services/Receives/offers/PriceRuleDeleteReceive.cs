@@ -11,13 +11,13 @@ namespace Transmission.Receives.commerce;
 /// PriceRuleDeleteReceive
 /// </summary>
 public class PriceRuleDeleteReceive(ICommerceService commerceRepo, ITracesIndexing indexingRepo)
-    : IResponseReceive<TAuthRequestStandardModel<int>?, TResponseModel<PriceRuleForOfferModelDB>?>
+    : IResponseReceive<TAuthRequestStandardModel<PriceRuleDeleteRequestModel>?, TResponseModel<PriceRuleForOfferModelDB>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.PriceRuleDeleteCommerceReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<PriceRuleForOfferModelDB>?> ResponseHandleActionAsync(TAuthRequestStandardModel<int>? req, CancellationToken token = default)
+    public async Task<TResponseModel<PriceRuleForOfferModelDB>?> ResponseHandleActionAsync(TAuthRequestStandardModel<PriceRuleDeleteRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.SenderActionUserId, req.Payload);

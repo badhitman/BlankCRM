@@ -56,7 +56,7 @@ public partial class DeliveryStatusesTableComponent : BlazorBusyComponentBaseAut
 
         DeleteDeliveryStatusDocumentResponseModel res = await RetailRepo.DeleteDeliveryStatusDocumentAsync(new()
         {
-            Payload = initDeleteRowStatusId.Value,
+            Payload = new() { DeleteDeliveryStatusDocumentId = initDeleteRowStatusId.Value },
             SenderActionUserId = CurrentUserSession.UserId
         });
 

@@ -309,7 +309,14 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
         else
         {
             RowOfDeliveryRetailDocumentModelDB rowOfDocument = Document.Rows!.First(x => x.OfferId == offerId);
-            TResponseModel<Guid?> res = await RetailRepo.DeleteRowOfDeliveryDocumentAsync(new() { SenderActionUserId = CurrentUserSession.UserId, Payload = rowOfDocument.Id });
+            TResponseModel<Guid?> res = await RetailRepo.DeleteRowOfDeliveryDocumentAsync(new()
+            {
+                SenderActionUserId = CurrentUserSession.UserId,
+                Payload = new()
+                {
+                    DeleteRowOfDeliveryDocumentId = rowOfDocument.Id
+                }
+            });
             SnackBarRepo.ShowMessagesResponse(res.Messages);
             if (res.Response is not null)
                 Document.Version = res.Response.Value;

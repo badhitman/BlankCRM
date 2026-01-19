@@ -11,13 +11,13 @@ namespace Transmission.Receives.constructor;
 /// Удалить схему документа
 /// </summary>
 public class DeleteDocumentSchemeConstructorReceive(IConstructorService conService, ITracesIndexing indexingRepo)
-    : IResponseReceive<TAuthRequestStandardModel<int>?, ResponseBaseModel?>
+    : IResponseReceive<TAuthRequestStandardModel<DeleteDocumentSchemeRequestModel>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.DeleteDocumentSchemeConstructorReceive;
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestStandardModel<int>? req, CancellationToken token = default)
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestStandardModel<DeleteDocumentSchemeRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.SenderActionUserId, req.Payload);

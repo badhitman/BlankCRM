@@ -11,13 +11,13 @@ namespace Transmission.Receives.constructor;
 /// Удалить связь [таба/вкладки схемы документа] с [формой] 
 /// </summary>
 public class DeleteTabDocumentSchemeJoinFormConstructorReceive(IConstructorService conService, ITracesIndexing indexingRepo)
-    : IResponseReceive<TAuthRequestStandardModel<int>?, ResponseBaseModel?>
+    : IResponseReceive<TAuthRequestStandardModel<DeleteTabDocumentSchemeJoinFormRequestModel>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.DeleteTabDocumentSchemeJoinFormConstructorReceive;
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestStandardModel<int>? req, CancellationToken token = default)
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestStandardModel<DeleteTabDocumentSchemeJoinFormRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.SenderActionUserId, req.Payload);

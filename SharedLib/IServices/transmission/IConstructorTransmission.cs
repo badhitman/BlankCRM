@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// Constructor Remote Transmission Service
 /// </summary>
-public interface IConstructorTransmission
+public interface IConstructorTransmission : IConstructorBaseService
 {
     #region public
     /// <summary>
@@ -56,11 +56,6 @@ public interface IConstructorTransmission
     /// UpdateOrCreateDirectory
     /// </summary>
     public Task<TResponseModel<int>> UpdateOrCreateDirectoryAsync(TAuthRequestStandardModel<EntryConstructedModel> req, CancellationToken token = default);
-
-    /// <summary>
-    /// DeleteDirectory
-    /// </summary>
-    public Task<ResponseBaseModel> DeleteDirectoryAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default);
     #endregion
     #region elements of directories
     /// <summary>
@@ -82,11 +77,6 @@ public interface IConstructorTransmission
     /// GetElementOfDirectory
     /// </summary>
     public Task<TResponseModel<EntryDescriptionModel>> GetElementOfDirectoryAsync(int req, CancellationToken token = default);
-
-    /// <summary>
-    /// DeleteElementFromDirectory
-    /// </summary>
-    public Task<ResponseBaseModel> DeleteElementFromDirectoryAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default);
 
     /// <summary>
     /// UpMoveElementOfDirectory
@@ -184,7 +174,7 @@ public interface IConstructorTransmission
     /// <summary>
     /// Удалить форму
     /// </summary>
-    public Task<ResponseBaseModel> FormDeleteAsync(TAuthRequestStandardModel<int> req, CancellationToken cancellationToken = default);
+    public Task<ResponseBaseModel> FormDeleteAsync(TAuthRequestStandardModel<FormDeleteRequestModel> req, CancellationToken cancellationToken = default);
     #endregion
     #region поля форм    
     /// <summary>
@@ -204,19 +194,9 @@ public interface IConstructorTransmission
     public Task<ResponseBaseModel> FormFieldUpdateOrCreateAsync(TAuthRequestStandardModel<FieldFormConstructorModelDB> req, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Удалить поле формы (простой тип)
-    /// </summary>
-    public Task<ResponseBaseModel> FormFieldDeleteAsync(TAuthRequestStandardModel<int> req, CancellationToken cancellationToken = default);
-
-    /// <summary>
     /// Обновить/создать поле формы (тип: справочник/список)
     /// </summary>
     public Task<ResponseBaseModel> FormFieldDirectoryUpdateOrCreateAsync(TAuthRequestStandardModel<FieldFormAkaDirectoryConstructorModelDB> req, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Удалить поле формы (тип: справочник/список)
-    /// </summary>
-    public Task<ResponseBaseModel> FormFieldDirectoryDeleteAsync(TAuthRequestStandardModel<int> req, CancellationToken cancellationToken = default);
     #endregion
 
     /////////////// Документ. Описывается/настраивается конечный результат, который будет использоваться.
@@ -238,11 +218,6 @@ public interface IConstructorTransmission
     /// Получить схему документа
     /// </summary>
     public Task<TResponseModel<DocumentSchemeConstructorModelDB>> GetDocumentSchemeAsync(int questionnaire_id, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Удалить схему документа
-    /// </summary>
-    public Task<ResponseBaseModel> DeleteDocumentSchemeAsync(TAuthRequestStandardModel<int> req, CancellationToken cancellationToken = default);
     #endregion
     // табы/вкладки схожи по смыслу табов/вкладок в Excel. Т.е. обычная группировка разных рабочих пространств со своим именем 
     #region табы документов
@@ -260,11 +235,6 @@ public interface IConstructorTransmission
     /// Получить страницу анкеты/опроса
     /// </summary>
     public Task<TResponseModel<TabOfDocumentSchemeConstructorModelDB>> GetTabOfDocumentSchemeAsync(int questionnaire_page_id, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Удалить страницу опроса/анкеты
-    /// </summary>
-    public Task<ResponseBaseModel> DeleteTabOfDocumentSchemeAsync(TAuthRequestStandardModel<int> req, CancellationToken cancellationToken = default);
     #endregion
     #region структура/схема таба/вкладки: формы, порядок и настройки поведения    
     /// <summary>
@@ -281,11 +251,6 @@ public interface IConstructorTransmission
     /// Сдвинуть связь [таба/вкладки схемы документа] с [формой] (изменение сортировки/последовательности)
     /// </summary>
     public Task<TResponseModel<TabOfDocumentSchemeConstructorModelDB>> MoveTabDocumentSchemeJoinFormAsync(TAuthRequestStandardModel<MoveObjectModel> req, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Удалить связь [таба/вкладки схемы документа] с [формой] 
-    /// </summary>
-    public Task<ResponseBaseModel> DeleteTabDocumentSchemeJoinFormAsync(TAuthRequestStandardModel<int> req, CancellationToken cancellationToken = default);
     #endregion
 
     /////////////// Пользовательский/публичный доступ к возможностям заполнения документа данными
@@ -331,6 +296,6 @@ public interface IConstructorTransmission
     /// <summary>
     /// Удалить сессию опроса/анкеты
     /// </summary>
-    public Task<ResponseBaseModel> DeleteSessionDocumentAsync(int session_id, CancellationToken cancellationToken = default);
+    public Task<ResponseBaseModel> DeleteSessionDocumentAsync(DeleteSessionDocumentRequestModel session_id, CancellationToken cancellationToken = default);
     #endregion     
 }

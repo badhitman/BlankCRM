@@ -129,7 +129,7 @@ public partial class SessionsViewComponent : BlazorBusyComponentBaseAuthModel
     protected async Task DeleteSession(int session_id)
     {
         await SetBusyAsync();
-        ResponseBaseModel rest = await ConstructorRepo.DeleteSessionDocumentAsync(session_id);
+        ResponseBaseModel rest = await ConstructorRepo.DeleteSessionDocumentAsync(new() { DeleteSessionDocumentId = session_id });
         await SetBusyAsync(false);
 
         SnackBarRepo.ShowMessagesResponse(rest.Messages);

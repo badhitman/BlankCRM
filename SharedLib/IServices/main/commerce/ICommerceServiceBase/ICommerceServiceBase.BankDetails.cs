@@ -15,5 +15,5 @@ public partial interface ICommerceServiceBase
     /// <summary>
     /// Удалить банковские реквизиты
     /// </summary>
-    public Task<TResponseModel<BankDetailsModelDB>> BankDetailsForOrganizationDeleteAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default);
+    public Task<TResponseModel<BankDetailsModelDB>> BankDetailsForOrganizationDeleteAsync(TAuthRequestStandardModel<BankDetailsForOrganizationDeleteRequestModel> req, CancellationToken token = default);
 }

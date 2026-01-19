@@ -37,7 +37,7 @@ public interface IRetailService
     public Task<TPaginationResponseStandardModel<RowOfDeliveryRetailDocumentModelDB>> SelectRowsOfDeliveryDocumentsAsync(TPaginationRequestStandardModel<SelectRowsOfDeliveriesRetailDocumentsRequestModel> req, CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<TResponseModel<Guid?>> DeleteRowOfDeliveryDocumentAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default);
+    public Task<TResponseModel<Guid?>> DeleteRowOfDeliveryDocumentAsync(TAuthRequestStandardModel<DeleteRowOfDeliveryDocumentRequestModel> req, CancellationToken token = default);
     #endregion
 
     #region Statuses (of delivery document)
@@ -51,7 +51,7 @@ public interface IRetailService
     public Task<TPaginationResponseStandardModel<DeliveryStatusRetailDocumentModelDB>> SelectDeliveryStatusesDocumentsAsync(TPaginationRequestStandardModel<SelectDeliveryStatusesRetailDocumentsRequestModel> req, CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<DeleteDeliveryStatusDocumentResponseModel> DeleteDeliveryStatusDocumentAsync(TAuthRequestStandardModel<int> statusId, CancellationToken token = default);
+    public Task<DeleteDeliveryStatusDocumentResponseModel> DeleteDeliveryStatusDocumentAsync(TAuthRequestStandardModel<DeleteDeliveryStatusDocumentRequestModel> statusId, CancellationToken token = default);
     #endregion
 
     #region Deliveries orders link`s    
@@ -175,7 +175,7 @@ public interface IRetailService
     public Task<TPaginationResponseStandardModel<OrderStatusRetailDocumentModelDB>> SelectOrderDocumentStatusesAsync(TPaginationRequestStandardModel<SelectOrderStatusesRetailDocumentsRequestModel> req, CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<TResponseModel<Guid?>> DeleteOrderStatusDocumentAsync(TAuthRequestStandardModel<int> statusId, CancellationToken token = default);
+    public Task<TResponseModel<Guid?>> DeleteOrderStatusDocumentAsync(TAuthRequestStandardModel<DeleteOrderStatusDocumentRequestModel> statusId, CancellationToken token = default);
     #endregion
 
     #region Rows for retail order (document)
@@ -206,7 +206,7 @@ public interface IRetailService
     public Task<TResponseModel<WalletConversionRetailDocumentModelDB[]>> GetConversionsDocumentsRetailAsync(ReadWalletsRetailsConversionDocumentsRequestModel req, CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<TResponseModel<Guid?>> DeleteToggleConversionRetailAsync(TAuthRequestStandardModel<int> conversionId, CancellationToken token = default);
+    public Task<TResponseModel<Guid?>> DeleteToggleConversionRetailAsync(TAuthRequestStandardModel<DeleteToggleConversionRequestModel> conversionId, CancellationToken token = default);
     #endregion
 
     #region Conversions orders link`s

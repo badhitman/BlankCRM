@@ -11,13 +11,13 @@ namespace Transmission.Receives.commerce;
 /// OfficeOrganizationDelete
 /// </summary>
 public class OfficeOrganizationDeleteReceive(ICommerceService commerceRepo, ITracesIndexing indexingRepo)
-    : IResponseReceive<TAuthRequestStandardModel<int>?, TResponseModel<OfficeOrganizationModelDB>?>
+    : IResponseReceive<TAuthRequestStandardModel<OfficeOrganizationDeleteRequestModel>?, TResponseModel<OfficeOrganizationModelDB>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.OfficeOrganizationDeleteCommerceReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<OfficeOrganizationModelDB>?> ResponseHandleActionAsync(TAuthRequestStandardModel<int>? req, CancellationToken token = default)
+    public async Task<TResponseModel<OfficeOrganizationModelDB>?> ResponseHandleActionAsync(TAuthRequestStandardModel<OfficeOrganizationDeleteRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req?.Payload);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.SenderActionUserId, req.Payload);

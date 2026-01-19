@@ -56,7 +56,12 @@ public partial class PriceRuleElementComponent : BlazorBusyComponentBaseAuthMode
             return;
 
         await SetBusyAsync();
-        ResponseBaseModel res = await CommerceRepo.PriceRuleDeleteAsync(new() { Payload = PriceRule.Id, SenderActionUserId = CurrentUserSession.UserId });
+        ResponseBaseModel res = await CommerceRepo.PriceRuleDeleteAsync(new()
+        {
+            Payload = new() { RuleId = PriceRule.Id },
+            SenderActionUserId = CurrentUserSession.UserId
+        });
+
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         await OwnerComponent.ReloadRules();
     }

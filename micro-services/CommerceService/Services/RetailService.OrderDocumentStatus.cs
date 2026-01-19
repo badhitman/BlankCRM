@@ -247,9 +247,12 @@ public partial class RetailService : IRetailService
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<Guid?>> DeleteOrderStatusDocumentAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default)
+    public async Task<TResponseModel<Guid?>> DeleteOrderStatusDocumentAsync(TAuthRequestStandardModel<DeleteOrderStatusDocumentRequestModel> req, CancellationToken token = default)
     {
-        int statusId = req.Payload;
+        if (req.Payload is null)
+            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "req.Payload is null" }] };
+
+        int statusId = req.Payload.DeleteOrderStatusDocumentId;
         TResponseModel<bool?> res_WarehouseReserveForRetailOrder = await StorageTransmissionRepo.ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.WarehouseReserveForRetailOrder, token);
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);

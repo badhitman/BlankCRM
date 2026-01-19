@@ -36,7 +36,7 @@ public partial class CommerceTransmission(IRabbitClient rabbitClient) : ICommerc
         => await rabbitClient.MqRemoteCallAsync<TPaginationResponseStandardModel<NomenclatureModelDB>>(GlobalStaticConstantsTransmission.TransmissionQueues.NomenclaturesSelectCommerceReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<OfficeOrganizationModelDB>> OfficeOrganizationDeleteAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default)
+    public async Task<TResponseModel<OfficeOrganizationModelDB>> OfficeOrganizationDeleteAsync(TAuthRequestStandardModel<OfficeOrganizationDeleteRequestModel> req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<OfficeOrganizationModelDB>>(GlobalStaticConstantsTransmission.TransmissionQueues.OfficeOrganizationDeleteCommerceReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
@@ -116,7 +116,7 @@ public partial class CommerceTransmission(IRabbitClient rabbitClient) : ICommerc
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(GlobalStaticConstantsTransmission.TransmissionQueues.PriceRuleUpdateOrCreateReceive, price_rule, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<PriceRuleForOfferModelDB>> PriceRuleDeleteAsync(TAuthRequestStandardModel<int> id, CancellationToken token = default)
+    public async Task<TResponseModel<PriceRuleForOfferModelDB>> PriceRuleDeleteAsync(TAuthRequestStandardModel<PriceRuleDeleteRequestModel> id, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<PriceRuleForOfferModelDB>>(GlobalStaticConstantsTransmission.TransmissionQueues.PriceRuleDeleteCommerceReceive, id, token: token) ?? new();
 
     /// <inheritdoc/>
@@ -188,7 +188,7 @@ public partial class CommerceTransmission(IRabbitClient rabbitClient) : ICommerc
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(GlobalStaticConstantsTransmission.TransmissionQueues.BankDetailsUpdateOrCreateCommerceReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<BankDetailsModelDB>> BankDetailsForOrganizationDeleteAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default)
+    public async Task<TResponseModel<BankDetailsModelDB>> BankDetailsForOrganizationDeleteAsync(TAuthRequestStandardModel<BankDetailsForOrganizationDeleteRequestModel> req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<BankDetailsModelDB>>(GlobalStaticConstantsTransmission.TransmissionQueues.BankDetailsForOrganizationDeleteCommerceReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>

@@ -11,13 +11,13 @@ namespace Transmission.Receives.commerce;
 /// DeleteToggleConversion
 /// </summary>
 public class DeleteToggleConversionReceive(IRetailService commRepo, ITracesIndexing indexingRepo)
-    : IResponseReceive<TAuthRequestStandardModel<int>?, TResponseModel<Guid?>?>
+    : IResponseReceive<TAuthRequestStandardModel<DeleteToggleConversionRequestModel>?, TResponseModel<Guid?>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.DeleteToggleConversionRetailReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<Guid?>?> ResponseHandleActionAsync(TAuthRequestStandardModel<int>? req, CancellationToken token = default)
+    public async Task<TResponseModel<Guid?>?> ResponseHandleActionAsync(TAuthRequestStandardModel<DeleteToggleConversionRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.SenderActionUserId, req.Payload);

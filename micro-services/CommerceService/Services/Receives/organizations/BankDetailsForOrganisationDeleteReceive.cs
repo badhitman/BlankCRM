@@ -11,13 +11,13 @@ namespace Transmission.Receives.commerce;
 /// BankDetailsForOrganizationDelete
 /// </summary>
 public class BankDetailsForOrganizationDeleteReceive(ICommerceService commerceRepo, ITracesIndexing indexingRepo)
-    : IResponseReceive<TAuthRequestStandardModel<int>?, TResponseModel<BankDetailsModelDB>?>
+    : IResponseReceive<TAuthRequestStandardModel<BankDetailsForOrganizationDeleteRequestModel>?, TResponseModel<BankDetailsModelDB>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.BankDetailsForOrganizationDeleteCommerceReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<BankDetailsModelDB>?> ResponseHandleActionAsync(TAuthRequestStandardModel<int>? req, CancellationToken token = default)
+    public async Task<TResponseModel<BankDetailsModelDB>?> ResponseHandleActionAsync(TAuthRequestStandardModel<BankDetailsForOrganizationDeleteRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.SenderActionUserId, req.Payload);

@@ -44,7 +44,7 @@ public partial class DocumentsSchemesTableComponent : BlazorBusyComponentBaseAut
 
         await SetBusyAsync();
 
-        ResponseBaseModel rest = await ConstructorRepo.DeleteDocumentSchemeAsync(new() { Payload = questionnaire_id, SenderActionUserId = CurrentUserSession.UserId });
+        ResponseBaseModel rest = await ConstructorRepo.DeleteDocumentSchemeAsync(new() { Payload = new() { DeleteDocumentSchemeId = questionnaire_id }, SenderActionUserId = CurrentUserSession.UserId });
         await SetBusyAsync(false);
 
         SnackBarRepo.ShowMessagesResponse(rest.Messages);

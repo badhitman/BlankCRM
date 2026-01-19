@@ -197,7 +197,14 @@ public partial class ElementDirectoryFieldSetComponent : BlazorBusyComponentBase
 
         await SetBusyAsync();
 
-        ResponseBaseModel rest = await ConstructorRepo.DeleteElementFromDirectoryAsync(new() { Payload = ElementObject.Id, SenderActionUserId = CurrentUserSession.UserId });
+        ResponseBaseModel rest = await ConstructorRepo.DeleteElementFromDirectoryAsync(new()
+        {
+            Payload = new()
+            {
+                DeleteElementFromDirectoryId = ElementObject.Id
+            },
+            SenderActionUserId = CurrentUserSession.UserId
+        });
 
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())

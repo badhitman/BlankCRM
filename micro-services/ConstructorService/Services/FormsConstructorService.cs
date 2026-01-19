@@ -1021,15 +1021,18 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DeleteDirectoryAsync(TAuthRequestStandardModel<int> req, CancellationToken cancellationToken = default)
+    public async Task<ResponseBaseModel> DeleteDirectoryAsync(TAuthRequestStandardModel<DeleteDirectoryRequestModel> req, CancellationToken cancellationToken = default)
     {
+        if (req.Payload is null)
+            return ResponseBaseModel.CreateError("req.Payload");
+
         if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
             return ResponseBaseModel.CreateError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
 
         using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         DirectoryConstructorModelDB? directory_db = await context_forms
             .Directories
-            .FirstOrDefaultAsync(x => x.Id == req.Payload, cancellationToken: cancellationToken);
+            .FirstOrDefaultAsync(x => x.Id == req.Payload.DeleteDirectoryId, cancellationToken: cancellationToken);
 
         if (directory_db is null)
             return ResponseBaseModel.CreateError($"Список/справочник #{req.Payload} не найден в БД");
@@ -1237,16 +1240,19 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DeleteElementFromDirectoryAsync(TAuthRequestStandardModel<int> req, CancellationToken cancellationToken = default)
+    public async Task<ResponseBaseModel> DeleteElementFromDirectoryAsync(TAuthRequestStandardModel<DeleteElementFromDirectoryRequestModel> req, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
             return ResponseBaseModel.CreateError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
+
+        if (req.Payload is null)
+            return ResponseBaseModel.CreateError("req.Payload is null");
 
         using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         ElementOfDirectoryConstructorModelDB? element_db = await context_forms
             .ElementsOfDirectories
             .Include(x => x.Parent)
-            .FirstOrDefaultAsync(x => x.Id == req.Payload, cancellationToken: cancellationToken);
+            .FirstOrDefaultAsync(x => x.Id == req.Payload.DeleteElementFromDirectoryId, cancellationToken: cancellationToken);
 
         if (element_db?.Parent is null)
             return ResponseBaseModel.CreateError($"Элемент справочника #{req.Payload} не найден в БД");
@@ -1583,8 +1589,11 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> FormDeleteAsync(TAuthRequestStandardModel<int> req, CancellationToken cancellationToken = default)
+    public async Task<ResponseBaseModel> FormDeleteAsync(TAuthRequestStandardModel<FormDeleteRequestModel> req, CancellationToken cancellationToken = default)
     {
+        if (req.Payload is null)
+            return ResponseBaseModel.CreateError("req.Payload is null");
+
         if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
             return ResponseBaseModel.CreateError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
 
@@ -1592,7 +1601,7 @@ public partial class FormsConstructorService(
 
         FormConstructorModelDB? form_db = await context_forms
             .Forms
-            .FirstOrDefaultAsync(x => x.Id == req.Payload, cancellationToken: cancellationToken);
+            .FirstOrDefaultAsync(x => x.Id == req.Payload.FormDeleteId, cancellationToken: cancellationToken);
 
         if (form_db is null)
             return ResponseBaseModel.CreateError($"Форма #{req.Payload} не найдена в БД");
@@ -2150,16 +2159,19 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> FormFieldDeleteAsync(TAuthRequestStandardModel<int> req, CancellationToken cancellationToken = default)
+    public async Task<ResponseBaseModel> FormFieldDeleteAsync(TAuthRequestStandardModel<FormFieldDeleteRequestModel> req, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
             return ResponseBaseModel.CreateError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
+
+        if (req.Payload is null)
+            return ResponseBaseModel.CreateError("req.Payload is null");
 
         using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         FieldFormConstructorModelDB? field_db = await context_forms
             .Fields
             .Include(x => x.Owner)
-            .FirstOrDefaultAsync(x => x.Id == req.Payload, cancellationToken: cancellationToken);
+            .FirstOrDefaultAsync(x => x.Id == req.Payload.FormFieldDeleteId, cancellationToken: cancellationToken);
 
         if (field_db?.Owner is null)
             return ResponseBaseModel.CreateError($"Поле #{req.Payload} (простого типа) формы не найден в БД");
@@ -2188,8 +2200,11 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> FormFieldDirectoryDeleteAsync(TAuthRequestStandardModel<int> req, CancellationToken cancellationToken = default)
+    public async Task<ResponseBaseModel> FormFieldDirectoryDeleteAsync(TAuthRequestStandardModel<FormFieldDirectoryDeleteRequestModel> req, CancellationToken cancellationToken = default)
     {
+        if (req.Payload is null)
+            return ResponseBaseModel.CreateError("req.Payload is null");
+
         if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
             return ResponseBaseModel.CreateError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
 
@@ -2197,10 +2212,10 @@ public partial class FormsConstructorService(
         FieldFormAkaDirectoryConstructorModelDB? field_db = await context_forms
             .LinksDirectoriesToForms
             .Include(x => x.Owner)
-            .FirstOrDefaultAsync(x => x.Id == req.Payload, cancellationToken: cancellationToken);
+            .FirstOrDefaultAsync(x => x.Id == req.Payload.FormFieldDirectoryDeleteId, cancellationToken: cancellationToken);
 
         if (field_db?.Owner is null)
-            return ResponseBaseModel.CreateError($"Поле #{req.Payload} (тип: справочник) формы не найден в БД");
+            return ResponseBaseModel.CreateError($"Поле #{req.Payload.FormFieldDirectoryDeleteId} (тип: справочник) формы не найден в БД");
 
         ResponseBaseModel check_project = await CanEditProjectAsync(new() { ProjectId = field_db.Owner.ProjectId, UserId = req.SenderActionUserId }, cancellationToken);
         if (!check_project.Success())
@@ -2456,17 +2471,20 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DeleteDocumentSchemeAsync(TAuthRequestStandardModel<int> req, CancellationToken cancellationToken = default)
+    public async Task<ResponseBaseModel> DeleteDocumentSchemeAsync(TAuthRequestStandardModel<DeleteDocumentSchemeRequestModel> req, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
             return ResponseBaseModel.CreateError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
+
+        if (req.Payload is null)
+            return ResponseBaseModel.CreateError("req.Payload is null");
 
         using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         DocumentSchemeConstructorModelDB? document_scheme_db = await context_forms
             .DocumentSchemes
             .Include(x => x.Tabs!)
             .ThenInclude(x => x.JoinsForms)
-            .FirstOrDefaultAsync(x => x.Id == req.Payload, cancellationToken: cancellationToken);
+            .FirstOrDefaultAsync(x => x.Id == req.Payload.DeleteDocumentSchemeId, cancellationToken: cancellationToken);
 
         if (document_scheme_db is null)
             return ResponseBaseModel.CreateError($"Опрос/анкета #{req.Payload} не найдена в БД");
@@ -2728,8 +2746,11 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DeleteTabOfDocumentSchemeAsync(TAuthRequestStandardModel<int> req, CancellationToken cancellationToken = default)
+    public async Task<ResponseBaseModel> DeleteTabOfDocumentSchemeAsync(TAuthRequestStandardModel<DeleteTabOfDocumentSchemeRequestModel> req, CancellationToken cancellationToken = default)
     {
+        if (req.Payload is null)
+            return ResponseBaseModel.CreateError("req.Payload is null");
+
         if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
             return ResponseBaseModel.CreateError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
 
@@ -2737,7 +2758,7 @@ public partial class FormsConstructorService(
         TabOfDocumentSchemeConstructorModelDB? tab_of_document_scheme_db = await context_forms
             .TabsOfDocumentsSchemes
             .Include(x => x.JoinsForms)
-            .FirstOrDefaultAsync(x => x.Id == req.Payload, cancellationToken: cancellationToken);
+            .FirstOrDefaultAsync(x => x.Id == req.Payload.DeleteTabOfDocumentSchemeId, cancellationToken: cancellationToken);
 
         if (tab_of_document_scheme_db is null)
             return ResponseBaseModel.CreateError($"Страница опроса/анкеты #{req.Payload} не найден в БД");
@@ -3003,15 +3024,18 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DeleteTabDocumentSchemeJoinFormAsync(TAuthRequestStandardModel<int> req, CancellationToken cancellationToken = default)
+    public async Task<ResponseBaseModel> DeleteTabDocumentSchemeJoinFormAsync(TAuthRequestStandardModel<DeleteTabDocumentSchemeJoinFormRequestModel> req, CancellationToken cancellationToken = default)
     {
+        if (req.Payload is null)
+            return ResponseBaseModel.CreateError("req.Payload is null");
+
         if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
             return ResponseBaseModel.CreateError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
 
         using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         FormToTabJoinConstructorModelDB? questionnaire_page_db = await context_forms
             .TabsJoinsForms
-            .FirstOrDefaultAsync(x => x.Id == req.Payload, cancellationToken: cancellationToken);
+            .FirstOrDefaultAsync(x => x.Id == req.Payload.DeleteTabDocumentSchemeJoinFormId, cancellationToken: cancellationToken);
 
         if (questionnaire_page_db is null)
             return ResponseBaseModel.CreateError($"Связь формы и страницы опроса/анкеты #{req.Payload} не найдена в БД");
@@ -3448,8 +3472,9 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DeleteSessionDocumentAsync(int session_id, CancellationToken cancellationToken = default)
+    public async Task<ResponseBaseModel> DeleteSessionDocumentAsync(DeleteSessionDocumentRequestModel req, CancellationToken cancellationToken = default)
     {
+        int session_id = req.DeleteSessionDocumentId;
         using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         SessionOfDocumentDataModelDB? session_db = await context_forms
             .Sessions

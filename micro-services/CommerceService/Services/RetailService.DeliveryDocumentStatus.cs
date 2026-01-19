@@ -243,9 +243,18 @@ public partial class RetailService : IRetailService
     }
 
     /// <inheritdoc/>
-    public async Task<DeleteDeliveryStatusDocumentResponseModel> DeleteDeliveryStatusDocumentAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default)
+    public async Task<DeleteDeliveryStatusDocumentResponseModel> DeleteDeliveryStatusDocumentAsync(TAuthRequestStandardModel<DeleteDeliveryStatusDocumentRequestModel> req, CancellationToken token = default)
     {
-        int statusId = req.Payload;
+        if (req.Payload is null)
+            return new()
+            {
+                Messages = [new()
+                {
+                    TypeMessage = MessagesTypesEnum.Error,
+                    Text = "req.Payload is null" }]
+            };
+
+        int statusId = req.Payload.DeleteDeliveryStatusDocumentId;
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         IQueryable<DeliveryStatusRetailDocumentModelDB> q = context.DeliveriesStatusesDocumentsRetail.Where(x => x.Id == statusId);
 
