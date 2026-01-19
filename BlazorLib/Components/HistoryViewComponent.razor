@@ -15,7 +15,7 @@
     <RowTemplate>
         <MudTd DataLabel="DateTime">@context.UTCTimestampInitReceive</MudTd>
         <MudTd DataLabel="Receiver">
-            <div class="stack">
+            <div class="vstack">
                 <span>@context.ReceiverName</span>
                 <span>@((this.UsersCache.FirstOrDefault(x => x.UserId == context.SenderActionUserId)?.ToString() ?? context.SenderActionUserId))</span>
             </div>
