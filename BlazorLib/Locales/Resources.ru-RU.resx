@@ -180,6 +180,9 @@
   <data name="Resend confirmation email" xml:space="preserve">
     <value>Повторно отправить письмо с подтверждением</value>
   </data>
+  <data name="Rubrics.LeftMainMenu" xml:space="preserve">
+    <value>Рубрики</value>
+  </data>
   <data name="Services.LeftMainMenu" xml:space="preserve">
     <value>Услуги</value>
   </data>

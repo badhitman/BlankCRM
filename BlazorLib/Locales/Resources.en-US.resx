@@ -180,6 +180,9 @@
   <data name="Resend confirmation email" xml:space="preserve">
     <value>Resend confirmation email</value>
   </data>
+  <data name="Rubrics.LeftMainMenu" xml:space="preserve">
+    <value>Rubrics</value>
+  </data>
   <data name="Services.LeftMainMenu" xml:space="preserve">
     <value>Services</value>
   </data>
