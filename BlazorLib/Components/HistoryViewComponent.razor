@@ -15,23 +15,23 @@
                             Editable />
     </ToolBarContent>
     <HeaderContent>
-        <MudTh>DateTime</MudTh>
-        <MudTh>Receiver</MudTh>
-        <MudTh>Request</MudTh>
-        <MudTh>Response</MudTh>
+        <MudTh>Дата/Время</MudTh>
+        <MudTh>Обработчик</MudTh>
+        <MudTh>Запрос</MudTh>
+        <MudTh>Ответ</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="DateTime">
+        <MudTd DataLabel="Дата/Время">
             @context.UTCTimestampInitReceive
             <sup title="время на выполнение операции">@(context.UTCTimestampFinalReceive - context.UTCTimestampInitReceive)</sup>
         </MudTd>
-        <MudTd DataLabel="Receiver">
+        <MudTd DataLabel="Обработчик">
             <div class="vstack">
                 <code>@context.ReceiverName</code>
                 <span>@((OwnerBase.UsersCache.FirstOrDefault(x => x.UserId == context.SenderActionUserId)?.ToString() ?? context.SenderActionUserId))</span>
             </div>
         </MudTd>
-        <MudTd DataLabel="Request">
+        <MudTd DataLabel="Ответ">
             <pre style="max-height: 250px;"><code class="language-json">@context.RequestBody</code></pre>
         </MudTd>
         <MudTd DataLabel="Response">

@@ -24,7 +24,7 @@
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Имя">
-                <a class="@(context.IsDisabled ? "text-decoration-line-through" : "")" href="/nomenclature/card/@context.Id">@context.Name</a>
+                <MudLink Class="@(context.IsDisabled ? "text-decoration-line-through" : "")" Href="@($"/nomenclature/card/{context.Id}")">@context.Name</MudLink>
             </MudTd>
             <MudTd DataLabel="Ед.изм.">@context.BaseUnit.DescriptionInfo()</MudTd>
             <MudTd DataLabel="Остаток">
