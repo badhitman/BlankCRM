@@ -175,7 +175,7 @@ public interface IRetailService
     public Task<TPaginationResponseStandardModel<OrderStatusRetailDocumentModelDB>> SelectOrderDocumentStatusesAsync(TPaginationRequestStandardModel<SelectOrderStatusesRetailDocumentsRequestModel> req, CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<TResponseModel<DocumentNewVersionResponseModel?>> DeleteOrderStatusDocumentAsync(TAuthRequestStandardModel<DeleteOrderStatusDocumentRequestModel> statusId, CancellationToken token = default);
+    public Task<DocumentNewVersionResponseModel> DeleteOrderStatusDocumentAsync(TAuthRequestStandardModel<DeleteOrderStatusDocumentRequestModel> statusId, CancellationToken token = default);
     #endregion
 
     #region Rows for retail order (document)
