@@ -16,7 +16,7 @@
     </ToolBarContent>
     <HeaderContent>
         <MudTh>Дата/Время</MudTh>
-        <MudTh>Обработчик</MudTh>
+        <MudTh>Событие</MudTh>
         <MudTh>Запрос</MudTh>
         <MudTh>Ответ</MudTh>
     </HeaderContent>
@@ -25,7 +25,7 @@
             @context.UTCTimestampInitReceive
             <sup title="время на выполнение операции">@(context.UTCTimestampFinalReceive - context.UTCTimestampInitReceive)</sup>
         </MudTd>
-        <MudTd DataLabel="Обработчик">
+        <MudTd DataLabel="Событие">
             <div class="vstack">
                 <code>@context.ReceiverName</code>
                 <span>@((OwnerBase.UsersCache.FirstOrDefault(x => x.UserId == context.SenderActionUserId)?.ToString() ?? context.SenderActionUserId))</span>
