@@ -23,7 +23,16 @@ public class CreateOrderStatusDocumentReceive(IRetailService commRepo, ITracesIn
         
         if (req.Payload.OrderDocument?.Rows is not null)
             req.Payload.OrderDocument.Rows = null;
-        
+
+        if (req.Payload.OrderDocument?.Conversions is not null)
+            req.Payload.OrderDocument.Conversions = null;
+
+        if (req.Payload.OrderDocument?.Payments is not null)
+            req.Payload.OrderDocument.Payments = null;
+
+        if (req.Payload.OrderDocument?.Deliveries is not null)
+            req.Payload.OrderDocument.Deliveries = null;
+
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.SenderActionUserId, req.Payload);
         DocumentNewVersionResponseModel res = await commRepo.CreateOrderStatusDocumentAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);

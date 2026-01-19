@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////
 
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Converters;
 using System.ComponentModel.DataAnnotations;
 
 namespace SharedLib;
@@ -20,6 +21,8 @@ public class OrderStatusRetailDocumentModelDB : EntryUpdatedLiteModel
     /// <summary>
     /// Шаг/статус обращения: "Создан", "В работе", "На проверке" и "Готово"
     /// </summary>
+    [System.Text.Json.Serialization.JsonConverter(typeof(StringEnumConverter))]
+    [Newtonsoft.Json.JsonConverter(typeof(StringEnumConverter))]
     public StatusesDocumentsEnum StatusDocument { get; set; }
 
     /// <summary>
