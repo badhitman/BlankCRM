@@ -18,7 +18,7 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
     public async Task<TResponseModel<KladrResponseModel>> ObjectGetAsync(KladrsRequestBaseModel req, CancellationToken token = default)
     {
         if (string.IsNullOrWhiteSpace(req.Code))
-            throw new NotImplementedException();
+            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "string.IsNullOrWhiteSpace(req.Code)" }] };
 
         CodeKladrModel codeParse = CodeKladrModel.Build(req.Code);
 

@@ -76,6 +76,8 @@ public partial class KladrInputComponent : BlazorBusyComponentBaseModel
         {
             await SetBusyAsync();
             TResponseModel<KladrResponseModel> res = await KladrRepo.ObjectGetAsync(new() { Code = KladrObject.Id });
+            if (!res.Success())
+                SnackBarRepo.ShowMessagesResponse(res.Messages);
             CurrentKladrObject = res.Response;
             await SetBusyAsync(false);
         }
