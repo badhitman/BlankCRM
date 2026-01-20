@@ -19,15 +19,15 @@
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Created">
-            <a href="/articles/edit-card/@(context.Id)">
+            <MudLink Href="@($"/articles/edit-card/{context.Id}")">
                 @context.CreatedAtUTC.GetCustomTime().ToString("d", GlobalStaticConstants.RU)
-            </a>
+            </MudLink>
         </MudTd>
         <MudTd DataLabel="Updated">
-            <a href="/articles/edit-card/@(context.Id)">
+            <MudLink Href="@($"/articles/edit-card/{context.Id}")">
                 @context.LastUpdatedAtUTC?.GetCustomTime().ToString("d", GlobalStaticConstants.RU)
                 <sup>@context.LastUpdatedAtUTC?.GetCustomTime().ToString("t", GlobalStaticConstants.RU)</sup>
-            </a>
+            </MudLink>
         </MudTd>
         <MudTd DataLabel="Name">@context.Name</MudTd>
         <MudTd DataLabel="Author">@(usersDump.FirstOrDefault(x => x.UserId == context.AuthorIdentityId)?.UserName ?? context.AuthorIdentityId)</MudTd>
