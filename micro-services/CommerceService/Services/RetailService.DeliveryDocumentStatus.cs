@@ -107,7 +107,7 @@ public partial class RetailService : IRetailService
            .ToListAsync(cancellationToken: token);
 
         ResponseBaseModel sRes = await DoIt(context, transaction, docDb.Rows, !offDeliveriesStatuses.Contains(_newStatus), offerAvailabilityDB, docDb, token);
-        if (!res.Success())
+        if (!sRes.Success())
         {
             await transaction.RollbackAsync(token);
             res.AddRangeMessages(sRes.Messages);
