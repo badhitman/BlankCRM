@@ -344,7 +344,7 @@ public partial class CommerceImplementService : ICommerceService
         }
 
         if (lockers.Count != 0)
-            context.RemoveRange(lockers);
+            context.LockTransactions.RemoveRange(lockers);
 
         await context.SaveChangesAsync(token);
         await transaction.CommitAsync(token);

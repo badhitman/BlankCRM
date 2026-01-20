@@ -915,7 +915,7 @@ public partial class CommerceImplementService(
             }
 
             loggerRepo.LogInformation(msg_for_tg);
-            context.RemoveRange(offersLocked);
+            context.LockTransactions.RemoveRange(offersLocked);
             tasks.Add(context.SaveChangesAsync(token));
             await Task.WhenAll(tasks);
             await transaction.CommitAsync(token);
@@ -1160,7 +1160,7 @@ public partial class CommerceImplementService(
             return res;
         }
 
-        context.RemoveRange(lockers);
+        context.LockTransactions.RemoveRange(lockers);
         await context.SaveChangesAsync(token);
         await transaction.CommitAsync(token);
         res.AddSuccess($"Обновление `строки документа-заказа` выполнено");
@@ -1268,7 +1268,7 @@ public partial class CommerceImplementService(
         }
 
         if (offersLocked.Length != 0)
-            context.RemoveRange(offersLocked);
+            context.LockTransactions.RemoveRange(offersLocked);
 
         await context.SaveChangesAsync(token);
         if (await context.RowsOrders.Where(x => rowsDel.Contains(x.Id)).ExecuteDeleteAsync(cancellationToken: token) != 0)
@@ -1397,7 +1397,7 @@ public partial class CommerceImplementService(
 
         context.UpdateRange(registersOffersDb.Where(x => x.Id > 0));
         if (offersLocked.Length != 0)
-            context.RemoveRange(offersLocked);
+            context.LockTransactions.RemoveRange(offersLocked);
 
         await context.SaveChangesAsync(token);
         int _rc = await context

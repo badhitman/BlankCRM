@@ -292,7 +292,7 @@ public partial class CommerceImplementService : ICommerceService
         }
 
         loggerRepo.LogInformation(msg_for_tg);
-        context.RemoveRange(offersLocked);
+        context.LockTransactions.RemoveRange(offersLocked);
 
         await context.SaveChangesAsync(token);
         await transaction.CommitAsync(token);
@@ -490,7 +490,7 @@ public partial class CommerceImplementService : ICommerceService
             reqPulse.Payload.Payload.Tag = Routes.SET_ACTION_NAME;
         }
         await HelpDeskRepo.PulsePushAsync(reqPulse, false, token);
-        context.RemoveRange(offersLocked);
+        context.LockTransactions.RemoveRange(offersLocked);
         await context.SaveChangesAsync(token);
         int _rc = await context
                             .AttendancesReg

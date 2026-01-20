@@ -305,7 +305,7 @@ public partial class RetailService : IRetailService
 
             if (offersLocked.Count != 0)
             {
-                context.RemoveRange(offersLocked);
+                context.LockTransactions.RemoveRange(offersLocked);
                 await context.SaveChangesAsync(token);
             }
         }

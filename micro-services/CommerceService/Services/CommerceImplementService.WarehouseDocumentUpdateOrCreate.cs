@@ -469,7 +469,7 @@ public partial class CommerceImplementService : ICommerceService
         }
 
         if (offersLocked.Count != 0)
-            context.RemoveRange(offersLocked);
+            context.LockTransactions.RemoveRange(offersLocked);
 
         await context.SaveChangesAsync(token);
         res.DocumentNewVersion = Guid.NewGuid();
