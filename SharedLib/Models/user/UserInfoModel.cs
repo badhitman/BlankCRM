@@ -53,7 +53,7 @@ public record UserInfoModel : UserInfoMainModel
         bool _needEndTag = false;
         if (!UserName.EndsWith($"@{GlobalStaticConstants.FakeHost}"))
         {
-            _res = $"{_res} <{UserName}";
+            _res = $"{_res} [{UserName}";
             _needEndTag = true;
         }
 
@@ -63,7 +63,7 @@ public record UserInfoModel : UserInfoMainModel
             _needEndTag = true;
         }
         if (_needEndTag)
-            _res += ">";
+            _res += "]";
 
         if (!string.IsNullOrWhiteSpace(PhoneNumber))
             _res += $" ({PhoneNumber})";

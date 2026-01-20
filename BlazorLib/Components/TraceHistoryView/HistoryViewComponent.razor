@@ -4,6 +4,7 @@
 
 <MudTable ServerData="ServerReload" Dense Hover Loading="IsBusyProgress" @ref="tableRef">
     <ToolBarContent>
+        <MudText Typo="Typo.h6">События изменений</MudText>
         <MudSpacer />
         <MudDateRangePicker PickerVariant="PickerVariant.Dialog"
                             @bind-DateRange="@DateRangePeriod"
