@@ -142,7 +142,7 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
             Payload = new()
             {
                 DeliveryId = deliveryDocumentId,
-                OrderId = FilterOrderId.Value,
+                OrderDocumentId = FilterOrderId.Value,
             }
         });
         SnackBarRepo.ShowMessagesResponse(res.Messages);

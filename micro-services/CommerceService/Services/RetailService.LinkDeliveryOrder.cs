@@ -152,7 +152,7 @@ public partial class RetailService : IRetailService
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
         int res = await context.OrdersDeliveriesLinks
-             .Where(x => x.OrderDocumentId == req.Payload.OrderId && x.DeliveryDocumentId == req.Payload.DeliveryId)
+             .Where(x => x.OrderDocumentId == req.Payload.OrderDocumentId && x.DeliveryDocumentId == req.Payload.DeliveryId)
              .ExecuteDeleteAsync(cancellationToken: token);
 
         return res == 0

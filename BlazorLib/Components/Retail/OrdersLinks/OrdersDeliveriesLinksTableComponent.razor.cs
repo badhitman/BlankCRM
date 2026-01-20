@@ -52,7 +52,7 @@ public partial class OrdersDeliveriesLinksTableComponent : OrderLinkBaseComponen
 
         OrderDeliveryModel req = new()
         {
-            OrderId = initDeleteRow!.Value.orderId,
+            OrderDocumentId = initDeleteRow!.Value.orderId,
             DeliveryId = initDeleteRow.Value.otherDocId,
 
         };

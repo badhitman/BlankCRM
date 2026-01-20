@@ -36,7 +36,7 @@ public partial class OrdersPaymentsLinksTableComponent : OrderLinkBaseComponent<
 
         OrderPaymentModel req = new()
         {
-            OrderId = initDeleteRow!.Value.orderId,
+            OrderDocumentId = initDeleteRow!.Value.orderId,
             PaymentId = initDeleteRow.Value.otherDocId,
         };
         await SetBusyAsync();

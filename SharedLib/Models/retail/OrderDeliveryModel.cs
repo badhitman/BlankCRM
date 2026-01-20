@@ -10,7 +10,7 @@ namespace SharedLib;
 public class OrderDeliveryModel
 {
     /// <inheritdoc/>
-    public int OrderId { get; set; }
+    public int OrderDocumentId { get; set; }
 
     /// <inheritdoc/>
     public int DeliveryId { get; set; }
