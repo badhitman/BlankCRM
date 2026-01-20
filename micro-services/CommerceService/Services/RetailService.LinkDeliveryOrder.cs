@@ -46,6 +46,7 @@ public partial class RetailService : IRetailService
             .Where(x => x.Id == req.Payload.Id || (req.Payload.OrderDocumentId == x.OrderDocumentId && req.Payload.DeliveryDocumentId == x.DeliveryDocumentId))
             .ExecuteUpdateAsync(set => set
                 .SetProperty(p => p.WeightShipping, req.Payload.WeightShipping), cancellationToken: token);
+        
         await context.SaveChangesAsync(token);
         return ResponseBaseModel.CreateSuccess("Ok");
     }

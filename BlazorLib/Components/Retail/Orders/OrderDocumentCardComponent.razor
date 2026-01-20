@@ -131,7 +131,7 @@ else
                     <small title="Дата создания документа" class="text-body-secondary">Дата создания: @editDocument.CreatedAtUTC.GetCustomTime()</small>
                     @if (editDocument.LastUpdatedAtUTC is not null && editDocument.LastUpdatedAtUTC != default)
                     {
-                        <small title="Автор документа" class="text-body-secondary">Автор: @editDocument.LastUpdatedAtUTC.Value.GetCustomTime()</small>
+                        <small title="Дата последнего изменения/обновления" class="text-body-secondary ms-2">Изменён: @editDocument.LastUpdatedAtUTC.Value.GetCustomTime()</small>
                     }
                 }
             </p>
