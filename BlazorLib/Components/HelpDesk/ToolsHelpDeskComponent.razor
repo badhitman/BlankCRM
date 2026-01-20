@@ -104,16 +104,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col">
-                        <div class="card">
-                            <div class="card-body">
-                                <DecimalParameterStorageComponent Label="Офисные"
-                                                                  InitValueIfNotExist=540
-                                                                  HelperText="Офисные"
-                                                                  KeyStorage="GlobalStaticCloudStorageMetadata.BonusAmountStorageMetadata" />
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </MudTabPanel>
             <MudTabPanel Text="json price view">
@@ -142,9 +132,13 @@
                             <div class="card-body">
                                 <h6 class="card-subtitle mb-2 text-body-secondary">New document</h6>
                                 <p class="card-text">
-                                    <StringParameterStorageComponent Label="Subject email" HelperText="Subject Email" KeyStorage="GlobalStaticCloudStorageMetadata.CommerceNewOrderSubjectNotification" />
+                                    <StringParameterStorageComponent Label="Subject email"
+                                                                     HelperText="Subject Email"
+                                                                     KeyStorage="GlobalStaticCloudStorageMetadata.CommerceNewOrderSubjectNotification" />
                                     <hr />
-                                    <TextareaParameterStorageComponent Label="Text email" KeyStorage="GlobalStaticCloudStorageMetadata.CommerceNewOrderBodyNotification" HelperText="Email text when creating a document" />
+                                    <TextareaParameterStorageComponent Label="Text email"
+                                                                       KeyStorage="GlobalStaticCloudStorageMetadata.CommerceNewOrderBodyNotification"
+                                                                       HelperText="Email text when creating a document" />
                                 </p>
                             </div>
                         </div>
@@ -160,9 +154,13 @@
                                         <div class="card-body">
                                             <h6 class="card-subtitle mb-2 text-body-secondary">Change of status</h6>
                                             <p class="card-text">
-                                                <StringParameterStorageComponent Label="Subject email" HelperText="Subject Email" KeyStorage="_kss" />
+                                                <StringParameterStorageComponent Label="Subject email"
+                                                                                 HelperText="Subject Email"
+                                                                                 KeyStorage="_kss" />
                                                 <hr />
-                                                <TextareaParameterStorageComponent Label="Text email" KeyStorage="_ksb" HelperText="Email text when document status changes" />
+                                                <TextareaParameterStorageComponent Label="Text email"
+                                                                                   KeyStorage="_ksb"
+                                                                                   HelperText="Email text when document status changes" />
                                             </p>
                                         </div>
                                     </div>
@@ -173,9 +171,13 @@
                             <div class="card-body">
                                 <h6 class="card-subtitle mb-2 text-body-secondary">New message</h6>
                                 <p class="card-text">
-                                    <StringParameterStorageComponent Label="Subject email" HelperText="Subject Email" KeyStorage="GlobalStaticCloudStorageMetadata.CommerceNewMessageOrderSubjectNotification" />
+                                    <StringParameterStorageComponent Label="Subject email"
+                                                                     HelperText="Subject Email"
+                                                                     KeyStorage="GlobalStaticCloudStorageMetadata.CommerceNewMessageOrderSubjectNotification" />
                                     <hr />
-                                    <TextareaParameterStorageComponent Label="Text email" KeyStorage="GlobalStaticCloudStorageMetadata.CommerceNewMessageOrderBodyNotification" HelperText="Email text when a new message appears in a document" />
+                                    <TextareaParameterStorageComponent Label="Text email"
+                                                                       KeyStorage="GlobalStaticCloudStorageMetadata.CommerceNewMessageOrderBodyNotification"
+                                                                       HelperText="Email text when a new message appears in a document" />
                                 </p>
                             </div>
                         </div>
@@ -190,7 +192,9 @@
                             <div class="card-body">
                                 <h6 class="card-subtitle mb-2 text-body-secondary">New document</h6>
                                 <p class="card-text">
-                                    <TextareaParameterStorageComponent Label="Текст сообщения" KeyStorage="GlobalStaticCloudStorageMetadata.CommerceNewOrderBodyNotificationTelegram" HelperText="Текст TelegramBot уведомления при создании документа" />
+                                    <TextareaParameterStorageComponent Label="Текст сообщения"
+                                                                       KeyStorage="GlobalStaticCloudStorageMetadata.CommerceNewOrderBodyNotificationTelegram"
+                                                                       HelperText="Текст TelegramBot уведомления при создании документа" />
                                 </p>
                             </div>
                         </div>
@@ -202,7 +206,9 @@
                                         <div class="card-body">
                                             <h6 class="card-subtitle mb-2 text-body-secondary">Изменение статуса</h6>
                                             <p class="card-text">
-                                                <TextareaParameterStorageComponent Label="Текст сообщения" KeyStorage="GlobalStaticCloudStorageMetadata.CommerceStatusChangeOrderBodyNotificationTelegram(stepEnum)" HelperText="Текст TelegramBot уведомления при изменении статуса документа" />
+                                                <TextareaParameterStorageComponent Label="Текст сообщения"
+                                                                                   KeyStorage="GlobalStaticCloudStorageMetadata.CommerceStatusChangeOrderBodyNotificationTelegram(stepEnum)"
+                                                                                   HelperText="Текст TelegramBot уведомления при изменении статуса документа" />
                                             </p>
                                         </div>
                                     </div>
@@ -213,7 +219,9 @@
                             <div class="card-body">
                                 <h6 class="card-subtitle mb-2 text-body-secondary">Новое сообщение</h6>
                                 <p class="card-text">
-                                    <TextareaParameterStorageComponent Label="Текст сообщения" KeyStorage="GlobalStaticCloudStorageMetadata.CommerceNewMessageOrderBodyNotificationTelegram" HelperText="Текст TelegramBot уведомления при добавлении комментария к документу" />
+                                    <TextareaParameterStorageComponent Label="Текст сообщения"
+                                                                       KeyStorage="GlobalStaticCloudStorageMetadata.CommerceNewMessageOrderBodyNotificationTelegram"
+                                                                       HelperText="Текст TelegramBot уведомления при добавлении комментария к документу" />
                                 </p>
                             </div>
                         </div>
@@ -228,7 +236,9 @@
                             <div class="card-body">
                                 <h6 class="card-subtitle mb-2 text-body-secondary">New document</h6>
                                 <p class="card-text">
-                                    <TextareaParameterStorageComponent Label="Текст сообщения" KeyStorage="GlobalStaticCloudStorageMetadata.CommerceNewOrderBodyNotificationWhatsapp" HelperText="Текст Whatsapp уведомления при создании документа" />
+                                    <TextareaParameterStorageComponent Label="Текст сообщения"
+                                                                       KeyStorage="GlobalStaticCloudStorageMetadata.CommerceNewOrderBodyNotificationWhatsapp"
+                                                                       HelperText="Текст Whatsapp уведомления при создании документа" />
                                 </p>
                             </div>
                             <ul class="list-group list-group-flush">
@@ -277,7 +287,9 @@
                                         <div class="card-body">
                                             <h6 class="card-subtitle mb-2 text-body-secondary">Изменение статуса</h6>
                                             <p class="card-text">
-                                                <TextareaParameterStorageComponent Label="Текст сообщения" KeyStorage="GlobalStaticCloudStorageMetadata.CommerceStatusChangeOrderBodyNotificationWhatsapp(stepEnum)" HelperText="Текст Whatsapp уведомления при изменении статуса документа" />
+                                                <TextareaParameterStorageComponent Label="Текст сообщения"
+                                                                                   KeyStorage="GlobalStaticCloudStorageMetadata.CommerceStatusChangeOrderBodyNotificationWhatsapp(stepEnum)"
+                                                                                   HelperText="Текст Whatsapp уведомления при изменении статуса документа" />
                                             </p>
                                         </div>
                                     </div>
@@ -288,7 +300,9 @@
                             <div class="card-body">
                                 <h6 class="card-subtitle mb-2 text-body-secondary">Новое сообщение</h6>
                                 <p class="card-text">
-                                    <TextareaParameterStorageComponent Label="Текст сообщения" KeyStorage="GlobalStaticCloudStorageMetadata.CommerceNewMessageOrderBodyNotificationWhatsapp" HelperText="Текст Whatsapp уведомления при добавлении комментария к документу" />
+                                    <TextareaParameterStorageComponent Label="Текст сообщения"
+                                                                       KeyStorage="GlobalStaticCloudStorageMetadata.CommerceNewMessageOrderBodyNotificationWhatsapp"
+                                                                       HelperText="Текст Whatsapp уведомления при добавлении комментария к документу" />
                                 </p>
                             </div>
                         </div>
@@ -330,42 +344,66 @@
             <div class="col">
                 <div class="card">
                     <div class="card-body">
-                        <BoolSimpleStorageComponent StorageMetadata="GlobalStaticCloudStorageMetadata.ShowClaimsUser" Title="Отображение колонки Claims" Label="Колонка Claims пользователей" HintTrue="Колонка Claims отображается" HintFalse="Колонка Claims скрыта" />
+                        <BoolSimpleStorageComponent StorageMetadata="GlobalStaticCloudStorageMetadata.ShowClaimsUser"
+                                                    Title="Отображение колонки Claims"
+                                                    Label="Колонка Claims пользователей"
+                                                    HintTrue="Колонка Claims отображается"
+                                                    HintFalse="Колонка Claims скрыта" />
                     </div>
                 </div>
             </div>
             <div class="col">
                 <div class="card">
                     <div class="card-body">
-                        <BoolSimpleStorageComponent StorageMetadata="GlobalStaticCloudStorageMetadata.ShowCreatingIssue" Title="Ручное создание обращений-заявок в СЭД" Label="Создание заявок" HintTrue="Кнопка создания обращения активна" HintFalse="Ручное создание обращений отключено" />
+                        <BoolSimpleStorageComponent StorageMetadata="GlobalStaticCloudStorageMetadata.ShowCreatingIssue"
+                                                    Title="Ручное создание обращений-заявок в СЭД"
+                                                    Label="Создание заявок"
+                                                    HintTrue="Кнопка создания обращения активна"
+                                                    HintFalse="Ручное создание обращений отключено" />
                     </div>
                 </div>
             </div>
             <div class="col">
                 <div class="card">
                     <div class="card-body">
-                        <BoolSimpleStorageComponent StorageMetadata="GlobalStaticCloudStorageMetadata.ShowingWappiArea" Title="Отображение WhatsApp отправки сообщения в заявке" Label="WhatsApp чаты в заявках" HintTrue="В заявке будет отображаться диалог отправки WhatsApp сообщения" HintFalse="Отправка WhatsApp сообщений не отображаются в заявках" />
+                        <BoolSimpleStorageComponent StorageMetadata="GlobalStaticCloudStorageMetadata.ShowingWappiArea"
+                                                    Title="Отображение WhatsApp отправки сообщения в заявке"
+                                                    Label="WhatsApp чаты в заявках"
+                                                    HintTrue="В заявке будет отображаться диалог отправки WhatsApp сообщения"
+                                                    HintFalse="Отправка WhatsApp сообщений не отображаются в заявках" />
                     </div>
                 </div>
             </div>
             <div class="col">
                 <div class="card">
                     <div class="card-body">
-                        <BoolSimpleStorageComponent StorageMetadata="GlobalStaticCloudStorageMetadata.ShowingPriceSelectorOrder" Title="Отображение цены в селекторе номенклатуры в создании заказа" Label="Цены при выборе номенклатуры в заказе" HintTrue="При выборе номенклатуры отображается цена" HintFalse="При выборе номенклатуры цена не отображается" />
+                        <BoolSimpleStorageComponent StorageMetadata="GlobalStaticCloudStorageMetadata.ShowingPriceSelectorOrder"
+                                                    Title="Отображение цены в селекторе номенклатуры в создании заказа"
+                                                    Label="Цены при выборе номенклатуры в заказе"
+                                                    HintTrue="При выборе номенклатуры отображается цена"
+                                                    HintFalse="При выборе номенклатуры цена не отображается" />
                     </div>
                 </div>
             </div>
             <div class="col">
                 <div class="card">
                     <div class="card-body">
-                        <BoolSimpleStorageComponent StorageMetadata="GlobalStaticCloudStorageMetadata.ShowingAttachmentsOrderArea" Title="Отображение панели вложений в заявках" Label="Вложения в заказах" HintTrue="В заказе будет отображаться диалог прикрепления файлов" HintFalse="Вложения для заказов отключены" />
+                        <BoolSimpleStorageComponent StorageMetadata="GlobalStaticCloudStorageMetadata.ShowingAttachmentsOrderArea"
+                                                    Title="Отображение панели вложений в заявках"
+                                                    Label="Вложения в заказах"
+                                                    HintTrue="В заказе будет отображаться диалог прикрепления файлов"
+                                                    HintFalse="Вложения для заказов отключены" />
                     </div>
                 </div>
             </div>
             <div class="col">
                 <div class="card">
                     <div class="card-body">
-                        <BoolSimpleStorageComponent StorageMetadata="GlobalStaticCloudStorageMetadata.ShowingAttachmentsIssuesArea" Title="Displaying the attachment panel in requests" Label="Вложения в обращениях" HintTrue="В заявке будет отображаться диалог прикрепления файлов" HintFalse="Вложения для заявок отключены" />
+                        <BoolSimpleStorageComponent StorageMetadata="GlobalStaticCloudStorageMetadata.ShowingAttachmentsIssuesArea"
+                                                    Title="Displaying the attachment panel in requests"
+                                                    Label="Вложения в обращениях"
+                                                    HintTrue="В заявке будет отображаться диалог прикрепления файлов"
+                                                    HintFalse="Вложения для заявок отключены" />
                     </div>
                 </div>
             </div>

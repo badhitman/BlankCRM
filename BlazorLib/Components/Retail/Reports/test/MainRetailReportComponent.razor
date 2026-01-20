@@ -1,12 +1,35 @@
 ﻿@inherits BlazorBusyComponentBaseModel
 
+@using BlazorLib.Components.ParametersShared
 @using MudBlazor
+<div class="row row-cols-1 row-cols-md-2 g-1">
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <MudDateRangePicker PickerVariant="@PickerVariant.Inline"
+                                    @bind-DateRange="@DateRangeProp"
+                                    Variant="Variant.Outlined"
+                                    Label="Период"
+                                    Disabled=@(Owner is not null)
+                                    Clearable=@(Owner is null) />
+            </div>
+        </div>
+    </div>
+    <AuthorizeView Context="col" Roles="@($"{GlobalStaticConstantsRoles.Roles.Admin}")">
+        <Authorized>
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <DecimalParameterStorageComponent Label="Офисные"
+                                                          InitValueIfNotExist=540
+                                                          KeyStorage="GlobalStaticCloudStorageMetadata.BonusAmountStorageMetadata" />
+                    </div>
+                </div>
+            </div>
+        </Authorized>
+    </AuthorizeView>
+</div>
 
-<MudDateRangePicker PickerVariant="@PickerVariant.Inline"
-                    @bind-DateRange="@DateRangeProp"
-                    Margin="Margin.Dense"
-                    Disabled=@(Owner is not null)
-                    Clearable=@(Owner is null) />
 
 @if (IsBusyProgress || ReportData is null)
 {
