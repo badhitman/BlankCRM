@@ -26,6 +26,7 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<TracesSelectForOrdersRetailReceive, TPaginationRequestStandardModel<SelectTraceElementsRequestModel>, TPaginationResponseStandardModel<TraceReceiverRecord>>()
             .RegisterMqListener<TracesSelectForDeliveriesRetailReceive, TPaginationRequestStandardModel<SelectTraceElementsRequestModel>, TPaginationResponseStandardModel<TraceReceiverRecord>>()
             .RegisterMqListener<TracesSelectForConversionsRetailReceive, TPaginationRequestStandardModel<SelectTraceElementsRequestModel>, TPaginationResponseStandardModel<TraceReceiverRecord>>()
+            .RegisterMqListener<TracesSelectForPaymentsRetailReceive, TPaginationRequestStandardModel<SelectTraceElementsRequestModel>, TPaginationResponseStandardModel<TraceReceiverRecord>>()
             ;
     }
 }

@@ -1,6 +1,7 @@
 ﻿@using BlazorLib.Components.Retail.OrdersLinks
 @using BlazorLib.Components.Retail.Wallet
 @using BlazorLib.Components.Telegram
+@using BlazorLib.Components.TraceHistoryView
 @using MudBlazor
 
 @inherits BlazorBusyComponentBaseAuthModel
@@ -85,6 +86,12 @@
                 <MudTabPanel Text="Заказы" Disabled="@(PaymentId < 1)">
                     <OrdersPaymentsLinksTableComponent PaymentId="PaymentId" />
                 </MudTabPanel>
+                @if (PaymentId > 0)
+                {
+                    <MudTabPanel Text="История" Icon="@Icons.Material.Filled.BugReport">
+                        <HistoryPaymentsWrapperComponent PaymentId="PaymentId" />
+                    </MudTabPanel>
+                }
                 @if (currentChatTelegram is not null)
                 {
                     <MudTabPanel Text="Telegram">

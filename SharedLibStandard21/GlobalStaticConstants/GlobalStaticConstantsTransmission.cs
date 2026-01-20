@@ -1135,6 +1135,9 @@ public static partial class GlobalStaticConstantsTransmission
         public readonly static string TracesSelectForDeliveriesRetailReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.INDEXING_CONTROLLER_NAME}-{Routes.RETAIL_CONTROLLER_NAME}", Routes.DELIVERY_CONTROLLER_NAME, Routes.TRACES_CONTROLLER_NAME);
 
         /// <inheritdoc/>
+        public readonly static string TracesSelectForPaymentsRetailReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.INDEXING_CONTROLLER_NAME}-{Routes.RETAIL_CONTROLLER_NAME}", Routes.PAYMENT_CONTROLLER_NAME, Routes.TRACES_CONTROLLER_NAME);
+
+        /// <inheritdoc/>
         public readonly static string TracesSelectForConversionsRetailReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.INDEXING_CONTROLLER_NAME}-{Routes.RETAIL_CONTROLLER_NAME}", Routes.CONVERSION_CONTROLLER_NAME, Routes.TRACES_CONTROLLER_NAME);
 
         /// <inheritdoc/>
