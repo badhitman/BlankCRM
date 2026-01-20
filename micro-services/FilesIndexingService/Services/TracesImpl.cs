@@ -91,92 +91,6 @@ public class TracesImpl(IOptions<MongoConfigModel> mongoConf) : ITracesIndexing
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseStandardModel<TraceReceiverRecord>> TracesSelectForDeliveriesRetailAsync(TPaginationRequestStandardModel<SelectTraceElementsRequestModel> req, CancellationToken token = default)
-    {
-        if (req.Payload is null)
-            return new()
-            {
-                Status = new()
-                {
-                    Messages = [new()
-                      {
-                           TypeMessage = MessagesTypesEnum.Error,
-                            Text = "req.Payload is null"
-                      }]
-                }
-            };
-
-        IMongoDatabase mongoFs = new MongoClient(mongoConf.Value.ToString()).GetDatabase($"{mongoConf.Value.BusTracesSystemName}{GlobalStaticConstantsTransmission.GetModePrefix}");
-        IMongoCollection<BsonDocument> collection = mongoFs.GetCollection<BsonDocument>(nameof(TraceReceive));
-
-        FilterDefinitionBuilder<BsonDocument> filterBuilder = Builders<BsonDocument>.Filter;
-        FilterDefinition<BsonDocument> filter = filterBuilder.Empty;
-
-        filter = filterBuilder.And(
-            filterBuilder.Eq(nameof(TraceReceiverRecord.ReceiverName), GlobalStaticConstantsTransmission.TransmissionQueues.CreateDeliveryStatusDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()),
-            filterBuilder.Eq($"{nameof(TraceReceiverRecord.RequestBody)}._v.{nameof(DeliveryStatusRetailDocumentModelDB.DeliveryDocumentId)}", req.Payload.FilterId))
-            | filterBuilder.And(
-                filterBuilder.Eq(nameof(TraceReceiverRecord.ReceiverName), GlobalStaticConstantsTransmission.TransmissionQueues.DeleteDeliveryStatusDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()),
-                filterBuilder.Eq($"{nameof(TraceReceiverRecord.ResponseBody)}._v.{nameof(DeleteDeliveryStatusDocumentRequestModel.DeleteDeliveryStatusDocumentId)}", req.Payload.FilterId))
-            | filterBuilder.And(
-                filterBuilder.Eq(nameof(TraceReceiverRecord.ReceiverName), GlobalStaticConstantsTransmission.TransmissionQueues.UpdateRowOfDeliveryDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()),
-                filterBuilder.Eq($"{nameof(TraceReceiverRecord.RequestBody)}._v.{nameof(RowOfDeliveryRetailDocumentModelDB.DocumentId)}", req.Payload.FilterId))
-            | filterBuilder.And(
-                filterBuilder.Eq(nameof(TraceReceiverRecord.ReceiverName), GlobalStaticConstantsTransmission.TransmissionQueues.UpdateDeliveryDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()),
-                filterBuilder.Eq($"{nameof(TraceReceiverRecord.RequestBody)}._v.{nameof(DeliveryDocumentRetailModelDB.Id)}", req.Payload.FilterId))
-            | filterBuilder.And(
-                filterBuilder.Eq(nameof(TraceReceiverRecord.ReceiverName), GlobalStaticConstantsTransmission.TransmissionQueues.UpdateDeliveryStatusDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()),
-                filterBuilder.Eq($"{nameof(TraceReceiverRecord.RequestBody)}._v.{nameof(DeliveryStatusRetailDocumentModelDB.DeliveryDocumentId)}", req.Payload.FilterId))
-            | filterBuilder.And(
-                filterBuilder.Eq(nameof(TraceReceiverRecord.ReceiverName), GlobalStaticConstantsTransmission.TransmissionQueues.DeleteRowOfDeliveryDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()),
-                filterBuilder.Eq($"{nameof(TraceReceiverRecord.ResponseBody)}._v.{nameof(DocumentNewVersionResponseModel.Response)}", req.Payload.FilterId))
-            | filterBuilder.And(
-                filterBuilder.Eq(nameof(TraceReceiverRecord.ReceiverName), GlobalStaticConstantsTransmission.TransmissionQueues.CreateRowOfDeliveryDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()),
-                filterBuilder.Eq($"{nameof(TraceReceiverRecord.RequestBody)}._v.{nameof(RowOfDeliveryRetailDocumentModelDB.DocumentId)}", req.Payload.FilterId))
-            | filterBuilder.And(
-                filterBuilder.Eq(nameof(TraceReceiverRecord.ReceiverName), GlobalStaticConstantsTransmission.TransmissionQueues.CreateDeliveryDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()),
-                filterBuilder.Eq($"{nameof(TraceReceiverRecord.ResponseBody)}._v.{nameof(TResponseModel<>.Response)}", req.Payload.FilterId))
-            | filterBuilder.And(
-                filterBuilder.Eq(nameof(TraceReceiverRecord.ReceiverName), GlobalStaticConstantsTransmission.TransmissionQueues.CreateDeliveryOrderLinkDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()),
-                filterBuilder.Eq($"{nameof(TraceReceiverRecord.RequestBody)}._v.{nameof(RetailOrderDeliveryLinkModelDB.DeliveryDocumentId)}", req.Payload.FilterId))
-            | filterBuilder.And(
-                filterBuilder.Eq(nameof(TraceReceiverRecord.ReceiverName), GlobalStaticConstantsTransmission.TransmissionQueues.DeleteDeliveryOrderLinkDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()),
-                filterBuilder.Eq($"{nameof(TraceReceiverRecord.RequestBody)}._v.{nameof(OrderDeliveryModel.DeliveryId)}", req.Payload.FilterId))
-            | filterBuilder.And(
-                filterBuilder.Eq(nameof(TraceReceiverRecord.ReceiverName), GlobalStaticConstantsTransmission.TransmissionQueues.UpdateDeliveryOrderLinkDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()),
-                filterBuilder.Eq($"{nameof(TraceReceiverRecord.RequestBody)}._v.{nameof(RetailOrderDeliveryLinkModelDB.DeliveryDocumentId)}", req.Payload.FilterId))
-         ;
-
-        IOrderedFindFluent<BsonDocument, BsonDocument> filteredSource = collection
-            .Find(filter)
-            .SortByDescending(d => d[nameof(TraceReceiverRecord.UTCTimestampInitReceive)]);
-
-        List<BsonDocument> records = await filteredSource.Skip(req.PageNum * req.PageSize).Limit(req.PageSize).ToListAsync(cancellationToken: token);
-        long count = await collection.CountDocumentsAsync(filter, cancellationToken: token);
-        List<TraceReceive> recordsPoco = [.. records.Select(x => BsonSerializer.Deserialize<TraceReceive>(x))];
-
-        return new()
-        {
-            PageNum = req.PageNum,
-            PageSize = req.PageSize,
-            TotalRowsCount = (int)await collection.CountDocumentsAsync(filter, cancellationToken: token),
-            SortingDirection = req.SortingDirection,
-            SortBy = req.SortBy,
-            Response = [.. recordsPoco.Select(x => new TraceReceive()
-            {
-                UTCTimestampFinalReceive = x.UTCTimestampFinalReceive,
-                UTCTimestampInitReceive = x.UTCTimestampInitReceive,
-
-                ReceiverName = x.ReceiverName,
-                SenderActionUserId = x.SenderActionUserId,
-
-                RequestBody = JObject.Parse(x.RequestBody.ToBsonDocument().ToJson()),
-                ResponseBody = JObject.Parse(x.ResponseBody.ToBsonDocument().ToJson()),
-            }).OrderByDescending(x => x.UTCTimestampInitReceive)],
-        };
-    }
-
-    /// <inheritdoc/>
     public async Task<TPaginationResponseStandardModel<TraceReceiverRecord>> TracesSelectForOrdersRetailAsync(TPaginationRequestStandardModel<SelectTraceElementsRequestModel> req, CancellationToken token = default)
     {
         if (req.Payload is null)
@@ -249,6 +163,92 @@ public class TracesImpl(IOptions<MongoConfigModel> mongoConf) : ITracesIndexing
             | filterBuilder.And(
                 filterBuilder.Eq(nameof(TraceReceiverRecord.ReceiverName), GlobalStaticConstantsTransmission.TransmissionQueues.UpdateConversionOrderLinkDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()),
                 filterBuilder.Eq($"{nameof(TraceReceiverRecord.RequestBody)}._v.{nameof(OrderConversionAmountModel.OrderDocumentId)}", req.Payload.FilterId))
+         ;
+
+        IOrderedFindFluent<BsonDocument, BsonDocument> filteredSource = collection
+            .Find(filter)
+            .SortByDescending(d => d[nameof(TraceReceiverRecord.UTCTimestampInitReceive)]);
+
+        List<BsonDocument> records = await filteredSource.Skip(req.PageNum * req.PageSize).Limit(req.PageSize).ToListAsync(cancellationToken: token);
+        long count = await collection.CountDocumentsAsync(filter, cancellationToken: token);
+        List<TraceReceive> recordsPoco = [.. records.Select(x => BsonSerializer.Deserialize<TraceReceive>(x))];
+
+        return new()
+        {
+            PageNum = req.PageNum,
+            PageSize = req.PageSize,
+            TotalRowsCount = (int)await collection.CountDocumentsAsync(filter, cancellationToken: token),
+            SortingDirection = req.SortingDirection,
+            SortBy = req.SortBy,
+            Response = [.. recordsPoco.Select(x => new TraceReceive()
+            {
+                UTCTimestampFinalReceive = x.UTCTimestampFinalReceive,
+                UTCTimestampInitReceive = x.UTCTimestampInitReceive,
+
+                ReceiverName = x.ReceiverName,
+                SenderActionUserId = x.SenderActionUserId,
+
+                RequestBody = JObject.Parse(x.RequestBody.ToBsonDocument().ToJson()),
+                ResponseBody = JObject.Parse(x.ResponseBody.ToBsonDocument().ToJson()),
+            }).OrderByDescending(x => x.UTCTimestampInitReceive)],
+        };
+    }
+
+    /// <inheritdoc/>
+    public async Task<TPaginationResponseStandardModel<TraceReceiverRecord>> TracesSelectForDeliveriesRetailAsync(TPaginationRequestStandardModel<SelectTraceElementsRequestModel> req, CancellationToken token = default)
+    {
+        if (req.Payload is null)
+            return new()
+            {
+                Status = new()
+                {
+                    Messages = [new()
+                      {
+                           TypeMessage = MessagesTypesEnum.Error,
+                            Text = "req.Payload is null"
+                      }]
+                }
+            };
+
+        IMongoDatabase mongoFs = new MongoClient(mongoConf.Value.ToString()).GetDatabase($"{mongoConf.Value.BusTracesSystemName}{GlobalStaticConstantsTransmission.GetModePrefix}");
+        IMongoCollection<BsonDocument> collection = mongoFs.GetCollection<BsonDocument>(nameof(TraceReceive));
+
+        FilterDefinitionBuilder<BsonDocument> filterBuilder = Builders<BsonDocument>.Filter;
+        FilterDefinition<BsonDocument> filter = filterBuilder.Empty;
+
+        filter = filterBuilder.And(
+            filterBuilder.Eq(nameof(TraceReceiverRecord.ReceiverName), GlobalStaticConstantsTransmission.TransmissionQueues.CreateDeliveryStatusDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()),
+            filterBuilder.Eq($"{nameof(TraceReceiverRecord.RequestBody)}._v.{nameof(DeliveryStatusRetailDocumentModelDB.DeliveryDocumentId)}", req.Payload.FilterId))
+            | filterBuilder.And(
+                filterBuilder.Eq(nameof(TraceReceiverRecord.ReceiverName), GlobalStaticConstantsTransmission.TransmissionQueues.DeleteDeliveryStatusDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()),
+                filterBuilder.Eq($"{nameof(TraceReceiverRecord.ResponseBody)}._v.{nameof(DeleteDeliveryStatusDocumentRequestModel.DeleteDeliveryStatusDocumentId)}", req.Payload.FilterId))
+            | filterBuilder.And(
+                filterBuilder.Eq(nameof(TraceReceiverRecord.ReceiverName), GlobalStaticConstantsTransmission.TransmissionQueues.UpdateRowOfDeliveryDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()),
+                filterBuilder.Eq($"{nameof(TraceReceiverRecord.RequestBody)}._v.{nameof(RowOfDeliveryRetailDocumentModelDB.DocumentId)}", req.Payload.FilterId))
+            | filterBuilder.And(
+                filterBuilder.Eq(nameof(TraceReceiverRecord.ReceiverName), GlobalStaticConstantsTransmission.TransmissionQueues.UpdateDeliveryDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()),
+                filterBuilder.Eq($"{nameof(TraceReceiverRecord.RequestBody)}._v.{nameof(DeliveryDocumentRetailModelDB.Id)}", req.Payload.FilterId))
+            | filterBuilder.And(
+                filterBuilder.Eq(nameof(TraceReceiverRecord.ReceiverName), GlobalStaticConstantsTransmission.TransmissionQueues.UpdateDeliveryStatusDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()),
+                filterBuilder.Eq($"{nameof(TraceReceiverRecord.RequestBody)}._v.{nameof(DeliveryStatusRetailDocumentModelDB.DeliveryDocumentId)}", req.Payload.FilterId))
+            | filterBuilder.And(
+                filterBuilder.Eq(nameof(TraceReceiverRecord.ReceiverName), GlobalStaticConstantsTransmission.TransmissionQueues.DeleteRowOfDeliveryDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()),
+                filterBuilder.Eq($"{nameof(TraceReceiverRecord.ResponseBody)}._v.{nameof(DocumentNewVersionResponseModel.Response)}", req.Payload.FilterId))
+            | filterBuilder.And(
+                filterBuilder.Eq(nameof(TraceReceiverRecord.ReceiverName), GlobalStaticConstantsTransmission.TransmissionQueues.CreateRowOfDeliveryDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()),
+                filterBuilder.Eq($"{nameof(TraceReceiverRecord.RequestBody)}._v.{nameof(RowOfDeliveryRetailDocumentModelDB.DocumentId)}", req.Payload.FilterId))
+            | filterBuilder.And(
+                filterBuilder.Eq(nameof(TraceReceiverRecord.ReceiverName), GlobalStaticConstantsTransmission.TransmissionQueues.CreateDeliveryDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()),
+                filterBuilder.Eq($"{nameof(TraceReceiverRecord.ResponseBody)}._v.{nameof(TResponseModel<>.Response)}", req.Payload.FilterId))
+            | filterBuilder.And(
+                filterBuilder.Eq(nameof(TraceReceiverRecord.ReceiverName), GlobalStaticConstantsTransmission.TransmissionQueues.CreateDeliveryOrderLinkDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()),
+                filterBuilder.Eq($"{nameof(TraceReceiverRecord.RequestBody)}._v.{nameof(RetailOrderDeliveryLinkModelDB.DeliveryDocumentId)}", req.Payload.FilterId))
+            | filterBuilder.And(
+                filterBuilder.Eq(nameof(TraceReceiverRecord.ReceiverName), GlobalStaticConstantsTransmission.TransmissionQueues.DeleteDeliveryOrderLinkDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()),
+                filterBuilder.Eq($"{nameof(TraceReceiverRecord.RequestBody)}._v.{nameof(OrderDeliveryModel.DeliveryId)}", req.Payload.FilterId))
+            | filterBuilder.And(
+                filterBuilder.Eq(nameof(TraceReceiverRecord.ReceiverName), GlobalStaticConstantsTransmission.TransmissionQueues.UpdateDeliveryOrderLinkDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()),
+                filterBuilder.Eq($"{nameof(TraceReceiverRecord.RequestBody)}._v.{nameof(RetailOrderDeliveryLinkModelDB.DeliveryDocumentId)}", req.Payload.FilterId))
          ;
 
         IOrderedFindFluent<BsonDocument, BsonDocument> filteredSource = collection
