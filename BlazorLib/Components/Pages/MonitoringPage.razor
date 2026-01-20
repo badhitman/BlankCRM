@@ -1,7 +1,10 @@
 @page "/monitoring-tools"
 
+@using BlazorLib.Components.Shared
+@using BlazorLib.Components.Storage
 @using BlazorLib.Components.TraceHistoryView
 @using BlazorLib.Components.HelpDesk
+@using Microsoft.Extensions.Options
 @using MudBlazor
 
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
@@ -14,4 +17,24 @@
     <MudTabPanel Text="История">
         <HistoryMainWrapperComponent />
     </MudTabPanel>
+    <MudTabPanel Text="SnackBar stack">
+        <SnackBarHistoryComponent />
+    </MudTabPanel>
+    @if (ServerConfig.Value.DirectoriesReadList is not null && ServerConfig.Value.DirectoriesReadList.Length != 0)
+    {
+        <MudTabPanel Text="Файлы/папки">
+            <MudTable Items="@ServerConfig.Value.DirectoriesReadList">
+                <RowTemplate>
+                    <MudTd><FolderRootViewComponent FolderPath="@context" /></MudTd>
+                </RowTemplate>
+                <PagerContent>
+                    <MudTablePager PageSizeOptions="new int[] { 3, 5, 10, int.MaxValue }" />
+                </PagerContent>
+            </MudTable>
+        </MudTabPanel>
+    }
 </MudTabs>
+@code {
+    [Inject]
+    IOptions<ServerConfigModel> ServerConfig { get; set; } = default!;
+}
