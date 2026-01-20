@@ -154,11 +154,18 @@ public class TracesImpl(IOptions<MongoConfigModel> mongoConf) : ITracesIndexing
             | filterBuilder.And(
                 filterBuilder.Eq(nameof(TraceReceiverRecord.ReceiverName), GlobalStaticConstantsTransmission.TransmissionQueues.DeleteDeliveryOrderLinkDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()),
                 filterBuilder.Eq($"{nameof(TraceReceiverRecord.RequestBody)}._v.{nameof(OrderDeliveryModel.OrderDocumentId)}", req.Payload.FilterId))
-         ;
+            | filterBuilder.And(
+                filterBuilder.Eq(nameof(TraceReceiverRecord.ReceiverName), GlobalStaticConstantsTransmission.TransmissionQueues.UpdatePaymentOrderLinkDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()),
+                filterBuilder.Eq($"{nameof(TraceReceiverRecord.RequestBody)}._v.{nameof(PaymentOrderRetailLinkModelDB.OrderDocumentId)}", req.Payload.FilterId))
 
-        /*
-         
-         */
+            | filterBuilder.And(
+                filterBuilder.Eq(nameof(TraceReceiverRecord.ReceiverName), GlobalStaticConstantsTransmission.TransmissionQueues.UpdateDeliveryOrderLinkDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()),
+                filterBuilder.Eq($"{nameof(TraceReceiverRecord.RequestBody)}._v.{nameof(RetailOrderDeliveryLinkModelDB.OrderDocumentId)}", req.Payload.FilterId))
+
+            | filterBuilder.And(
+                filterBuilder.Eq(nameof(TraceReceiverRecord.ReceiverName), GlobalStaticConstantsTransmission.TransmissionQueues.UpdateConversionOrderLinkDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()),
+                filterBuilder.Eq($"{nameof(TraceReceiverRecord.RequestBody)}._v.{nameof(OrderConversionAmountModel.OrderDocumentId)}", req.Payload.FilterId))
+         ;
 
         IOrderedFindFluent<BsonDocument, BsonDocument> filteredSource = collection
             .Find(filter)

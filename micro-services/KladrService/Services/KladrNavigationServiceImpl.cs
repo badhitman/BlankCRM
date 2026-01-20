@@ -7,7 +7,6 @@ using System.Collections.Concurrent;
 using Newtonsoft.Json.Linq;
 using SharedLib;
 using DbcLib;
-using System.Linq;
 
 namespace KladrService;
 
@@ -18,7 +17,7 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
     public async Task<TResponseModel<KladrResponseModel>> ObjectGetAsync(KladrsRequestBaseModel req, CancellationToken token = default)
     {
         if (string.IsNullOrWhiteSpace(req.Code))
-            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "string.IsNullOrWhiteSpace(req.Code)" }] };
+            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = $"string.IsNullOrWhiteSpace(req.Code) -> {nameof(ObjectGetAsync)}" }] };
 
         CodeKladrModel codeParse = CodeKladrModel.Build(req.Code);
 
