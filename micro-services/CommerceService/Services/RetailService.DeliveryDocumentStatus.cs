@@ -109,7 +109,6 @@ public partial class RetailService : IRetailService
         ResponseBaseModel sRes = await DoIt(context, transaction, docDb.Rows, !offDeliveriesStatuses.Contains(_newStatus), offerAvailabilityDB, docDb, token);
         if (!sRes.Success())
         {
-            await transaction.RollbackAsync(token);
             res.AddRangeMessages(sRes.Messages);
             return res;
         }
@@ -227,8 +226,8 @@ public partial class RetailService : IRetailService
         ResponseBaseModel sRes = await DoIt(context, transaction, docDb.Rows, !offDeliveriesStatuses.Contains(_newStatus), offerAvailabilityDB, docDb, token);
         if (!sRes.Success())
         {
-            await transaction.RollbackAsync(token);
-            return new() { Messages = sRes.Messages };
+            res.AddRangeMessages(sRes.Messages);
+            return res;
         }
 
         if (lockers.Count != 0)
@@ -326,8 +325,8 @@ public partial class RetailService : IRetailService
         ResponseBaseModel sRes = await DoIt(context, transaction, res.DeliveryStatus.DeliveryDocument!.Rows, !offDeliveriesStatuses.Contains(res.NewStatus), offerAvailabilityDB, res.DeliveryStatus.DeliveryDocument!, token);
         if (!sRes.Success())
         {
-            await transaction.RollbackAsync(token);
-            return new() { Messages = sRes.Messages };
+            res.AddRangeMessages(sRes.Messages);
+            return res;
         }
 
         if (lockers.Count != 0)
