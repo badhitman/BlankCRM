@@ -1,0 +1,44 @@
+////////////////////////////////////////////////
+// © https://github.com/badhitman - @FakeGov 
+////////////////////////////////////////////////
+
+using Microsoft.AspNetCore.Components;
+using MudBlazor;
+using SharedLib;
+
+namespace BlazorLib.Components.TraceHistoryView;
+
+/// <summary>
+/// HistoryDeliveriesWrapperComponent
+/// </summary>
+public partial class HistoryDeliveriesWrapperComponent : HistoryOwnerBaseComponent
+{
+    /// <inheritdoc/>
+    [Parameter]
+    public int DeliveryId { get; set; }
+
+    /// <inheritdoc/>
+    public override async Task<TableData<TraceReceiverRecord>> ServerReload(DateRange? dateRangePeriod, TableState state, CancellationToken token)
+    {
+        TPaginationRequestStandardModel<SelectTraceElementsRequestModel> req = new()
+        {
+            PageNum = state.Page,
+            PageSize = state.PageSize,
+            SortingDirection = state.SortDirection.Convert(),
+            Payload = new()
+            {
+                Start = dateRangePeriod?.Start,
+                End = dateRangePeriod?.End,
+                FilterId = DeliveryId,
+            }
+        };
+        await SetBusyAsync(token: token);
+        TPaginationResponseStandardModel<TraceReceiverRecord> res = await IndexingRepo.TracesSelectForDeliveriesRetailAsync(req, token);
+        await SetBusyAsync(false, token: token);
+        return new TableData<TraceReceiverRecord>()
+        {
+            TotalItems = res.TotalRowsCount,
+            Items = res.Response
+        };
+    }
+}

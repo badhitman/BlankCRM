@@ -127,42 +127,24 @@ public class TracesImpl(IOptions<MongoConfigModel> mongoConf) : ITracesIndexing
             | filterBuilder.And(
                 filterBuilder.Eq(nameof(TraceReceiverRecord.ReceiverName), GlobalStaticConstantsTransmission.TransmissionQueues.UpdateDeliveryStatusDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()),
                 filterBuilder.Eq($"{nameof(TraceReceiverRecord.RequestBody)}._v.{nameof(DeliveryStatusRetailDocumentModelDB.DeliveryDocumentId)}", req.Payload.FilterId))
-        //    | filterBuilder.And(
-        //        filterBuilder.Eq(nameof(TraceReceiverRecord.ReceiverName), GlobalStaticConstantsTransmission.TransmissionQueues.DeleteRowDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()),
-        //        filterBuilder.Eq($"{nameof(TraceReceiverRecord.ResponseBody)}._v.{nameof(TResponseModel<>.Response)}.{nameof(RowOfRetailOrderDocumentModelDB.OrderId)}", req.Payload.FilterId))
-        //    | filterBuilder.And(
-        //        filterBuilder.Eq(nameof(TraceReceiverRecord.ReceiverName), GlobalStaticConstantsTransmission.TransmissionQueues.CreateRowDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()),
-        //        filterBuilder.Eq($"{nameof(TraceReceiverRecord.RequestBody)}._v.{nameof(RowOfRetailOrderDocumentModelDB.OrderId)}", req.Payload.FilterId))
-        //    | filterBuilder.And(
-        //        filterBuilder.Eq(nameof(TraceReceiverRecord.ReceiverName), GlobalStaticConstantsTransmission.TransmissionQueues.CreateDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()),
-        //        filterBuilder.Eq($"{nameof(TraceReceiverRecord.ResponseBody)}._v.{nameof(TResponseModel<>.Response)}", req.Payload.FilterId))
-        //    | filterBuilder.And(
-        //        filterBuilder.Eq(nameof(TraceReceiverRecord.ReceiverName), GlobalStaticConstantsTransmission.TransmissionQueues.CreateConversionOrderLinkDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()),
-        //        filterBuilder.Eq($"{nameof(TraceReceiverRecord.RequestBody)}._v.{nameof(OrderConversionAmountModel.OrderDocumentId)}", req.Payload.FilterId))
-        //    | filterBuilder.And(
-        //        filterBuilder.Eq(nameof(TraceReceiverRecord.ReceiverName), GlobalStaticConstantsTransmission.TransmissionQueues.CreatePaymentOrderLinkDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()),
-        //        filterBuilder.Eq($"{nameof(TraceReceiverRecord.RequestBody)}._v.{nameof(PaymentOrderRetailLinkModelDB.OrderDocumentId)}", req.Payload.FilterId))
-        //    | filterBuilder.And(
-        //        filterBuilder.Eq(nameof(TraceReceiverRecord.ReceiverName), GlobalStaticConstantsTransmission.TransmissionQueues.CreateDeliveryOrderLinkDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()),
-        //        filterBuilder.Eq($"{nameof(TraceReceiverRecord.RequestBody)}._v.{nameof(RetailOrderDeliveryLinkModelDB.OrderDocumentId)}", req.Payload.FilterId))
-        //    | filterBuilder.And(
-        //        filterBuilder.Eq(nameof(TraceReceiverRecord.ReceiverName), GlobalStaticConstantsTransmission.TransmissionQueues.DeleteConversionOrderLinkDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()),
-        //        filterBuilder.Eq($"{nameof(TraceReceiverRecord.RequestBody)}._v.{nameof(OrderConversionModel.OrderDocumentId)}", req.Payload.FilterId))
-        //    | filterBuilder.And(
-        //        filterBuilder.Eq(nameof(TraceReceiverRecord.ReceiverName), GlobalStaticConstantsTransmission.TransmissionQueues.DeletePaymentOrderLinkDocumentReceive.WithoutTransmissionQueueNamePrefix()),
-        //        filterBuilder.Eq($"{nameof(TraceReceiverRecord.RequestBody)}._v.{nameof(OrderPaymentModel.OrderDocumentId)}", req.Payload.FilterId))
-        //    | filterBuilder.And(
-        //        filterBuilder.Eq(nameof(TraceReceiverRecord.ReceiverName), GlobalStaticConstantsTransmission.TransmissionQueues.DeleteDeliveryOrderLinkDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()),
-        //        filterBuilder.Eq($"{nameof(TraceReceiverRecord.RequestBody)}._v.{nameof(OrderDeliveryModel.OrderDocumentId)}", req.Payload.FilterId))
-        //    | filterBuilder.And(
-        //        filterBuilder.Eq(nameof(TraceReceiverRecord.ReceiverName), GlobalStaticConstantsTransmission.TransmissionQueues.UpdatePaymentOrderLinkDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()),
-        //        filterBuilder.Eq($"{nameof(TraceReceiverRecord.RequestBody)}._v.{nameof(PaymentOrderRetailLinkModelDB.OrderDocumentId)}", req.Payload.FilterId))
-        //    | filterBuilder.And(
-        //        filterBuilder.Eq(nameof(TraceReceiverRecord.ReceiverName), GlobalStaticConstantsTransmission.TransmissionQueues.UpdateDeliveryOrderLinkDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()),
-        //        filterBuilder.Eq($"{nameof(TraceReceiverRecord.RequestBody)}._v.{nameof(RetailOrderDeliveryLinkModelDB.OrderDocumentId)}", req.Payload.FilterId))
-        //    | filterBuilder.And(
-        //        filterBuilder.Eq(nameof(TraceReceiverRecord.ReceiverName), GlobalStaticConstantsTransmission.TransmissionQueues.UpdateConversionOrderLinkDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()),
-        //        filterBuilder.Eq($"{nameof(TraceReceiverRecord.RequestBody)}._v.{nameof(OrderConversionAmountModel.OrderDocumentId)}", req.Payload.FilterId))
+            | filterBuilder.And(
+                filterBuilder.Eq(nameof(TraceReceiverRecord.ReceiverName), GlobalStaticConstantsTransmission.TransmissionQueues.DeleteRowOfDeliveryDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()),
+                filterBuilder.Eq($"{nameof(TraceReceiverRecord.ResponseBody)}._v.{nameof(DocumentNewVersionResponseModel.Response)}", req.Payload.FilterId))
+            | filterBuilder.And(
+                filterBuilder.Eq(nameof(TraceReceiverRecord.ReceiverName), GlobalStaticConstantsTransmission.TransmissionQueues.CreateRowOfDeliveryDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()),
+                filterBuilder.Eq($"{nameof(TraceReceiverRecord.RequestBody)}._v.{nameof(RowOfDeliveryRetailDocumentModelDB.DocumentId)}", req.Payload.FilterId))
+            | filterBuilder.And(
+                filterBuilder.Eq(nameof(TraceReceiverRecord.ReceiverName), GlobalStaticConstantsTransmission.TransmissionQueues.CreateDeliveryDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()),
+                filterBuilder.Eq($"{nameof(TraceReceiverRecord.ResponseBody)}._v.{nameof(TResponseModel<>.Response)}", req.Payload.FilterId))
+            | filterBuilder.And(
+                filterBuilder.Eq(nameof(TraceReceiverRecord.ReceiverName), GlobalStaticConstantsTransmission.TransmissionQueues.CreateDeliveryOrderLinkDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()),
+                filterBuilder.Eq($"{nameof(TraceReceiverRecord.RequestBody)}._v.{nameof(RetailOrderDeliveryLinkModelDB.DeliveryDocumentId)}", req.Payload.FilterId))
+            | filterBuilder.And(
+                filterBuilder.Eq(nameof(TraceReceiverRecord.ReceiverName), GlobalStaticConstantsTransmission.TransmissionQueues.DeleteDeliveryOrderLinkDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()),
+                filterBuilder.Eq($"{nameof(TraceReceiverRecord.RequestBody)}._v.{nameof(OrderDeliveryModel.DeliveryId)}", req.Payload.FilterId))
+            | filterBuilder.And(
+                filterBuilder.Eq(nameof(TraceReceiverRecord.ReceiverName), GlobalStaticConstantsTransmission.TransmissionQueues.UpdateDeliveryOrderLinkDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()),
+                filterBuilder.Eq($"{nameof(TraceReceiverRecord.RequestBody)}._v.{nameof(RetailOrderDeliveryLinkModelDB.DeliveryDocumentId)}", req.Payload.FilterId))
          ;
 
         IOrderedFindFluent<BsonDocument, BsonDocument> filteredSource = collection
@@ -233,7 +215,7 @@ public class TracesImpl(IOptions<MongoConfigModel> mongoConf) : ITracesIndexing
                 filterBuilder.Eq($"{nameof(TraceReceiverRecord.RequestBody)}._v.{nameof(OrderStatusRetailDocumentModelDB.OrderDocumentId)}", req.Payload.FilterId))
             | filterBuilder.And(
                 filterBuilder.Eq(nameof(TraceReceiverRecord.ReceiverName), GlobalStaticConstantsTransmission.TransmissionQueues.DeleteRowDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()),
-                filterBuilder.Eq($"{nameof(TraceReceiverRecord.ResponseBody)}._v.{nameof(TResponseModel<>.Response)}.{nameof(RowOfRetailOrderDocumentModelDB.OrderId)}", req.Payload.FilterId))
+                filterBuilder.Eq($"{nameof(TraceReceiverRecord.ResponseBody)}._v.{nameof(DeleteRowRetailDocumentResponseModel.Response)}.{nameof(RowOfRetailOrderDocumentModelDB.OrderId)}", req.Payload.FilterId))
             | filterBuilder.And(
                 filterBuilder.Eq(nameof(TraceReceiverRecord.ReceiverName), GlobalStaticConstantsTransmission.TransmissionQueues.CreateRowDocumentRetailReceive.WithoutTransmissionQueueNamePrefix()),
                 filterBuilder.Eq($"{nameof(TraceReceiverRecord.RequestBody)}._v.{nameof(RowOfRetailOrderDocumentModelDB.OrderId)}", req.Payload.FilterId))

@@ -3,6 +3,7 @@
 @using BlazorLib.Components.Retail.OrdersLinks
 @using BlazorLib.Components.Retail.Orders
 @using BlazorLib.Components.Telegram
+@using BlazorLib.Components.TraceHistoryView
 @using MudBlazor
 
 @inherits BlazorBusyComponentBaseAuthModel
@@ -150,6 +151,16 @@
                         <MudTabPanel Text="Telegram">
                             <TelegramChatWrapComponent Chat="currentChatTelegram" />
                         </MudTabPanel>
+                    }
+                    @if (DeliveryDocumentId > 0)
+                    {
+                        <AuthorizeView Context="col" Roles="@($"{GlobalStaticConstantsRoles.Roles.Admin}")">
+                            <Authorized>
+                                <MudTabPanel Text="История" Icon="@Icons.Material.Filled.BugReport">
+                                    <HistoryDeliveriesWrapperComponent DeliveryId="DeliveryDocumentId" />
+                                </MudTabPanel>
+                            </Authorized>
+                        </AuthorizeView>
                     }
                 </MudTabs>
 
