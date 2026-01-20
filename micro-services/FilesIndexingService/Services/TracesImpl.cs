@@ -91,7 +91,7 @@ public class TracesImpl(IOptions<MongoConfigModel> mongoConf) : ITracesIndexing
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseStandardModel<TraceReceiverRecord>> TracesSelectForOrdersAsync(TPaginationRequestStandardModel<SelectTraceElementsRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<TraceReceiverRecord>> TracesSelectForOrdersRetailAsync(TPaginationRequestStandardModel<SelectTraceElementsRequestModel> req, CancellationToken token = default)
     {
         if (req.Payload is null)
             return new()
@@ -192,7 +192,7 @@ public class TracesImpl(IOptions<MongoConfigModel> mongoConf) : ITracesIndexing
 
                 RequestBody = JObject.Parse(x.RequestBody.ToBsonDocument().ToJson()),
                 ResponseBody = JObject.Parse(x.ResponseBody.ToBsonDocument().ToJson()),
-            }).OrderByDescending(x=>x.UTCTimestampInitReceive)],
+            }).OrderByDescending(x => x.UTCTimestampInitReceive)],
         };
     }
 }

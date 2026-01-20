@@ -8,9 +8,9 @@ using SharedLib;
 namespace Transmission.Receives.indexing;
 
 /// <summary>
-/// TracesSelectForOrders
+/// TracesSelectForOrdersRetail
 /// </summary>
-public class TracesSelectForOrdersReceive(ITracesIndexing indexingFileRepo)
+public class TracesSelectForOrdersRetailReceive(ITracesIndexing indexingFileRepo)
     : IResponseReceive<TPaginationRequestStandardModel<SelectTraceElementsRequestModel>?, TPaginationResponseStandardModel<TraceReceiverRecord>?>
 {
     /// <inheritdoc/>
@@ -20,7 +20,7 @@ public class TracesSelectForOrdersReceive(ITracesIndexing indexingFileRepo)
     public async Task<TPaginationResponseStandardModel<TraceReceiverRecord>?> ResponseHandleActionAsync(TPaginationRequestStandardModel<SelectTraceElementsRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        TPaginationResponseStandardModel<TraceReceiverRecord> res = await indexingFileRepo.TracesSelectForOrdersAsync(req, token);
+        TPaginationResponseStandardModel<TraceReceiverRecord> res = await indexingFileRepo.TracesSelectForOrdersRetailAsync(req, token);
         return res;
     }
 }

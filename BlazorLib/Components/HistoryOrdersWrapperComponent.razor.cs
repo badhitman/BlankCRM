@@ -33,7 +33,7 @@ public partial class HistoryOrdersWrapperComponent : HistoryOwnerBaseComponent
             }
         };
         await SetBusyAsync(token: token);
-        TPaginationResponseStandardModel<TraceReceiverRecord> res = await IndexingRepo.TracesSelectForOrdersAsync(req, token);
+        TPaginationResponseStandardModel<TraceReceiverRecord> res = await IndexingRepo.TracesSelectForOrdersRetailAsync(req, token);
         await SetBusyAsync(false, token: token);
         return new TableData<TraceReceiverRecord>()
         {
