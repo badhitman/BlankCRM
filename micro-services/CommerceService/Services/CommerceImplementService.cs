@@ -754,7 +754,8 @@ public partial class CommerceImplementService(
             order.Id = 0;
             order.CreatedAtUTC = dtu;
             order.LastUpdatedAtUTC = dtu;
-            order.Version = res.DocumentNewVersion;
+
+            order.Version = res.DocumentNewVersion.Value;
             order.StatusDocument = StatusesDocumentsEnum.Created;
 
             var _offersOfDocument = order.OfficesTabs

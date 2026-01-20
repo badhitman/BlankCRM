@@ -10,5 +10,5 @@ namespace SharedLib;
 public class DocumentNewVersionResponseModel : TResponseModel<int>
 {
     /// <inheritdoc/>
-    public Guid DocumentNewVersion { get; set; }
+    public Guid? DocumentNewVersion { get; set; }
 }

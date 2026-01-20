@@ -225,8 +225,8 @@ public partial class OrderTableRowsComponent : OffersTableBaseComponent
                 DocumentNewVersionResponseModel resAddingRow = await RetailRepo.CreateRowRetailDocumentAsync(new() { SenderActionUserId = CurrentUserSession.UserId, Payload = newOrderElement });
                 SnackBarRepo.ShowMessagesResponse(resAddingRow.Messages);
 
-                if (resAddingRow.Success())
-                    Document.Version = resAddingRow.DocumentNewVersion;
+                if (resAddingRow.Success() && resAddingRow.DocumentNewVersion.HasValue)
+                    Document.Version = resAddingRow.DocumentNewVersion.Value;
 
                 await ReloadTableItems();
                 await SetBusyAsync(false);

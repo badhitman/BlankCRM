@@ -309,7 +309,7 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
         else
         {
             RowOfDeliveryRetailDocumentModelDB rowOfDocument = Document.Rows!.First(x => x.OfferId == offerId);
-            TResponseModel<Guid?> res = await RetailRepo.DeleteRowOfDeliveryDocumentAsync(new()
+            DocumentNewVersionResponseModel res = await RetailRepo.DeleteRowOfDeliveryDocumentAsync(new()
             {
                 SenderActionUserId = CurrentUserSession.UserId,
                 Payload = new()
@@ -318,8 +318,8 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
                 }
             });
             SnackBarRepo.ShowMessagesResponse(res.Messages);
-            if (res.Response is not null)
-                Document.Version = res.Response.Value;
+            if (res.DocumentNewVersion is not null)
+                Document.Version = res.DocumentNewVersion.Value;
         }
         await ElementsReload();
         await GetOrdersOffers();

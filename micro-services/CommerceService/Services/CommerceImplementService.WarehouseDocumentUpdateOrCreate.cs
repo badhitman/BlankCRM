@@ -57,7 +57,7 @@ public partial class CommerceImplementService : ICommerceService
 
             req.Payload.Rows?.Clear();
             req.Payload.Id = 0;
-            req.Payload.Version = res.DocumentNewVersion;
+            req.Payload.Version = res.DocumentNewVersion.Value;
             req.Payload.CreatedAtUTC = dtu;
             req.Payload.LastUpdatedAtUTC = dtu;
             req.Payload.IsDisabled = true;

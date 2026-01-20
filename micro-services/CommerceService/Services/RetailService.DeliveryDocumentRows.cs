@@ -311,7 +311,7 @@ public partial class RetailService : IRetailService
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<Guid?>> DeleteRowOfDeliveryDocumentAsync(TAuthRequestStandardModel<DeleteRowOfDeliveryDocumentRequestModel> req, CancellationToken token = default)
+    public async Task<DocumentNewVersionResponseModel> DeleteRowOfDeliveryDocumentAsync(TAuthRequestStandardModel<DeleteRowOfDeliveryDocumentRequestModel> req, CancellationToken token = default)
     {
         if (req.Payload is null)
             return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "req.Payload is null" }] };
@@ -319,9 +319,10 @@ public partial class RetailService : IRetailService
         int rowId = req.Payload.DeleteRowOfDeliveryDocumentId;
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         RowOfDeliveryRetailDocumentModelDB rowDb = await context.RowsDeliveryDocumentsRetail.Include(x => x.Document).FirstAsync(x => x.Id == rowId, cancellationToken: token);
-        TResponseModel<Guid?> res = new()
+        DocumentNewVersionResponseModel res = new()
         {
-            Response = Guid.NewGuid(),
+            Response = rowDb.DocumentId,
+            DocumentNewVersion = Guid.NewGuid()
         };
         DeliveryDocumentRetailModelDB deliveryDocumentRetailDb = rowDb.Document!;
 
@@ -335,7 +336,7 @@ public partial class RetailService : IRetailService
             await context.DeliveryDocumentsRetail
              .Where(x => x.Id == rowDb.DocumentId)
              .ExecuteUpdateAsync(set => set
-                 .SetProperty(p => p.Version, res.Response), cancellationToken: token);
+                 .SetProperty(p => p.Version, res.DocumentNewVersion), cancellationToken: token);
 
             await transaction.CommitAsync(token);
             res.AddSuccess("Элемент удалён");
@@ -397,7 +398,7 @@ public partial class RetailService : IRetailService
         await context.DeliveryDocumentsRetail
          .Where(x => x.Id == rowDb.DocumentId)
          .ExecuteUpdateAsync(set => set
-             .SetProperty(p => p.Version, res.Response), cancellationToken: token);
+             .SetProperty(p => p.Version, res.DocumentNewVersion), cancellationToken: token);
 
         if (lockers.Count != 0)
             context.RemoveRange(lockers);

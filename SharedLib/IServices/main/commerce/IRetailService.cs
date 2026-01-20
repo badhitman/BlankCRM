@@ -37,7 +37,7 @@ public interface IRetailService
     public Task<TPaginationResponseStandardModel<RowOfDeliveryRetailDocumentModelDB>> SelectRowsOfDeliveryDocumentsAsync(TPaginationRequestStandardModel<SelectRowsOfDeliveriesRetailDocumentsRequestModel> req, CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<TResponseModel<Guid?>> DeleteRowOfDeliveryDocumentAsync(TAuthRequestStandardModel<DeleteRowOfDeliveryDocumentRequestModel> req, CancellationToken token = default);
+    public Task<DocumentNewVersionResponseModel> DeleteRowOfDeliveryDocumentAsync(TAuthRequestStandardModel<DeleteRowOfDeliveryDocumentRequestModel> req, CancellationToken token = default);
     #endregion
 
     #region Statuses (of delivery document)

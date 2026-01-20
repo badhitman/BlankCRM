@@ -18,6 +18,10 @@ public class TracesTransmission(IRabbitClient rabbitClient) : ITracesIndexing
         => await rabbitClient.MqRemoteCallAsync<TPaginationResponseStandardModel<TraceReceiverRecord>>(GlobalStaticConstantsTransmission.TransmissionQueues.TracesSelectReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
+    public async Task<TPaginationResponseStandardModel<TraceReceiverRecord>> TracesSelectForDeliveriesRetailAsync(TPaginationRequestStandardModel<SelectTraceElementsRequestModel> req, CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<TPaginationResponseStandardModel<TraceReceiverRecord>>(GlobalStaticConstantsTransmission.TransmissionQueues.TracesSelectForDeliveriesRetailReceive, req, token: token) ?? new();
+
+    /// <inheritdoc/>
     public async Task<TPaginationResponseStandardModel<TraceReceiverRecord>> TracesSelectForOrdersRetailAsync(TPaginationRequestStandardModel<SelectTraceElementsRequestModel> req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TPaginationResponseStandardModel<TraceReceiverRecord>>(GlobalStaticConstantsTransmission.TransmissionQueues.TracesSelectForOrdersRetailReceive, req, token: token) ?? new();
 }

@@ -67,7 +67,8 @@ public partial class OrderStatusesTableComponent : BlazorBusyComponentBaseAuthMo
         });
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         initDeleteRowStatusId = null;
-        Document.Version = res.DocumentNewVersion;
+        if (res.DocumentNewVersion.HasValue)
+            Document.Version = res.DocumentNewVersion.Value;
 
         if (tableRef is not null)
             await tableRef.ReloadServerData();
@@ -195,8 +196,8 @@ public partial class OrderStatusesTableComponent : BlazorBusyComponentBaseAuthMo
             await SetBusyAsync(false);
             return;
         }
-        else
-            Document.Version = res.DocumentNewVersion;
+        else if (res.DocumentNewVersion.HasValue)
+            Document.Version = res.DocumentNewVersion.Value;
 
         if (tableRef is not null)
             await tableRef.ReloadServerData();

@@ -185,8 +185,8 @@ public partial class DeliveryStatusesTableComponent : BlazorBusyComponentBaseAut
             await SetBusyAsync(false);
             return;
         }
-
-        Document.Version = res.DocumentNewVersion;
+        if (res.DocumentNewVersion.HasValue)
+            Document.Version = res.DocumentNewVersion.Value;
 
         if (tableRef is not null)
             await tableRef.ReloadServerData();

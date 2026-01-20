@@ -81,7 +81,9 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
             }
 
             DocumentNewVersionResponseModel res = await CommRepo.RowForWarehouseDocumentUpdateOrCreateAsync(new() { Payload = _el, SenderActionUserId = CurrentUserSession.UserId });
-            editDocument.Version = res.DocumentNewVersion;
+            if (res.DocumentNewVersion.HasValue)
+                editDocument.Version = res.DocumentNewVersion.Value;
+
             SnackBarRepo.ShowMessagesResponse(res.Messages);
         }
         await ReadDocument();
@@ -185,7 +187,10 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
             await SetBusyAsync();
             res = await CommRepo.RowForWarehouseDocumentUpdateOrCreateAsync(new() { Payload = _newRow, SenderActionUserId = CurrentUserSession.UserId });
             SnackBarRepo.ShowMessagesResponse(res.Messages);
-            editDocument.Version = res.DocumentNewVersion;
+
+            if (res.DocumentNewVersion.HasValue)
+                editDocument.Version = res.DocumentNewVersion.Value;
+
             await SetBusyAsync(false);
             if (!res.Success())
                 return;
@@ -200,7 +205,10 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
             await SetBusyAsync();
             res = await CommRepo.RowForWarehouseDocumentUpdateOrCreateAsync(new() { Payload = CurrentDocument.Rows[exist_row], SenderActionUserId = CurrentUserSession.UserId });
             SnackBarRepo.ShowMessagesResponse(res.Messages);
-            editDocument.Version = res.DocumentNewVersion;
+
+            if (res.DocumentNewVersion.HasValue)
+                editDocument.Version = res.DocumentNewVersion.Value;
+
             await SetBusyAsync(false);
         }
 

@@ -17,4 +17,7 @@ public interface ITracesIndexing
 
     /// <inheritdoc/>
     public Task<TPaginationResponseStandardModel<TraceReceiverRecord>> TracesSelectForOrdersRetailAsync(TPaginationRequestStandardModel<SelectTraceElementsRequestModel> req, CancellationToken token = default);
+
+    /// <inheritdoc/>
+    public Task<TPaginationResponseStandardModel<TraceReceiverRecord>> TracesSelectForDeliveriesRetailAsync(TPaginationRequestStandardModel<SelectTraceElementsRequestModel> req, CancellationToken token = default);
 }
