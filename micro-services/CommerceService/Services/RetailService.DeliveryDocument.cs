@@ -62,7 +62,7 @@ public partial class RetailService : IRetailService
 
         if (req.Payload.InjectToOrderId > 0)
         {
-            TraceReceiverRecord trace = TraceReceiverRecord.Build(GlobalStaticConstantsTransmission.TransmissionQueues.CreateConversionOrderLinkDocumentRetailReceive, req.SenderActionUserId, new RetailOrderDeliveryLinkModelDB()
+            TraceReceiverRecord trace = TraceReceiverRecord.Build(GlobalStaticConstantsTransmission.TransmissionQueues.CreateDeliveryOrderLinkDocumentRetailReceive, req.SenderActionUserId, new RetailOrderDeliveryLinkModelDB()
             {
                 DeliveryDocumentId = docDb.Id,
                 WeightShipping = req.Payload.WeightShipping,
