@@ -70,14 +70,6 @@ else
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row">&nbsp;&nbsp;&nbsp;&nbsp;Платежи</th>
-                        <td>
-                            @ReportData.PaidNoSitePaymentsSumAmount.ToString("C")
-                            [<code>x @ReportData.PaidNoSitePaymentsCount шт.</code>]
-                            <span class="ms-2">(@(Math.Round((ReportData.PaidNoSitePaymentsSumAmount / 120), 2)))</span>
-                        </td>
-                    </tr>
-                    <tr>
                         <th scope="row">&nbsp;&nbsp;&nbsp;&nbsp;Перевод/конвертация (поступило)</th>
                         <td>
                             @ReportData.ConversionsSumAmount.ToString("C")
@@ -85,6 +77,25 @@ else
                             <span class="me-2">(@(Math.Round((ReportData.ConversionsSumAmount / 120), 2)))</span>
                         </td>
                     </tr>
+                    <tr>
+                        <th scope="row">&nbsp;&nbsp;&nbsp;&nbsp;Платежи</th>
+                        <td>
+                            @ReportData.PaidNoSitePaymentsSumAmount.ToString("C")
+                            [<code>x @ReportData.PaidNoSitePaymentsCount шт.</code>]
+                            <span class="ms-2">(@(Math.Round((ReportData.PaidNoSitePaymentsSumAmount / 120), 2)))</span>
+                        </td>
+                    </tr>
+                    @foreach (IGrouping<PaymentsRetailTypesEnum, PaymentOrderNoSiteRetailModel> _gp in ReportData.PaidNoSitePayments.GroupBy(x => x.TypePayment))
+                    {
+                        <tr>
+                            <th scope="row">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@_gp.Key.DescriptionInfo()</th>
+                            <td>
+                                @_gp.Sum(y => y.AmountPayment).ToString("C")
+                                [<code>x @_gp.Count() шт.</code>]
+                                <span class="ms-2">(@(Math.Round((@_gp.Sum(y => y.AmountPayment) / 120), 2)))</span>
+                            </td>
+                        </tr>
+                    }
                     <tr>
                         <th scope="row"><div class="d-flex flex-row-reverse">Итого:</div></th>
                         <td>
