@@ -87,12 +87,13 @@ else
                     </tr>
                     @foreach (IGrouping<PaymentsRetailTypesEnum, PaymentOrderNoSiteRetailModel> _gp in ReportData.PaidNoSitePayments.GroupBy(x => x.TypePayment))
                     {
+                        decimal _sum = _gp.Sum(y => y.AmountPayment);
                         <tr>
                             <th scope="row">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@_gp.Key.DescriptionInfo()</th>
                             <td>
-                                @_gp.Sum(y => y.AmountPayment).ToString("C")
+                                @_sum.ToString("C")
                                 [<code>x @_gp.Count() шт.</code>]
-                                <span class="ms-2">(@(Math.Round((@_gp.Sum(y => y.AmountPayment) / 120), 2)))</span>
+                                <span class="ms-2">(@(Math.Round((_sum / 120), 2)))</span>
                             </td>
                         </tr>
                     }

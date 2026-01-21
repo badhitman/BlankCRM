@@ -288,6 +288,13 @@ public partial class MainRetailReportComponent : BlazorBusyComponentBaseModel
         my_table.TBody.AddRow(["Другое", $"{ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount:C} [x {ReportData.PaidNoSitePaymentsCount + ReportData.ConversionsCount} шт.] ({Math.Round((ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount) / 120, 2)})"]);
         my_table.TBody.AddRow(["&nbsp;&nbsp;&nbsp;&nbsp;Перевод/конвертация (поступило)", $"{ReportData.ConversionsSumAmount:C} [x {ReportData.ConversionsCount} шт.] ({Math.Round(ReportData.ConversionsSumAmount / 120, 2)})"]);
         my_table.TBody.AddRow(["&nbsp;&nbsp;&nbsp;&nbsp;Платежи", $"{ReportData.PaidNoSitePaymentsSumAmount:C} [x {ReportData.PaidNoSitePaymentsCount} шт.] ({Math.Round(ReportData.PaidNoSitePaymentsSumAmount / 120, 2)})"]);
+
+        foreach (IGrouping<PaymentsRetailTypesEnum, PaymentOrderNoSiteRetailModel> _gp in ReportData.PaidNoSitePayments.GroupBy(x => x.TypePayment))
+        {
+            decimal _sum = _gp.Sum(y => y.AmountPayment);
+            my_table.TBody.AddRow([$"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{_gp.Key.DescriptionInfo()}", $"{_sum:C} [x {_gp.Count()} шт.] ({Math.Round(_sum / 120, 2)})"]);
+        }
+
         my_table.TBody.AddRow(["Итого:", $"{Math.Round(ReportData.PaidOnSitePaymentsSumAmount + ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount, 2):C} [x {ReportData.PaidOnSitePaymentsCount + ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount} шт.] ({Math.Round((ReportData.PaidOnSitePaymentsSumAmount + ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount) / 120, 2)})"]);
         wrapDiv.AddDomNode(my_table);
         wrapDiv.AddDomNode(new HtmlGenerator.html5.textual.p(""));
