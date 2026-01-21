@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+
 namespace SharedLib;
 
 /// <summary>
@@ -35,12 +36,42 @@ public class MainReportResponseModel
     /// <summary>
     /// Оплаты [не на сайте]
     /// </summary>
-    public decimal PaidNoSitePaymentsSumAmount { get; set; }
+    public List<PaymentOrderNoSiteRetailModel> PaidNoSitePayments { get; set; } = [];
 
+    decimal? _paidNoSitePaymentsSumAmount;
     /// <summary>
     /// Оплаты [не на сайте]
     /// </summary>
-    public decimal PaidNoSitePaymentsCount { get; set; }
+    public decimal PaidNoSitePaymentsSumAmount
+    {
+        get
+        {
+            if (!_paidNoSitePaymentsSumAmount.HasValue)
+                _paidNoSitePaymentsSumAmount = PaidNoSitePayments.Count == 0
+                    ? 0
+                    : PaidNoSitePayments.Sum(x => x.AmountPayment);
+
+            return _paidNoSitePaymentsSumAmount.Value;
+        }
+    }
+
+    decimal? _paidNoSitePaymentsCount;
+    /// <summary>
+    /// Оплаты [не на сайте]
+    /// </summary>
+    public decimal PaidNoSitePaymentsCount
+    {
+        get
+        {
+            if (!_paidNoSitePaymentsCount.HasValue)
+                _paidNoSitePaymentsCount = PaidNoSitePayments.Count == 0
+                    ? 0
+                    : PaidNoSitePayments.Count;
+
+            return _paidNoSitePaymentsCount.Value;
+        }
+    }
+
 
     /// <summary>
     /// Поступило в переводах/конвертации
