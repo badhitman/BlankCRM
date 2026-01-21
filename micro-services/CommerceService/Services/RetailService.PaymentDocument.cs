@@ -59,14 +59,27 @@ public partial class RetailService : IRetailService
 
         if (req.Payload.InjectToOrderId > 0)
         {
-            await context.PaymentsOrdersLinks.AddAsync(new()
+            TraceReceiverRecord trace = TraceReceiverRecord.Build(GlobalStaticConstantsTransmission.TransmissionQueues.CreatePaymentOrderLinkDocumentRetailReceive, req.SenderActionUserId, new PaymentOrderRetailLinkModelDB()
+            {
+                PaymentDocumentId = docDb.Id,
+                AmountPayment = req.Payload.Amount,
+                OrderDocumentId = req.Payload.InjectToOrderId,
+            });
+
+            PaymentOrderRetailLinkModelDB _paymentOrderRetailLink = new()
             {
                 OrderDocumentId = req.Payload.InjectToOrderId,
                 PaymentDocumentId = docDb.Id,
                 AmountPayment = docDb.Amount
-            }, token);
+            };
+            await context.PaymentsOrdersLinks.AddAsync(_paymentOrderRetailLink, token);
             await context.SaveChangesAsync(token);
             res.AddInfo($"Добавлена связь оплаты/платежа #{docDb.Id} с заказом #{req.Payload.InjectToOrderId}");
+
+            await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(new TResponseModel<int>()
+            {
+                Response = _paymentOrderRetailLink.Id,
+            }), token);
         }
 
         if (req.Payload.StatusPayment == PaymentsRetailStatusesEnum.Paid)

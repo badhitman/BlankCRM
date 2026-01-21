@@ -96,15 +96,28 @@ public partial class RetailService : IRetailService
         await context.SaveChangesAsync(token);
         res.AddSuccess($"Документ перевода/конвертации создан #{docDb.Id}");
 
-        if (createDoc.InjectToOrderId > 0)
+        if (req.Payload.InjectToOrderId > 0)
         {
-            await context.ConversionsOrdersLinksRetail.AddAsync(new()
+            TraceReceiverRecord trace = TraceReceiverRecord.Build(GlobalStaticConstantsTransmission.TransmissionQueues.CreateConversionOrderLinkDocumentRetailReceive, req.SenderActionUserId, new OrderConversionAmountModel()
             {
                 ConversionDocumentId = docDb.Id,
-                OrderDocumentId = createDoc.InjectToOrderId,
-                AmountPayment = createDoc.ToWalletSum,
-            }, token);
+                AmountPayment = req.Payload.ToWalletSum,
+                OrderDocumentId = req.Payload.InjectToOrderId,
+            });
+
+            ConversionOrderRetailLinkModelDB _conversionOrderRetailLinkDb = new()
+            {
+                ConversionDocumentId = docDb.Id,
+                OrderDocumentId = req.Payload.InjectToOrderId,
+                AmountPayment = req.Payload.ToWalletSum,
+            };
+            await context.ConversionsOrdersLinksRetail.AddAsync(_conversionOrderRetailLinkDb, token);
             await context.SaveChangesAsync(token);
+            await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(new TResponseModel<int>()
+            {
+                Response = _conversionOrderRetailLinkDb.Id,
+            }), token);
+
             res.AddInfo($"Добавлена связь документа перевода/конвертации #{docDb.Id} с заказом #{createDoc.InjectToOrderId}");
         }
 

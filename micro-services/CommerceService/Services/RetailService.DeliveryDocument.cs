@@ -62,14 +62,26 @@ public partial class RetailService : IRetailService
 
         if (req.Payload.InjectToOrderId > 0)
         {
-            await context.OrdersDeliveriesLinks.AddAsync(new()
+            TraceReceiverRecord trace = TraceReceiverRecord.Build(GlobalStaticConstantsTransmission.TransmissionQueues.CreateConversionOrderLinkDocumentRetailReceive, req.SenderActionUserId, new RetailOrderDeliveryLinkModelDB()
+            {
+                DeliveryDocumentId = docDb.Id,
+                WeightShipping = req.Payload.WeightShipping,
+                OrderDocumentId = req.Payload.InjectToOrderId,
+            });
+
+            RetailOrderDeliveryLinkModelDB _retailOrderDeliveryLink = new()
             {
                 DeliveryDocumentId = docDb.Id,
                 OrderDocumentId = req.Payload.InjectToOrderId,
                 WeightShipping = req.Payload.WeightShipping,
-            }, token);
+            };
+            await context.OrdersDeliveriesLinks.AddAsync(_retailOrderDeliveryLink, token);
             await context.SaveChangesAsync(token);
             res.AddInfo($"Добавлена связь документа отгрузки/доставки #{docDb.Id} с заказом #{req.Payload.InjectToOrderId}");
+            await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(new TResponseModel<int>()
+            {
+                Response = _retailOrderDeliveryLink.Id,
+            }), token);
         }
 
         await transaction.CommitAsync(token);
