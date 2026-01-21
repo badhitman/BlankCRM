@@ -75,12 +75,14 @@
     <RowTemplate>
         @if (OrderParent is null || OrderParent.Id <= 0)
         {
-            <MudTd DataLabel="Заказ"><a href="/retail/order-document/@context.OrderDocumentId">@context.OrderDocument?.ToString()</a></MudTd>
+            <MudTd DataLabel="Заказ">
+                <MudLink Href="@($"/retail/order-document/{context.OrderDocumentId}")">@context.OrderDocument?.ToString()</MudLink>
+            </MudTd>
         }
         @if (ConversionId <= 0)
         {
             <MudTd DataLabel="Перевод">
-                <a href="/retail/conversion-document/@context.ConversionDocumentId">@context.ConversionDocument?.ToString()</a>
+                <MudLink Href="@($"/retail/conversion-document/{context.ConversionDocumentId}")">@context.ConversionDocument?.ToString()</MudLink>
                 [@(UsersCache.FirstOrDefault(x => x.UserId == context.ConversionDocument!.FromWallet!.UserIdentityId)?.ToString()) -> @(UsersCache.FirstOrDefault(x => x.UserId == context.ConversionDocument!.ToWallet!.UserIdentityId)?.ToString())]
             </MudTd>
         }

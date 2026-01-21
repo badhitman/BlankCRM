@@ -75,14 +75,18 @@
         @if (OrderParent is null || OrderParent.Id <= 0)
         {
             <MudTd DataLabel="Заказ">
-                <a href="/retail/order-document/@context.OrderDocumentId">@context.OrderDocument?.ToString()</a>
+                <MudLink Href="@($"/retail/order-document/{context.OrderDocumentId}")">
+                    @context.OrderDocument?.ToString()
+                </MudLink>
                 [@(UsersCache.FirstOrDefault(x => x.UserId == context.PaymentDocument!.Wallet!.UserIdentityId)?.ToString())]
             </MudTd>
         }
         @if (PaymentId <= 0)
         {
             <MudTd DataLabel="Платёж">
-                <a href="/retail/payment-document/@context.PaymentDocumentId">@context.PaymentDocument?.ToString()</a>
+                <MudLink Href="@($"/retail/payment-document/{context.PaymentDocumentId}")">
+                    @context.PaymentDocument?.ToString()
+                </MudLink>
             </MudTd>
         }
         <MudTd Class="@(context.AmountPayment <= 0 ? "text-bg-danger" : "")" DataLabel="Сумма">@context.AmountPayment</MudTd>
