@@ -82,8 +82,8 @@ public class TracesImpl(IOptions<MongoConfigModel> mongoConf) : ITracesIndexing
                 ReceiverName = x.ReceiverName,
                 SenderActionUserId = x.SenderActionUserId,
 
-                RequestBody = JObject.Parse(x.RequestBody.ToBsonDocument().ToJson()),
-                ResponseBody = JObject.Parse(x.ResponseBody.ToBsonDocument().ToJson()),
+                RequestBody = x.RequestBody is null ? null : JObject.Parse(x.RequestBody.ToBsonDocument().ToJson()),
+                ResponseBody = x.ResponseBody is null ? null : JObject.Parse(x.ResponseBody.ToBsonDocument().ToJson()),
             })],
             SortBy = req.SortBy,
             SortingDirection = req.SortingDirection,
@@ -274,8 +274,8 @@ public class TracesImpl(IOptions<MongoConfigModel> mongoConf) : ITracesIndexing
                 ReceiverName = x.ReceiverName,
                 SenderActionUserId = x.SenderActionUserId,
 
-                RequestBody = JObject.Parse(x.RequestBody.ToBsonDocument().ToJson()),
-                ResponseBody = JObject.Parse(x.ResponseBody.ToBsonDocument().ToJson()),
+                RequestBody = x.RequestBody is null ? null : JObject.Parse(x.RequestBody.ToBsonDocument().ToJson()),
+                ResponseBody = x.ResponseBody is null ? null : JObject.Parse(x.ResponseBody.ToBsonDocument().ToJson()),
             }).OrderByDescending(x => x.UTCTimestampInitReceive)],
         };
     }
@@ -345,8 +345,8 @@ public class TracesImpl(IOptions<MongoConfigModel> mongoConf) : ITracesIndexing
                 ReceiverName = x.ReceiverName,
                 SenderActionUserId = x.SenderActionUserId,
 
-                RequestBody = JObject.Parse(x.RequestBody.ToBsonDocument().ToJson()),
-                ResponseBody = JObject.Parse(x.ResponseBody.ToBsonDocument().ToJson()),
+                RequestBody = x.RequestBody is null ? null : JObject.Parse(x.RequestBody.ToBsonDocument().ToJson()),
+                ResponseBody = x.ResponseBody is null ? null : JObject.Parse(x.ResponseBody.ToBsonDocument().ToJson()),
             }).OrderByDescending(x => x.UTCTimestampInitReceive)],
         };
     }
@@ -413,8 +413,8 @@ public class TracesImpl(IOptions<MongoConfigModel> mongoConf) : ITracesIndexing
                 ReceiverName = x.ReceiverName,
                 SenderActionUserId = x.SenderActionUserId,
 
-                RequestBody = JObject.Parse(x.RequestBody.ToBsonDocument().ToJson()),
-                ResponseBody = JObject.Parse(x.ResponseBody.ToBsonDocument().ToJson()),
+                RequestBody = x.RequestBody is null ? null : JObject.Parse(x.RequestBody.ToBsonDocument().ToJson()),
+                ResponseBody = x.ResponseBody is null ? null : JObject.Parse(x.ResponseBody.ToBsonDocument().ToJson()),
             }).OrderByDescending(x => x.UTCTimestampInitReceive)],
         };
     }
