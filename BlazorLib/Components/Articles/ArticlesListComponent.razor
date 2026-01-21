@@ -18,15 +18,19 @@
         <MudTh>Rubrics</MudTh>
     </HeaderContent>
     <RowTemplate>
+        @{
+            DateTime dc = context.CreatedAtUTC.GetCustomTime();
+            DateTime? du = context.LastUpdatedAtUTC?.GetCustomTime();
+        }
         <MudTd DataLabel="Created">
             <MudLink Href="@($"/articles/edit-card/{context.Id}")">
-                @context.CreatedAtUTC.GetCustomTime().ToString("d", GlobalStaticConstants.RU)
+                @dc.ToString("d", GlobalStaticConstants.RU)
             </MudLink>
         </MudTd>
         <MudTd DataLabel="Updated">
             <MudLink Href="@($"/articles/edit-card/{context.Id}")">
-                @context.LastUpdatedAtUTC?.GetCustomTime().ToString("d", GlobalStaticConstants.RU)
-                <sup>@context.LastUpdatedAtUTC?.GetCustomTime().ToString("t", GlobalStaticConstants.RU)</sup>
+                @du?.GetCustomTime().ToString("d", GlobalStaticConstants.RU)
+                <sup>@du?.ToString("t", GlobalStaticConstants.RU)</sup>
             </MudLink>
         </MudTd>
         <MudTd DataLabel="Name">@context.Name</MudTd>

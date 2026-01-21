@@ -23,7 +23,7 @@
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Дата/Время">
-            @context.UTCTimestampInitReceive
+            @context.UTCTimestampInitReceive.GetCustomTime()
             <sup title="время на выполнение операции">@(context.UTCTimestampFinalReceive - context.UTCTimestampInitReceive)</sup>
         </MudTd>
         <MudTd DataLabel="Событие">

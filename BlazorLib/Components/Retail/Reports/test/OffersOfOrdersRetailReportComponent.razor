@@ -45,7 +45,11 @@
         </MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Offer">@context.Offer.GetName()</MudTd>
+        <MudTd DataLabel="Offer">
+            <MudLink Href="@($"/nomenclature/offer-card/{context.Offer.Id}")">
+                @context.Offer.GetName()
+            </MudLink>
+        </MudTd>
         <MudTd DataLabel="Кол-во">@context.Count</MudTd>
         <MudTd DataLabel="Сумма">@context.Sum</MudTd>
     </RowTemplate>

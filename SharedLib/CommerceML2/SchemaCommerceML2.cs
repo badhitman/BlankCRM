@@ -159,7 +159,6 @@ public partial class ПодчиненныйДокумент
     public РольТип Роль { get; set; }
 
     /// <remarks/>
-
     public bool РольSpecified { get; set; }
 
     /// <remarks/>
@@ -172,7 +171,6 @@ public partial class ПодчиненныйДокумент
     public decimal Сумма { get; set; }
 
     /// <remarks/>
-
     public bool СуммаSpecified { get; set; }
 
     /// <remarks/>
@@ -189,7 +187,6 @@ public partial class ПодчиненныйДокумент
     public DateTime СрокПлатежа { get; set; }
 
     /// <remarks/>
-
     public bool СрокПлатежаSpecified { get; set; }
 
     /// <remarks/>
@@ -284,7 +281,6 @@ public partial class Банк
     public string Item { get; set; }
 
     /// <remarks/>
-
     public ItemChoiceType ItemElementName { get; set; }
 }
 
@@ -353,7 +349,6 @@ public partial class Скидка
     public bool УчтеноВСумме { get; set; }
 
     /// <remarks/>
-
     public bool УчтеноВСуммеSpecified { get; set; }
 
     /// <remarks/>
@@ -378,7 +373,6 @@ public partial class ДопРасход
     public bool УчтеноВСумме { get; set; }
 
     /// <remarks/>
-
     public bool УчтеноВСуммеSpecified { get; set; }
 
     /// <remarks/>
@@ -398,21 +392,18 @@ public partial class ПодчиненныйДокументТовар : Това
     public decimal ЦенаЗаЕдиницу { get; set; }
 
     /// <remarks/>
-
     public bool ЦенаЗаЕдиницуSpecified { get; set; }
 
     /// <remarks/>
     public decimal Количество { get; set; }
 
     /// <remarks/>
-
     public bool КоличествоSpecified { get; set; }
 
     /// <remarks/>
     public decimal Сумма { get; set; }
 
     /// <remarks/>
-
     public bool СуммаSpecified { get; set; }
 
     /// <remarks/>
@@ -468,7 +459,6 @@ public partial class ПодчиненныйДокументТоварСклад 
     public decimal Количество { get; set; }
 
     /// <remarks/>
-
     public bool КоличествоSpecified { get; set; }
 }
 
@@ -542,11 +532,9 @@ public partial class Товар
     public required ЗначениеРеквизита[] ЗначенияРеквизитов { get; set; }
 
     /// <remarks/>
-
     public СтатусТип Статус { get; set; }
 
     /// <remarks/>
-
     public bool СтатусSpecified { get; set; }
 }
 
@@ -561,11 +549,9 @@ public partial class ТоварБазоваяЕдиница
     public string[] Text { get; set; }
 
     /// <remarks/>
-
     public string Код { get; set; }
 
     /// <remarks/>
-
     public string? НаименованиеПолное { get; set; }
 
     /// <remarks/>
@@ -573,7 +559,6 @@ public partial class ТоварБазоваяЕдиница
     public string? МеждународноеСокращение { get; set; }
 
     /// <remarks/>
-
     public string? НаименованиеКраткое { get; set; }
 }
 
@@ -760,7 +745,6 @@ public partial class ПодписантМестоРаботы
     public DateOnly ДатаРегистрации { get; set; }
 
     /// <remarks/>
-
     public bool ДатаРегистрацииSpecified { get; set; }
 
     /// <remarks/>
@@ -823,7 +807,6 @@ public partial class ОстаткиПоСкладам
     public required string ИдСклада { get; set; }
 
     /// <remarks/>
-
     public decimal КоличествоНаСкладе { get; set; }
 }
 
@@ -908,21 +891,18 @@ public partial class Свойство
     public ОбязательностьСвойствТип Обязательное { get; set; }
 
     /// <remarks/>
-
     public bool ОбязательноеSpecified { get; set; }
 
     /// <remarks/>
     public bool Множественное { get; set; }
 
     /// <remarks/>
-
     public bool МножественноеSpecified { get; set; }
 
     /// <remarks/>
     public ТипЗначенийТип ТипЗначений { get; set; }
 
     /// <remarks/>
-
     public bool ТипЗначенийSpecified { get; set; }
 
     /// <remarks/>
@@ -932,38 +912,19 @@ public partial class Свойство
     public bool ДляТоваров { get; set; }
 
     /// <remarks/>
-
     public bool ДляТоваровSpecified { get; set; }
 
     /// <remarks/>
     public bool ДляПредложений { get; set; }
 
     /// <remarks/>
-
     public bool ДляПредложенийSpecified { get; set; }
 
     /// <remarks/>
     public bool ДляДокументов { get; set; }
 
     /// <remarks/>
-
     public bool ДляДокументовSpecified { get; set; }
-}
-
-/// <remarks/>
-public enum ОбязательностьСвойствТип
-{
-    /// <remarks/>
-    [System.Xml.Serialization.XmlEnumAttribute("Для каталога")]
-    Длякаталога,
-
-    /// <remarks/>
-    [System.Xml.Serialization.XmlEnumAttribute("Для документа")]
-    Длядокумента,
-
-    /// <remarks/>
-    [System.Xml.Serialization.XmlEnumAttribute("Для предложений")]
-    Дляпредложений,
 }
 
 /// <remarks/>
