@@ -8,7 +8,6 @@ window.tryInitJivoSite = function () {
         console.log('Widget re active')
     }
 };
-// window.addEventListener('change', (event) => { window.tryInitJivoSite(); });
 
 (function (history) {
     var pushState = history.pushState;
@@ -34,6 +33,6 @@ window.tryInitJivoSite = function () {
 
 // Now you can listen for the custom 'locationchange' event
 window.addEventListener('locationchange', function () {
-    console.log('URL has changed to:', window.location.href);
+    /*console.log('URL has changed to:', window.location.href);*/
     window.tryInitJivoSite();
 });

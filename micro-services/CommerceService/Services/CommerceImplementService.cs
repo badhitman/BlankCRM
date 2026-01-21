@@ -1752,7 +1752,6 @@ public partial class CommerceImplementService(
         WorkbookPart wBookPart = spreadsheetDoc.AddWorkbookPart();
         wBookPart.Workbook = new Workbook();
         uint sheetId = 1;
-       // WorkbookPart workbookPart = spreadsheetDoc.WorkbookPart ?? spreadsheetDoc.AddWorkbookPart();
 
         WorkbookStylesPart wbsp = wBookPart.AddNewPart<WorkbookStylesPart>();
 
