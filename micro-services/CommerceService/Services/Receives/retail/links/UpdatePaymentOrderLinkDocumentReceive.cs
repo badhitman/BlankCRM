@@ -22,7 +22,7 @@ public class UpdatePaymentOrderLinkDocumentReceive(IRetailService commRepo, ITra
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.SenderActionUserId, req.Payload);
         ResponseBaseModel res = await commRepo.UpdatePaymentOrderLinkDocumentAsync(req, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }
 }

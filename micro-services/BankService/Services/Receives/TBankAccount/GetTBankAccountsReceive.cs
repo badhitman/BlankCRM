@@ -10,7 +10,7 @@ namespace Transmission.Receives.bank;
 /// <summary>
 /// GetTBankAccountsReceive
 /// </summary>
-public class GetTBankAccountsReceive(IBankService bankRepo, ITracesIndexing indexingRepo)
+public class GetTBankAccountsReceive(IBankService bankRepo)
     : IResponseReceive<GetTBankAccountsRequestModel?, TResponseModel<List<TBankAccountModelDB>>?>
 {
     /// <inheritdoc/>
@@ -20,8 +20,6 @@ public class GetTBankAccountsReceive(IBankService bankRepo, ITracesIndexing inde
     public async Task<TResponseModel<List<TBankAccountModelDB>>?> ResponseHandleActionAsync(GetTBankAccountsRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, null, req);
-        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
         return await bankRepo.GetTBankAccountsAsync(req, token);
     }
 }
