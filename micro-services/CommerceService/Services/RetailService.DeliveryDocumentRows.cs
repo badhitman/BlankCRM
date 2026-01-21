@@ -33,7 +33,7 @@ public partial class RetailService : IRetailService
 
         DocumentNewVersionResponseModel res = new();
         using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
-        loggerRepo.LogWarning($"{nameof(CreateRowOfDeliveryDocumentAsync)}:\n{JsonConvert.SerializeObject(req)}");
+        loggerRepo.LogWarning($"{nameof(CreateRowOfDeliveryDocumentAsync)}:\n{JsonConvert.SerializeObject(req.Payload)}");
         string msg;
 
         if (!offDeliveriesStatuses.Contains(docDb.DeliveryStatus))
