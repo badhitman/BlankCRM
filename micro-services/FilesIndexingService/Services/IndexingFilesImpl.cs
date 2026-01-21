@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Packaging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -112,7 +113,7 @@ public class IndexingFilesImpl(
 
         WorkbookPart workbookPart = spreadsheetDocument.WorkbookPart;
 
-        DocumentFormat.OpenXml.Spreadsheet.Sheets? sheets = workbookPart.Workbook.GetFirstChild<DocumentFormat.OpenXml.Spreadsheet.Sheets>();
+        DocumentFormat.OpenXml.Spreadsheet.Sheets? sheets = workbookPart.Workbook?.GetFirstChild<DocumentFormat.OpenXml.Spreadsheet.Sheets>();
 
         if (sheets is null)
             return ResponseBaseModel.CreateError("Workbook.Sheets is null");
@@ -128,14 +129,14 @@ public class IndexingFilesImpl(
         return ResponseBaseModel.CreateSuccess("Ok");
     }
 
-    static List<SheetExcelIndexFileModelDB> ExcelRead(int fileId, WorkbookPart workbookPart, DocumentFormat.OpenXml.Spreadsheet.Sheets sheets)
+    static List<SheetExcelIndexFileModelDB> ExcelRead(int fileId, WorkbookPart workbookPart, Sheets sheets)
     {
         List<string> sharedStrings = [];
         SharedStringTablePart? sharedStringTablePart = workbookPart.SharedStringTablePart;
 
-        if (sharedStringTablePart is not null)
+        if (sharedStringTablePart?.SharedStringTable is not null)
         {
-            foreach (var item in sharedStringTablePart.SharedStringTable.Elements<DocumentFormat.OpenXml.Spreadsheet.SharedStringItem>())
+            foreach (SharedStringItem item in sharedStringTablePart.SharedStringTable.Elements<SharedStringItem>())
                 sharedStrings.Add(item.InnerText);
         }
 
@@ -143,7 +144,7 @@ public class IndexingFilesImpl(
         foreach (WorksheetPart worksheetPart in workbookPart.WorksheetParts)
         {
             string partRelationshipId = workbookPart.GetIdOfPart(worksheetPart);
-            DocumentFormat.OpenXml.Spreadsheet.Sheet correspondingSheet = sheets.Cast<DocumentFormat.OpenXml.Spreadsheet.Sheet>().First(s => s.Id == partRelationshipId);
+            Sheet correspondingSheet = sheets.Cast<Sheet>().First(s => s.Id == partRelationshipId);
             SheetExcelIndexFileModelDB _newSheetDb = new()
             {
                 Title = correspondingSheet.Name?.Value ?? "-no name-",
@@ -152,16 +153,19 @@ public class IndexingFilesImpl(
                 SortIndex = sheetsDb.Count,
             };
 
-            foreach (DocumentFormat.OpenXml.Spreadsheet.SheetData sheetData in worksheetPart.Worksheet.Elements<DocumentFormat.OpenXml.Spreadsheet.SheetData>())
+            if (worksheetPart.Worksheet is null)
+                continue;
+
+            foreach (SheetData sheetData in worksheetPart.Worksheet.Elements<SheetData>())
             {
                 uint _rowNum = 0;
-                foreach (DocumentFormat.OpenXml.Spreadsheet.Row _row in sheetData.Elements<DocumentFormat.OpenXml.Spreadsheet.Row>())
+                foreach (Row _row in sheetData.Elements<Row>())
                 {
                     uint _colNum = 0;
-                    foreach (DocumentFormat.OpenXml.Spreadsheet.Cell _cell in _row.Elements<DocumentFormat.OpenXml.Spreadsheet.Cell>())
+                    foreach (Cell _cell in _row.Elements<Cell>())
                     {
                         string? _cellVal = _cell.CellValue?.Text;
-                        DocumentFormat.OpenXml.EnumValue<DocumentFormat.OpenXml.Spreadsheet.CellValues>? _cellValType = _cell.DataType;
+                        DocumentFormat.OpenXml.EnumValue<CellValues>? _cellValType = _cell.DataType;
 
                         if (!string.IsNullOrWhiteSpace(_cellVal))
                         {
@@ -200,7 +204,7 @@ public class IndexingFilesImpl(
         await gridFS.DownloadToStreamAsync(new ObjectId(file_db.PointId), stream, cancellationToken: token);
 
         using WordprocessingDocument wordprocessingDocument = WordprocessingDocument.Open(stream, false);
-        if (wordprocessingDocument.MainDocumentPart?.Document.Body is null)
+        if (wordprocessingDocument.MainDocumentPart?.Document?.Body is null)
             return ResponseBaseModel.CreateError("word-processing document [MainDocumentPart?.Document.Body] is null");
 
         (List<ParagraphWordIndexFileModelDB> _paragraphs, List<TableWordIndexFileModelDB> _tablesDb) = WordRead(file_db.Id, wordprocessingDocument.MainDocumentPart.Document.Body);

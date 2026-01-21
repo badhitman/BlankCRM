@@ -1666,28 +1666,26 @@ public partial class CommerceImplementService(
     {
         string docName = $"Заказ {orderDb.Name} от {orderDb.CreatedAtUTC.GetHumanDateTime()}";
         using MemoryStream XLSStream = new();
-        WorkbookPart? wBookPart = null;
-
         using SpreadsheetDocument spreadsheetDoc = SpreadsheetDocument.Create(XLSStream, SpreadsheetDocumentType.Workbook);
 
-        wBookPart = spreadsheetDoc.AddWorkbookPart();
+        WorkbookPart wBookPart = spreadsheetDoc.AddWorkbookPart();
         wBookPart.Workbook = new Workbook();
         uint sheetId = 1;
-        WorkbookPart workbookPart = spreadsheetDoc.WorkbookPart ?? spreadsheetDoc.AddWorkbookPart();
+        //WorkbookPart workbookPart = spreadsheetDoc.WorkbookPart ?? spreadsheetDoc.AddWorkbookPart();
 
-        WorkbookStylesPart wbsp = workbookPart.AddNewPart<WorkbookStylesPart>();
+        WorkbookStylesPart wbsp = wBookPart.AddNewPart<WorkbookStylesPart>();
 
         wbsp.Stylesheet = GenerateExcelStyleSheet();
         wbsp.Stylesheet.Save();
 
-        workbookPart.Workbook.Sheets = new Sheets();
+        wBookPart.Workbook.Sheets = new Sheets();
 
-        Sheets sheets = workbookPart.Workbook.GetFirstChild<Sheets>() ?? workbookPart.Workbook.AppendChild(new Sheets());
+        Sheets sheets = wBookPart.Workbook.GetFirstChild<Sheets>() ?? wBookPart.Workbook.AppendChild(new Sheets());
 
         foreach (var table in orderDb.OfficesTabs!)
         {
             WorksheetPart wSheetPart = wBookPart.AddNewPart<WorksheetPart>();
-            Sheet sheet = new() { Id = workbookPart.GetIdOfPart(wSheetPart), SheetId = sheetId, Name = table.Office?.Name };
+            Sheet sheet = new() { Id = wBookPart.GetIdOfPart(wSheetPart), SheetId = sheetId, Name = table.Office?.Name };
             sheets.Append(sheet);
 
             SheetData sheetData = new();
@@ -1739,7 +1737,7 @@ public partial class CommerceImplementService(
             sheetId++;
         }
 
-        workbookPart.Workbook.Save();
+        wBookPart.Workbook.Save();
         spreadsheetDoc.Save();
 
         XLSStream.Position = 0;
@@ -1748,28 +1746,27 @@ public partial class CommerceImplementService(
 
     static byte[] ExportPrice(List<IGrouping<NomenclatureModelDB?, OfferModelDB>> sourceTable, List<RubricStandardModel>? rubricsDb)
     {
-        WorkbookPart? wBookPart = null;
         using MemoryStream XLSStream = new();
         using SpreadsheetDocument spreadsheetDoc = SpreadsheetDocument.Create(XLSStream, SpreadsheetDocumentType.Workbook);
 
-        wBookPart = spreadsheetDoc.AddWorkbookPart();
+        WorkbookPart wBookPart = spreadsheetDoc.AddWorkbookPart();
         wBookPart.Workbook = new Workbook();
         uint sheetId = 1;
-        WorkbookPart workbookPart = spreadsheetDoc.WorkbookPart ?? spreadsheetDoc.AddWorkbookPart();
+       // WorkbookPart workbookPart = spreadsheetDoc.WorkbookPart ?? spreadsheetDoc.AddWorkbookPart();
 
-        WorkbookStylesPart wbsp = workbookPart.AddNewPart<WorkbookStylesPart>();
+        WorkbookStylesPart wbsp = wBookPart.AddNewPart<WorkbookStylesPart>();
 
         wbsp.Stylesheet = GenerateExcelStyleSheet();
         wbsp.Stylesheet.Save();
 
-        workbookPart.Workbook.Sheets = new Sheets();
+        wBookPart.Workbook.Sheets = new Sheets();
 
-        Sheets sheets = workbookPart.Workbook.GetFirstChild<Sheets>() ?? workbookPart.Workbook.AppendChild(new Sheets());
+        Sheets sheets = wBookPart.Workbook.GetFirstChild<Sheets>() ?? wBookPart.Workbook.AppendChild(new Sheets());
 
         foreach (IGrouping<NomenclatureModelDB?, OfferModelDB> table in sourceTable)
         {
             WorksheetPart wSheetPart = wBookPart.AddNewPart<WorksheetPart>();
-            Sheet sheet = new() { Id = workbookPart.GetIdOfPart(wSheetPart), SheetId = sheetId, Name = table.Key?.Name };
+            Sheet sheet = new() { Id = wBookPart.GetIdOfPart(wSheetPart), SheetId = sheetId, Name = table.Key?.Name };
             sheets.Append(sheet);
 
             SheetData sheetData = new();
@@ -1825,7 +1822,7 @@ public partial class CommerceImplementService(
             sheetId++;
         }
 
-        workbookPart.Workbook.Save();
+        wBookPart.Workbook.Save();
         spreadsheetDoc.Save();
         XLSStream.Position = 0;
 
