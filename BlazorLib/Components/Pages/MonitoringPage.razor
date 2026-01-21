@@ -22,7 +22,7 @@
     </MudTabPanel>
     @if (ServerConfig.Value.DirectoriesReadList is not null && ServerConfig.Value.DirectoriesReadList.Length != 0)
     {
-        <MudTabPanel Text="Файлы/папки">
+        <MudTabPanel Text="Файлы/Папки">
             <MudTable Items="@ServerConfig.Value.DirectoriesReadList">
                 <RowTemplate>
                     <MudTd><FolderRootViewComponent FolderPath="@context" /></MudTd>
