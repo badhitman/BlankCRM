@@ -27,7 +27,10 @@ public partial class RetailService : IRetailService
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
-        TResponseModel<KladrResponseModel> kladrObj = await kladrRepo.ObjectGetAsync(new() { Code = req.Payload.KladrCode }, token);
+        TResponseModel<KladrResponseModel> kladrObj = string.IsNullOrWhiteSpace(req.Payload.KladrCode)
+            ? new()
+            : await kladrRepo.ObjectGetAsync(new() { Code = req.Payload.KladrCode }, token);
+
         if (!kladrObj.Success())
         {
             res.AddRangeMessages(kladrObj.Messages);
