@@ -66,7 +66,7 @@ public class TracesImpl(IOptions<MongoConfigModel> mongoConf) : ITracesIndexing
             query = query.Where(x => x.UTCTimestampInitReceive <= req.Payload.End.Value.Date.AddHours(23).AddMinutes(59).AddSeconds(59));
 
         Task<int> totalTask = query.CountAsync(cancellationToken: token);
-        Task<List<TraceReceive>> itemsTask = query.Skip(req.PageNum * req.PageSize).Take(req.PageSize).ToListAsync(cancellationToken: token);
+        Task<List<TraceReceive>> itemsTask = query.OrderByDescending(x => x.UTCTimestampInitReceive).Skip(req.PageNum * req.PageSize).Take(req.PageSize).ToListAsync(cancellationToken: token);
         await Task.WhenAll(totalTask, itemsTask);
 
         return new()
@@ -190,7 +190,7 @@ public class TracesImpl(IOptions<MongoConfigModel> mongoConf) : ITracesIndexing
 
                 RequestBody = JObject.Parse(x.RequestBody.ToBsonDocument().ToJson()),
                 ResponseBody = JObject.Parse(x.ResponseBody.ToBsonDocument().ToJson()),
-            }).OrderByDescending(x => x.UTCTimestampInitReceive)],
+            })],
         };
     }
 
@@ -276,7 +276,7 @@ public class TracesImpl(IOptions<MongoConfigModel> mongoConf) : ITracesIndexing
 
                 RequestBody = x.RequestBody is null ? null : JObject.Parse(x.RequestBody.ToBsonDocument().ToJson()),
                 ResponseBody = x.ResponseBody is null ? null : JObject.Parse(x.ResponseBody.ToBsonDocument().ToJson()),
-            }).OrderByDescending(x => x.UTCTimestampInitReceive)],
+            })],
         };
     }
 
@@ -347,7 +347,7 @@ public class TracesImpl(IOptions<MongoConfigModel> mongoConf) : ITracesIndexing
 
                 RequestBody = x.RequestBody is null ? null : JObject.Parse(x.RequestBody.ToBsonDocument().ToJson()),
                 ResponseBody = x.ResponseBody is null ? null : JObject.Parse(x.ResponseBody.ToBsonDocument().ToJson()),
-            }).OrderByDescending(x => x.UTCTimestampInitReceive)],
+            })],
         };
     }
 
