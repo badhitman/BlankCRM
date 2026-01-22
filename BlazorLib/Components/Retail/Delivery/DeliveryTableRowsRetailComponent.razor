@@ -58,9 +58,9 @@
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Name">
-            <a href="/nomenclature/offer-card/@context!.Offer!.Id">
+            <MudLink Href="@($"/nomenclature/offer-card/{context!.Offer!.Id}")">
                 @context.Offer.GetName()
-            </a>
+            </MudLink>
         </MudTd>
         @{
             IQueryable<OfferAvailabilityModelDB> _q = RegistersCache.Where(x => x.OfferId == context.OfferId && x.WarehouseId == Document?.WarehouseId).AsQueryable();
