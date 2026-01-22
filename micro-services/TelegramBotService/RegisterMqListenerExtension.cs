@@ -22,14 +22,14 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<SetWebConfigReceive, TelegramBotConfigModel, ResponseBaseModel>()
             .RegisterMqListener<GetBotTokenReceive, object, TResponseModel<string>>()
             .RegisterMqListener<AboutBotReceive, object, TResponseModel<UserTelegramBaseModel>>()
-            .RegisterMqListener<ChatsReadTelegramReceive, long[], List<ChatTelegramModelDB>>()
+            .RegisterMqListener<ChatsReadTelegramReceive, long[], List<ChatTelegramViewModel>>()
             .RegisterMqListener<MessagesSelectTelegramReceive, TPaginationRequestStandardModel<SearchMessagesChatModel>, TPaginationResponseStandardModel<MessageTelegramModelDB>>()
             .RegisterMqListener<GetFileTelegramReceive, string, TResponseModel<byte[]>>()
             .RegisterMqListener<SendWappiMessageReceive, EntryAltExtModel, TResponseModel<SendMessageResponseModel?>>()
-            .RegisterMqListener<ChatsFindForUserTelegramReceive, long[], List<ChatTelegramModelDB>>()
-            .RegisterMqListener<ChatsSelectTelegramReceive, TPaginationRequestStandardModel<string?>, TPaginationResponseStandardModel<ChatTelegramModelDB>>()
+            .RegisterMqListener<ChatsFindForUserTelegramReceive, long[], List<ChatTelegramViewModel>>()
+            .RegisterMqListener<ChatsSelectTelegramReceive, TPaginationRequestStandardModel<string?>, TPaginationResponseStandardModel<ChatTelegramViewModel>>()
             .RegisterMqListener<ForwardMessageTelegramReceive, ForwardMessageTelegramBotModel, TResponseModel<MessageComplexIdsModel>>()
-            .RegisterMqListener<ChatTelegramReadReceive, int, ChatTelegramModelDB>()
+            .RegisterMqListener<ChatTelegramReadReceive, int, ChatTelegramViewModel>()
             .RegisterMqListener<ErrorsForChatsSelectTelegramReceive, TPaginationRequestStandardModel<long[]>, TPaginationResponseStandardModel<ErrorSendingMessageTelegramBotModelDB>>()
             ;
     }

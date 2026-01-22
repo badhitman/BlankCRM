@@ -26,7 +26,7 @@
             Class="mt-0"></MudTextField>
     </ToolBarContent>
     <HeaderContent>
-        <MudTh><MudTableSortLabel InitialDirection="SortDirection.Descending" SortLabel="@(nameof(ChatTelegramModelDB.LastUpdateUtc))" T="ChatTelegramModelDB">Updated</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel InitialDirection="SortDirection.Descending" SortLabel="@(nameof(ChatTelegramViewModel.LastUpdateUtc))" T="ChatTelegramViewModel">Updated</MudTableSortLabel></MudTh>
         <MudTh>Title</MudTh>
         <MudTh>Type</MudTh>
         <MudTh>Username</MudTh>
@@ -35,7 +35,7 @@
         <MudTh>About</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="@(nameof(ChatTelegramModelDB.LastUpdateUtc))">
+        <MudTd DataLabel="@(nameof(ChatTelegramViewModel.LastUpdateUtc))">
             <a href="@($"/telegram-bot/chat-page/{context.Id}")">@context.LastUpdateUtc.GetCustomTime().ToString("d", GlobalStaticConstants.RU)<sup>@context.LastUpdateUtc.GetCustomTime().ToString("t", GlobalStaticConstants.RU)</sup></a>
         </MudTd>
         <MudTd DataLabel="Title">@context.Title</MudTd>

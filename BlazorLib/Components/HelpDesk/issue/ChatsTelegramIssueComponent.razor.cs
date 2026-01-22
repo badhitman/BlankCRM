@@ -18,7 +18,7 @@ public partial class ChatsTelegramIssueComponent : IssueWrapBaseModel
     ITelegramTransmission TelegramRepo { get; set; } = default!;
 
 
-    List<ChatTelegramModelDB>? chats = null;
+    List<ChatTelegramViewModel>? chats = null;
 
     async void SendMessageTelegramAction(SendTextMessageTelegramBotModel msg)
     {

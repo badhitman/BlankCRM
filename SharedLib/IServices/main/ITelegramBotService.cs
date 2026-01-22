@@ -10,29 +10,9 @@ namespace SharedLib;
 public interface ITelegramBotService : ITelegramBotStandardService
 {
     /// <summary>
-    /// ChatsFindForUserTelegram
+    /// SendTextMessageTelegram
     /// </summary>
-    public Task<List<ChatTelegramModelDB>> ChatsFindForUserTelegramAsync(long[] req, CancellationToken token = default);
-
-    /// <summary>
-    /// ChatsReadTelegram
-    /// </summary>
-    public Task<List<ChatTelegramModelDB>> ChatsReadTelegramAsync(long[] req, CancellationToken token = default);
-
-    /// <summary>
-    /// ChatsSelectTelegram
-    /// </summary>
-    public Task<TPaginationResponseStandardModel<ChatTelegramModelDB>> ChatsSelectTelegramAsync(TPaginationRequestStandardModel<string?> req, CancellationToken token = default);
-
-    /// <summary>
-    /// ChatTelegramRead
-    /// </summary>
-    public Task<ChatTelegramModelDB> ChatTelegramReadAsync(int chatId, CancellationToken token = default);
-
-    /// <summary>
-    /// ErrorsForChatsSelectTelegram
-    /// </summary>
-    public Task<TPaginationResponseStandardModel<ErrorSendingMessageTelegramBotModelDB>> ErrorsForChatsSelectTelegramAsync(TPaginationRequestStandardModel<long[]> req, CancellationToken token = default);
+    public Task<TResponseModel<MessageComplexIdsModel>> SendTextMessageTelegramAsync(SendTextMessageTelegramBotModel req, CancellationToken token = default);
 
     /// <summary>
     /// ForwardMessageTelegram
@@ -40,9 +20,9 @@ public interface ITelegramBotService : ITelegramBotStandardService
     public Task<TResponseModel<MessageComplexIdsModel>> ForwardMessageTelegramAsync(ForwardMessageTelegramBotModel req, CancellationToken token = default);
 
     /// <summary>
-    /// GetFileTelegram
+    /// ErrorsForChatsSelectTelegram
     /// </summary>
-    public Task<TResponseModel<byte[]>> GetFileTelegramAsync(string req, CancellationToken token = default);
+    public Task<TPaginationResponseStandardModel<ErrorSendingMessageTelegramBotModelDB>> ErrorsForChatsSelectTelegramAsync(TPaginationRequestStandardModel<long[]> req, CancellationToken token = default);
 
     /// <summary>
     /// MessagesSelectTelegram

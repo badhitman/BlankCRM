@@ -14,7 +14,7 @@ namespace BlazorLib.Components.Telegram;
 public partial class ChatsTableTelegramComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
-    ITelegramBotStandardTransmission TelegramRepo { get; set; } = default!;
+    ITelegramBotStandardService TelegramRepo { get; set; } = default!;
 
 
     MudTable<ChatTelegramViewModel>? tableRef;

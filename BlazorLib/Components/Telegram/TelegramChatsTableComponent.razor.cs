@@ -20,15 +20,15 @@ public partial class TelegramChatsTableComponent : BlazorBusyComponentBaseAuthMo
     IHelpDeskTransmission HelpDeskRepo { get; set; } = default!;
 
 
-    private IEnumerable<ChatTelegramModelDB> pagedData = [];
-    private MudTable<ChatTelegramModelDB> table = default!;
+    private IEnumerable<ChatTelegramViewModel> pagedData = [];
+    private MudTable<ChatTelegramViewModel> table = default!;
 
     private string? searchString = null;
 
     readonly List<UserInfoModel> UsersCache = [];
     readonly Dictionary<string, IssueHelpDeskModel[]> IssuesCache = [];
 
-    async Task<TableData<ChatTelegramModelDB>> ServerReload(TableState state, CancellationToken token)
+    async Task<TableData<ChatTelegramViewModel>> ServerReload(TableState state, CancellationToken token)
     {
         await SetBusyAsync(token: token);
         TPaginationRequestStandardModel<string?> req = new()
@@ -39,14 +39,14 @@ public partial class TelegramChatsTableComponent : BlazorBusyComponentBaseAuthMo
             SortBy = state.SortLabel,
             SortingDirection = state.SortDirection.Convert(),
         };
-        TPaginationResponseStandardModel<ChatTelegramModelDB> rest = await TgRepo.ChatsSelectAsync(req, token);
+        TPaginationResponseStandardModel<ChatTelegramViewModel> rest = await TgRepo.ChatsSelectTelegramAsync(req, token);
 
         if (rest.Response is null)
-            return new TableData<ChatTelegramModelDB>() { TotalItems = 0, Items = pagedData };
+            return new TableData<ChatTelegramViewModel>() { TotalItems = 0, Items = pagedData };
         pagedData = rest.Response;
         await LoadUsersData();
         await SetBusyAsync(false, token);
-        return new TableData<ChatTelegramModelDB>() { TotalItems = rest.TotalRowsCount, Items = pagedData };
+        return new TableData<ChatTelegramViewModel>() { TotalItems = rest.TotalRowsCount, Items = pagedData };
     }
 
     async Task LoadUsersData()
@@ -54,7 +54,7 @@ public partial class TelegramChatsTableComponent : BlazorBusyComponentBaseAuthMo
         if (CurrentUserSession is null)
             return;
 
-        IQueryable<ChatTelegramModelDB> q = pagedData
+        IQueryable<ChatTelegramViewModel> q = pagedData
             .Where(x => x.Type == ChatsTypesTelegramEnum.Private && !UsersCache.Any(y => y.TelegramId == x.ChatTelegramId))
             .AsQueryable();
 

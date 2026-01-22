@@ -52,7 +52,7 @@ public partial class ChatSelectComponent : BlazorBusyComponentBaseModel
     /// <summary>
     /// Выбранный чат
     /// </summary>
-    public ChatTelegramModelDB? SelectedChat;
+    public ChatTelegramViewModel? SelectedChat;
     ChatSelectInputComponent? selectorInput;
 
     long initValue;
@@ -64,7 +64,7 @@ public partial class ChatSelectComponent : BlazorBusyComponentBaseModel
         StateHasChanged();
     }
 
-    async void SelectChatHandler(ChatTelegramModelDB? selected)
+    async void SelectChatHandler(ChatTelegramViewModel? selected)
     {
         if (SelectedChat?.ChatTelegramId == selected?.ChatTelegramId || SelectedChat is null || initValue == selected?.ChatTelegramId)
         {

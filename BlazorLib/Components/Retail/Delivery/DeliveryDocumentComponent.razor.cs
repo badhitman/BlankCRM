@@ -39,7 +39,7 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
     public string? ClientId { get; set; }
 
 
-    ChatTelegramModelDB? currentChatTelegram;
+    ChatTelegramViewModel? currentChatTelegram;
     DeliveryDocumentRetailModelDB? currentDoc, editDoc;
     UserInfoModel? recipientUser;
     DeliveryTableRowsRetailComponent? tableRowsRef;
@@ -286,7 +286,7 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
 
         if (recipientUser.TelegramId.HasValue)
         {
-            List<ChatTelegramModelDB> chats = await TelegramRepo.ChatsReadTelegramAsync([recipientUser.TelegramId.Value]);
+            List<ChatTelegramViewModel> chats = await TelegramRepo.ChatsReadTelegramAsync([recipientUser.TelegramId.Value]);
             currentChatTelegram = chats.FirstOrDefault();
         }
         StateHasChangedCall();

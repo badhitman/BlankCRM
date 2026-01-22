@@ -25,7 +25,7 @@ public partial class ClientAboutComponent : BlazorBusyComponentBaseAuthModel
 
 
     UserInfoModel? currentUser, editClientCopy;
-    ChatTelegramModelDB? currentChatTelegram;
+    ChatTelegramViewModel? currentChatTelegram;
     List<WalletRetailModelDB>? WalletsForUser;
 
     EntryAltModel? SelectedKladrObject
@@ -165,7 +165,7 @@ public partial class ClientAboutComponent : BlazorBusyComponentBaseAuthModel
             editClientCopy = GlobalTools.CreateDeepCopy(currentUser);
             if (currentUser.TelegramId.HasValue)
             {
-                List<ChatTelegramModelDB> chats = await TelegramRepo.ChatsReadTelegramAsync([currentUser.TelegramId.Value]);
+                List<ChatTelegramViewModel> chats = await TelegramRepo.ChatsReadTelegramAsync([currentUser.TelegramId.Value]);
                 currentChatTelegram = chats.FirstOrDefault();
             }
         }

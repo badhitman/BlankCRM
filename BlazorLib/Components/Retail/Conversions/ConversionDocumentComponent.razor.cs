@@ -41,7 +41,7 @@ public partial class ConversionDocumentComponent : BlazorBusyComponentUsersCache
     WalletConversionRetailDocumentModelDB? currentDoc, editDoc;
     UserInfoModel? userSender, userRecipient;
     WalletSelectInputComponent? senderWalletRef, recipientWalletRef;
-    readonly List<ChatTelegramModelDB> currentChatTelegrams = [];
+    readonly List<ChatTelegramViewModel> currentChatTelegrams = [];
     decimal sumConversionsOrdersAmounts;
 
     bool readonlyInputFromWalletSum => editDoc is null || editDoc.FromWalletId <= 0;
@@ -167,8 +167,7 @@ public partial class ConversionDocumentComponent : BlazorBusyComponentUsersCache
         }
         if (_chatsIds.Count != 0)
         {
-            List<ChatTelegramModelDB> chats = await TelegramRepo.ChatsReadTelegramAsync([.. _chatsIds]);
-            currentChatTelegrams.AddRange(chats);
+            currentChatTelegrams.AddRange(await TelegramRepo.ChatsReadTelegramAsync([.. _chatsIds]));
         }
     }
 

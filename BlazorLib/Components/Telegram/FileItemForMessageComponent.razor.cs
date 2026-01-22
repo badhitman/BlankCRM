@@ -34,7 +34,7 @@ public partial class FileItemForMessageComponent : BlazorBusyComponentBaseModel
     async Task DownloadFile()
     {
         await SetBusyAsync();
-        TResponseModel<byte[]> rest = await telegramRepo.GetFileAsync(FileElement.FileId);
+        TResponseModel<byte[]> rest = await telegramRepo.GetFileTelegramAsync(FileElement.FileId);
 
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (rest.Response is not null)

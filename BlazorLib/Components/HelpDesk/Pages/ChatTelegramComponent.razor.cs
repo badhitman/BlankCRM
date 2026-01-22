@@ -40,7 +40,7 @@ public partial class ChatTelegramComponent : BlazorBusyComponentBaseModel
         _tab = page;
     }
 
-    ChatTelegramModelDB? Chat;
+    ChatTelegramViewModel? Chat;
     TelegramUserBaseModel? CurrentUser;
 
     /// <inheritdoc/>

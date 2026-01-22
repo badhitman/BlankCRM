@@ -16,7 +16,7 @@ public partial class NotificationsAreaTelegramIssueConfigComponent : IssueWrapBa
     ITelegramTransmission TelegramRepo { get; set; } = default!;
 
 
-    List<ChatTelegramModelDB>? chatsTelegram;
+    List<ChatTelegramViewModel>? chatsTelegram;
 
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
@@ -31,7 +31,7 @@ public partial class NotificationsAreaTelegramIssueConfigComponent : IssueWrapBa
             return;
 
         await SetBusyAsync();
-        chatsTelegram = [.. await TelegramRepo.ChatsFindForUserAsync(telegram_users_ids)];
+        chatsTelegram = [.. await TelegramRepo.ChatsFindForUserTelegramAsync(telegram_users_ids)];
 
         chatsTelegram.Insert(0, new() { Title = "Off", Type = ChatsTypesTelegramEnum.Private });
 

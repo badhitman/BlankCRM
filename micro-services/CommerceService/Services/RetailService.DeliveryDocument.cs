@@ -110,8 +110,6 @@ public partial class RetailService : IRetailService
         if (documentDb.Version != req.Payload.Version)
             return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = $"Документ уже был кем-то изменён. Обновите документ и попробуйте снова его изменить" }] };
 
-        loggerRepo.LogInformation($"{nameof(documentDb)}: {JsonConvert.SerializeObject(documentDb, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
-
         TResponseModel<Guid?> res = new();
         using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
         string msg;

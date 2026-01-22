@@ -13,7 +13,7 @@ namespace BlazorLib.Components.Telegram;
 public partial class ChatTelegramComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
-    ITelegramBotStandardTransmission tgRepo { get; set; } = default!;
+    ITelegramBotStandardService TelegramRepo { get; set; } = default!;
 
 
     /// <inheritdoc/>
@@ -28,7 +28,7 @@ public partial class ChatTelegramComponent : BlazorBusyComponentBaseModel
     {
         await base.OnInitializedAsync();
         await SetBusyAsync();
-        currentChat = await tgRepo.ChatTelegramReadAsync(ChatId);
+        currentChat = await TelegramRepo.ChatTelegramReadAsync(ChatId);
         await SetBusyAsync(false);
     }
 }

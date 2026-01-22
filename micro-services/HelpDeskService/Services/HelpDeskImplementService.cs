@@ -1831,7 +1831,7 @@ public class HelpDeskImplementService(
         TResponseModel<long?> helpdesk_user_redirect_telegram_for_issue_rest = await StorageRepo.ReadParameterAsync<long?>(GlobalStaticCloudStorageMetadata.HelpDeskNotificationsTelegramForUser(req.From!.UserTelegramId), token);
         if (helpdesk_user_redirect_telegram_for_issue_rest.Success() && helpdesk_user_redirect_telegram_for_issue_rest.Response.HasValue && helpdesk_user_redirect_telegram_for_issue_rest.Response != 0)
         {
-            TResponseModel<MessageComplexIdsModel> forward_res = await telegramRemoteRepo.ForwardMessageAsync(new()
+            TResponseModel<MessageComplexIdsModel> forward_res = await telegramRemoteRepo.ForwardMessageTelegramAsync(new()
             {
                 DestinationChatId = helpdesk_user_redirect_telegram_for_issue_rest.Response.Value,
                 SourceChatId = req.Chat!.ChatTelegramId,
@@ -1859,7 +1859,7 @@ public class HelpDeskImplementService(
         helpdesk_user_redirect_telegram_for_issue_rest = await StorageRepo.ReadParameterAsync<long?>(GlobalStaticCloudStorageMetadata.HelpDeskNotificationTelegramGlobalForIncomingMessage, token);
         if (helpdesk_user_redirect_telegram_for_issue_rest.Success() && helpdesk_user_redirect_telegram_for_issue_rest.Response.HasValue && helpdesk_user_redirect_telegram_for_issue_rest.Response != 0)
         {
-            TResponseModel<MessageComplexIdsModel> forward_res = await telegramRemoteRepo.ForwardMessageAsync(new()
+            TResponseModel<MessageComplexIdsModel> forward_res = await telegramRemoteRepo.ForwardMessageTelegramAsync(new()
             {
                 DestinationChatId = helpdesk_user_redirect_telegram_for_issue_rest.Response.Value,
                 SourceChatId = req.Chat!.ChatTelegramId,
@@ -1893,32 +1893,32 @@ public class HelpDeskImplementService(
         //
         if (req.Audio is not null)
         {
-            data_res = await telegramRemoteRepo.GetFileAsync(req.Audio.FileId, token);
+            data_res = await telegramRemoteRepo.GetFileTelegramAsync(req.Audio.FileId, token);
             if (data_res.Success() && data_res.Response is not null && data_res.Response.Length != 0)
                 files.Add(new() { ContentType = req.Audio.MimeType ?? "application/octet-stream", Data = data_res.Response, Name = req.Audio.FileName ?? req.Audio.Title ?? "Audio" });
         }
         if (req.Document is not null)
         {
-            data_res = await telegramRemoteRepo.GetFileAsync(req.Document.FileId, token);
+            data_res = await telegramRemoteRepo.GetFileTelegramAsync(req.Document.FileId, token);
             if (data_res.Success() && data_res.Response is not null && data_res.Response.Length != 0)
                 files.Add(new() { ContentType = req.Document.MimeType ?? "application/octet-stream", Data = data_res.Response, Name = req.Document.FileName ?? "Document" });
         }
         if (req.Photo is not null && req.Photo.Count != 0)
         {
             PhotoMessageTelegramModelDB _f = req.Photo.OrderByDescending(x => x.FileSize).First();
-            data_res = await telegramRemoteRepo.GetFileAsync(_f.FileId, token);
+            data_res = await telegramRemoteRepo.GetFileTelegramAsync(_f.FileId, token);
             if (data_res.Success() && data_res.Response is not null && data_res.Response.Length != 0)
                 files.Add(new() { ContentType = "image/jpeg", Data = data_res.Response, Name = "Photo" });
         }
         if (req.Voice is not null)
         {
-            data_res = await telegramRemoteRepo.GetFileAsync(req.Voice.FileId, token);
+            data_res = await telegramRemoteRepo.GetFileTelegramAsync(req.Voice.FileId, token);
             if (data_res.Success() && data_res.Response is not null && data_res.Response.Length != 0)
                 files.Add(new() { ContentType = req.Voice.MimeType ?? "application/octet-stream", Data = data_res.Response, Name = "Voice" });
         }
         if (req.Video is not null)
         {
-            data_res = await telegramRemoteRepo.GetFileAsync(req.Video.FileId, token);
+            data_res = await telegramRemoteRepo.GetFileTelegramAsync(req.Video.FileId, token);
             if (data_res.Success() && data_res.Response is not null && data_res.Response.Length != 0)
                 files.Add(new() { ContentType = req.Video.MimeType ?? "application/octet-stream", Data = data_res.Response, Name = req.Video.FileName ?? "Video" });
         }

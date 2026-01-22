@@ -24,7 +24,7 @@ public partial class MessagesTelegramComponent : BlazorBusyComponentBaseModel
     public int ChatId { get; set; }
 
 
-    ChatTelegramModelDB? CurrentChat;
+    ChatTelegramViewModel? CurrentChat;
 
     private string _searchStringQuery = "";
     private string SearchStringQuery

@@ -24,9 +24,9 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
     StoreTelegramService storeTgRepo) : ITelegramBotService
 {
     /// <inheritdoc/>
-    public async Task<List<ChatTelegramModelDB>> ChatsFindForUserTelegramAsync(long[] chats_ids, CancellationToken token = default)
+    public async Task<List<ChatTelegramViewModel>> ChatsFindForUserTelegramAsync(long[] chats_ids, CancellationToken token = default)
     {
-        TResponseModel<ChatTelegramModelDB[]?> res = new();
+        TResponseModel<ChatTelegramViewModel[]?> res = new();
         using TelegramBotContext context = await tgDbFactory.CreateDbContextAsync(token);
 
         int[] users_ids = await context.Users.Where(x => chats_ids.Contains(x.UserTelegramId)).Select(x => x.Id).ToArrayAsync(cancellationToken: token);
@@ -35,23 +35,46 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
             ? context.Chats.Where(x => chats_ids.Contains(x.ChatTelegramId))
             : context.Chats.Where(x => chats_ids.Contains(x.ChatTelegramId) || context.JoinsUsersToChats.Any(y => y.ChatId == x.Id && users_ids.Contains(y.UserId)));
 
-        return await q
+        List<ChatTelegramModelDB> _src = await q
             .Include(x => x.UsersJoins!)
             .ThenInclude(x => x.User)
             .ToListAsync(cancellationToken: token);
+
+        return [.._src.Select(x => new ChatTelegramViewModel()
+        {
+             LastName = x.LastName,
+             IsForum = x.IsForum,
+             Id = x.Id,
+             LastUpdateUtc = x.LastUpdateUtc,
+             Title = x.Title,
+             ChatTelegramId = x.ChatTelegramId,
+             FirstName = x.FirstName,
+             Type = x.Type,
+             Username = x.Username,
+        })];
     }
 
     /// <inheritdoc/>
-    public async Task<List<ChatTelegramModelDB>> ChatsReadTelegramAsync(long[] chats_ids, CancellationToken token = default)
+    public async Task<List<ChatTelegramViewModel>> ChatsReadTelegramAsync(long[] chats_ids, CancellationToken token = default)
     {
-        TResponseModel<ChatTelegramModelDB[]> res = new();
         using TelegramBotContext context = await tgDbFactory.CreateDbContextAsync(token);
-        return await context.Chats.Where(x => chats_ids.Contains(x.ChatTelegramId)).ToListAsync(cancellationToken: token)
-        ;
+        List<ChatTelegramModelDB> _src = await context.Chats.Where(x => chats_ids.Contains(x.ChatTelegramId)).ToListAsync(cancellationToken: token);
+        return [.._src.Select(x=> new ChatTelegramViewModel()
+        {
+             ChatTelegramId = x.ChatTelegramId,
+             FirstName = x.FirstName,
+             Type = x.Type,
+             Username = x.Username,
+             Title = x.Title,
+             LastUpdateUtc = x.LastUpdateUtc,
+             Id = x.Id,
+             IsForum = x.IsForum,
+             LastName = x.LastName,
+        })];
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseStandardModel<ChatTelegramModelDB>> ChatsSelectTelegramAsync(TPaginationRequestStandardModel<string?> req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<ChatTelegramViewModel>> ChatsSelectTelegramAsync(TPaginationRequestStandardModel<string?> req, CancellationToken token = default)
     {
         if (req.PageSize < 5)
             req.PageSize = 5;
@@ -79,7 +102,7 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
                 ? q.OrderBy(x => x.LastUpdateUtc).Skip(req.PageNum * req.PageSize).Take(req.PageSize)
                 : q.OrderByDescending(x => x.LastUpdateUtc).Skip(req.PageNum * req.PageSize).Take(req.PageSize);
         }
-
+        List<ChatTelegramModelDB> _src = await TakePart(q, req.SortingDirection).ToListAsync(cancellationToken: token);
         return new()
         {
             PageNum = req.PageNum,
@@ -87,14 +110,25 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
             SortBy = req.SortBy,
             SortingDirection = req.SortingDirection,
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
-            Response = await TakePart(q, req.SortingDirection).ToListAsync(cancellationToken: token),
+            Response = [.._src.Select(x=> new ChatTelegramViewModel()
+            {
+                 ChatTelegramId = x.ChatTelegramId,
+                 FirstName = x.FirstName,
+                 Id = x.Id,
+                 IsForum = x.IsForum,
+                 LastName = x.LastName,
+                 LastUpdateUtc = x.LastUpdateUtc,
+                 Title = x.Title,
+                 Type = x.Type,
+                 Username = x.Username,
+            })],
         };
     }
 
     /// <inheritdoc/>
-    public async Task<ChatTelegramModelDB> ChatTelegramReadAsync(int chatId, CancellationToken token = default)
+    public async Task<ChatTelegramViewModel> ChatTelegramReadAsync(int chatId, CancellationToken token = default)
     {
-        TResponseModel<ChatTelegramModelDB> res = new();
+        TResponseModel<ChatTelegramViewModel> res = new();
         using TelegramBotContext context = await tgDbFactory.CreateDbContextAsync(token);
         return await context
             .Chats
