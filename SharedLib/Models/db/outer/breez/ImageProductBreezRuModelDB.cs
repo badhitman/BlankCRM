@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// ImageProductBreezRuModelDB
 /// </summary>
-public class ImageProductBreezRuModelDB : EntryModel
+public class ImageProductBreezRuModelDB : EntryStandardModel
 {
     /// <summary>
     /// Product

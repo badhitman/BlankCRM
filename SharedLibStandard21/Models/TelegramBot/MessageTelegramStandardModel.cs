@@ -1,14 +1,15 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace SharedLib;
 
 /// <summary>
-/// MessageTelegramViewModel
+/// MessageTelegramStandardModel
 /// </summary>
-public class MessageTelegramViewModel
+public class MessageTelegramStandardModel
 {
     /// <summary>
     /// Идентификатор/Key
@@ -34,7 +35,7 @@ public class MessageTelegramViewModel
     /// <summary>
     /// Optional. Sender, empty for messages sent to channels
     /// </summary>
-    public virtual UserTelegramViewModel? From { get; set; }
+    public virtual UserTelegramStandardModel? From { get; set; }
 
     /// <summary>
     /// Optional. Sender, empty for messages sent to channels
@@ -46,7 +47,7 @@ public class MessageTelegramViewModel
     /// The supergroup itself for messages from anonymous group administrators. The linked channel for messages
     /// automatically forwarded to the discussion group
     /// </summary>
-    public virtual ChatTelegramViewModel? Chat { get; set; }
+    public virtual ChatTelegramStandardModel? Chat { get; set; }
 
     /// <summary>
     /// Optional. Sender of the message, sent on behalf of a chat. The channel itself for channel messages.
@@ -111,7 +112,7 @@ public class MessageTelegramViewModel
     public int? ReplyToMessageId { get; set; }
 
     /// <summary>
-    /// Optional. Bot through which the message was sent <see cref="UserTelegramViewModel"/>
+    /// Optional. Bot through which the message was sent <see cref="UserTelegramStandardModel"/>
     /// </summary>
     public long? ViaBotId { get; set; }
 
@@ -138,11 +139,6 @@ public class MessageTelegramViewModel
     public string? Text { get; set; }
 
     /// <summary>
-    /// Optional. For text messages, the actual text of the message, 0-4096 characters
-    /// </summary>
-    public string? NormalizedTextUpper { get; set; }
-
-    /// <summary>
     /// CreatedAtUtc
     /// </summary>
     public DateTime CreatedAtUtc { get; set; }
@@ -153,7 +149,32 @@ public class MessageTelegramViewModel
     public string? Caption { get; set; }
 
     /// <summary>
-    /// Optional. Caption for the animation, audio, document, photo, video or voice, 0-1024 characters
+    /// Contact
     /// </summary>
-    public string? NormalizedCaptionUpper { get; set; }
+    public virtual ContactTelegramStandardModel? Contact { get; set; }
+
+    /// <summary>
+    /// Voice
+    /// </summary>
+    public virtual VoiceTelegramStandardModel? Voice { get; set; }
+
+    /// <summary>
+    /// Audio
+    /// </summary>
+    public virtual AudioTelegramStandardModel? Audio { get; set; }
+
+    /// <summary>
+    /// Document
+    /// </summary>
+    public virtual DocumentTelegramStandardModel? Document { get; set; }
+
+    /// <summary>
+    /// Video
+    /// </summary>
+    public virtual VideoTelegramStandardModel? Video { get; set; }
+
+    /// <summary>
+    /// Optional. Message is a photo, available sizes of the photo
+    /// </summary>
+    public List<PhotoMessageTelegramStandardModel>? Photo { get; set; }
 }

@@ -12,7 +12,7 @@ namespace SharedLib;
 /// <summary>
 /// UserTelegramViewModel
 /// </summary>
-public class UserTelegramViewModel : UserTelegramBaseModel
+public class UserTelegramStandardModel : UserTelegramBaseModel
 {
     /// <inheritdoc/>
     public int Id { get; set; }

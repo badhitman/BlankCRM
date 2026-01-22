@@ -24,15 +24,15 @@ public partial class ErrorMessageTelegramBotComponent : BlazorBusyComponentBaseM
     public long? ChatId { get; set; }
 
 
-    private IEnumerable<ErrorSendingMessageTelegramBotModelDB> pagedData = default!;
+    private IEnumerable<ErrorSendingMessageTelegramBotStandardModel> pagedData = default!;
 
     /// <summary>
     /// Here we simulate getting the paged, filtered and ordered data from the server
     /// </summary>
-    private async Task<TableData<ErrorSendingMessageTelegramBotModelDB>> ServerReload(TableState state, CancellationToken token)
+    private async Task<TableData<ErrorSendingMessageTelegramBotStandardModel>> ServerReload(TableState state, CancellationToken token)
     {
         await SetBusyAsync(token: token);
-        TPaginationResponseStandardModel<ErrorSendingMessageTelegramBotModelDB> err_res = await TelegramRepo.ErrorsForChatsSelectTelegramAsync(new TPaginationRequestStandardModel<long[]>()
+        TPaginationResponseStandardModel<ErrorSendingMessageTelegramBotStandardModel> err_res = await TelegramRepo.ErrorsForChatsSelectTelegramAsync(new TPaginationRequestStandardModel<long[]>()
         {
             Payload = ChatId is null || ChatId.Value == 0 ? null : [ChatId.Value],
             PageNum = state.Page,
@@ -44,9 +44,9 @@ public partial class ErrorMessageTelegramBotComponent : BlazorBusyComponentBaseM
         await SetBusyAsync(false, token);
 
         if (err_res.Response is null)
-            return new TableData<ErrorSendingMessageTelegramBotModelDB>() { TotalItems = 0, Items = [] };
+            return new TableData<ErrorSendingMessageTelegramBotStandardModel>() { TotalItems = 0, Items = [] };
 
         pagedData = err_res.Response;
-        return new TableData<ErrorSendingMessageTelegramBotModelDB>() { TotalItems = err_res.TotalRowsCount, Items = pagedData };
+        return new TableData<ErrorSendingMessageTelegramBotStandardModel>() { TotalItems = err_res.TotalRowsCount, Items = pagedData };
     }
 }

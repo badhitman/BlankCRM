@@ -12,7 +12,7 @@ namespace BlazorLib.Components.Telegram;
 /// <summary>
 /// ChatSelectInputComponent
 /// </summary>
-public partial class ChatSelectInputComponent : LazySelectorComponent<ChatTelegramViewModel>
+public partial class ChatSelectInputComponent : LazySelectorComponent<ChatTelegramStandardModel>
 {
     [Inject]
     ITelegramTransmission TelegramRepo { get; set; } = default!;
@@ -29,7 +29,7 @@ public partial class ChatSelectInputComponent : LazySelectorComponent<ChatTelegr
     public override async Task LoadPartData()
     {
         await SetBusyAsync();
-        TPaginationResponseStandardModel<ChatTelegramViewModel> rest = await TelegramRepo
+        TPaginationResponseStandardModel<ChatTelegramStandardModel> rest = await TelegramRepo
             .ChatsSelectTelegramAsync(new()
             {
                 Payload = _selectedValueText,
@@ -77,7 +77,7 @@ public partial class ChatSelectInputComponent : LazySelectorComponent<ChatTelegr
     {
         await SetBusyAsync();
 
-        List<ChatTelegramViewModel> rest = await TelegramRepo.ChatsReadTelegramAsync([SelectedChat]);
+        List<ChatTelegramStandardModel> rest = await TelegramRepo.ChatsReadTelegramAsync([SelectedChat]);
 
         if (rest.Count == 0)
         {

@@ -13,7 +13,7 @@ else
     <div class="col-auto">
         <select @bind="SelectedDirectoryField" class="form-select" id="inputGroupSelect01">
             <option value="0" selected disabled="@(SelectedDirectoryField > 0)">Selecting a directory...</option>
-            @foreach (EntryModel e in Entries)
+            @foreach (EntryStandardModel e in Entries)
             {
                 <option value="@e.Id">
                     @e.Name

@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// TagArticleSetModel
 /// </summary>
-public class TagSetModel : EntryModel
+public class TagSetModel : EntryStandardModel
 {
     /// <summary>
     /// Приложение

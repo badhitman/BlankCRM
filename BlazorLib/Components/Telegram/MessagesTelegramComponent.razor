@@ -25,7 +25,7 @@ else
             <MudTextField Immediate="true" @bind-Value="SearchStringQuery" Placeholder="Поиск по тексту" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
         </ToolBarContent>
         <HeaderContent>
-            <MudTh><MudTableSortLabel InitialDirection="SortDirection.Descending" SortLabel="@(nameof(MessageTelegramModelDB.CreatedAtUtc))" T="MessageTelegramModelDB"></MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel InitialDirection="SortDirection.Descending" SortLabel="@(nameof(MessageTelegramStandardModel.CreatedAtUtc))" T="MessageTelegramStandardModel"></MudTableSortLabel></MudTh>
             <MudTh></MudTh>
             <MudTh></MudTh>
         </HeaderContent>

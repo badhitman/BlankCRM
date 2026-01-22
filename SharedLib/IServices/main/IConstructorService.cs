@@ -81,7 +81,7 @@ public interface IConstructorService : IConstructorBaseService
     /// <summary>
     /// Получить участников проекта (за исключением владельца, который хранится в самом проекте)
     /// </summary>
-    public Task<TResponseModel<EntryAltModel[]>> GetMembersOfProjectAsync(int project_id, CancellationToken cancellationToken = default);
+    public Task<TResponseModel<EntryAltStandardModel[]>> GetMembersOfProjectAsync(int project_id, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Установить проект как основной/используемый для пользователя.
@@ -115,7 +115,7 @@ public interface IConstructorService : IConstructorBaseService
     /// <summary>
     /// Получить справочники/списки для проекта
     /// </summary>
-    public Task<TResponseModel<EntryModel[]>> GetDirectoriesAsync(ProjectFindModel req, CancellationToken cancellationToken = default);
+    public Task<TResponseModel<EntryStandardModel[]>> GetDirectoriesAsync(ProjectFindModel req, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Получить справочник (список/перечисление)
@@ -131,7 +131,7 @@ public interface IConstructorService : IConstructorBaseService
     /// <summary>
     /// Получить элементы справочника/списка
     /// </summary>
-    public Task<TResponseModel<List<EntryModel>?>> GetElementsOfDirectoryAsync(int directory_id, CancellationToken cancellationToken = default);
+    public Task<TResponseModel<List<EntryStandardModel>?>> GetElementsOfDirectoryAsync(int directory_id, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Создать элемент справочника
@@ -305,7 +305,7 @@ public interface IConstructorService : IConstructorBaseService
     /// <summary>
     /// Найти порцию сессий по имени поля (с пагинацией)
     /// </summary>
-    public Task<TResponseModel<EntryDictModel[]>> FindSessionsDocumentsByFormFieldNameAsync(FormFieldModel req, CancellationToken cancellationToken = default);
+    public Task<TResponseModel<EntryDictStandardModel[]>> FindSessionsDocumentsByFormFieldNameAsync(FormFieldModel req, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Удалить значения (введённые в сессиях) по имени поля

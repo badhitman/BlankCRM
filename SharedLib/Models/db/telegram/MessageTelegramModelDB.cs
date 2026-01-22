@@ -11,7 +11,7 @@ namespace SharedLib;
 /// MessageTelegramModelDB
 /// </summary>
 [Index(nameof(MessageTelegramId), nameof(ChatId), nameof(FromId))]
-public class MessageTelegramModelDB : MessageTelegramViewModel
+public class MessageTelegramModelDB : MessageTelegramStandardModel
 {
     /// <summary>
     /// Optional. Sender, empty for messages sent to channels
@@ -34,7 +34,7 @@ public class MessageTelegramModelDB : MessageTelegramViewModel
     /// <summary>
     /// Optional. Message is a photo, available sizes of the photo
     /// </summary>
-    public List<PhotoMessageTelegramModelDB>? Photo { get; set; }
+    public new List<PhotoMessageTelegramModelDB>? Photo { get; set; }
 
     /// <summary>
     /// Audio
@@ -43,12 +43,12 @@ public class MessageTelegramModelDB : MessageTelegramViewModel
     /// <summary>
     /// Audio
     /// </summary>
-    public AudioTelegramModelDB? Audio { get; set; }
+    public new AudioTelegramModelDB? Audio { get; set; }
 
     /// <summary>
     /// Video
     /// </summary>
-    public VideoTelegramModelDB? Video { get; set; }
+    public new VideoTelegramModelDB? Video { get; set; }
     /// <summary>
     /// Video
     /// </summary>
@@ -57,7 +57,7 @@ public class MessageTelegramModelDB : MessageTelegramViewModel
     /// <summary>
     /// Document
     /// </summary>
-    public DocumentTelegramModelDB? Document { get; set; }
+    public new DocumentTelegramModelDB? Document { get; set; }
     /// <summary>
     /// Document
     /// </summary>
@@ -67,7 +67,7 @@ public class MessageTelegramModelDB : MessageTelegramViewModel
     /// <summary>
     /// Voice
     /// </summary>
-    public VoiceTelegramModelDB? Voice { get; set; }
+    public new VoiceTelegramModelDB? Voice { get; set; }
     /// <summary>
     /// Voice
     /// </summary>
@@ -76,7 +76,7 @@ public class MessageTelegramModelDB : MessageTelegramViewModel
     /// <summary>
     /// Contact
     /// </summary>
-    public ContactTelegramModelDB? Contact { get; set; }
+    public new ContactTelegramModelDB? Contact { get; set; }
     /// <summary>
     /// Contact
     /// </summary>
@@ -93,4 +93,14 @@ public class MessageTelegramModelDB : MessageTelegramViewModel
     /// </summary>
     [NotMapped]
     public UserTelegramModelDB? ForwardFrom { get; set; }
+
+    /// <summary>
+    /// Optional. For text messages, the actual text of the message, 0-4096 characters
+    /// </summary>
+    public string? NormalizedTextUpper { get; set; }
+
+    /// <summary>
+    /// Optional. Caption for the animation, audio, document, photo, video or voice, 0-1024 characters
+    /// </summary>
+    public string? NormalizedCaptionUpper { get; set; }
 }

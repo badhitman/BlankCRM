@@ -40,9 +40,9 @@ public partial class OfficeOrganizationComponent : BlazorBusyComponentBaseAuthMo
 
     UniversalBaseModel? SelectedRubric;
 
-    EntryAltModel? SelectedKladrObject
+    EntryAltStandardModel? SelectedKladrObject
     {
-        get => EntryAltModel.Build(OfficeEdit!.KladrCode, OfficeEdit.KladrTitle);
+        get => EntryAltStandardModel.Build(OfficeEdit!.KladrCode, OfficeEdit.KladrTitle);
         set
         {
             OfficeEdit!.KladrCode = value?.Id ?? "";

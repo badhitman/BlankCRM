@@ -7,7 +7,7 @@
             <select @bind="SelectedDirectoryField" class="form-select" id="inputSelect-@(DomID)" aria-describedby="@(DomID)Help" disabled="@(IsBusyProgress || !ParentFormsPage.CanEditProject)">
                 @if (Entries is not null)
                 {
-                    foreach (EntryModel e in Entries)
+                    foreach (EntryStandardModel e in Entries)
                     {
                         <option value="@e.Id">@e.Name</option>
                     }

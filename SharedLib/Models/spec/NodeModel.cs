@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// Вложенная EntryModel
 /// </summary>
-public class NodeModel : EntryModel
+public class NodeModel : EntryStandardModel
 {
     /// <summary>
     /// Идентификатор родителя

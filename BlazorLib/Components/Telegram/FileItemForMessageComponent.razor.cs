@@ -16,7 +16,7 @@ namespace BlazorLib.Components.Telegram;
 public partial class FileItemForMessageComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
-    ITelegramTransmission telegramRepo { get; set; } = default!;
+    ITelegramTransmission TelegramRepo { get; set; } = default!;
 
     [Inject]
     IJSRuntime JSRepo { get; set; } = default!;
@@ -26,15 +26,21 @@ public partial class FileItemForMessageComponent : BlazorBusyComponentBaseModel
     /// FileElement
     /// </summary>
     [Parameter, EditorRequired]
-    public required FileBaseTelegramModel FileElement { get; set; }
+    public required FileBaseTelegramStandardModel FileElement { get; set; }
 
 
     string? fileName;
 
     async Task DownloadFile()
     {
+        if(string.IsNullOrWhiteSpace(FileElement.FileId))
+        {
+            SnackBarRepo.Error("string.IsNullOrWhiteSpace(FileElement.FileId)");
+            return; 
+        }
+
         await SetBusyAsync();
-        TResponseModel<byte[]> rest = await telegramRepo.GetFileTelegramAsync(FileElement.FileId);
+        TResponseModel<byte[]> rest = await TelegramRepo.GetFileTelegramAsync(FileElement.FileId);
 
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (rest.Response is not null)

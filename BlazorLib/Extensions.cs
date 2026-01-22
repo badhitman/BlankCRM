@@ -70,7 +70,7 @@ public static class Extensions
             UserName = userName,
             Roles = [.. roles],
             GivenName = givenName,
-            Claims = [.. principal.Claims.Where(x => x.Type != ClaimTypes.Role).Select(x => new EntryAltModel() { Id = x.Type, Name = x.Value })],
+            Claims = [.. principal.Claims.Where(x => x.Type != ClaimTypes.Role).Select(x => new EntryAltStandardModel() { Id = x.Type, Name = x.Value })],
         };
     }
 

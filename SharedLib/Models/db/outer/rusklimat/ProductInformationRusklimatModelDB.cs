@@ -10,7 +10,7 @@ namespace SharedLib;
 /// ProductInformationRusklimatModelDB
 /// </summary>
 [Index(nameof(TypeInfo))]
-public class ProductInformationRusklimatModelDB : EntryModel
+public class ProductInformationRusklimatModelDB : EntryStandardModel
 {
     /// <summary>
     /// Product

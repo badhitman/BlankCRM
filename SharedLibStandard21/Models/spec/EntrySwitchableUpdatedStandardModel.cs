@@ -9,7 +9,7 @@ namespace SharedLib;
 /// <summary>
 /// Базовая DB модель объекта с поддержкой -> int:Id +string:Name +bool:IsDeleted AND UpdatedAt
 /// </summary>
-public class EntrySwitchableUpdatedModel : IdSwitchableModel
+public class EntrySwitchableUpdatedStandardModel : IdSwitchableStandardModel
 {
     /// <inheritdoc/>
     public virtual string? Name { get; set; }

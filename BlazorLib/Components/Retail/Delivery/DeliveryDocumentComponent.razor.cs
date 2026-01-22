@@ -39,7 +39,7 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
     public string? ClientId { get; set; }
 
 
-    ChatTelegramViewModel? currentChatTelegram;
+    ChatTelegramStandardModel? currentChatTelegram;
     DeliveryDocumentRetailModelDB? currentDoc, editDoc;
     UserInfoModel? recipientUser;
     DeliveryTableRowsRetailComponent? tableRowsRef;
@@ -88,9 +88,9 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
         }
     }
 
-    EntryAltModel? DeliveryAddressSelectedKladrObject
+    EntryAltStandardModel? DeliveryAddressSelectedKladrObject
     {
-        get => EntryAltModel.Build(editDoc?.KladrCode ?? "", editDoc?.KladrTitle ?? "");
+        get => EntryAltStandardModel.Build(editDoc?.KladrCode ?? "", editDoc?.KladrTitle ?? "");
         set
         {
             if (editDoc is null)
@@ -286,7 +286,7 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
 
         if (recipientUser.TelegramId.HasValue)
         {
-            List<ChatTelegramViewModel> chats = await TelegramRepo.ChatsReadTelegramAsync([recipientUser.TelegramId.Value]);
+            List<ChatTelegramStandardModel> chats = await TelegramRepo.ChatsReadTelegramAsync([recipientUser.TelegramId.Value]);
             currentChatTelegram = chats.FirstOrDefault();
         }
         StateHasChangedCall();

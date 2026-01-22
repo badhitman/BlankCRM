@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// Платёжный документ
 /// </summary>
-public class PaymentDocumentBaseModel : EntryModel
+public class PaymentDocumentBaseModel : EntryStandardModel
 {
     /// <summary>
     /// Название

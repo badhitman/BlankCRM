@@ -22,7 +22,7 @@
         {
             <CascadingValue Value="SendMessageTelegramAction">
                 <MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-2">
-                    @foreach (ChatTelegramViewModel chat in chats)
+                    @foreach (ChatTelegramStandardModel chat in chats)
                     {
                         <MudTabPanel Text="@(UsersIdentityDump.First(x => x.TelegramId == chat.ChatTelegramId).UserName)">
                             <TelegramChatWrapComponent Chat="chat" />

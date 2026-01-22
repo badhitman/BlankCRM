@@ -14,19 +14,18 @@
     <ToolBarContent>
         <MudText Typo="Typo.h6">Чаты TelegramBot`а</MudText>
         <MudSpacer />
-        <MudTextField 
-            title="без учёта регистра = регистро-независимый поиск" 
-            T="string" 
-            ValueChanged="@(s => OnSearch(s))" 
-            Placeholder="Поиск по: Title, Username, FirstName, LastName" 
-            Adornment="Adornment.Start" 
-            Immediate="true"
-            AdornmentIcon="@Icons.Material.Filled.Search" 
-            IconSize="Size.Medium" 
-            Class="mt-0"></MudTextField>
+        <MudTextField title="без учёта регистра = регистро-независимый поиск"
+                      T="string"
+                      ValueChanged="@(s => OnSearch(s))"
+                      Placeholder="Поиск по: Title, Username, FirstName, LastName"
+                      Adornment="Adornment.Start"
+                      Immediate="true"
+                      AdornmentIcon="@Icons.Material.Filled.Search"
+                      IconSize="Size.Medium"
+                      Class="mt-0"></MudTextField>
     </ToolBarContent>
     <HeaderContent>
-        <MudTh><MudTableSortLabel InitialDirection="SortDirection.Descending" SortLabel="@(nameof(ChatTelegramViewModel.LastUpdateUtc))" T="ChatTelegramViewModel">Updated</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel InitialDirection="SortDirection.Descending" SortLabel="@(nameof(ChatTelegramStandardModel.LastUpdateUtc))" T="ChatTelegramStandardModel">Updated</MudTableSortLabel></MudTh>
         <MudTh>Title</MudTh>
         <MudTh>Type</MudTh>
         <MudTh>Username</MudTh>
@@ -35,8 +34,13 @@
         <MudTh>About</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="@(nameof(ChatTelegramViewModel.LastUpdateUtc))">
-            <a href="@($"/telegram-bot/chat-page/{context.Id}")">@context.LastUpdateUtc.GetCustomTime().ToString("d", GlobalStaticConstants.RU)<sup>@context.LastUpdateUtc.GetCustomTime().ToString("t", GlobalStaticConstants.RU)</sup></a>
+        <MudTd DataLabel="@(nameof(ChatTelegramStandardModel.LastUpdateUtc))">
+            <MudLink Href="@($"/telegram-bot/chat-page/{context.Id}")">
+                @context.LastUpdateUtc.GetCustomTime().ToString("d", GlobalStaticConstants.RU)
+                <sup>
+                    @context.LastUpdateUtc.GetCustomTime().ToString("t", GlobalStaticConstants.RU)
+                </sup>
+            </MudLink>
         </MudTd>
         <MudTd DataLabel="Title">@context.Title</MudTd>
         <MudTd DataLabel="Type">@context.Type.DescriptionInfo()</MudTd>

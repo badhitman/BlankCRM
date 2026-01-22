@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// Базовая DB модель объекта с поддержкой -> int:Id +string:Name +string:Description
 /// </summary>
-public class EntryDescriptionModel : EntryModel
+public class EntryDescriptionModel : EntryStandardModel
 {
     /// <summary>
     /// Описание/примечание для объекта

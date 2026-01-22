@@ -12,5 +12,5 @@ public class IdResponseOwnedModel : TResponseModel<int?>
     /// <summary>
     /// Владелец текущего объекта
     /// </summary>
-    public EntryModel? CurrentOwnerObject { get; set; }
+    public EntryStandardModel? CurrentOwnerObject { get; set; }
 }

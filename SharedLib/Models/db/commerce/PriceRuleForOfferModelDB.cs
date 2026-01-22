@@ -11,7 +11,7 @@ namespace SharedLib;
 /// </summary>
 [Index(nameof(OfferId), nameof(QuantityRule), IsUnique = true)]
 [Index(nameof(Name)), Index(nameof(IsDisabled))]
-public class PriceRuleForOfferModelDB : EntrySwitchableUpdatedModel
+public class PriceRuleForOfferModelDB : EntrySwitchableUpdatedStandardModel
 {
     /// <summary>
     /// Offer

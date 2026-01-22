@@ -7,10 +7,10 @@ namespace SharedLib;
 /// <summary>
 /// Простейший вещественный тип вложенной/древовидной структуры
 /// </summary>
-public class EntryNestedModel : EntryModel
+public class EntryNestedModel : EntryStandardModel
 {
     /// <summary>
     /// Вложенные (дочерние) объекты
     /// </summary>
-    public IEnumerable<EntryModel> Childs { get; set; } = [];
+    public IEnumerable<EntryStandardModel> Childs { get; set; } = [];
 }

@@ -316,22 +316,22 @@ public partial class MainRetailReportComponent : BlazorBusyComponentBaseModel
         {
             my_table = new() { css_style = "border: 1px solid black; width: 100%; border-collapse: collapse;" };
 
-            my_table.TBody.AddRow(["Офисные за онлайн контракты", $"{Math.Round((decimal)(_bonusAmount * (decimal)0.1) * (ReportData.PaidOnSitePaymentsSumAmount * (decimal)0.1) / 120, 2)}"]);
-            my_table.TBody.AddRow(["Офисные при оплате на складе (+переводы/конвертации)", $"{Math.Round(((decimal)(_bonusAmount * (decimal)0.1) * ((((ReportData.DoneOrdersSumAmount - ReportData.PaidOnSitePaymentsSumAmount))) * (decimal)0.1) / 120), 2)}"]);
-            my_table.TBody.AddRow(["Итого:", $"{Math.Round(((decimal)(_bonusAmount * (decimal)0.1) * (ReportData.PaidOnSitePaymentsSumAmount * (decimal)0.1) / 120) + (((decimal)(_bonusAmount * (decimal)0.1) * ((((ReportData.DoneOrdersSumAmount - ReportData.PaidOnSitePaymentsSumAmount))) * (decimal)0.1) / 120)), 2)}"]);
+            my_table.TBody.AddRow(["Офисные за онлайн контракты", $"{Math.Round((decimal)(_bonusAmount * (decimal)0.1) * (ReportData.PaidOnSitePaymentsSumAmount * (decimal)0.1) / 120, 2):C}"]);
+            my_table.TBody.AddRow(["Офисные при оплате на складе (+переводы/конвертации)", $"{Math.Round(((decimal)(_bonusAmount * (decimal)0.1) * ((((ReportData.DoneOrdersSumAmount - ReportData.PaidOnSitePaymentsSumAmount))) * (decimal)0.1) / 120), 2):C}"]);
+            my_table.TBody.AddRow(["Итого:", $"{Math.Round(((decimal)(_bonusAmount * (decimal)0.1) * (ReportData.PaidOnSitePaymentsSumAmount * (decimal)0.1) / 120) + (((decimal)(_bonusAmount * (decimal)0.1) * ((((ReportData.DoneOrdersSumAmount - ReportData.PaidOnSitePaymentsSumAmount))) * (decimal)0.1) / 120)), 2):C}"]);
             wrapDiv.AddDomNode(my_table);
             wrapDiv.AddDomNode(new HtmlGenerator.html5.textual.p(""));
             wrapDiv.AddDomNode(new HtmlGenerator.html5.textual.h4("К оплате:"));
 
             my_table = new() { css_style = "border: 1px solid black; width: 100%; border-collapse: collapse;" };
-            my_table.TBody.AddRow(["Сумма заявок:", $"{Math.Round((ReportData.DoneOrdersSumAmount - ReportData.PaidOnSitePaymentsSumAmount), 2)}"]);
-            my_table.TBody.AddRow(["минус [офисные при оплате на складе]", $"{((decimal)(_bonusAmount * (decimal)0.1) * ((Math.Round(ReportData.DoneOrdersSumAmount - ReportData.PaidOnSitePaymentsSumAmount) * (decimal)0.1) / 120), 2)}"]);
+            my_table.TBody.AddRow(["Сумма заявок:", $"{Math.Round((ReportData.DoneOrdersSumAmount - ReportData.PaidOnSitePaymentsSumAmount), 2):C}"]);
+            my_table.TBody.AddRow(["минус [офисные при оплате на складе]", $"{((decimal)(_bonusAmount * (decimal)0.1) * ((Math.Round(ReportData.DoneOrdersSumAmount - ReportData.PaidOnSitePaymentsSumAmount) * (decimal)0.1) / 120), 2):C}"]);
             my_table.TBody.AddRow(["минус [офисные за онлайн контракты]", $"{(Math.Round((decimal)(_bonusAmount * (decimal)0.1) * (ReportData.PaidOnSitePaymentsSumAmount * (decimal)0.1) / 120), 2)}"]);
             my_table.TBody.AddRow(["минус [перевод в компанию бонусов]", $"{TransferBonusesCompany * 42}"]);
-            my_table.TBody.AddRow(["минус [перевод в компанию на расчетный счет]", $"{TransferToCompanyBankAccount}"]);
-            my_table.TBody.AddRow(["плюс [долг]", $"{Debt}"]);
-            my_table.TBody.AddRow(["минус [оплата наличными]", $"{CashPayment}"]);
-            my_table.TBody.AddRow(["Итого:", $"{Math.Round(((ReportData.DoneOrdersSumAmount - ReportData.PaidOnSitePaymentsSumAmount) - (((decimal)(_bonusAmount * (decimal)0.1) * ((((ReportData.DoneOrdersSumAmount - ReportData.PaidOnSitePaymentsSumAmount))) * (decimal)0.1) / 120))) - ((decimal)(_bonusAmount * (decimal)0.1) * (ReportData.PaidOnSitePaymentsSumAmount * (decimal)0.1) / 120) - (TransferBonusesCompany * 42) - TransferToCompanyBankAccount + Debt - CashPayment, 2)}"]);
+            my_table.TBody.AddRow(["минус [перевод в компанию на расчетный счет]", $"{TransferToCompanyBankAccount:C}"]);
+            my_table.TBody.AddRow(["плюс [долг]", $"{Debt:C}"]);
+            my_table.TBody.AddRow(["минус [оплата наличными]", $"{CashPayment:C}"]);
+            my_table.TBody.AddRow(["Итого:", $"{Math.Round(((ReportData.DoneOrdersSumAmount - ReportData.PaidOnSitePaymentsSumAmount) - (((decimal)(_bonusAmount * (decimal)0.1) * ((((ReportData.DoneOrdersSumAmount - ReportData.PaidOnSitePaymentsSumAmount))) * (decimal)0.1) / 120))) - ((decimal)(_bonusAmount * (decimal)0.1) * (ReportData.PaidOnSitePaymentsSumAmount * (decimal)0.1) / 120) - (TransferBonusesCompany * 42) - TransferToCompanyBankAccount + Debt - CashPayment, 2):C}"]);
 
             wrapDiv.AddDomNode(my_table);
         }

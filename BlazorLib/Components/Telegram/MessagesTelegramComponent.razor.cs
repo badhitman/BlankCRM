@@ -24,7 +24,7 @@ public partial class MessagesTelegramComponent : BlazorBusyComponentBaseModel
     public int ChatId { get; set; }
 
 
-    ChatTelegramViewModel? CurrentChat;
+    ChatTelegramStandardModel? CurrentChat;
 
     private string _searchStringQuery = "";
     private string SearchStringQuery
@@ -41,7 +41,7 @@ public partial class MessagesTelegramComponent : BlazorBusyComponentBaseModel
     /// <summary>
     /// Table
     /// </summary>
-    public MudTable<MessageTelegramModelDB>? TableRef { get; set; }
+    public MudTable<MessageTelegramStandardModel>? TableRef { get; set; }
 
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
@@ -55,11 +55,11 @@ public partial class MessagesTelegramComponent : BlazorBusyComponentBaseModel
     /// <summary>
     /// Here we simulate getting the paged, filtered and ordered data from the server
     /// </summary>
-    private async Task<TableData<MessageTelegramModelDB>> ServerReload(TableState state, CancellationToken token)
+    private async Task<TableData<MessageTelegramStandardModel>> ServerReload(TableState state, CancellationToken token)
     {
         await SetBusyAsync(token: token);
-        TPaginationResponseStandardModel<MessageTelegramModelDB> rest_message = await TelegramRepo
-            .MessagesTelegramSelectAsync(new TPaginationRequestStandardModel<SearchMessagesChatModel>()
+        TPaginationResponseStandardModel<MessageTelegramStandardModel> rest_message = await TelegramRepo
+            .MessagesTelegramSelectAsync(new TPaginationRequestStandardModel<SearchMessagesChatStandardModel>()
             {
                 Payload = new() { ChatId = ChatId, SearchQuery = SearchStringQuery },
                 PageNum = state.Page,
@@ -71,8 +71,8 @@ public partial class MessagesTelegramComponent : BlazorBusyComponentBaseModel
         await SetBusyAsync(false, token);
 
         if (rest_message.Response is null)
-            return new TableData<MessageTelegramModelDB>() { TotalItems = 0, Items = [] };
+            return new TableData<MessageTelegramStandardModel>() { TotalItems = 0, Items = [] };
 
-        return new TableData<MessageTelegramModelDB>() { TotalItems = rest_message.TotalRowsCount, Items = rest_message.Response };
+        return new TableData<MessageTelegramStandardModel>() { TotalItems = rest_message.TotalRowsCount, Items = rest_message.Response };
     }
 }

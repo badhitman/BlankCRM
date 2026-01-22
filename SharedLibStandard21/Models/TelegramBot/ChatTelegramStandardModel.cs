@@ -11,7 +11,7 @@ namespace SharedLib;
 /// <summary>
 /// ChatTelegramViewModel
 /// </summary>
-public class ChatTelegramViewModel
+public class ChatTelegramStandardModel
 {
     /// <summary>
     /// Идентификатор/Key
@@ -72,7 +72,7 @@ public class ChatTelegramViewModel
     /// <summary>
     /// Messages
     /// </summary>
-    public virtual List<MessageTelegramViewModel>? Messages { get; set; }
+    public virtual List<MessageTelegramStandardModel>? Messages { get; set; }
 
     /// <summary>
     /// ChatsJoins
@@ -99,7 +99,7 @@ public class ChatTelegramViewModel
         if (obj is null)
             return false;
 
-        if (obj is ChatTelegramViewModel ct)
+        if (obj is ChatTelegramStandardModel ct)
             return
                 ct.Title == Title &&
                 ct.LastName == LastName &&

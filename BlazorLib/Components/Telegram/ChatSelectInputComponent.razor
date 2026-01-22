@@ -1,5 +1,5 @@
 ﻿@using MudBlazor
-@inherits LazySelectorComponent<ChatTelegramViewModel>
+@inherits LazySelectorComponent<ChatTelegramStandardModel>
 
 @if (IsBusyProgress)
 {
@@ -10,7 +10,7 @@
     <button disabled="@IsBusyProgress" @onclick="EditToggle" class="btn btn-outline-secondary dropdown-toggle @ShowIfEditing" type="button" data-bs-toggle="dropdown" data-meta="@yToggleBtn" aria-expanded="@IsEditing">Изменить</button>
     <ul class="chat-selector-input dropdown-menu @ShowIfEditing" id="@dropdownId" style="@StyleIfEditing" data-meta="@HeightDropdown">
         <i title="Отмена (закрыть меню выбора)" @onclick="EditToggle" class="bi bi-x-lg position-absolute top-0 end-0" style="cursor:pointer;"></i>
-        @foreach (ChatTelegramViewModel ch in LoadedData)
+        @foreach (ChatTelegramStandardModel ch in LoadedData)
         {
             <li @onclick="() => SelectElementEvent(ch)"><span class="dropdown-item">@ch.ToString()</span></li>
         }

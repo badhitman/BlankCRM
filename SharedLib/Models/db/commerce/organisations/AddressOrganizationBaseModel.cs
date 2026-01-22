@@ -9,7 +9,7 @@ namespace SharedLib;
 /// <summary>
 /// Адрес организации (базовая модель)
 /// </summary>
-public class AddressOrganizationBaseModel : EntryModel
+public class AddressOrganizationBaseModel : EntryStandardModel
 {
     /// <summary>
     /// Название

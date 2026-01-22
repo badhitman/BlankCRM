@@ -11,7 +11,7 @@ namespace SharedLib;
 /// Торговое предложение
 /// </summary>
 [Index(nameof(Name)), Index(nameof(IsDisabled))]
-public class OfferModelDB : EntrySwitchableUpdatedModel
+public class OfferModelDB : EntrySwitchableUpdatedStandardModel
 {
     /// <summary>
     /// Короткое название

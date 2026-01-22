@@ -10,7 +10,7 @@ namespace SharedLib;
 /// EntryUpdatedLiteModel
 /// </summary>
 [Index(nameof(LastUpdatedAtUTC)), Index(nameof(CreatedAtUTC))]
-public class EntryUpdatedLiteModel : EntryModel
+public class EntryUpdatedLiteModel : EntryStandardModel
 {
     /// <summary>
     /// Дата последнего обновления

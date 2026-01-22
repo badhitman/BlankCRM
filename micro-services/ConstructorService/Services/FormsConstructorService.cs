@@ -333,7 +333,7 @@ public partial class FormsConstructorService(
             .Union(raw_data.Select(x => x.OwnerUserId))
             .Distinct()];
 
-        EntryAltModel[]? usersIdentity = null;
+        EntryAltStandardModel[]? usersIdentity = null;
 
         if (usersIds.Length != 0)
         {
@@ -341,10 +341,10 @@ public partial class FormsConstructorService(
             if (!restUsers.Success())
                 throw new Exception(restUsers.Message());
 
-            usersIdentity = [.. restUsers.Response!.Select(x => new EntryAltModel { Id = x.UserId, Name = x.UserName })];
+            usersIdentity = [.. restUsers.Response!.Select(x => new EntryAltStandardModel { Id = x.UserId, Name = x.UserName })];
         }
 
-        List<EntryAltModel>? ReadMembersData(List<MemberOfProjectConstructorModelDB>? members)
+        List<EntryAltStandardModel>? ReadMembersData(List<MemberOfProjectConstructorModelDB>? members)
         {
             if (members is null || usersIdentity is null)
                 return null;
@@ -505,7 +505,7 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<EntryAltModel[]>> GetMembersOfProjectAsync(int project_id, CancellationToken token = default)
+    public async Task<TResponseModel<EntryAltStandardModel[]>> GetMembersOfProjectAsync(int project_id, CancellationToken token = default)
     {
         using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(token);
 
@@ -524,7 +524,7 @@ public partial class FormsConstructorService(
 
         return new()
         {
-            Response = [.. restUsers.Response!.Select(x => new EntryAltModel() { Id = x.UserId, Name = x.UserName })]
+            Response = [.. restUsers.Response!.Select(x => new EntryAltStandardModel() { Id = x.UserId, Name = x.UserName })]
         };
     }
 
@@ -887,24 +887,24 @@ public partial class FormsConstructorService(
             .Where(x => ids.Contains(x.Id)).
             ToArrayAsync(cancellationToken: cancellationToken);
 
-        return [.. res.Select(x => new EntryNestedModel() { Id = x.Id, Name = x.Name, Childs = x.Elements!.Select(y => new EntryModel() { Id = y.Id, Name = y.Name }) })];
+        return [.. res.Select(x => new EntryNestedModel() { Id = x.Id, Name = x.Name, Childs = x.Elements!.Select(y => new EntryStandardModel() { Id = y.Id, Name = y.Name }) })];
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<EntryModel[]>> GetDirectoriesAsync(ProjectFindModel req, CancellationToken cancellationToken = default)
+    public async Task<TResponseModel<EntryStandardModel[]>> GetDirectoriesAsync(ProjectFindModel req, CancellationToken cancellationToken = default)
     {
         using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
 
-        IQueryable<EntryModel> query = context_forms
+        IQueryable<EntryStandardModel> query = context_forms
             .Directories
             .Where(x => x.ProjectId == req.ProjectId)
-            .Select(x => new EntryModel() { Id = x.Id, Name = x.Name })
+            .Select(x => new EntryStandardModel() { Id = x.Id, Name = x.Name })
             .AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(req.QuerySearch))
             query = query.Where(x => EF.Functions.Like(x.Name.ToUpper(), $"%{req.QuerySearch.ToUpper()}%"));
 
-        return new TResponseModel<EntryModel[]>() { Response = await query.ToArrayAsync(cancellationToken: cancellationToken) };
+        return new TResponseModel<EntryStandardModel[]>() { Response = await query.ToArrayAsync(cancellationToken: cancellationToken) };
     }
 
     /// <inheritdoc/>
@@ -1068,9 +1068,9 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<EntryModel>?>> GetElementsOfDirectoryAsync(int directory_id, CancellationToken cancellationToken = default)
+    public async Task<TResponseModel<List<EntryStandardModel>?>> GetElementsOfDirectoryAsync(int directory_id, CancellationToken cancellationToken = default)
     {
-        TResponseModel<List<EntryModel>?> res = new();
+        TResponseModel<List<EntryStandardModel>?> res = new();
         using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         DirectoryConstructorModelDB? dir = await context_forms.Directories
             .Include(x => x.Elements)
@@ -1084,7 +1084,7 @@ public partial class FormsConstructorService(
 
         res.Response = dir.Elements?
             .OrderBy(x => x.SortIndex)
-            .Select(x => new EntryModel() { Name = x.Name, Id = x.Id })
+            .Select(x => new EntryStandardModel() { Name = x.Name, Id = x.Id })
             .ToList();
 
         return res;
@@ -3399,9 +3399,9 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<EntryDictModel[]>> FindSessionsDocumentsByFormFieldNameAsync(FormFieldModel req, CancellationToken cancellationToken = default)
+    public async Task<TResponseModel<EntryDictStandardModel[]>> FindSessionsDocumentsByFormFieldNameAsync(FormFieldModel req, CancellationToken cancellationToken = default)
     {
-        TResponseModel<EntryDictModel[]> res = new();
+        TResponseModel<EntryDictStandardModel[]> res = new();
         if (string.IsNullOrWhiteSpace(req.FieldName))
         {
             res.AddError("Не указано имя поля/колонки");
@@ -3442,7 +3442,7 @@ public partial class FormsConstructorService(
                 if (element_g.Session.LastDocumentUpdateActivity is not null)
                     _d.Add(nameof(element_g.Session.LastDocumentUpdateActivity), element_g.Session.LastDocumentUpdateActivity);
 
-                return new EntryDictModel()
+                return new EntryDictStandardModel()
                 {
                     Id = x.Key,
                     Name = element_g.Session.Name,

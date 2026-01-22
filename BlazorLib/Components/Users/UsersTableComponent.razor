@@ -98,7 +98,7 @@
     }
     @if (RolesMarkers is not null && RolesMarkers.Length != 0)
     {
-        foreach (EntryAltModel ch in RolesMarkers)
+        foreach (EntryAltStandardModel ch in RolesMarkers)
         {
             <TemplateColumn Title="@ch.Name" Align="Align.Right">
                 @(context.Roles?.Contains(ch.Id) == true ? "ДА" : "")

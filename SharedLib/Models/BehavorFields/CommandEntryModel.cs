@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// Команда (в виде стандартного элемента)
 /// </summary>
-public class CommandEntryModel : EntryAltDescriptionModel
+public class CommandEntryModel : EntryAltDescriptionStandardModel
 {
     /// <summary>
     /// Разрешение запуска/вызова без параметров

@@ -14,8 +14,8 @@
     }
     else
     {
-        <MudSelect @bind-Value="SelectedChatSet" T="ChatTelegramViewModel" Label="@Title" AnchorOrigin="Origin.BottomCenter" HelperText="@Hint">
-            @foreach (ChatTelegramViewModel ct in ChatsTelegram)
+        <MudSelect @bind-Value="SelectedChatSet" T="ChatTelegramStandardModel" Label="@Title" AnchorOrigin="Origin.BottomCenter" HelperText="@Hint">
+            @foreach (ChatTelegramStandardModel ct in ChatsTelegram)
             {
                 <MudSelectItem Value="@ct">@ct.ToString()</MudSelectItem>
             }

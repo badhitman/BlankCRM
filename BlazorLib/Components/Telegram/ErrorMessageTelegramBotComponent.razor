@@ -9,7 +9,11 @@
         <MudSpacer />
     </ToolBarContent>
     <HeaderContent>
-        <MudTh><MudTableSortLabel InitialDirection="SortDirection.Descending" SortLabel="CreatedAtUtc" T="ErrorSendingMessageTelegramBotModelDB">Date</MudTableSortLabel></MudTh>
+        <MudTh>
+            <MudTableSortLabel InitialDirection="SortDirection.Descending"
+                               SortLabel="CreatedAtUtc"
+                               T="ErrorSendingMessageTelegramBotStandardModel">Date</MudTableSortLabel>
+        </MudTh>
         <MudTh>Type</MudTh>
         <MudTh>Code</MudTh>
         <MudTh>Message</MudTh>
@@ -17,7 +21,8 @@
     <RowTemplate>
         <MudTd DataLabel="Date">
             <span data-cd="@context.CreatedAtUtc">
-                @context.CreatedAtUtc.GetCustomTime().ToString("d", GlobalStaticConstants.RU) <sup>@context.CreatedAtUtc.GetCustomTime().ToString("t", GlobalStaticConstants.RU)</sup>
+                @context.CreatedAtUtc.GetCustomTime().ToString("d", GlobalStaticConstants.RU)
+                <sup>@context.CreatedAtUtc.GetCustomTime().ToString("t", GlobalStaticConstants.RU)</sup>
             </span>
         </MudTd>
         <MudTd DataLabel="Type">@context.ExceptionTypeName</MudTd>

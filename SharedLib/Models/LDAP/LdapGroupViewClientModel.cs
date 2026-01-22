@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// LdapGroupViewClientModel
 /// </summary>
-public class LdapGroupViewClientModel : EntryDictModel
+public class LdapGroupViewClientModel : EntryDictStandardModel
 {
     /// <summary>
     /// Group

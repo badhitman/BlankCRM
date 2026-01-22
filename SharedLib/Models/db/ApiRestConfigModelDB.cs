@@ -9,7 +9,7 @@ namespace SharedLib;
 /// <summary>
 /// Настройки api/rest
 /// </summary>
-public class ApiRestConfigModelDB : EntryModel
+public class ApiRestConfigModelDB : EntryStandardModel
 {
     /// <summary>
     /// Адрес

@@ -20,7 +20,7 @@ public class JoinUserChatViewModel
     /// <summary>
     /// User
     /// </summary>
-    public virtual UserTelegramViewModel? User { get; set; }
+    public virtual UserTelegramStandardModel? User { get; set; }
     /// <summary>
     /// User
     /// </summary>
@@ -29,7 +29,7 @@ public class JoinUserChatViewModel
     /// <summary>
     /// Chat
     /// </summary>
-    public virtual ChatTelegramViewModel? Chat { get; set; }
+    public virtual ChatTelegramStandardModel? Chat { get; set; }
     /// <summary>
     /// Chat
     /// </summary>

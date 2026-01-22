@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 ///LdapMemberViewClientModel
 /// </summary>
-public class LdapMemberViewClientModel : EntryDictModel
+public class LdapMemberViewClientModel : EntryDictStandardModel
 {
     /// <summary>
     ///Member

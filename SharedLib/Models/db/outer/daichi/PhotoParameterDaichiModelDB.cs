@@ -5,7 +5,7 @@
 namespace SharedLib;
 
 /// <inheritdoc/>
-public class PhotoParameterDaichiModelDB : EntryModel
+public class PhotoParameterDaichiModelDB : EntryStandardModel
 {
     /// <inheritdoc/>
     public ParameterEntryDaichiModelDB? Parent { get; set; }

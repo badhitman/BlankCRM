@@ -31,7 +31,7 @@ public class ProjectViewModel : EntryDescriptionSwitchableModel
     /// <summary>
     /// Участники проекта
     /// </summary>
-    public List<EntryAltModel>? Members { get; set; }
+    public List<EntryAltStandardModel>? Members { get; set; }
 
     /// <summary>
     /// Scheme: Last updated DateTime
@@ -76,14 +76,14 @@ public class ProjectViewModel : EntryDescriptionSwitchableModel
                 i = findMember_for_remove();
             }
 
-            EntryAltModel? member_obj;
-            foreach (EntryAltModel member_item in Members)
+            EntryAltStandardModel? member_obj;
+            foreach (EntryAltStandardModel member_item in Members)
             {
                 member_obj = other.Members.FirstOrDefault(x => x.Id == member_item.Id);
                 if (member_obj is not null)
                     member_item.Update(member_obj);
             }
-            EntryAltModel[] members_for_add = other.Members.Where(x => !Members.Any(y => y.Id == x.Id)).ToArray();
+            EntryAltStandardModel[] members_for_add = other.Members.Where(x => !Members.Any(y => y.Id == x.Id)).ToArray();
             if (members_for_add.Length != 0)
                 Members.AddRange(members_for_add);
         }

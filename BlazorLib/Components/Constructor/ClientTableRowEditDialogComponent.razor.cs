@@ -43,7 +43,7 @@ public partial class ClientTableRowEditDialogComponent : BlazorBusyComponentBase
     protected List<ValueDataForSessionOfDocumentModelDB> RowValuesSet = [];
 
     /// <inheritdoc/>
-    protected IEnumerable<EntryAltDescriptionModel> Entries = [];
+    protected IEnumerable<EntryAltDescriptionStandardModel> Entries = [];
 
     /// <inheritdoc/>
     protected void Close() => InvokeAsync(async () =>

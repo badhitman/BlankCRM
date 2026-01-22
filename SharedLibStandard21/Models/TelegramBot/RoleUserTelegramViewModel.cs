@@ -13,7 +13,7 @@ public class RoleUserTelegramViewModel
     public TelegramUsersRolesEnum Role { get; set; }
 
     /// <inheritdoc/>
-    public virtual UserTelegramViewModel? User { get; set; }
+    public virtual UserTelegramStandardModel? User { get; set; }
 
     /// <inheritdoc/>
     public int UserId { get; set; }

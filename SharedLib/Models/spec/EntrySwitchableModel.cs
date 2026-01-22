@@ -11,10 +11,10 @@ namespace SharedLib;
 /// Базовая DB модель объекта с поддержкой -> int:Id +string:Name +bool:IsDeleted
 /// </summary>
 [Index(nameof(Name)), Index(nameof(IsDisabled))]
-public class EntrySwitchableModel : IdSwitchableModel
+public class EntrySwitchableModel : IdSwitchableStandardModel
 {
     /// <inheritdoc/>
-    public static EntryModel Build(string name) => new() { Name = name };
+    public static EntryStandardModel Build(string name) => new() { Name = name };
 
     /// <summary>
     /// Имя объекта

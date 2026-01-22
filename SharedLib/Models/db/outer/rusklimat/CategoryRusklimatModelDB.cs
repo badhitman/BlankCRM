@@ -10,7 +10,7 @@ namespace SharedLib;
 /// Категории товаров
 /// </summary>
 [Index(nameof(Parent))]
-public class CategoryRusklimatModelDB : EntryAltModel
+public class CategoryRusklimatModelDB : EntryAltStandardModel
 {
     /// <inheritdoc/>
     public string? Parent { get; set; }

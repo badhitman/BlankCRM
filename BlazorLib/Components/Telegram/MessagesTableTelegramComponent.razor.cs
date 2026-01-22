@@ -24,7 +24,7 @@ public partial class MessagesTableTelegramComponent : BlazorBusyComponentBaseMod
     public int ChatId { get; set; }
 
 
-    MudTable<MessageTelegramViewModel>? tableRef;
+    MudTable<MessageTelegramStandardModel>? tableRef;
 
     async Task ReloadTableData()
     {
@@ -35,9 +35,9 @@ public partial class MessagesTableTelegramComponent : BlazorBusyComponentBaseMod
     /// <summary>
     /// Here we simulate getting the paged, filtered and ordered data from the server, with a token for canceling this request
     /// </summary>
-    async Task<TableData<MessageTelegramViewModel>> ServerReload(TableState state, CancellationToken token)
+    async Task<TableData<MessageTelegramStandardModel>> ServerReload(TableState state, CancellationToken token)
     {
-        TPaginationRequestStandardModel<SearchMessagesChatModel> req = new()
+        TPaginationRequestStandardModel<SearchMessagesChatStandardModel> req = new()
         {
             PageNum = state.Page,
             PageSize = state.PageSize,
@@ -47,9 +47,9 @@ public partial class MessagesTableTelegramComponent : BlazorBusyComponentBaseMod
                 ChatId = ChatId
             }
         };
-        TPaginationResponseStandardModel<MessageTelegramViewModel> data = await TelegramRepo.MessagesSelectTelegramAsync(req, token);
+        TPaginationResponseStandardModel<MessageTelegramStandardModel> data = await TelegramRepo.MessagesTelegramSelectAsync(req, token);
 
         // Return the data
-        return new TableData<MessageTelegramViewModel>() { TotalItems = data.TotalRowsCount, Items = data.Response };
+        return new TableData<MessageTelegramStandardModel>() { TotalItems = data.TotalRowsCount, Items = data.Response };
     }
 }

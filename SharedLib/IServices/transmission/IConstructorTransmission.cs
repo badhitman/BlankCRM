@@ -45,7 +45,7 @@ public interface IConstructorTransmission : IConstructorBaseService
     /// <summary>
     /// GetDirectories
     /// </summary>
-    public Task<TResponseModel<EntryModel[]>> GetDirectoriesAsync(ProjectFindModel req, CancellationToken token = default);
+    public Task<TResponseModel<EntryStandardModel[]>> GetDirectoriesAsync(ProjectFindModel req, CancellationToken token = default);
 
     /// <summary>
     /// ReadDirectories
@@ -61,7 +61,7 @@ public interface IConstructorTransmission : IConstructorBaseService
     /// <summary>
     /// GetElementsOfDirectory
     /// </summary>
-    public Task<TResponseModel<List<EntryModel>>> GetElementsOfDirectoryAsync(int req, CancellationToken token = default);
+    public Task<TResponseModel<List<EntryStandardModel>>> GetElementsOfDirectoryAsync(int req, CancellationToken token = default);
 
     /// <summary>
     /// CreateElementForDirectory
@@ -148,7 +148,7 @@ public interface IConstructorTransmission : IConstructorBaseService
     /// <summary>
     /// GetMembersOfProject
     /// </summary>
-    public Task<TResponseModel<EntryAltModel[]>> GetMembersOfProjectAsync(int req, CancellationToken token = default);
+    public Task<TResponseModel<EntryAltStandardModel[]>> GetMembersOfProjectAsync(int req, CancellationToken token = default);
     #endregion
 
     /////////////// Формы для редактирования/добавления бизнес-сущностей внутри итогового документа.
@@ -286,7 +286,7 @@ public interface IConstructorTransmission : IConstructorBaseService
     /// <summary>
     /// Найти порцию сессий по имени поля (с пагинацией)
     /// </summary>
-    public Task<TResponseModel<EntryDictModel[]>> FindSessionsDocumentsByFormFieldNameAsync(FormFieldModel req, CancellationToken cancellationToken = default);
+    public Task<TResponseModel<EntryDictStandardModel[]>> FindSessionsDocumentsByFormFieldNameAsync(FormFieldModel req, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Удалить значения (введённые в сессиях) по имени поля

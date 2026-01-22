@@ -11,7 +11,7 @@ namespace BlazorLib.Components.HelpDesk;
 /// </summary>
 public partial class ToolsHelpDeskComponent
 {
-    static readonly EntryAltModel[] showMarkersRoles = [new() { Id = GlobalStaticConstantsRoles.Roles.CommerceClient, Name = "Покупатель" }];
+    static readonly EntryAltStandardModel[] showMarkersRoles = [new() { Id = GlobalStaticConstantsRoles.Roles.CommerceClient, Name = "Покупатель" }];
     static readonly IEnumerable<string> rolesKit = GlobalStaticConstantsRoles.Roles.AllHelpDeskRoles.Union(
         [GlobalStaticConstantsRoles.Roles.CommerceManager,
         GlobalStaticConstantsRoles.Roles.CommerceClient,

@@ -110,7 +110,7 @@
         {
             <MudExpansionPanel Text="Telegram" Class="mt-2">
                 <MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-6">
-                    @foreach (ChatTelegramViewModel _chat in currentChatTelegrams)
+                    @foreach (ChatTelegramStandardModel _chat in currentChatTelegrams)
                     {
                         <MudTabPanel Text="@_chat.ToString()">
                             <TelegramChatWrapComponent Chat="_chat" />

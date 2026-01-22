@@ -52,7 +52,7 @@ public partial class UsersTableComponent : BlazorBusyComponentBaseAuthModel
     /// RolesMarkers
     /// </summary>
     [Parameter]
-    public EntryAltModel[]? RolesMarkers { get; set; }
+    public EntryAltStandardModel[]? RolesMarkers { get; set; }
 
 
     private readonly PaginationState pagination = new() { ItemsPerPage = 15 };

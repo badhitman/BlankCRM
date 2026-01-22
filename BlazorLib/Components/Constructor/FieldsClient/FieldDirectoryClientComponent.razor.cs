@@ -23,8 +23,8 @@ public partial class FieldDirectoryClientComponent : FieldComponentBaseModel
     [Parameter, EditorRequired]
     public required EntryNestedModel DirectoryObject { get; set; }
 
-    EntryModel? _detect_value;
-    EntryModel? detect_value
+    EntryStandardModel? _detect_value;
+    EntryStandardModel? detect_value
     {
         get => _detect_value;
         set
@@ -33,8 +33,8 @@ public partial class FieldDirectoryClientComponent : FieldComponentBaseModel
         }
     }
 
-    IEnumerable<EntryModel> _options = [];
-    IEnumerable<EntryModel> options
+    IEnumerable<EntryStandardModel> _options = [];
+    IEnumerable<EntryStandardModel> options
     {
         get => _options;
         set
@@ -50,7 +50,7 @@ public partial class FieldDirectoryClientComponent : FieldComponentBaseModel
         }
     }
 
-    Func<EntryModel?, string> converter = p => p?.Name ?? "";
+    Func<EntryStandardModel?, string> converter = p => p?.Name ?? "";
 
     string? FieldValue => SessionDocument?.DataSessionValues?.FirstOrDefault(x => x.Name.Equals(Field.Name, StringComparison.OrdinalIgnoreCase) && x.JoinFormToTabId == PageJoinForm?.Id && x.RowNum == GroupByRowNum)?.Value;
 

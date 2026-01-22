@@ -22,15 +22,15 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<SetWebConfigReceive, TelegramBotConfigModel, ResponseBaseModel>()
             .RegisterMqListener<GetBotTokenReceive, object, TResponseModel<string>>()
             .RegisterMqListener<AboutBotReceive, object, TResponseModel<UserTelegramBaseModel>>()
-            .RegisterMqListener<ChatsReadTelegramReceive, long[], List<ChatTelegramViewModel>>()
-            .RegisterMqListener<MessagesSelectTelegramReceive, TPaginationRequestStandardModel<SearchMessagesChatModel>, TPaginationResponseStandardModel<MessageTelegramModelDB>>()
+            .RegisterMqListener<ChatsReadTelegramReceive, long[], List<ChatTelegramStandardModel>>()
+            .RegisterMqListener<MessagesSelectTelegramReceive, TPaginationRequestStandardModel<SearchMessagesChatStandardModel>, TPaginationResponseStandardModel<MessageTelegramStandardModel>>()
             .RegisterMqListener<GetFileTelegramReceive, string, TResponseModel<byte[]>>()
             .RegisterMqListener<SendWappiMessageReceive, EntryAltExtModel, TResponseModel<SendMessageResponseModel?>>()
-            .RegisterMqListener<ChatsFindForUserTelegramReceive, long[], List<ChatTelegramViewModel>>()
-            .RegisterMqListener<ChatsSelectTelegramReceive, TPaginationRequestStandardModel<string?>, TPaginationResponseStandardModel<ChatTelegramViewModel>>()
+            .RegisterMqListener<ChatsFindForUserTelegramReceive, long[], List<ChatTelegramStandardModel>>()
+            .RegisterMqListener<ChatsSelectTelegramReceive, TPaginationRequestStandardModel<string?>, TPaginationResponseStandardModel<ChatTelegramStandardModel>>()
             .RegisterMqListener<ForwardMessageTelegramReceive, ForwardMessageTelegramBotModel, TResponseModel<MessageComplexIdsModel>>()
-            .RegisterMqListener<ChatTelegramReadReceive, int, ChatTelegramViewModel>()
-            .RegisterMqListener<ErrorsForChatsSelectTelegramReceive, TPaginationRequestStandardModel<long[]>, TPaginationResponseStandardModel<ErrorSendingMessageTelegramBotModelDB>>()
+            .RegisterMqListener<ChatTelegramReadReceive, int, ChatTelegramStandardModel>()
+            .RegisterMqListener<ErrorsForChatsSelectTelegramReceive, TPaginationRequestStandardModel<long[]>, TPaginationResponseStandardModel<ErrorSendingMessageTelegramBotStandardModel>>()
             ;
     }
 }

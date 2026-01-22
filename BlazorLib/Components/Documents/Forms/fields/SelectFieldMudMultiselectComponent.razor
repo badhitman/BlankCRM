@@ -2,19 +2,19 @@
 
 @inherits FieldBaseComponentModel
 
-<MudSelect ReadOnly="Readonly" T="EntryModel" Label="@Label" HelperText="@Hint" MultiSelection @bind-SelectedValues="EntriesValues" ToStringFunc="converter">
+<MudSelect ReadOnly="Readonly" T="EntryStandardModel" Label="@Label" HelperText="@Hint" MultiSelection @bind-SelectedValues="EntriesValues" ToStringFunc="converter">
     @if (Entries?.Any() == true)
     {
-        @foreach (EntryModel d in Entries)
+        @foreach (EntryStandardModel d in Entries)
         {
-            <MudSelectItem T="EntryModel" Value="@d">@d.Name</MudSelectItem>
+            <MudSelectItem T="EntryStandardModel" Value="@d">@d.Name</MudSelectItem>
         }
     }
 </MudSelect>
 
 @code {
     [Parameter, EditorRequired]
-    public required List<EntryModel> Entries { get; set; }
+    public required List<EntryStandardModel> Entries { get; set; }
 
     [Parameter]
     public int[]? Value { get; set; }
@@ -24,7 +24,7 @@
     public EventCallback<int[]?> ValueChanged { get; set; }
 
 
-    Func<EntryModel?, string> converter = p => p?.Name ?? "";
+    Func<EntryStandardModel?, string> converter = p => p?.Name ?? "";
 
     public override bool IsEdited
     {
@@ -40,8 +40,8 @@
     }
 
 
-    IEnumerable<EntryModel>? _entriesValues;
-    IEnumerable<EntryModel>? EntriesValues
+    IEnumerable<EntryStandardModel>? _entriesValues;
+    IEnumerable<EntryStandardModel>? EntriesValues
     {
         get => _entriesValues ?? Entries?.Where(x => Value?.Contains(x.Id) == true);
         set

@@ -28,7 +28,7 @@ public partial class NotificationTelegramIssueConfigComponent : BlazorBusyCompon
 
     /// <inheritdoc/>
     [CascadingParameter, EditorRequired]
-    public required List<ChatTelegramViewModel> ChatsTelegram { get; set; }
+    public required List<ChatTelegramStandardModel> ChatsTelegram { get; set; }
 
     /// <summary>
     /// Имя приложения, которое обращается к службе облачного хранения параметров
@@ -41,7 +41,7 @@ public partial class NotificationTelegramIssueConfigComponent : BlazorBusyCompon
 
     bool IsEdited => initValue != SelectedChatSet.ChatTelegramId;
 
-    private ChatTelegramViewModel SelectedChatSet { get; set; } = default!;
+    private ChatTelegramStandardModel SelectedChatSet { get; set; } = default!;
 
     async Task SaveConfig()
     {

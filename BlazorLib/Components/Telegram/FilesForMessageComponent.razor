@@ -25,10 +25,10 @@
 
 @code {
     [Parameter, EditorRequired]
-    public required MessageTelegramModelDB Message { get; set; }
+    public required MessageTelegramStandardModel Message { get; set; }
 
 
-    List<FileBaseTelegramModel> files = [];
+    List<FileBaseTelegramStandardModel> files = [];
 
     bool isExpand;
 

@@ -33,7 +33,7 @@ public partial class TextFieldFormRowEditUIComponent : FieldFormEditFormBaseComp
     /// <inheritdoc/>
     protected TextFieldAgentSelectorComponent? _tfAgentSelectorComponent_ref;
     /// <inheritdoc/>
-    public void SelectAgentAction(EntryAltDescriptionModel selected_element)
+    public void SelectAgentAction(EntryAltDescriptionStandardModel selected_element)
     {
         ParameterField = $"{selected_element.Name} #{selected_element.Id}";
         StateHasChanged();

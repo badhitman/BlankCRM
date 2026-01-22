@@ -5,12 +5,9 @@
 namespace SharedLib;
 
 /// <summary>
-/// 
+/// PhotoMessageTelegramModelDB
 /// </summary>
-public class EntryAltDescriptionModel : EntryAltModel
+public class PhotoMessageTelegramStandardModel : PhotoSizeTelegramStandardModel
 {
-    /// <summary>
-    /// Описание
-    /// </summary>
-    public string? Description { get; set; }
+
 }

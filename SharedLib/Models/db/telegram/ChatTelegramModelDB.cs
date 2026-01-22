@@ -12,7 +12,7 @@ namespace SharedLib;
 [Index(nameof(ChatTelegramId), IsUnique = true), Index(nameof(NormalizedFirstNameUpper)), Index(nameof(LastUpdateUtc))]
 [Index(nameof(NormalizedLastNameUpper)), Index(nameof(NormalizedTitleUpper)), Index(nameof(NormalizedUsernameUpper))]
 [Index(nameof(Type)), Index(nameof(Title)), Index(nameof(Username)), Index(nameof(FirstName)), Index(nameof(LastName)), Index(nameof(IsForum))]
-public class ChatTelegramModelDB : ChatTelegramViewModel
+public class ChatTelegramModelDB : ChatTelegramStandardModel
 {
     /// <summary>
     /// Optional. Title, for supergroups, channels and group chats

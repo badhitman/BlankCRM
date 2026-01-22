@@ -10,7 +10,7 @@ namespace SharedLib;
 /// Модель строки таблицы
 /// </summary>
 [Index(nameof(IsDisabled))]
-public class TableDataRowModel : IdSwitchableModel
+public class TableDataRowModel : IdSwitchableStandardModel
 {
     /// <summary>
     /// Ячейки строки таблицы

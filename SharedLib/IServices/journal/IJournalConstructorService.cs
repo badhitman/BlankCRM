@@ -63,7 +63,7 @@ public partial interface IJournalUniversalService
                     return new FieldAkaDirectoryFitModel()
                     {
                         DirectorySystemName = systemNamesManufacture.GetSystemName(field.Directory.Id, $"", field.GetType().Name) ?? GlobalTools.TranslateToSystemName(field.Directory!.Name),
-                        Items = [.. field.Directory.Elements.Cast<EntryModel>()],
+                        Items = [.. field.Directory.Elements.Cast<EntryStandardModel>()],
                         Name = field.Name,
                         SortIndex = field.SortIndex,
                         SystemName = systemNamesManufacture.GetSystemName(field.Id, $"{doc.GetType().Name}#{doc.Id} {tab.GetType().Name}#{tab.Id} {joinForm.Form.GetType().Name}#{joinForm.Form.Id} {nameof(FieldFormBaseLowConstructorModel)}", field.GetType().Name) ?? GlobalTools.TranslateToSystemName(field.Name),

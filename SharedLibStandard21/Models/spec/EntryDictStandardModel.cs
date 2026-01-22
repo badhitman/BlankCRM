@@ -10,7 +10,7 @@ namespace SharedLib;
 /// <summary>
 /// Простой вещественный тип (id:int;name:string) + полезная нагрузка через Tag словарь
 /// </summary>
-public class EntryDictModel : EntryModel
+public class EntryDictStandardModel : EntryStandardModel
 {
     /// <summary>
     /// Дополнительная полезная нагрузка ответа

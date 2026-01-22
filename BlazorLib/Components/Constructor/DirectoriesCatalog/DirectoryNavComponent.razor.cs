@@ -36,7 +36,7 @@ public partial class DirectoryNavComponent : BlazorBusyComponentBaseAuthModel
     string images_upload_url = default!;
     Dictionary<string, object> editorConf = default!;
 
-    EntryModel[] allDirectories = default!;
+    EntryStandardModel[] allDirectories = default!;
 
     EntryDescriptionModel? selectedDirectory;
 
@@ -70,7 +70,7 @@ public partial class DirectoryNavComponent : BlazorBusyComponentBaseAuthModel
     }
     int _selected_dir_id;
 
-    EntryModel directoryObject = default!;
+    EntryStandardModel directoryObject = default!;
     string? Description { get; set; }
 
     static readonly DirectoryNavStatesEnum[] ModesForHideSelector =
@@ -200,7 +200,7 @@ public partial class DirectoryNavComponent : BlazorBusyComponentBaseAuthModel
 
     void ResetNavForm(bool stateHasChanged = false)
     {
-        directoryObject = EntryModel.BuildEmpty();
+        directoryObject = EntryStandardModel.BuildEmpty();
         Description = null;
         DirectoryNavState = DirectoryNavStatesEnum.None;
 
@@ -220,7 +220,7 @@ public partial class DirectoryNavComponent : BlazorBusyComponentBaseAuthModel
 
         await SetBusyAsync();
 
-        TResponseModel<EntryModel[]> rest = await ConstructorRepo.GetDirectoriesAsync(new() { ProjectId = ParentFormsPage.MainProject.Id });
+        TResponseModel<EntryStandardModel[]> rest = await ConstructorRepo.GetDirectoriesAsync(new() { ProjectId = ParentFormsPage.MainProject.Id });
 
         allDirectories = rest.Response ?? throw new Exception();
 

@@ -5,17 +5,12 @@
 namespace SharedLib;
 
 /// <summary>
-/// SearchMessagesChatModel
+/// EntryAltDescriptionStandardModel
 /// </summary>
-public class SearchMessagesChatModel
+public class EntryAltDescriptionStandardModel : EntryAltStandardModel
 {
     /// <summary>
-    /// Чат
+    /// Описание
     /// </summary>
-    public int ChatId { get; set; }
-
-    /// <summary>
-    /// SearchQuery
-    /// </summary>
-    public string? SearchQuery { get; set; }
+    public string? Description { get; set; }
 }

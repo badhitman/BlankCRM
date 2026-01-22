@@ -16,7 +16,7 @@ public partial class NotificationsAreaTelegramIssueConfigComponent : IssueWrapBa
     ITelegramTransmission TelegramRepo { get; set; } = default!;
 
 
-    List<ChatTelegramViewModel>? chatsTelegram;
+    List<ChatTelegramStandardModel>? chatsTelegram;
 
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()

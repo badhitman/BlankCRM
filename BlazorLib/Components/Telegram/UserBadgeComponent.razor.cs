@@ -26,7 +26,7 @@ public partial class UserBadgeComponent : BlazorBusyComponentBaseModel
     public string? BadgeColor { get; set; }
 
 
-    UserTelegramViewModel? currentUser;
+    UserTelegramStandardModel? currentUser;
     bool _visible;
     readonly DialogOptions _dialogOptions = new() { FullWidth = true };
 
@@ -59,7 +59,7 @@ public partial class UserBadgeComponent : BlazorBusyComponentBaseModel
     {
         await base.OnInitializedAsync();
         await SetBusyAsync();
-        List<UserTelegramViewModel> res = await TelegramRepo.UsersReadTelegramAsync([JoinUserChat.UserId]);
+        List<UserTelegramStandardModel> res = await TelegramRepo.UsersReadTelegramAsync([JoinUserChat.UserId]);
         await SetBusyAsync(false);
         if (res.Count == 1)
         {

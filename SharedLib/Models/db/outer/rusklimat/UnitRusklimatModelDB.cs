@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// Единицы измерения
 /// </summary>
-public class UnitRusklimatModelDB : EntryAltModel
+public class UnitRusklimatModelDB : EntryAltStandardModel
 {
     /// <inheritdoc/>
     public string? NameFull { get; set; }

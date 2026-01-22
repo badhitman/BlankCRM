@@ -165,9 +165,9 @@ public partial class FieldBaseClientComponent : FieldComponentBaseModel
         }
     }
     //StringFieldValue
-    EntryAltModel? KladrObject
+    EntryAltStandardModel? KladrObject
     {
-        get => EntryAltModel.Build("0", StringFieldValue ?? "");
+        get => EntryAltStandardModel.Build("0", StringFieldValue ?? "");
         set
         {
             StringFieldValue = value?.Name;

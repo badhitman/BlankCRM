@@ -44,9 +44,9 @@ public partial class OfficesOrganizationComponent : BlazorBusyComponentBaseAuthM
         _expanded = !_expanded;
     }
 
-    EntryAltModel? SelectedKladrObject
+    EntryAltStandardModel? SelectedKladrObject
     {
-        get => EntryAltModel.Build(addingKladrCode ?? "", addingKladrTitle ?? "");
+        get => EntryAltStandardModel.Build(addingKladrCode ?? "", addingKladrTitle ?? "");
         set
         {
             addingKladrCode = value?.Id ?? "";

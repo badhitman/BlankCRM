@@ -34,7 +34,7 @@ public partial class SessionsValuesOfFieldViewComponent : BlazorBusyComponentBas
     /// Show referrals -  handler action
     /// </summary>
     [Parameter, EditorRequired]
-    public required Action<EntryDictModel[]> ShowReferralsHandler { get; set; }
+    public required Action<EntryDictStandardModel[]> ShowReferralsHandler { get; set; }
 
     /// <summary>
     /// Найти использование полей (заполненные данными), связанные с данным документом/сессией
@@ -42,7 +42,7 @@ public partial class SessionsValuesOfFieldViewComponent : BlazorBusyComponentBas
     public async Task FindFields()
     {
         await SetBusyAsync();
-        TResponseModel<EntryDictModel[]> rest = await ConstructorRepo.FindSessionsDocumentsByFormFieldNameAsync(new() { FormId = Form.Id, FieldName = FieldName });
+        TResponseModel<EntryDictStandardModel[]> rest = await ConstructorRepo.FindSessionsDocumentsByFormFieldNameAsync(new() { FormId = Form.Id, FieldName = FieldName });
 
         if (!rest.Success())
         {

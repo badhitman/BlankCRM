@@ -32,7 +32,7 @@ public record UserInfoMainModel : UserInfoBaseModel
     /// <summary>
     /// Claims
     /// </summary>
-    public EntryAltModel[]? Claims { get; init; }
+    public EntryAltStandardModel[]? Claims { get; init; }
 
     /// <summary>
     /// –оли пользовател€ в виде одной строки

@@ -10,7 +10,7 @@ namespace SharedLib;
 /// Свойства товаров
 /// </summary>
 [Index(nameof(Sort))]
-public class PropertyRusklimatModelDB : EntryAltModel
+public class PropertyRusklimatModelDB : EntryAltStandardModel
 {
     /// <inheritdoc/>
     public required int Sort { get; set; }

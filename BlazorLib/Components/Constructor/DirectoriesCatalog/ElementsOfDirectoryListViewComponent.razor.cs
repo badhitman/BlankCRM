@@ -23,7 +23,7 @@ public partial class ElementsOfDirectoryListViewComponent : BlazorBusyComponentB
 
 
     /// <inheritdoc/>
-    public List<EntryModel>? EntriesElements { get; set; }
+    public List<EntryStandardModel>? EntriesElements { get; set; }
 
     /// <inheritdoc/>
     public async Task ReloadElements(int? selected_directory_id = 0, bool state_has_change = false)
@@ -39,7 +39,7 @@ public partial class ElementsOfDirectoryListViewComponent : BlazorBusyComponentB
 
         await SetBusyAsync();
         
-        TResponseModel<List<EntryModel>> rest = await ConstructorRepo.GetElementsOfDirectoryAsync(SelectedDirectoryId);
+        TResponseModel<List<EntryStandardModel>> rest = await ConstructorRepo.GetElementsOfDirectoryAsync(SelectedDirectoryId);
         
         if (!rest.Success())
             SnackBarRepo.ShowMessagesResponse(rest.Messages);

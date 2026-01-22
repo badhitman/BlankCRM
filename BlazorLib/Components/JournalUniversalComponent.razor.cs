@@ -55,7 +55,7 @@ public partial class JournalUniversalComponent : BlazorBusyComponentBaseModel
     /// <summary>
     /// ColumnsNames
     /// </summary>
-    EntryAltModel[]? ColumnsNames { get; set; }
+    EntryAltStandardModel[]? ColumnsNames { get; set; }
 
     private int totalItems;
 
@@ -123,7 +123,7 @@ public partial class JournalUniversalComponent : BlazorBusyComponentBaseModel
         else
         {
             await SetBusyAsync();
-            TResponseModel<EntryAltModel[]?> res = await JournalRepo.GetColumnsForJournalAsync(SelectedJournal, ProjectId);
+            TResponseModel<EntryAltStandardModel[]?> res = await JournalRepo.GetColumnsForJournalAsync(SelectedJournal, ProjectId);
             SnackBarRepo.ShowMessagesResponse(res.Messages);
             ColumnsNames = res.Response;
         }

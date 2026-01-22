@@ -20,8 +20,5 @@ public interface ITelegramBotStandardTransmission : ITelegramBotStandardService
     public Task<TResponseModel<MessageComplexIdsModel>> ForwardMessageTelegramAsync(ForwardMessageTelegramBotModel req, CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<TPaginationResponseStandardModel<MessageTelegramViewModel>> MessagesSelectTelegramAsync(TPaginationRequestStandardModel<SearchMessagesChatModel> req, CancellationToken token = default);
-
-    /// <inheritdoc/>
-    public Task<List<UserTelegramViewModel>> UsersReadTelegramAsync(int[] req, CancellationToken token = default);
+    public Task<List<UserTelegramStandardModel>> UsersReadTelegramAsync(int[] req, CancellationToken token = default);
 }

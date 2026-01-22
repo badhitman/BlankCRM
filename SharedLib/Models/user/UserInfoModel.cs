@@ -91,7 +91,7 @@ public record UserInfoModel : UserInfoMainModel
                 string? kladrCode,
                 string? addressUserComment,
                 string[]? roles = null,
-                EntryAltModel[]? claims = null)
+                EntryAltStandardModel[]? claims = null)
         => new()
         {
             GivenName = firstName,

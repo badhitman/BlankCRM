@@ -22,7 +22,7 @@ public partial class ElementDirectoryFieldSetComponent : BlazorBusyComponentBase
 
     /// <inheritdoc/>
     [CascadingParameter, EditorRequired]
-    public EntryModel ElementObject { get; set; } = default!;
+    public EntryStandardModel ElementObject { get; set; } = default!;
 
     /// <inheritdoc/>
     [CascadingParameter, EditorRequired]

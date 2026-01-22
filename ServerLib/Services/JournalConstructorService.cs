@@ -45,9 +45,9 @@ public partial class JournalConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<EntryAltModel[]?>> GetColumnsForJournalAsync(string journal_name_or_id, int? projectId, CancellationToken token = default)
+    public async Task<TResponseModel<EntryAltStandardModel[]?>> GetColumnsForJournalAsync(string journal_name_or_id, int? projectId, CancellationToken token = default)
     {
-        TResponseModel<EntryAltModel[]?> res = new();
+        TResponseModel<EntryAltStandardModel[]?> res = new();
 
         TResponseModel<DocumentSchemeConstructorModelDB[]?> find_doc = await FindDocumentSchemes(journal_name_or_id, projectId, token);
         if (!find_doc.Success())
@@ -73,28 +73,28 @@ public partial class JournalConstructorService(
         return res;
     }
 
-    static EntryAltModel[] ExtractColumns(DocumentSchemeConstructorModelDB[] documents)
+    static EntryAltStandardModel[] ExtractColumns(DocumentSchemeConstructorModelDB[] documents)
     {
         DocumentSchemeConstructorModelDB? _doc = documents.FirstOrDefault();
         if (_doc?.Tabs is null || _doc.Tabs.Count == 0)
             return [];
 
         if (_doc.Tabs.Count > 1)
-            return [.. _doc.Tabs.Select(x => new EntryAltModel() { Id = x.Id.ToString(), Name = x.Name })];
+            return [.. _doc.Tabs.Select(x => new EntryAltStandardModel() { Id = x.Id.ToString(), Name = x.Name })];
 
         TabOfDocumentSchemeConstructorModelDB _tab = _doc.Tabs.Single();
         if (_tab.JoinsForms is null || _tab.JoinsForms.Count == 0)
-            return [new EntryAltModel() { Id = _tab.Id.ToString(), Name = _tab.Name }];
+            return [new EntryAltStandardModel() { Id = _tab.Id.ToString(), Name = _tab.Name }];
 
         if (_tab.JoinsForms.Count > 1)
-            return [.. _tab.JoinsForms.Select(x => new EntryAltModel() { Id = x.Id.ToString(), Name = x.Name })];
+            return [.. _tab.JoinsForms.Select(x => new EntryAltStandardModel() { Id = x.Id.ToString(), Name = x.Name })];
 
         FormConstructorModelDB _form = _tab.JoinsForms.Single().Form ?? throw new Exception();
 
         if (_form.AllFields.Length == 0)
-            return [new EntryAltModel() { Id = _form.Id.ToString(), Name = _form.Name }];
+            return [new EntryAltStandardModel() { Id = _form.Id.ToString(), Name = _form.Name }];
 
-        return [.. _form.AllFields.Select(x => new EntryAltModel() { Id = x.Id.ToString(), Name = x.Name })];
+        return [.. _form.AllFields.Select(x => new EntryAltStandardModel() { Id = x.Id.ToString(), Name = x.Name })];
     }
 
     /// <inheritdoc/>

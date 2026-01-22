@@ -10,7 +10,7 @@ namespace SharedLib;
 /// <summary>
 /// ProductRusklimatBaseModel
 /// </summary>
-public class ProductRusklimatBaseModel : EntryAltModel
+public class ProductRusklimatBaseModel : EntryAltStandardModel
 {
     /// <summary>
     /// НС код товара

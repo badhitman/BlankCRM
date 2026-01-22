@@ -4,7 +4,7 @@
 <div class="col-md-6 border-bottom border-top py-2 border-start">
     <label for="exampleInputParameter2_@(DomID)" class="form-label">Программа</label>
     <select @bind="GeneratorClass" class="form-select" aria-label="Программа" id="exampleInputParameter2_@(DomID)" name="exampleInputParameter2_@(DomID)" aria-describedby="@($"exampleInputParameter2_{DomID}Help")" disabled="@(!ParentFormsPage.CanEditProject)">
-        @foreach (EntryAltDescriptionModel gen_element in Entries)
+        @foreach (EntryAltDescriptionStandardModel gen_element in Entries)
         {
             <option title="@gen_element.Description" value="@gen_element.Id">@gen_element.Name</option>
         }

@@ -14,7 +14,7 @@ public partial class TextFieldAgentSelectorComponent : ComponentBase
 {
     /// <inheritdoc/>
     [Parameter, EditorRequired]
-    public required Action<EntryAltDescriptionModel> SelectAgentHandle { get; set; }
+    public required Action<EntryAltDescriptionStandardModel> SelectAgentHandle { get; set; }
 
     /// <inheritdoc/>
     [Parameter]

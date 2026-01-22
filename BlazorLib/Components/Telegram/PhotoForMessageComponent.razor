@@ -1,7 +1,7 @@
 ﻿@if (IsExpand)
 {
     <ul>
-        @foreach (PhotoMessageTelegramModelDB _f in Photo)
+        @foreach (PhotoMessageTelegramStandardModel _f in Photo)
         {
             <li>
                 <FileItemForMessageComponent FileElement="@_f" />
@@ -16,7 +16,7 @@ else
 
 @code {
     [Parameter, EditorRequired]
-    public required List<PhotoMessageTelegramModelDB> Photo { get; set; }
+    public required List<PhotoMessageTelegramStandardModel> Photo { get; set; }
 
     bool IsExpand;
 }

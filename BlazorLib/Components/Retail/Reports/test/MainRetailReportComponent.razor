@@ -115,19 +115,19 @@ else
                         <tr>
                             <th scope="row">Офисные за онлайн контракты</th>
                             <td>
-                                @(Math.Round((decimal)(_bonusAmount * (decimal)0.1) * (ReportData.PaidOnSitePaymentsSumAmount * (decimal)0.1) / 120, 2))
+                                @Math.Round((decimal)(_bonusAmount * (decimal)0.1) * (ReportData.PaidOnSitePaymentsSumAmount * (decimal)0.1) / 120, 2).ToString("C")
                             </td>
                         </tr>
                         <tr>
                             <th scope="row">Офисные при оплате на складе (+переводы/конвертации)</th>
                             <td>
-                                @(Math.Round(((decimal)(_bonusAmount * (decimal)0.1) * ((((ReportData.DoneOrdersSumAmount - ReportData.PaidOnSitePaymentsSumAmount))) * (decimal)0.1) / 120), 2))
+                                @Math.Round(((decimal)(_bonusAmount * (decimal)0.1) * ((((ReportData.DoneOrdersSumAmount - ReportData.PaidOnSitePaymentsSumAmount))) * (decimal)0.1) / 120), 2).ToString("C")
                             </td>
                         </tr>
                         <tr>
                             <th scope="row"><div class="d-flex flex-row-reverse">Итого:</div></th>
                             <td>
-                                @(Math.Round(((decimal)(_bonusAmount * (decimal)0.1) * (ReportData.PaidOnSitePaymentsSumAmount * (decimal)0.1) / 120) + (((decimal)(_bonusAmount * (decimal)0.1) * ((((ReportData.DoneOrdersSumAmount - ReportData.PaidOnSitePaymentsSumAmount))) * (decimal)0.1) / 120)), 2))
+                                @Math.Round(((decimal)(_bonusAmount * (decimal)0.1) * (ReportData.PaidOnSitePaymentsSumAmount * (decimal)0.1) / 120) + (((decimal)(_bonusAmount * (decimal)0.1) * ((((ReportData.DoneOrdersSumAmount - ReportData.PaidOnSitePaymentsSumAmount))) * (decimal)0.1) / 120)), 2).ToString("C")
                             </td>
                         </tr>
                     </tbody>
@@ -144,15 +144,15 @@ else
                     <tbody>
                         <tr>
                             <td>Сумма заявок:</td>
-                            <td>@(Math.Round((ReportData.DoneOrdersSumAmount - ReportData.PaidOnSitePaymentsSumAmount), 2))</td>
+                            <td>@(Math.Round((ReportData.DoneOrdersSumAmount - ReportData.PaidOnSitePaymentsSumAmount), 2).ToString("C"))</td>
                         </tr>
                         <tr>
                             <td>минус [офисные при оплате на складе]</td>
-                            <td>@((Math.Round((decimal)(_bonusAmount * (decimal)0.1) * (((ReportData.DoneOrdersSumAmount - ReportData.PaidOnSitePaymentsSumAmount) * (decimal)0.1) / 120), 2)))</td>
+                            <td>@((Math.Round((decimal)(_bonusAmount * (decimal)0.1) * (((ReportData.DoneOrdersSumAmount - ReportData.PaidOnSitePaymentsSumAmount) * (decimal)0.1) / 120), 2)).ToString("C"))</td>
                         </tr>
                         <tr>
                             <td>минус [офисные за онлайн контракты]</td>
-                            <td>@((Math.Round((decimal)(_bonusAmount * (decimal)0.1) * (ReportData.PaidOnSitePaymentsSumAmount * (decimal)0.1) / 120, 2)))</td>
+                            <td>@((Math.Round((decimal)(_bonusAmount * (decimal)0.1) * (ReportData.PaidOnSitePaymentsSumAmount * (decimal)0.1) / 120, 2)).ToString("C"))</td>
                         </tr>
                         <tr>
                             <td>минус [перевод в компанию бонусов]</td>
@@ -160,19 +160,19 @@ else
                         </tr>
                         <tr>
                             <td>минус [перевод в компанию на расчетный счет]</td>
-                            <td>@TransferToCompanyBankAccount</td>
+                            <td>@TransferToCompanyBankAccount.ToString("C")</td>
                         </tr>
                         <tr>
                             <td>плюс [долг]</td>
-                            <td>@Debt</td>
+                            <td>@Debt.ToString("C")</td>
                         </tr>
                         <tr>
                             <td>минус [оплата наличными]</td>
-                            <td>@CashPayment</td>
+                            <td>@CashPayment.ToString("C")</td>
                         </tr>
                         <tr>
                             <td>Итого:</td>
-                            <td>@(Math.Round(((ReportData.DoneOrdersSumAmount - ReportData.PaidOnSitePaymentsSumAmount) - (((decimal)(_bonusAmount * (decimal)0.1) * ((((ReportData.DoneOrdersSumAmount - ReportData.PaidOnSitePaymentsSumAmount))) * (decimal)0.1) / 120))) - ((decimal)(_bonusAmount * (decimal)0.1) * (ReportData.PaidOnSitePaymentsSumAmount * (decimal)0.1) / 120) - (TransferBonusesCompany * 42) - TransferToCompanyBankAccount + Debt - CashPayment, 2))</td>
+                            <td>@(Math.Round(((ReportData.DoneOrdersSumAmount - ReportData.PaidOnSitePaymentsSumAmount) - (((decimal)(_bonusAmount * (decimal)0.1) * ((((ReportData.DoneOrdersSumAmount - ReportData.PaidOnSitePaymentsSumAmount))) * (decimal)0.1) / 120))) - ((decimal)(_bonusAmount * (decimal)0.1) * (ReportData.PaidOnSitePaymentsSumAmount * (decimal)0.1) / 120) - (TransferBonusesCompany * 42) - TransferToCompanyBankAccount + Debt - CashPayment, 2).ToString("C"))</td>
                         </tr>
                     </tbody>
                 </MudSimpleTable>

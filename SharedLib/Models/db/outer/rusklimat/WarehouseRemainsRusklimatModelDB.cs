@@ -10,7 +10,7 @@ namespace SharedLib;
 /// Остатки на складах
 /// </summary>
 [Index(nameof(RemainValue))]
-public class WarehouseRemainsRusklimatModelDB:EntryModel
+public class WarehouseRemainsRusklimatModelDB:EntryStandardModel
 {
     /// <summary>
     /// Parent

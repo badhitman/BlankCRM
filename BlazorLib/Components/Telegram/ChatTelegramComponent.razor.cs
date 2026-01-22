@@ -21,7 +21,7 @@ public partial class ChatTelegramComponent : BlazorBusyComponentBaseModel
     public int ChatId { get; set; }
 
 
-    ChatTelegramViewModel? currentChat;
+    ChatTelegramStandardModel? currentChat;
 
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()

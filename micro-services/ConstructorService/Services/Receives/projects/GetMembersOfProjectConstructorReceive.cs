@@ -11,13 +11,13 @@ namespace Transmission.Receives.constructor;
 /// GetMembersOfProjectReceive
 /// </summary>
 public class GetMembersOfProjectConstructorReceive(IConstructorService conService) 
-    : IResponseReceive<int, TResponseModel<EntryAltModel[]>?>
+    : IResponseReceive<int, TResponseModel<EntryAltStandardModel[]>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.GetMembersOfProjectConstructorReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<EntryAltModel[]>?> ResponseHandleActionAsync(int req, CancellationToken token = default)
+    public async Task<TResponseModel<EntryAltStandardModel[]>?> ResponseHandleActionAsync(int req, CancellationToken token = default)
     {
         return await conService.GetMembersOfProjectAsync(req, token);
     }

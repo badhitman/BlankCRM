@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// Universal base
 /// </summary>
-public class UniversalBaseModel : EntrySwitchableUpdatedModel
+public class UniversalBaseModel : EntrySwitchableUpdatedStandardModel
 {
     /// <inheritdoc/>
     public int ProjectId { get; set; }

@@ -1,6 +1,6 @@
 ﻿<div class="hstack">
     <select @bind="SelectedProgramCalculationField" class="form-select">
-        @foreach (EntryAltDescriptionModel e in Entries)
+        @foreach (EntryAltDescriptionStandardModel e in Entries)
         {
             <option value="@e.Id">
                 <MudTooltip Text="@e.Description">

@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// Роли
 /// </summary>
-public class RoleInfoModel : EntryAltModel
+public class RoleInfoModel : EntryAltStandardModel
 {
     /// <summary>
     /// Title

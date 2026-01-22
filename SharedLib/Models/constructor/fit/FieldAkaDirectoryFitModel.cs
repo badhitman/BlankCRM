@@ -19,7 +19,7 @@ public class FieldAkaDirectoryFitModel : BaseRequiredFormFitModel
     /// <summary>
     /// Элементы перечисления
     /// </summary>
-    public required IEnumerable<EntryModel> Items { get; set; }
+    public required IEnumerable<EntryStandardModel> Items { get; set; }
 
     /// <summary>
     /// Множественный выбор

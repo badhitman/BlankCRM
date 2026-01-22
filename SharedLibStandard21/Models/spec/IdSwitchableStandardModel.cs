@@ -9,7 +9,7 @@ namespace SharedLib;
 /// <summary>
 /// Базовая DB модель с поддержкой -> int:Id +bool:IsDeleted
 /// </summary>
-public abstract class IdSwitchableModel
+public abstract class IdSwitchableStandardModel
 {
     /// <summary>
     /// Идентификатор/Key

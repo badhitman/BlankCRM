@@ -57,7 +57,7 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
     protected InputRichTextComponent? _currentTemplateInputRichText_ref;
     /// <inheritdoc/>
     protected SessionsValuesOfFieldViewComponent? _sessionsValuesOfFieldViewComponent_Ref;
-    EntryDictModel[]? _elements = null;
+    EntryDictStandardModel[]? _elements = null;
 
     #region row of table (visual)
 
@@ -236,7 +236,7 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
     }
 
     /// <inheritdoc/>
-    protected void ShowReferrals(EntryDictModel[] elements)
+    protected void ShowReferrals(EntryDictStandardModel[] elements)
     {
         _elements = elements;
         if (_elements.Length == 0)

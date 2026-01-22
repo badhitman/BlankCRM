@@ -39,7 +39,7 @@ public partial class PaymentDocumentComponent : BlazorBusyComponentBaseAuthModel
     PaymentRetailDocumentModelDB? currentDoc, editDoc;
     UserInfoModel? userRecipient;
     WalletSelectInputComponent? recipientWalletRef;
-    ChatTelegramViewModel? currentChatTelegram;
+    ChatTelegramStandardModel? currentChatTelegram;
 
     DateTime? DatePayment
     {
@@ -98,7 +98,7 @@ public partial class PaymentDocumentComponent : BlazorBusyComponentBaseAuthModel
 
             if (userRecipient.TelegramId.HasValue)
             {
-                List<ChatTelegramViewModel> chats = await TelegramRepo.ChatsReadTelegramAsync([userRecipient.TelegramId.Value]);
+                List<ChatTelegramStandardModel> chats = await TelegramRepo.ChatsReadTelegramAsync([userRecipient.TelegramId.Value]);
                 currentChatTelegram = chats.FirstOrDefault();
             }
         }

@@ -18,14 +18,4 @@ public interface ITelegramBotService : ITelegramBotStandardService
     /// ForwardMessageTelegram
     /// </summary>
     public Task<TResponseModel<MessageComplexIdsModel>> ForwardMessageTelegramAsync(ForwardMessageTelegramBotModel req, CancellationToken token = default);
-
-    /// <summary>
-    /// ErrorsForChatsSelectTelegram
-    /// </summary>
-    public Task<TPaginationResponseStandardModel<ErrorSendingMessageTelegramBotModelDB>> ErrorsForChatsSelectTelegramAsync(TPaginationRequestStandardModel<long[]> req, CancellationToken token = default);
-
-    /// <summary>
-    /// MessagesSelectTelegram
-    /// </summary>
-    public Task<TPaginationResponseStandardModel<MessageTelegramModelDB>> MessagesSelectTelegramAsync(TPaginationRequestStandardModel<SearchMessagesChatModel> req, CancellationToken token = default);
 }

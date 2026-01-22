@@ -589,12 +589,12 @@ public class IdentityTools(
            .Select(x => new { x.RoleId, x.UserId })
            .ToArrayAsync(cancellationToken: token);
 
-        EntryAltModel[] roles_names = users_roles.Length == 0
+        EntryAltStandardModel[] roles_names = users_roles.Length == 0
             ? []
             : await identityContext
                 .Roles
                 .Where(x => users_roles.Select(x => x.RoleId).Distinct().ToArray().Contains(x.Id))
-                .Select(x => new EntryAltModel() { Id = x.Id, Name = x.Name })
+                .Select(x => new EntryAltStandardModel() { Id = x.Id, Name = x.Name })
                 .ToArrayAsync(cancellationToken: token);
 
         EntryAltTagModel[] claims = await identityContext
@@ -633,7 +633,7 @@ public class IdentityTools(
                 UserName = app_user.UserName ?? "",
                 TelegramId = app_user.ChatTelegramId,
                 Roles = roles_for_user(app_user.Id)?.ToList(),
-                Claims = [.. claims.Where(x => x.Id == app_user.Id).Select(x => new EntryAltModel() { Id = x.Id, Name = x.Name })]
+                Claims = [.. claims.Where(x => x.Id == app_user.Id).Select(x => new EntryAltStandardModel() { Id = x.Id, Name = x.Name })]
             };
         }
 
@@ -673,12 +673,12 @@ public class IdentityTools(
            .Select(x => new { x.RoleId, x.UserId })
            .ToArrayAsync(cancellationToken: token);
 
-        EntryAltModel[] roles_names = users_roles.Length == 0
+        EntryAltStandardModel[] roles_names = users_roles.Length == 0
             ? []
             : await identityContext
                 .Roles
                 .Where(x => users_roles.Select(x => x.RoleId).Distinct().ToArray().Contains(x.Id))
-                .Select(x => new EntryAltModel() { Id = x.Id, Name = x.Name })
+                .Select(x => new EntryAltStandardModel() { Id = x.Id, Name = x.Name })
                 .ToArrayAsync(cancellationToken: token);
 
         EntryAltTagModel[] claims = await identityContext
@@ -712,7 +712,7 @@ public class IdentityTools(
                 UserName = app_user.UserName ?? "",
                 TelegramId = app_user.ChatTelegramId,
                 Roles = roles_for_user(app_user.Id)?.ToList(),
-                Claims = [.. claims.Where(x => x.Id == app_user.Id).Select(x => new EntryAltModel() { Id = x.Id, Name = x.Name })]
+                Claims = [.. claims.Where(x => x.Id == app_user.Id).Select(x => new EntryAltStandardModel() { Id = x.Id, Name = x.Name })]
             };
         }
 
@@ -1011,7 +1011,7 @@ public class IdentityTools(
                    patronymic: x.Patronymic,
                    externalUserId: x.ExternalUserId,
                    roles: [.. roles.Where(y => y.UserId == x.Id).Select(z => z.RoleName)],
-                   claims: [.. claims.Where(o => o.UserId == x.Id).Select(q => new EntryAltModel() { Id = q.ClaimType, Name = q.ClaimValue })]));
+                   claims: [.. claims.Where(o => o.UserId == x.Id).Select(q => new EntryAltStandardModel() { Id = q.ClaimType, Name = q.ClaimValue })]));
 
         return new()
         {
@@ -1080,7 +1080,7 @@ public class IdentityTools(
             RequestChangePhone = user.RequestChangePhone,
             TelegramId = user.ChatTelegramId,
             Roles = [.. (await userManager.GetRolesAsync(user))],
-            Claims = claims.Select(x => new EntryAltModel() { Id = x.Type, Name = x.Value }).ToArray(),
+            Claims = claims.Select(x => new EntryAltStandardModel() { Id = x.Type, Name = x.Value }).ToArray(),
         };
 
         return res;

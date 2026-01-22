@@ -9,7 +9,7 @@ namespace SharedLib;
 /// <summary>
 /// Базовая DB модель объекта с поддержкой -> int:Id +string:Name
 /// </summary>
-public class EntryModel
+public class EntryStandardModel
 {
     /// <summary>
     /// Идентификатор/Key
@@ -24,16 +24,16 @@ public class EntryModel
     public virtual string Name { get; set; } = "";
 
     /// <inheritdoc/>
-    public static EntryModel Build(string name) => new() { Name = name };
+    public static EntryStandardModel Build(string name) => new() { Name = name };
 
     /// <inheritdoc/>
-    public static EntryModel Build(EntryModel sender) => new() { Name = sender.Name };
+    public static EntryStandardModel Build(EntryStandardModel sender) => new() { Name = sender.Name };
 
     /// <inheritdoc/>
-    public static EntryModel BuildEmpty() => new() { Name = "" };
+    public static EntryStandardModel BuildEmpty() => new() { Name = "" };
 
     /// <inheritdoc/>
-    public virtual void Update(EntryModel elementObjectEdit)
+    public virtual void Update(EntryStandardModel elementObjectEdit)
     {
         Name = elementObjectEdit.Name;
         Id = elementObjectEdit.Id;
@@ -41,11 +41,11 @@ public class EntryModel
 
 
     /// <inheritdoc/>
-    public static bool operator ==(EntryModel e1, EntryModel e2)
+    public static bool operator ==(EntryStandardModel e1, EntryStandardModel e2)
         => (e1 is null && e2 is null) || (e1?.Id == e2?.Id && e1?.Name == e2?.Name);
 
     /// <inheritdoc/>
-    public static bool operator !=(EntryModel e1, EntryModel e2)
+    public static bool operator !=(EntryStandardModel e1, EntryStandardModel e2)
         => !(e1 == e2);
 
     /// <inheritdoc/>
@@ -54,7 +54,7 @@ public class EntryModel
         if (obj is null)
             return false;
 
-        if (obj is EntryModel _e)
+        if (obj is EntryStandardModel _e)
             return Id == _e.Id && Name == _e.Name;
 
         return base.Equals(obj);

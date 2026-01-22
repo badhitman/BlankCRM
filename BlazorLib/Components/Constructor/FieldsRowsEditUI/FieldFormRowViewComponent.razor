@@ -95,7 +95,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (EntryDictModel row in _elements)
+                                @foreach (EntryDictStandardModel row in _elements)
                                 {
                                     Dictionary<string, object>? _d = row.Tag;
                                     int? _count = _d?[nameof(Enumerable.Count)] as int?;

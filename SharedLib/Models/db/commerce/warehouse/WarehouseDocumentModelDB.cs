@@ -12,7 +12,7 @@ namespace SharedLib;
 /// </summary>
 [Index(nameof(DeliveryDate)), Index(nameof(NormalizedUpperName)), Index(nameof(WarehouseId))]
 [Index(nameof(Name)), Index(nameof(IsDisabled)), Index(nameof(ExternalDocumentId)), Index(nameof(WritingOffWarehouseId))]
-public class WarehouseDocumentModelDB : EntrySwitchableUpdatedModel
+public class WarehouseDocumentModelDB : EntrySwitchableUpdatedStandardModel
 {
     /// <summary>
     /// NormalizedUpperName

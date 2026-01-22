@@ -43,7 +43,7 @@ public partial class FieldDirectoryFormRowEditComponent : BlazorBusyComponentBas
 
 
     /// <inheritdoc/>
-    protected IEnumerable<EntryModel>? Entries;
+    protected IEnumerable<EntryStandardModel>? Entries;
 
     /// <inheritdoc/>
     public string DomID => $"{Field.GetType().FullName}_{Field.Id}";
@@ -84,7 +84,7 @@ public partial class FieldDirectoryFormRowEditComponent : BlazorBusyComponentBas
     protected override async Task OnInitializedAsync()
     {
         await SetBusyAsync();
-        TResponseModel<EntryModel[]> rest = await ConstructorRepo.GetDirectoriesAsync(new() { ProjectId = Form.ProjectId });
+        TResponseModel<EntryStandardModel[]> rest = await ConstructorRepo.GetDirectoriesAsync(new() { ProjectId = Form.ProjectId });
         Entries = rest.Response ?? throw new Exception();
         await SetBusyAsync(false);
     }

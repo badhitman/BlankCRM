@@ -41,7 +41,7 @@ public partial class ConversionDocumentComponent : BlazorBusyComponentUsersCache
     WalletConversionRetailDocumentModelDB? currentDoc, editDoc;
     UserInfoModel? userSender, userRecipient;
     WalletSelectInputComponent? senderWalletRef, recipientWalletRef;
-    readonly List<ChatTelegramViewModel> currentChatTelegrams = [];
+    readonly List<ChatTelegramStandardModel> currentChatTelegrams = [];
     decimal sumConversionsOrdersAmounts;
 
     bool readonlyInputFromWalletSum => editDoc is null || editDoc.FromWalletId <= 0;

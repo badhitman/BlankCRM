@@ -89,7 +89,7 @@ public sealed class PersistingRevalidatingAuthenticationStateProvider(ILoggerFac
             if (!string.IsNullOrWhiteSpace(telegramIdAsString) && long.TryParse(telegramIdAsString, out long tgId))
                 telegram_id = tgId;
 
-            EntryAltModel[] claims = principal.FindAll((c) => c.ValueType != ClaimTypes.Role).Select(x => new EntryAltModel() { Id = x.ValueType, Name = x.Value }).ToArray();
+            EntryAltStandardModel[] claims = principal.FindAll((c) => c.ValueType != ClaimTypes.Role).Select(x => new EntryAltStandardModel() { Id = x.ValueType, Name = x.Value }).ToArray();
 
             if (userId != null && email != null)
             {

@@ -23,7 +23,7 @@ else if (SelectedTypeFieldForEditRow == TypesFieldsFormsEnum.ProgramCalculationD
     <div class="col-md-6">
         <label for="inputSelect2-@(DomID)" class="form-label">Метод</label>
         <select id="inputSelect2-@(DomID)" @bind="SelectedProgramCalculationField" class="form-select" disabled="@(!ParentFormsPage.CanEditProject)">
-            @foreach (EntryAltDescriptionModel e in Entries)
+            @foreach (EntryAltDescriptionStandardModel e in Entries)
             {
                 <option value="@e.Id">
                     <MudTooltip Text="@e.Description">

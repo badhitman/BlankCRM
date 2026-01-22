@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// Базовая DB модель объекта с поддержкой -> int:Id +string:Name +string:Tag +bool:IsDeleted
 /// </summary>
-public class EntryTagModel : EntryModel
+public class EntryTagModel : EntryStandardModel
 {
     /// <summary>
     /// Tag/Признак объекта

@@ -23,13 +23,13 @@ public partial class KladrInputComponent : BlazorBusyComponentBaseModel
 
     /// <inheritdoc/>
     [Parameter]
-    public EntryAltModel? KladrObject { get; set; }
+    public EntryAltStandardModel? KladrObject { get; set; }
 
     /// <inheritdoc/>
     [Parameter]
-    public EventCallback<EntryAltModel?> KladrObjectChanged { get; set; }
+    public EventCallback<EntryAltStandardModel?> KladrObjectChanged { get; set; }
 
-    async Task UpdateKladrObject(EntryAltModel? sender) => await KladrObjectChanged.InvokeAsync(sender);
+    async Task UpdateKladrObject(EntryAltStandardModel? sender) => await KladrObjectChanged.InvokeAsync(sender);
 
 
     /// <inheritdoc/>
@@ -47,7 +47,7 @@ public partial class KladrInputComponent : BlazorBusyComponentBaseModel
         else
             KladrObject?.Update(sender.Code, sender.GetFullName());
         StateHasChangedCall();
-        await UpdateKladrObject(EntryAltModel.Build(sender.Code, sender.GetFullName()));
+        await UpdateKladrObject(EntryAltStandardModel.Build(sender.Code, sender.GetFullName()));
     }
 
     async void ClearInput()

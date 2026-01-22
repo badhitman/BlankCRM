@@ -22,7 +22,7 @@ public partial class TelegramChatWrapComponent : BlazorBusyComponentBaseModel
     /// Чат
     /// </summary>
     [Parameter, EditorRequired]
-    public required ChatTelegramViewModel Chat { get; set; }
+    public required ChatTelegramStandardModel Chat { get; set; }
 
     /// <summary>
     /// SendMessageHandle
