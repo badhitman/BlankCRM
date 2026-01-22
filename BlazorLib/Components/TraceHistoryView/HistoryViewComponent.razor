@@ -4,7 +4,7 @@
 
 <MudTable ServerData="ServerReload" Dense Hover Loading="IsBusyProgress" @ref="tableRef">
     <ToolBarContent>
-        <MudText Typo="Typo.h6">События изменений</MudText>
+        @* <MudText Typo="Typo.h6">События изменений</MudText> *@
         <MudSpacer />
         <MudDateRangePicker PickerVariant="PickerVariant.Dialog"
                             @bind-DateRange="@DateRangePeriod"
@@ -16,27 +16,39 @@
                             Editable />
     </ToolBarContent>
     <HeaderContent>
-        <MudTh>Дата/Время</MudTh>
+        <MudTh>Дата</MudTh>
         <MudTh>Событие</MudTh>
         <MudTh>Запрос</MudTh>
         <MudTh>Ответ</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Дата/Время">
+        <MudTd DataLabel="Дата">
             @context.UTCTimestampInitReceive.GetCustomTime()
             <sup title="время на выполнение операции">@(context.UTCTimestampFinalReceive - context.UTCTimestampInitReceive)</sup>
         </MudTd>
         <MudTd DataLabel="Событие">
             <div class="vstack">
-                <code>@context.ReceiverName</code>
-                <span>@((OwnerBase.UsersCache.FirstOrDefault(x => x.UserId == context.SenderActionUserId)?.ToString() ?? context.SenderActionUserId))</span>
+                <code>
+                    @context.ReceiverName
+                </code>
+                <span>
+                    @((OwnerBase.UsersCache.FirstOrDefault(x => x.UserId == context.SenderActionUserId)?.ToString() ?? context.SenderActionUserId))
+                </span>
             </div>
         </MudTd>
-        <MudTd DataLabel="Ответ">
-            <pre style="max-height: 250px;"><code class="language-json">@context.RequestBody</code></pre>
+        <MudTd DataLabel="Запрос">
+            <pre style="max-height: 250px;">
+            <code class="language-json">
+                @context.RequestBody
+                </code>
+                </pre>
         </MudTd>
-        <MudTd DataLabel="Response">
-            <pre style="max-height: 250px;"><code class="language-json">@context.ResponseBody</code></pre>
+        <MudTd DataLabel="Ответ">
+            <pre style="max-height: 250px;">
+            <code class="language-json">
+                    @context.ResponseBody
+                    </code>
+                </pre>
         </MudTd>
     </RowTemplate>
     <NoRecordsContent>
