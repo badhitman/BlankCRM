@@ -42,7 +42,7 @@ else
             <CardHeaderContent>
                 <MudText Typo="Typo.h6">
                     Всего заказов выполнено [@ReportData.DoneOrdersCount шт.] на сумму [@ReportData.DoneOrdersSumAmount.ToString("C")]
-                    <span class="ms-2">(@(Math.Round((ReportData.DoneOrdersSumAmount / 120), 2)))</span>
+                    <span class="ms-2">(@(Math.Round((ReportData.DoneOrdersSumAmount / 120), 2).ToString("C")))</span>
                 </MudText>
             </CardHeaderContent>
             <CardHeaderActions>
@@ -58,7 +58,7 @@ else
                         <td>
                             @ReportData.PaidOnSitePaymentsSumAmount.ToString("C")
                             [<code>x @ReportData.PaidOnSitePaymentsCount шт.</code>]
-                            <span class="ms-2">(@(Math.Round((ReportData.PaidOnSitePaymentsSumAmount / 120), 2)))</span>
+                            <span class="ms-2">(@(Math.Round((ReportData.PaidOnSitePaymentsSumAmount / 120), 2).ToString("C")))</span>
                         </td>
                     </tr>
                     <tr>
@@ -66,7 +66,7 @@ else
                         <td>
                             @((ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount).ToString("C"))
                             [<code>x @(ReportData.PaidNoSitePaymentsCount + ReportData.ConversionsCount) шт.</code>]
-                            <span class="ms-2">(@(Math.Round(((ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount) / 120), 2)))</span>
+                            <span class="ms-2">(@(Math.Round(((ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount) / 120), 2).ToString("C")))</span>
                         </td>
                     </tr>
                     <tr>
@@ -82,7 +82,7 @@ else
                         <td>
                             @ReportData.PaidNoSitePaymentsSumAmount.ToString("C")
                             [<code>x @ReportData.PaidNoSitePaymentsCount шт.</code>]
-                            <span class="ms-2">(@(Math.Round((ReportData.PaidNoSitePaymentsSumAmount / 120), 2)))</span>
+                            <span class="ms-2">(@(Math.Round((ReportData.PaidNoSitePaymentsSumAmount / 120), 2).ToString("C")))</span>
                         </td>
                     </tr>
                     @foreach (IGrouping<PaymentsRetailTypesEnum, PaymentOrderNoSiteRetailModel> _gp in ReportData.PaidNoSitePayments.GroupBy(x => x.TypePayment))
@@ -93,16 +93,22 @@ else
                             <td>
                                 @_sum.ToString("C")
                                 [<code>x @_gp.Count() шт.</code>]
-                                <span class="ms-2">(@(Math.Round((_sum / 120), 2)))</span>
+                                <span class="ms-2">(@(Math.Round((_sum / 120), 2).ToString("C")))</span>
                             </td>
                         </tr>
                     }
                     <tr>
-                        <th scope="row"><div class="d-flex flex-row-reverse">Итого:</div></th>
+                        <th scope="row">
+                            <div class="d-flex flex-row-reverse">
+                                Итого:
+                            </div>
+                        </th>
                         <td>
                             @(Math.Round(ReportData.PaidOnSitePaymentsSumAmount + ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount, 2).ToString("C"))
                             [<code class="me-2">x @(ReportData.PaidOnSitePaymentsCount + ReportData.PaidNoSitePaymentsCount + ReportData.ConversionsCount) шт.</code>]
-                            <span>(@(Math.Round((ReportData.PaidOnSitePaymentsSumAmount + ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount) / 120, 2)))</span>
+                            <span>
+                                (@(Math.Round((ReportData.PaidOnSitePaymentsSumAmount + ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount) / 120, 2).ToString("C")))
+                            </span>
                         </td>
                     </tr>
                 </tbody>
