@@ -28,9 +28,7 @@
         </MudTd>
         <MudTd DataLabel="Событие">
             <div class="vstack">
-                <code>
-                    @context.ReceiverName
-                </code>
+                <code>@context.ReceiverName</code>
                 <span>
                     @((OwnerBase.UsersCache.FirstOrDefault(x => x.UserId == context.SenderActionUserId)?.ToString() ?? context.SenderActionUserId))
                 </span>
@@ -38,17 +36,13 @@
         </MudTd>
         <MudTd DataLabel="Запрос">
             <pre style="max-height: 250px;">
-            <code class="language-json">
-                @context.RequestBody
-                </code>
-                </pre>
+            <code class="language-json">@context.RequestBody</code>
+            </pre>
         </MudTd>
         <MudTd DataLabel="Ответ">
             <pre style="max-height: 250px;">
-            <code class="language-json">
-                    @context.ResponseBody
-                    </code>
-                </pre>
+            <code class="language-json">@context.ResponseBody</code>
+            </pre>
         </MudTd>
     </RowTemplate>
     <NoRecordsContent>
