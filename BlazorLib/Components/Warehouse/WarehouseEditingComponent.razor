@@ -105,7 +105,7 @@ else
                     </HeaderContent>
                     <RowTemplate>
                         <MudTd DataLabel="Name">
-                            <a href="/nomenclature/offer-card/@context!.Offer!.Id">@context!.Offer!.GetName()</a>
+                            <MudLink Href="@($"/nomenclature/offer-card/{context!.Offer!.Id}")">@context!.Offer!.GetName()</MudLink>
                         </MudTd>
                         <MudTd DataLabel="Quantity">
                             @context!.Quantity
