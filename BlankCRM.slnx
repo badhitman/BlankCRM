@@ -49,7 +49,6 @@
     <File Path=".gitignore" />
     <File Path="CONTACT.md" />
     <File Path="README.md" />
-    <File Path="SchemaCommerceML2.xsd" />
     <Project Path="../HtmlGenerator/HtmlGenerator.csproj" />
     <Project Path="../TinkofClientApi/TinkoffPaymentClientApi/TinkoffPaymentClientApi.csproj" />
   </Folder>
