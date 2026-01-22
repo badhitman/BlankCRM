@@ -32,7 +32,7 @@ else
         <RowTemplate>
             <MudTd>
                 <MudChat ChatPosition="@(CurrentChat.ChatTelegramId == context.From?.UserTelegramId ? ChatBubblePosition.Start : ChatBubblePosition.End)">
-                    <MudChatHeader Name="@context.From!.GetName()" Time="@($"{context.CreatedAtUtc.GetCustomTime().ToString("d", GlobalStaticConstants.RU)} {@context.CreatedAtUtc.GetCustomTime().ToString("t", GlobalStaticConstants.RU)}")" />
+                    <MudChatHeader Name="@context.From?.GetName()" Time="@($"{context.CreatedAtUtc.GetCustomTime().ToString("d", GlobalStaticConstants.RU)} {@context.CreatedAtUtc.GetCustomTime().ToString("t", GlobalStaticConstants.RU)}")" />
                     <MudChatBubble>
                         @context.Text
                     </MudChatBubble>
