@@ -18,7 +18,7 @@ else
                         x @DirectoryData.DirectoryItems.Count ( @(GlobalToolsStandard.SizeDataAsString(DirectoryData.DirectoryItems.Sum(x => x.FileSizeBytes))) )
                     </sup>
                 }
-                <i class="bi bi-copy ms-2" style="cursor:pointer" title="Скопировать путь в буфер обмена" @onclick="ClipboardCopyHandle"></i>
+                <i class="bi bi-copy ms-2" style="cursor:pointer" title="Скопировать путь в буфер обмена" @onclick="() => ClipboardCopyHandle(FolderPath)"></i>
             </h6>
             @if (DirectoryData.DirectoryItems is null || DirectoryData.DirectoryItems.Count == 0)
             {
@@ -38,7 +38,8 @@ else
                         {
                             int startSegment = _fiElement.FullPath.IndexOf(DirectoryData.FullPath);
                             <MudTreeViewItem Value="@($"{(startSegment < 0 ? _fiElement.FullPath : $"...{_fiElement.FullPath.Substring(startSegment + DirectoryData.FullPath.Length)}")}{(_fiElement.IsDirectory ? "" : $" - {GlobalToolsStandard.SizeDataAsString(_fiElement.FileSizeBytes)}")}")"
-                                             Icon="@(_fiElement.IsDirectory? Icons.Custom.Uncategorized.Folder : Icons.Material.Filled.InsertDriveFile)" />
+                                             Icon="@(_fiElement.IsDirectory? Icons.Custom.Uncategorized.Folder : Icons.Material.Filled.InsertDriveFile)"
+                                             OnDoubleClick="() => ClipboardCopyHandle(_fiElement.FullPath)" />
                         }
                     </MudTreeView>
                 </MudPaper>
