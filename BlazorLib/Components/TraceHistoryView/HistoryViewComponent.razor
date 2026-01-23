@@ -4,7 +4,17 @@
 
 <MudTable ServerData="ServerReload" Dense Hover Loading="IsBusyProgress" @ref="tableRef">
     <ToolBarContent>
-        @* <MudText Typo="Typo.h6">События изменений</MudText> *@
+        @if (IsBusyProgress)
+        {
+            <sup class="spinner-grow spinner-grow-sm text-primary"></sup>
+        }
+        else
+        {
+            <i class="bi bi-arrow-clockwise"
+               style="cursor:pointer"
+               title="Обновить таблицу"
+               @onclick="async () => { if (tableRef is not null) { await tableRef.ReloadServerData(); } }"></i>
+        }
         <MudSpacer />
         <MudDateRangePicker PickerVariant="PickerVariant.Dialog"
                             @bind-DateRange="@DateRangePeriod"
@@ -12,12 +22,13 @@
                             PlaceholderEnd="End Date"
                             Margin="Margin.Dense"
                             Label="Период"
-                            Clearable
-                            Editable />
+                            Clearable Editable />
     </ToolBarContent>
     <HeaderContent>
         <MudTh>
-            <MudTableSortLabel InitialDirection="SortDirection.Descending" SortLabel="@nameof(TraceReceiverRecord.UTCTimestampInitReceive)" T="TraceReceiverRecord">
+            <MudTableSortLabel T="TraceReceiverRecord"
+                               InitialDirection="SortDirection.Descending"
+                               SortLabel="@nameof(TraceReceiverRecord.UTCTimestampInitReceive)">
                 Дата
             </MudTableSortLabel>
         </MudTh>
@@ -56,6 +67,6 @@
         <MudText>Loading...</MudText>
     </LoadingContent>
     <PagerContent>
-        <MudTablePager />
+        <MudTablePager PageSizeOptions="new int[] { 25, 50, 100 }" />
     </PagerContent>
 </MudTable>
