@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+
 namespace SharedLib;
 
 /// <summary>
@@ -38,4 +39,25 @@ public class VideoTelegramModelDB : FileBaseTelegramModel
     /// ThumbnailVideo
     /// </summary>
     public VideoThumbnailTelegramModelDB? ThumbnailVideo { get; set; }
+
+    /// <inheritdoc/>
+    public static VideoTelegramStandardModel Build(VideoTelegramModelDB video)
+    {
+        VideoTelegramStandardModel res = new()
+        {
+            MessageId = video.MessageId,
+            Message = video.Message,
+            Id = video.Id,
+            Height = video.Height,
+            Duration = video.Duration,
+            FileName = video.FileName,
+            MimeType = video.MimeType,
+            FileUniqueId = video.FileUniqueId,
+            FileId = video.FileId,
+            FileSize = video.FileSize,
+            Width = video.Width,
+        };
+        res.ThumbnailVideo = video.ThumbnailVideo is null ? null : VideoThumbnailTelegramModelDB.Build(video.ThumbnailVideo, res);
+        return res;
+    }
 }

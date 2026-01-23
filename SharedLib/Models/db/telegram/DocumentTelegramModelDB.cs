@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+
 namespace SharedLib;
 
 /// <summary>
@@ -23,4 +24,22 @@ public class DocumentTelegramModelDB : FileBaseTelegramModel
     /// ThumbnailDocument
     /// </summary>
     public DocumentThumbnailTelegramModelDB? ThumbnailDocument { get; set; }
+
+    /// <inheritdoc/>
+    public static DocumentTelegramStandardModel Build(DocumentTelegramModelDB document)
+    {
+        DocumentTelegramStandardModel res = new()
+        {
+            Message = document.Message,
+            Id = document.Id,
+            FileId = document.FileId,
+            FileName = document.FileName,
+            MimeType = document.MimeType,
+            FileSize = document.FileSize,
+            FileUniqueId = document.FileUniqueId,
+            MessageId = document.MessageId,
+        };
+        res.ThumbnailDocument = document.ThumbnailDocument is null ? null : DocumentThumbnailTelegramModelDB.Build(document.ThumbnailDocument, res);
+        return res;
+    }
 }

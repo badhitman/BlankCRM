@@ -38,4 +38,29 @@ public class AudioTelegramModelDB : FileBaseTelegramModel
     /// AudioThumbnail
     /// </summary>
     public AudioThumbnailTelegramModelDB? AudioThumbnail { get; set; }
+
+    /// <inheritdoc/>
+    public static AudioTelegramStandardModel Build(AudioTelegramModelDB other)
+    {
+        AudioTelegramStandardModel res = new()
+        {
+            Id = other.Id,
+            Title = other.Title,
+            FileId = other.FileId,
+            Message = other.Message,
+            Duration = other.Duration,
+            FileName = other.FileName,
+            MimeType = other.MimeType,
+            FileSize = other.FileSize,
+            MessageId = other.MessageId,
+            Performer = other.Performer,
+            FileUniqueId = other.FileUniqueId,
+        };
+
+        res.AudioThumbnail = other.AudioThumbnail is null
+            ? null
+            : AudioThumbnailTelegramModelDB.Build(other.AudioThumbnail, res);
+
+        return res;
+    }
 }

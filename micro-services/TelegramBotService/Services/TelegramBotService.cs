@@ -351,7 +351,7 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
                 r.msg.Audio = r.audio;
             });
 
-            return dbData.Select(x => x.msg).ToList();
+            return [.. dbData.Select(x => x.msg)];
         }
 
         IQueryable<MessageTelegramModelDB> TakePart(IQueryable<MessageTelegramModelDB> q, DirectionsEnum direct)
@@ -360,7 +360,7 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
                 ? q.OrderBy(x => x.CreatedAtUtc).Skip(req.PageNum * req.PageSize).Take(req.PageSize)
                 : q.OrderByDescending(x => x.CreatedAtUtc).Skip(req.PageNum * req.PageSize).Take(req.PageSize);
         }
-        var _src = await Include(TakePart(q, req.SortingDirection));
+        List<MessageTelegramModelDB> _src = await Include(TakePart(q, req.SortingDirection));
         return new()
         {
             PageNum = req.PageNum,
@@ -368,32 +368,7 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
             SortBy = req.SortBy,
             SortingDirection = req.SortingDirection,
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
-            Response = [.. _src.Select(x=> new MessageTelegramStandardModel()
-            {
-                 AuthorSignature = x.AuthorSignature,
-                 Caption = x.Caption,
-                 ChatId = x.ChatId,
-                 CreatedAtUtc = x.CreatedAtUtc,
-                 EditDate = x.EditDate,
-                 ForwardDate = x.ForwardDate,
-                 ForwardFromChatId = x.ForwardFromChatId,
-                 ForwardFromId = x.ForwardFromId,
-                 ForwardFromMessageId = x.ForwardFromMessageId,
-                 ForwardSenderName = x.ForwardSenderName,
-                 ForwardSignature = x.AuthorSignature,
-                 Id = x.Id,
-                 FromId = x.FromId,
-                 IsAutomaticForward = x.IsAutomaticForward,
-                 IsTopicMessage = x.IsTopicMessage,
-                 MediaGroupId = x.MediaGroupId,
-                 MessageTelegramId = x.MessageTelegramId,
-                 MessageThreadId = x.MessageThreadId,
-                 ReplyToMessageId = x.ReplyToMessageId,
-                 TypeMessage = x.TypeMessage,
-                 ViaBotId = x.ViaBotId,
-                 SenderChatId = x.SenderChatId,
-                 Text = x.Text,                   
-            })]
+            Response = [.. _src.Select(MessageTelegramModelDB.Build)]
         };
     }
 

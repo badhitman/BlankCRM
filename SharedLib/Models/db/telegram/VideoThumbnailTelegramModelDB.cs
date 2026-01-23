@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+
 namespace SharedLib;
 
 /// <summary>
@@ -17,4 +18,22 @@ public class VideoThumbnailTelegramModelDB : PhotoSizeTelegramModel
     /// AudioOwner
     /// </summary>
     public int VideoOwnerId { get; set; }
+
+    /// <inheritdoc/>
+    public static VideoThumbnailTelegramStandardModel Build(VideoThumbnailTelegramModelDB sender, VideoTelegramStandardModel owner)
+    {
+        return new()
+        {
+            Id = sender.Id,
+            Width = sender.Width,
+            Height = sender.Height,
+            FileId = sender.FileId,
+            Message = sender.Message,
+            FileSize = sender.FileSize,
+            FileUniqueId = sender.FileUniqueId,
+            MessageId = sender.MessageId,
+            VideoOwnerId = owner.Id,
+            VideoOwner = owner,
+        };
+    }
 }

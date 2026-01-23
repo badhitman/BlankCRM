@@ -21,4 +21,20 @@ public class VoiceTelegramModelDB : FileBaseTelegramModel
     /// Optional. MIME type of the file as defined by sender
     /// </summary>
     public string? MimeType { get; set; }
+
+    /// <inheritdoc/>
+    public static VoiceTelegramStandardModel Build(VoiceTelegramModelDB voice)
+    {
+        return new()
+        {
+            Id = voice.Id,
+            MessageId = voice.MessageId,
+            Message = voice.Message,
+            Duration = voice.Duration,
+            MimeType = voice.MimeType,
+            FileId = voice.FileId,
+            FileSize = voice.FileSize,
+            FileUniqueId = voice.FileUniqueId,
+        };
+    }
 }

@@ -103,4 +103,45 @@ public class MessageTelegramModelDB : MessageTelegramStandardModel
     /// Optional. Caption for the animation, audio, document, photo, video or voice, 0-1024 characters
     /// </summary>
     public string? NormalizedCaptionUpper { get; set; }
+
+    /// <remarks />
+    public static MessageTelegramStandardModel Build(MessageTelegramModelDB sender)
+    {
+        return new MessageTelegramStandardModel()
+        {
+            Id = sender.Id,
+            Text = sender.Text,
+            FromId = sender.FromId,
+            ChatId = sender.ChatId,
+            Caption = sender.Caption,
+            TypeMessage = sender.TypeMessage,
+            ForwardDate = sender.ForwardDate,
+            CreatedAtUtc = sender.CreatedAtUtc,
+            AuthorSignature = sender.AuthorSignature,
+            Contact = sender.Contact,
+            EditDate = sender.EditDate,
+            ForwardFromChatId = sender.ForwardFromChatId,
+            ForwardFromId = sender.ForwardFromId,
+            ForwardFromMessageId = sender.ForwardFromMessageId,
+            ForwardSenderName = sender.ForwardSenderName,
+            ForwardSignature = sender.ForwardSignature,
+            IsTopicMessage = sender.IsTopicMessage,
+            IsAutomaticForward = sender.IsAutomaticForward,
+            MediaGroupId = sender.MediaGroupId,
+            MessageTelegramId = sender.MessageTelegramId,
+            MessageThreadId = sender.MessageThreadId,
+            ReplyToMessageId = sender.ReplyToMessageId,
+            SenderChatId = sender.SenderChatId,
+            ViaBotId = sender.ViaBotId,
+
+            Chat = sender.Chat,
+            From = sender.From,
+
+            Audio = sender.Audio is null ? null : AudioTelegramModelDB.Build(sender.Audio),
+            Video = sender.Video is null ? null : VideoTelegramModelDB.Build(sender.Video),
+            Voice = sender.Voice is null ? null : VoiceTelegramModelDB.Build(sender.Voice),
+            Photo = sender.Photo is null ? null : [.. sender.Photo.Select(PhotoMessageTelegramModelDB.Build)],
+            Document = sender.Document is null ? null : DocumentTelegramModelDB.Build(sender.Document),
+        };
+    }
 }

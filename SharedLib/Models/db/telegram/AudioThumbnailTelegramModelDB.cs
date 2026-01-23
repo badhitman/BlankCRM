@@ -17,4 +17,22 @@ public class AudioThumbnailTelegramModelDB : PhotoSizeTelegramModel
     /// AudioOwner
     /// </summary>
     public int AudioOwnerId { get; set; }
+
+    /// <inheritdoc/>
+    public static AudioThumbnailTelegramStandardModel Build(AudioThumbnailTelegramModelDB sender, AudioTelegramStandardModel ownerAudio)
+    {
+        return new()
+        {
+            MessageId = sender.MessageId,
+            AudioOwnerId = sender.AudioOwnerId,
+            FileId = sender.FileId,
+            FileSize = sender.FileSize,
+            FileUniqueId = sender.FileUniqueId,
+            Height = sender.Height,
+            Id = sender.Id,
+            Message = sender.Message,
+            Width = sender.Width,
+            AudioOwner = ownerAudio,
+        };
+    }
 }

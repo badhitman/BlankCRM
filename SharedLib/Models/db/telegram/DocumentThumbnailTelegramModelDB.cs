@@ -17,4 +17,22 @@ public class DocumentThumbnailTelegramModelDB : PhotoSizeTelegramModel
     /// Document
     /// </summary>
     public int DocumentOwnerId { get; set; }
+
+    /// <inheritdoc/>
+    public static DocumentThumbnailTelegramStandardModel? Build(DocumentThumbnailTelegramModelDB sender, DocumentTelegramStandardModel owner)
+    {
+        return new()
+        {
+            Id = sender.Id,
+            Width = sender.Width,
+            Height = sender.Height,
+            FileId = sender.FileId,
+            Message = sender.Message,
+            FileSize = sender.FileSize,
+            MessageId = sender.MessageId,
+            FileUniqueId = sender.FileUniqueId,
+            DocumentOwnerId = sender.DocumentOwnerId,
+            DocumentOwner = owner,
+        };
+    }
 }
