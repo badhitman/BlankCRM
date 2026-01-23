@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using SharedLib;
 
 namespace BlazorLib.Components.Storage;
@@ -12,6 +13,10 @@ namespace BlazorLib.Components.Storage;
 /// </summary>
 public partial class FolderRootViewComponent : BlazorBusyComponentBaseAuthModel
 {
+    /// <inheritdoc/>
+    [Inject]
+    protected IJSRuntime JsRuntimeRepo { get; set; } = default!;
+
     [Inject]
     IStorageTransmission StorageRepo { get; set; } = default!;
 
@@ -33,5 +38,12 @@ public partial class FolderRootViewComponent : BlazorBusyComponentBaseAuthModel
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         DirectoryData = res.Response;
         await SetBusyAsync(false);
+    }
+
+    /// <inheritdoc/>
+    protected async Task ClipboardCopyHandle()
+    {
+        await JsRuntimeRepo.InvokeVoidAsync("clipboardCopy.copyText", FolderPath);
+        SnackBarRepo.Info($"Путь к папке `{FolderPath}` скопирован в буфер обмена");
     }
 }
