@@ -1,0 +1,16 @@
+﻿namespace SharedLib.CommerceML2;
+
+/// <remarks/>
+public partial class ПодчиненныйДокументКонтрагент : Контрагент
+{
+    /// <summary>
+    /// Возможные значения: Покупатель, Продавец, Плательщик, Получатель, Комитент, Комиссионер, Лицензиар, Лицензиат
+    /// </summary>
+    public РольТип Роль { get; set; }
+
+    /// <remarks/>
+    public РасчетныйСчет? РасчетныйСчет { get; set; }
+
+    /// <remarks/>
+    public Склад? Склад { get; set; }
+}

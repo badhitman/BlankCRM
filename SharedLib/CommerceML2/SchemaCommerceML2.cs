@@ -56,7 +56,10 @@ public partial class Классификатор
     public required Подписант[] Подписанты { get; set; }
 }
 
-/// <remarks/>
+/// <summary>
+/// Универсальное описание контрагента-участника бизнес-процессов.
+/// Содержит описание реквизитов юридического или физического лица контрагента.
+/// </summary>
 public partial class Контрагент
 {
     /// <remarks/>
@@ -89,7 +92,7 @@ public partial class Контрагент
     [System.Xml.Serialization.XmlElementAttribute("ПолноеНаименование", typeof(string))]
     [System.Xml.Serialization.XmlElementAttribute("РасчетныеСчета", typeof(КонтрагентРасчетныеСчета))]
     [System.Xml.Serialization.XmlElementAttribute("Руководитель", typeof(Руководитель))]
-    [System.Xml.Serialization.XmlElementAttribute("УдостоверениеЛичности", typeof(КонтрагентУдостоверениеЛичности))]
+    [System.Xml.Serialization.XmlElementAttribute("УдостоверениеЛичности", typeof(УдостоверениеЛичности))]
     [System.Xml.Serialization.XmlElementAttribute("Фамилия", typeof(string))]
     [System.Xml.Serialization.XmlElementAttribute("ЮридическийАдрес", typeof(Адрес))]
     [System.Xml.Serialization.XmlChoiceIdentifierAttribute("ItemsElementName")]
@@ -105,36 +108,26 @@ public partial class Контрагент
     public Адрес Адрес { get; set; }
 
     /// <remarks/>
-    public required КонтактнаяИнформацияКонтакт[] Контакты { get; set; }
+    public required КонтактнаяИнформация[] Контакты { get; set; }
 
     /// <remarks/>
     public required Представитель[] Представители { get; set; }
 }
 
 /// <summary>
-/// Служит для представления адреса контрагента или любого другого участника бизнес-процесса
+/// Содержит описание реквизитов контрагента, специфических для физических лиц
 /// </summary>
-public partial class Адрес
+public class РеквизитыФизЛица
 {
-    /// <remarks/>
-    public string Представление { get; set; }
 
-    /// <remarks/>
-    public string Комментарий { get; set; }
-
-    /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute("АдресноеПоле")]
-    public АдресАдресноеПоле[] АдресноеПоле { get; set; }
 }
 
-/// <remarks/>
-public partial class АдресАдресноеПоле
+/// <summary>
+/// Содержит описание реквизитов контрагента, специфических для юридических лиц
+/// </summary>
+public class РеквизитыЮрЛица
 {
-    /// <remarks/>
-    public АдресТип Тип { get; set; }
 
-    /// <remarks/>
-    public string Значение { get; set; }
 }
 
 /// <summary>
@@ -215,113 +208,6 @@ public partial class ПодчиненныйДокумент
 }
 
 /// <remarks/>
-public partial class ПодчиненныйДокументКонтрагент : Контрагент
-{
-    /// <remarks/>
-    public РольТип Роль { get; set; }
-
-    /// <remarks/>
-    public РасчетныйСчет РасчетныйСчет { get; set; }
-
-    /// <remarks/>
-    public Склад Склад { get; set; }
-}
-
-/// <summary>
-/// Номер расчетного счета контрагента
-/// </summary>
-public partial class РасчетныйСчет
-{
-    /// <summary>
-    /// Номер счета, сформированный в соответствии со "Схемой обозначения лицевых счетов и их нумерации (по основным счетам)"
-    /// приложения 1 Правил ведения бухгалтерского учета в Банке России от 18.09.97 №66
-    /// или Правил ведения бухгалтерского учета в кредитных организациях, расположенных на территории РФ, от 05.12.2002 №205
-    /// с учетом изменений и дополнений.
-    /// </summary>
-    [StringLength(20)]
-    public string НомерСчета { get; set; }
-
-    /// <remarks/>
-    public Банк Банк { get; set; }
-
-    /// <remarks/>
-    public Банк БанкКорреспондент { get; set; }
-
-    /// <remarks/>
-    public string Комментарий { get; set; }
-}
-
-/// <summary>
-/// Служит для определения реквизитов КО или УБР (БИК, Наименование, Адрес и т.д.) через которые клиент осуществляет расчеты
-/// </summary>
-public partial class Банк
-{
-    /// <summary>
-    /// Номер счета, сформированный в соответствии со "Схемой обозначения лицевых счетов и их нумерации (по основным счетам)"
-    /// приложения 1 Правил ведения бухгалтерского учета в Банке России от 18.09.97 №66
-    /// или Правил ведения бухгалтерского учета в кредитных организациях, расположенных на территории РФ, от 05.12.2002 №205
-    /// с учетом изменений и дополнений.
-    /// </summary>
-    [StringLength(20)]
-    public string СчетКорреспондентский { get; set; }
-
-    /// <remarks/>
-    public string Наименование { get; set; }
-
-    /// <remarks/>
-    public БанкАдрес Адрес { get; set; }
-
-    /// <remarks/>
-    public required КонтактнаяИнформацияКонтакт[] Контакты { get; set; }
-
-    /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute("SWIFT", typeof(string))]
-    [System.Xml.Serialization.XmlElementAttribute("БИК", typeof(string))]
-    [System.Xml.Serialization.XmlChoiceIdentifierAttribute("ItemElementName")]
-    public string Item { get; set; }
-
-    /// <remarks/>
-    public ItemChoiceType ItemElementName { get; set; }
-}
-
-/// <remarks/>
-public partial class БанкАдрес : Адрес
-{
-}
-
-/// <remarks/>
-[System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:1C.ru:commerceml_2", IncludeInSchema = false)]
-public enum ItemChoiceType
-{
-    /// <remarks/>
-    SWIFT,
-
-    /// <remarks/>
-    БИК,
-}
-
-/// <summary>
-/// Наименование и идентификатор склада
-/// </summary>
-public partial class Склад
-{
-    /// <remarks/>
-    public required string Ид { get; set; }
-
-    /// <remarks/>
-    public string Наименование { get; set; }
-
-    /// <remarks/>
-    public string Комментарий { get; set; }
-
-    /// <remarks/>
-    public Адрес Адрес { get; set; }
-
-    /// <remarks/>
-    public required КонтактнаяИнформацияКонтакт[] Контакты { get; set; }
-}
-
-/// <remarks/>
 public partial class ПодчиненныйДокументНалог : Налог
 {
     /// <remarks/>
@@ -329,54 +215,6 @@ public partial class ПодчиненныйДокументНалог : Нало
 
     /// <remarks/>
     public string Ставка { get; set; }
-}
-
-/// <summary>
-/// Предоставляемая скидка на товарную позицию и/или в целом на сумму документа
-/// </summary>
-public partial class Скидка
-{
-    /// <remarks/>
-    public string Наименование { get; set; }
-
-    /// <remarks/>
-    public decimal Сумма { get; set; }
-
-    /// <remarks/>
-    public string Процент { get; set; }
-
-    /// <remarks/>
-    public bool УчтеноВСумме { get; set; }
-
-    /// <remarks/>
-    public bool УчтеноВСуммеSpecified { get; set; }
-
-    /// <remarks/>
-    public string Комментарий { get; set; }
-}
-
-/// <summary>
-/// Дополнительный расход по номенклатурной позиции и/или по документу в целом (например, транспортировка, тара и т.п.)
-/// </summary>
-public partial class ДопРасход
-{
-    /// <remarks/>
-    public string Наименование { get; set; }
-
-    /// <remarks/>
-    public decimal Сумма { get; set; }
-
-    /// <remarks/>
-    public string Процент { get; set; }
-
-    /// <remarks/>
-    public bool УчтеноВСумме { get; set; }
-
-    /// <remarks/>
-    public bool УчтеноВСуммеSpecified { get; set; }
-
-    /// <remarks/>
-    public string Комментарий { get; set; }
 }
 
 /// <remarks/>
@@ -473,7 +311,6 @@ public partial class Товар
     /// <summary>
     /// Штрихкод (GTIN) товара (код EAN/UPC).
     /// </summary>
-    [StringLength(14, MinimumLength = 8)]
     public string? Штрихкод { get; set; }
 
     /// <remarks/>
@@ -483,7 +320,11 @@ public partial class Товар
     /// <remarks/>
     public required string Наименование { get; set; }
 
-    /// <remarks/>
+    /// <summary>
+    /// Имя базовой единицы измерения товара по ОКЕИ.
+    /// В документах и коммерческих предложениях может быть указана другая единица измерения,
+    /// но при этом обязательно указывается коэффициент пересчета количества в базовую единицу товара.
+    /// </summary>
     public ТоварБазоваяЕдиница? БазоваяЕдиница { get; set; }
 
     /// <remarks/>
@@ -499,16 +340,7 @@ public partial class Товар
     public string[]? Картинка { get; set; }
 
     /// <remarks/>
-    public string? Страна { get; set; }
-
-    /// <remarks/>
-    public string? ТорговаяМарка { get; set; }
-
-    /// <remarks/>
-    public Контрагент? ВладелецТорговойМарки { get; set; }
-
-    /// <remarks/>
-    public Контрагент? Изготовитель { get; set; }
+    public Производитель Производитель { get; set; }
 
     /// <remarks/>
     public required ЗначенияСвойства[] ЗначенияСвойств { get; set; }
@@ -519,11 +351,15 @@ public partial class Товар
     /// <remarks/>
     public required ТоварАкциз[] Акцизы { get; set; }
 
-    /// <remarks/>
+    /// <summary>
+    /// Для изделий, содержащих комплектующие
+    /// </summary>
     public required ТоварКомплектующее[] Комплектующие { get; set; }
 
-    /// <remarks/>
-    public required ТоварАналог[] Аналоги { get; set; }
+    /// <summary>
+    /// Аналоги товара, например для медикаментов другие лекарства, заменяющие данное
+    /// </summary>
+    public required ТоварАналог[]? Аналоги { get; set; }
 
     /// <remarks/>
     public required ХарактеристикиТовараХарактеристикаТовара[] ХарактеристикиТовара { get; set; }
@@ -532,51 +368,7 @@ public partial class Товар
     public required ЗначениеРеквизита[] ЗначенияРеквизитов { get; set; }
 
     /// <remarks/>
-    public СтатусТип Статус { get; set; }
-
-    /// <remarks/>
-    public bool СтатусSpecified { get; set; }
-}
-
-/// <remarks/>
-public partial class ТоварБазоваяЕдиница
-{
-    /// <remarks/>
-    [Description("Пересчет")]
-    public ТоварБазоваяЕдиницаПересчет[] Пересчет { get; set; }
-
-    /// <remarks/>    
-    public string[] Text { get; set; }
-
-    /// <remarks/>
-    public string Код { get; set; }
-
-    /// <remarks/>
-    public string? НаименованиеПолное { get; set; }
-
-    /// <remarks/>
-    [StringLength(3)]
-    public string? МеждународноеСокращение { get; set; }
-
-    /// <remarks/>
-    public string? НаименованиеКраткое { get; set; }
-}
-
-/// <summary>
-/// Содержит дополнительную информацию о единице измерения товара
-/// </summary>
-public partial class ТоварБазоваяЕдиницаПересчет
-{
-    /// <remarks/>
-    public string Единица { get; set; }
-
-    /// <summary>
-    /// Коэффициент пересчета количества товара в базовую единицу.
-    /// </summary>
-    public string Коэффициент { get; set; }
-
-    /// <remarks/>
-    public required ЗначениеРеквизита[] ДополнительныеДанные { get; set; }
+    public СтатусТип? Статус { get; set; }
 }
 
 /// <summary>
@@ -594,50 +386,21 @@ public partial class ЗначенияСвойства
     public string[] Значение { get; set; }
 }
 
-/// <remarks/>
-public partial class ТоварСтавкаНалога
-{
-    /// <remarks/>
-    public string Наименование { get; set; }
-
-    /// <remarks/>
-    public string Ставка { get; set; }
-}
-
-/// <remarks/>
-public partial class ТоварАкциз
-{
-    /// <remarks/>
-    public string Наименование { get; set; }
-
-    /// <remarks/>
-    public decimal СуммаЗаЕдиницу { get; set; }
-
-    /// <remarks/>
-    public string Валюта { get; set; }
-}
-
-/// <remarks/>
+/// <summary>
+/// Элементы типа «Товар» - определяют комплектующие составных товаров - наборов.
+/// </summary>
 public partial class ТоварКомплектующее : Товар
 {
     /// <remarks/>
     public string ИдКаталога { get; set; }
 
-    /// <remarks/>
+    /// <summary>
+    /// Идентификатор классификатора, в соответствии с которым описано комплектующее
+    /// </summary>
     public string ИдКлассификатора { get; set; }
 
     /// <remarks/>
     public decimal Количество { get; set; }
-}
-
-/// <remarks/>
-public partial class ТоварАналог : Товар
-{
-    /// <remarks/>
-    public string ИдКаталога { get; set; }
-
-    /// <remarks/>
-    public string ИдКлассификатора { get; set; }
 }
 
 /// <summary>
@@ -671,7 +434,7 @@ public partial class Подписант
     public string Обращение { get; set; }
 
     /// <remarks/>
-    public ПодписантУдостоверениеЛичности УдостоверениеЛичности { get; set; }
+    public УдостоверениеЛичности УдостоверениеЛичности { get; set; }
 
     /// <remarks/>
     public Адрес АдресРегистрации { get; set; }
@@ -684,25 +447,6 @@ public partial class Подписант
 
     /// <remarks/>
     public string Комментарий { get; set; }
-}
-
-/// <remarks/>
-public partial class ПодписантУдостоверениеЛичности
-{
-    /// <remarks/>
-    public string ВидДокумента { get; set; }
-
-    /// <remarks/>
-    public string Серия { get; set; }
-
-    /// <remarks/>
-    public string Номер { get; set; }
-
-    /// <remarks/>
-    public DateOnly ДатаВыдачи { get; set; }
-
-    /// <remarks/>
-    public string КемВыдан { get; set; }
 }
 
 /// <remarks/>
@@ -754,68 +498,14 @@ public partial class ПодписантМестоРаботы
     public required РасчетныйСчет[] РасчетныеСчета { get; set; }
 }
 
-/// <remarks/>
-public partial class Руководитель
-{
-    /// <remarks/>
-    public required string Фамилия { get; set; }
-
-    /// <remarks/>
-    public required string Имя { get; set; }
-
-    /// <remarks/>
-    public string? Отчество { get; set; }
-
-    /// <remarks/>
-    public РуководительУдостоверениеЛичности? УдостоверениеЛичности { get; set; }
-
-    /// <remarks/>
-    public Адрес? АресРегистрации { get; set; }
-
-    /// <remarks/>
-    public required string Должность { get; set; }
-
-    /// <remarks/>
-    public required КонтактнаяИнформацияКонтакт[] Контакты { get; set; }
-}
-
-/// <remarks/>
-public partial class РуководительУдостоверениеЛичности
-{
-    /// <remarks/>
-    public required string ВидДокумента { get; set; }
-
-    /// <remarks/>
-    public string? Серия { get; set; }
-
-    /// <remarks/>
-    public string? Номер { get; set; }
-
-    /// <remarks/>
-    public DateOnly ДатаВыдачи { get; set; }
-
-    /// <remarks/>
-    public string? КемВыдан { get; set; }
-}
-
-/// <summary>
-/// Идентификатор склада и количество товаров на этом склате
-/// </summary>
-public partial class ОстаткиПоСкладам
-{
-    /// <remarks/>
-    public required string ИдСклада { get; set; }
-
-    /// <remarks/>
-    public decimal КоличествоНаСкладе { get; set; }
-}
-
 /// <summary>
 /// Цена по номенклатурной позиции
 /// </summary>
 public partial class Цена
 {
-    /// <remarks/>
+    /// <summary>
+    /// Представление цены так, как оно отбражается в прайс-листе. Например: 10у.е./за 1000 шт
+    /// </summary>
     public required string Представление { get; set; }
 
     /// <remarks/>
@@ -824,8 +514,12 @@ public partial class Цена
     /// <remarks/>
     public decimal ЦенаЗаЕдиницу { get; set; }
 
-    /// <remarks/>
-    public string? Валюта { get; set; }
+    /// <summary>
+    /// Код валюты по международному классификатору валют (ISO 4217).
+    /// Если не указана, то используется валюта установленная для данного типа цен
+    /// </summary>
+    [StringLength(3)]
+    public required string Валюта { get; set; }
 
     /// <remarks/>
     public string? Единица { get; set; }
@@ -836,11 +530,10 @@ public partial class Цена
     /// <remarks/>
     public required ЗначениеРеквизита[] ДополнительныеДанные { get; set; }
 
-    /// <remarks/>
+    /// <summary>
+    /// Минимальное количество товара в указанных единицах, для которого действует данная цена.
+    /// </summary>
     public decimal МинКоличество { get; set; }
-
-    /// <remarks/>
-    public bool МинКоличествоSpecified { get; set; }
 
     /// <remarks/>
     public string? ИдКаталога { get; set; }
@@ -1001,7 +694,7 @@ public partial class Представитель
     [System.Xml.Serialization.XmlElementAttribute("ПолноеНаименование", typeof(string))]
     [System.Xml.Serialization.XmlElementAttribute("РасчетныеСчета", typeof(КонтрагентРасчетныеСчета))]
     [System.Xml.Serialization.XmlElementAttribute("Руководитель", typeof(Руководитель))]
-    [System.Xml.Serialization.XmlElementAttribute("УдостоверениеЛичности", typeof(КонтрагентУдостоверениеЛичности))]
+    [System.Xml.Serialization.XmlElementAttribute("УдостоверениеЛичности", typeof(УдостоверениеЛичности))]
     [System.Xml.Serialization.XmlElementAttribute("Фамилия", typeof(string))]
     [System.Xml.Serialization.XmlElementAttribute("ЮридическийАдрес", typeof(Адрес))]
     [System.Xml.Serialization.XmlChoiceIdentifierAttribute("ItemsElementName")]
@@ -1010,7 +703,7 @@ public partial class Представитель
     /// <remarks/>
     [System.Xml.Serialization.XmlElementAttribute("ItemsElementName")]
 
-    public ItemsChoiceType1[]? ItemsElementName { get; set; }
+    public ItemsChoiceType[]? ItemsElementName { get; set; }
 
     /// <remarks/>
     public string? Комментарий { get; set; }
@@ -1019,7 +712,7 @@ public partial class Представитель
     public Адрес? Адрес { get; set; }
 
     /// <remarks/>
-    public required КонтактнаяИнформацияКонтакт[] Контакты { get; set; }
+    public required КонтактнаяИнформация[] Контакты { get; set; }
 
     /// <remarks/>
     public string? Отношение { get; set; }
@@ -1080,107 +773,6 @@ public partial class КонтрагентРасчетныеСчета
 {
     /// <remarks/>
     public required РасчетныйСчет[] РасчетныйСчет { get; set; }
-}
-
-/// <remarks/>
-public partial class КонтрагентУдостоверениеЛичности
-{
-    /// <remarks/>
-    public required string ВидДокумента { get; set; }
-
-    /// <remarks/>
-    public string? Серия { get; set; }
-
-    /// <remarks/>
-    public string? Номер { get; set; }
-
-    /// <remarks/>
-    public DateTime ДатаВыдачи { get; set; }
-
-    /// <remarks/>
-    public string? КемВыдан { get; set; }
-}
-
-/// <remarks/>
-public enum ItemsChoiceType1
-{
-    /// <remarks/>
-    АдресРегистрации,
-
-    /// <remarks/>
-    ДатаРегистрации,
-
-    /// <remarks/>
-    ДатаРождения,
-
-    /// <remarks/>
-    Должность,
-
-    /// <remarks/>
-    ЕГРПО,
-
-    /// <remarks/>
-    ИНН,
-
-    /// <remarks/>
-    Имя,
-
-    /// <remarks/>
-    КПП,
-
-    /// <remarks/>
-    МестоРождения,
-
-    /// <remarks/>
-    ОКВЭД,
-
-    /// <remarks/>
-    ОКДП,
-
-    /// <remarks/>
-    ОКОПФ,
-
-    /// <remarks/>
-    ОКПО,
-
-    /// <remarks/>
-    ОКФС,
-
-    /// <remarks/>
-    Обращение,
-
-    /// <remarks/>
-    Организация,
-
-    /// <remarks/>
-    ОсновнойВидДеятельности,
-
-    /// <remarks/>
-    Отчество,
-
-    /// <remarks/>
-    ОфициальноеНаименование,
-
-    /// <remarks/>
-    Пол,
-
-    /// <remarks/>
-    ПолноеНаименование,
-
-    /// <remarks/>
-    РасчетныеСчета,
-
-    /// <remarks/>
-    Руководитель,
-
-    /// <remarks/>
-    УдостоверениеЛичности,
-
-    /// <remarks/>
-    Фамилия,
-
-    /// <remarks/>
-    ЮридическийАдрес,
 }
 
 /// <remarks/>
@@ -1411,7 +1003,7 @@ public partial class ДокументТовар : Товар
     public required ДокументТоварНалог[] Налоги { get; set; }
 
     /// <remarks/>
-    public required ДокументТоварСкидка[] Скидки { get; set; }
+    public required Скидка[] Скидки { get; set; }
 
     /// <remarks/>
     public required ДопРасход[] ДопРасходы { get; set; }
@@ -1419,7 +1011,9 @@ public partial class ДокументТовар : Товар
     /// <remarks/>
     public required ЗначениеРеквизита[] ДополнительныеЗначенияРеквизитов { get; set; }
 
-    /// <remarks/>
+    /// <summary>
+    /// Склад, на котором доступен товар и остатки товара на складе
+    /// </summary>
     public required ДокументТоварСклад[] Склады { get; set; }
 }
 
@@ -1431,22 +1025,6 @@ public partial class ДокументТоварНалог : Налог
 
     /// <remarks/>
     public required string Ставка { get; set; }
-}
-
-/// <remarks/>
-public partial class ДокументТоварСкидка : Скидка
-{
-}
-
-/// <remarks/>
-public partial class ДокументТоварСклад : Склад
-{
-    /// <remarks/>
-    public decimal Количество { get; set; }
-
-    /// <remarks/>
-
-    public bool КоличествоSpecified { get; set; }
 }
 
 /// <summary>

@@ -2,7 +2,9 @@
 
 namespace SharedLib.CommerceML2;
 
-/// <remarks/>
+/// <summary>
+/// Почтовый адрес
+/// </summary>
 public enum АдресТип
 {
     /// <remarks/>
@@ -37,4 +39,3 @@ public enum АдресТип
     /// <remarks/>
     Квартира,
 }
-#pragma warning restore CS8618 // Поле, не допускающее значения NULL, должно содержать значение, отличное от NULL, при выходе из конструктора. Рассмотрите возможность добавления модификатора "required" или объявления значения, допускающего значение NULL.
