@@ -65,8 +65,16 @@ public class TracesImpl(IOptions<MongoConfigModel> mongoConf) : ITracesIndexing
         if (req.Payload?.End.HasValue == true)
             query = query.Where(x => x.UTCTimestampInitReceive <= req.Payload.End.Value.Date.AddHours(23).AddMinutes(59).AddSeconds(59));
 
+        IOrderedMongoQueryable<TraceReceive> oQuery = req.SortingDirection switch
+        {
+            DirectionsEnum.Up => query.OrderBy(x => x.UTCTimestampInitReceive),
+            DirectionsEnum.Down => query.OrderByDescending(x => x.UTCTimestampInitReceive),
+            DirectionsEnum.None => query.OrderBy(x => x.ReceiverName),
+            _ => query.OrderByDescending(x => x.UTCTimestampInitReceive)
+        };
+
         Task<int> totalTask = query.CountAsync(cancellationToken: token);
-        Task<List<TraceReceive>> itemsTask = query.OrderByDescending(x => x.UTCTimestampInitReceive).Skip(req.PageNum * req.PageSize).Take(req.PageSize).ToListAsync(cancellationToken: token);
+        Task<List<TraceReceive>> itemsTask = oQuery.Skip(req.PageNum * req.PageSize).Take(req.PageSize).ToListAsync(cancellationToken: token);
         await Task.WhenAll(totalTask, itemsTask);
 
         return new()
@@ -165,9 +173,16 @@ public class TracesImpl(IOptions<MongoConfigModel> mongoConf) : ITracesIndexing
                 filterBuilder.Eq($"{nameof(TraceReceiverRecord.RequestBody)}._v.{nameof(OrderConversionAmountModel.OrderDocumentId)}", req.Payload.FilterId))
          ;
 
-        IOrderedFindFluent<BsonDocument, BsonDocument> filteredSource = collection
-            .Find(filter)
-            .SortByDescending(d => d[nameof(TraceReceiverRecord.UTCTimestampInitReceive)]);
+        IFindFluent<BsonDocument, BsonDocument> findDescriptor = collection
+            .Find(filter);
+
+        IOrderedFindFluent<BsonDocument, BsonDocument> filteredSource = req.SortingDirection switch
+        {
+            DirectionsEnum.Up => findDescriptor.SortBy(d => d[nameof(TraceReceiverRecord.UTCTimestampInitReceive)]),
+            DirectionsEnum.Down => findDescriptor.SortByDescending(d => d[nameof(TraceReceiverRecord.UTCTimestampInitReceive)]),
+            DirectionsEnum.None => findDescriptor.SortBy(d => d[nameof(TraceReceiverRecord.ReceiverName)]),
+            _ => findDescriptor.SortBy(d => d[nameof(TraceReceiverRecord.ReceiverName)])
+        };
 
         List<BsonDocument> records = await filteredSource.Skip(req.PageNum * req.PageSize).Limit(req.PageSize).ToListAsync(cancellationToken: token);
         long count = await collection.CountDocumentsAsync(filter, cancellationToken: token);
@@ -251,9 +266,16 @@ public class TracesImpl(IOptions<MongoConfigModel> mongoConf) : ITracesIndexing
                 filterBuilder.Eq($"{nameof(TraceReceiverRecord.RequestBody)}._v.{nameof(RetailOrderDeliveryLinkModelDB.DeliveryDocumentId)}", req.Payload.FilterId))
          ;
 
-        IOrderedFindFluent<BsonDocument, BsonDocument> filteredSource = collection
-            .Find(filter)
-            .SortByDescending(d => d[nameof(TraceReceiverRecord.UTCTimestampInitReceive)]);
+        IFindFluent<BsonDocument, BsonDocument> findDescriptor = collection
+            .Find(filter);
+
+        IOrderedFindFluent<BsonDocument, BsonDocument> filteredSource = req.SortingDirection switch
+        {
+            DirectionsEnum.Up => findDescriptor.SortBy(d => d[nameof(TraceReceiverRecord.UTCTimestampInitReceive)]),
+            DirectionsEnum.Down => findDescriptor.SortByDescending(d => d[nameof(TraceReceiverRecord.UTCTimestampInitReceive)]),
+            DirectionsEnum.None => findDescriptor.SortBy(d => d[nameof(TraceReceiverRecord.ReceiverName)]),
+            _ => findDescriptor.SortBy(d => d[nameof(TraceReceiverRecord.ReceiverName)])
+        };
 
         List<BsonDocument> records = await filteredSource.Skip(req.PageNum * req.PageSize).Limit(req.PageSize).ToListAsync(cancellationToken: token);
         long count = await collection.CountDocumentsAsync(filter, cancellationToken: token);
@@ -322,9 +344,16 @@ public class TracesImpl(IOptions<MongoConfigModel> mongoConf) : ITracesIndexing
                      filterBuilder.Eq($"{nameof(TraceReceiverRecord.RequestBody)}._v.{nameof(OrderConversionAmountModel.ConversionDocumentId)}", req.Payload.FilterId))
                  ;
 
-        IOrderedFindFluent<BsonDocument, BsonDocument> filteredSource = collection
-            .Find(filter)
-            .SortByDescending(d => d[nameof(TraceReceiverRecord.UTCTimestampInitReceive)]);
+        IFindFluent<BsonDocument, BsonDocument> findDescriptor = collection
+            .Find(filter);
+
+        IOrderedFindFluent<BsonDocument, BsonDocument> filteredSource = req.SortingDirection switch
+        {
+            DirectionsEnum.Up => findDescriptor.SortBy(d => d[nameof(TraceReceiverRecord.UTCTimestampInitReceive)]),
+            DirectionsEnum.Down => findDescriptor.SortByDescending(d => d[nameof(TraceReceiverRecord.UTCTimestampInitReceive)]),
+            DirectionsEnum.None => findDescriptor.SortBy(d => d[nameof(TraceReceiverRecord.ReceiverName)]),
+            _ => findDescriptor.SortBy(d => d[nameof(TraceReceiverRecord.ReceiverName)])
+        };
 
         List<BsonDocument> records = await filteredSource.Skip(req.PageNum * req.PageSize).Limit(req.PageSize).ToListAsync(cancellationToken: token);
         long count = await collection.CountDocumentsAsync(filter, cancellationToken: token);
@@ -390,9 +419,16 @@ public class TracesImpl(IOptions<MongoConfigModel> mongoConf) : ITracesIndexing
                      filterBuilder.Eq($"{nameof(TraceReceiverRecord.RequestBody)}._v.{nameof(PaymentOrderRetailLinkModelDB.PaymentDocumentId)}", req.Payload.FilterId))
                  ;
 
-        IOrderedFindFluent<BsonDocument, BsonDocument> filteredSource = collection
-            .Find(filter)
-            .SortByDescending(d => d[nameof(TraceReceiverRecord.UTCTimestampInitReceive)]);
+        IFindFluent<BsonDocument, BsonDocument> findDescriptor = collection
+            .Find(filter);
+
+        IOrderedFindFluent<BsonDocument, BsonDocument> filteredSource = req.SortingDirection switch
+        {
+            DirectionsEnum.Up => findDescriptor.SortBy(d => d[nameof(TraceReceiverRecord.UTCTimestampInitReceive)]),
+            DirectionsEnum.Down => findDescriptor.SortByDescending(d => d[nameof(TraceReceiverRecord.UTCTimestampInitReceive)]),
+            DirectionsEnum.None => findDescriptor.SortBy(d => d[nameof(TraceReceiverRecord.ReceiverName)]),
+            _ => findDescriptor.SortBy(d => d[nameof(TraceReceiverRecord.ReceiverName)])
+        };
 
         List<BsonDocument> records = await filteredSource.Skip(req.PageNum * req.PageSize).Limit(req.PageSize).ToListAsync(cancellationToken: token);
         long count = await collection.CountDocumentsAsync(filter, cancellationToken: token);

@@ -16,7 +16,11 @@
                             Editable />
     </ToolBarContent>
     <HeaderContent>
-        <MudTh>Дата</MudTh>
+        <MudTh>
+            <MudTableSortLabel InitialDirection="SortDirection.Descending" SortLabel="@nameof(TraceReceiverRecord.UTCTimestampInitReceive)" T="TraceReceiverRecord">
+                Дата
+            </MudTableSortLabel>
+        </MudTh>
         <MudTh>Событие</MudTh>
         <MudTh>Запрос</MudTh>
         <MudTh>Ответ</MudTh>
