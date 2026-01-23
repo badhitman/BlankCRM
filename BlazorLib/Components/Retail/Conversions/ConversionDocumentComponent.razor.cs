@@ -44,8 +44,8 @@ public partial class ConversionDocumentComponent : BlazorBusyComponentUsersCache
     readonly List<ChatTelegramStandardModel> currentChatTelegrams = [];
     decimal sumConversionsOrdersAmounts;
 
-    bool readonlyInputFromWalletSum => editDoc is null || editDoc.FromWalletId <= 0;
-    bool readonlyInputToWalletSum => editDoc is null || editDoc.ToWalletId <= 0;
+    bool ReadonlyInputFromWalletSum => editDoc is null || editDoc.FromWalletId <= 0;
+    bool ReadonlyInputToWalletSum => editDoc is null || editDoc.ToWalletId <= 0;
 
     bool CannotSave
     {

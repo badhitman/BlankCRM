@@ -32,7 +32,7 @@ else
             }
             else
             {
-                <MudPaper Elevation="0">
+                <MudPaper Elevation="0" title="Чтобы скопировать в буфер путь к файлу - двойной клик (mouse double click)">
                     <MudTreeView Hover @bind-SelectedValue="SelectedValue" SelectionMode="@SelectionMode.SingleSelection">
                         @foreach (DirectoryItemModel _fiElement in DirectoryData.DirectoryItems)
                         {
