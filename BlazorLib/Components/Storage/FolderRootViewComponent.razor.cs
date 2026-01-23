@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////
-// © https://github.com/badhitman - @FakeGov 
+// В© https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
@@ -44,6 +44,6 @@ public partial class FolderRootViewComponent : BlazorBusyComponentBaseAuthModel
     protected async Task ClipboardCopyHandle()
     {
         await JsRuntimeRepo.InvokeVoidAsync("clipboardCopy.copyText", FolderPath);
-        SnackBarRepo.Info($"Путь к папке `{FolderPath}` скопирован в буфер обмена");
+        SnackBarRepo.Info($"С•СѓС‚СЊ Рє РїР°РїРєРµ `{FolderPath}` СЃРєРѕРїРёСЂРѕРІР°РЅ РІ Р±СѓС„РµСЂ РѕР±РјРµРЅР°");
     }
 }
