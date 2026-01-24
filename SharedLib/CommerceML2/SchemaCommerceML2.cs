@@ -69,39 +69,6 @@ public partial class Контрагент
     public string Наименование { get; set; }
 
     /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute("АдресРегистрации", typeof(Адрес))]
-    [System.Xml.Serialization.XmlElementAttribute("ДатаРегистрации", typeof(DateTime), DataType = "date")]
-    [System.Xml.Serialization.XmlElementAttribute("ДатаРождения", typeof(DateTime), DataType = "date")]
-    [System.Xml.Serialization.XmlElementAttribute("Должность", typeof(string))]
-    [System.Xml.Serialization.XmlElementAttribute("ЕГРПО", typeof(string))]
-    [System.Xml.Serialization.XmlElementAttribute("ИНН", typeof(string))]
-    [System.Xml.Serialization.XmlElementAttribute("Имя", typeof(string))]
-    [System.Xml.Serialization.XmlElementAttribute("КПП", typeof(string))]
-    [System.Xml.Serialization.XmlElementAttribute("МестоРождения", typeof(Адрес))]
-    [System.Xml.Serialization.XmlElementAttribute("ОКВЭД", typeof(string))]
-    [System.Xml.Serialization.XmlElementAttribute("ОКДП", typeof(string))]
-    [System.Xml.Serialization.XmlElementAttribute("ОКОПФ", typeof(string))]
-    [System.Xml.Serialization.XmlElementAttribute("ОКПО", typeof(string))]
-    [System.Xml.Serialization.XmlElementAttribute("ОКФС", typeof(string))]
-    [System.Xml.Serialization.XmlElementAttribute("Обращение", typeof(string))]
-    [System.Xml.Serialization.XmlElementAttribute("Организация", typeof(КонтрагентОрганизация))]
-    [System.Xml.Serialization.XmlElementAttribute("ОсновнойВидДеятельности", typeof(string))]
-    [System.Xml.Serialization.XmlElementAttribute("Отчество", typeof(string))]
-    [System.Xml.Serialization.XmlElementAttribute("ОфициальноеНаименование", typeof(string))]
-    [System.Xml.Serialization.XmlElementAttribute("Пол", typeof(ПолТип))]
-    [System.Xml.Serialization.XmlElementAttribute("ПолноеНаименование", typeof(string))]
-    [System.Xml.Serialization.XmlElementAttribute("РасчетныеСчета", typeof(КонтрагентРасчетныеСчета))]
-    [System.Xml.Serialization.XmlElementAttribute("Руководитель", typeof(Руководитель))]
-    [System.Xml.Serialization.XmlElementAttribute("УдостоверениеЛичности", typeof(УдостоверениеЛичности))]
-    [System.Xml.Serialization.XmlElementAttribute("Фамилия", typeof(string))]
-    [System.Xml.Serialization.XmlElementAttribute("ЮридическийАдрес", typeof(Адрес))]
-    [System.Xml.Serialization.XmlChoiceIdentifierAttribute("ItemsElementName")]
-    public object[] Items { get; set; }
-
-    /// <remarks/>
-    public ItemsChoiceType[] ItemsElementName { get; set; }
-
-    /// <remarks/>
     public string Комментарий { get; set; }
 
     /// <remarks/>
@@ -112,22 +79,12 @@ public partial class Контрагент
 
     /// <remarks/>
     public required Представитель[] Представители { get; set; }
-}
 
-/// <summary>
-/// Содержит описание реквизитов контрагента, специфических для физических лиц
-/// </summary>
-public class РеквизитыФизЛица
-{
+    /// <remarks/>
+    public РеквизитыФизЛица? РеквизитыФизЛица { get; set; }
 
-}
-
-/// <summary>
-/// Содержит описание реквизитов контрагента, специфических для юридических лиц
-/// </summary>
-public class РеквизитыЮрЛица
-{
-
+    /// <remarks/>
+    public РеквизитыЮрЛица? РеквизитыЮрЛица { get; set; }
 }
 
 /// <summary>
@@ -372,38 +329,6 @@ public partial class Товар
 }
 
 /// <summary>
-/// Определяет значения свойств номенклатурной позиции в каталоге, пакете предложений, документе
-/// </summary>
-public partial class ЗначенияСвойства
-{
-    /// <remarks/>
-    public required string Ид { get; set; }
-
-    /// <remarks/>
-    public string Наименование { get; set; }
-
-    /// <remarks/>
-    public string[] Значение { get; set; }
-}
-
-/// <summary>
-/// Элементы типа «Товар» - определяют комплектующие составных товаров - наборов.
-/// </summary>
-public partial class ТоварКомплектующее : Товар
-{
-    /// <remarks/>
-    public string ИдКаталога { get; set; }
-
-    /// <summary>
-    /// Идентификатор классификатора, в соответствии с которым описано комплектующее
-    /// </summary>
-    public string ИдКлассификатора { get; set; }
-
-    /// <remarks/>
-    public decimal Количество { get; set; }
-}
-
-/// <summary>
 /// Уточняет характеристики поставляемого товара. Товар с разными характеристиками может иметь разную цену
 /// </summary>
 public partial class ХарактеристикиТовараХарактеристикаТовара
@@ -430,7 +355,9 @@ public partial class Подписант
     /// <remarks/>
     public string Отчество { get; set; }
 
-    /// <remarks/>
+    /// <summary>
+    /// Например: Г-н, Г-жа, Докт., Проф. и т.д.
+    /// </summary>
     public string Обращение { get; set; }
 
     /// <remarks/>
@@ -671,41 +598,6 @@ public partial class Представитель
     public required string Наименование { get; set; }
 
     /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute("АдресРегистрации", typeof(Адрес))]
-    [System.Xml.Serialization.XmlElementAttribute("ДатаРегистрации", typeof(DateTime), DataType = "date")]
-    [System.Xml.Serialization.XmlElementAttribute("ДатаРождения", typeof(DateTime), DataType = "date")]
-    [System.Xml.Serialization.XmlElementAttribute("Должность", typeof(string))]
-    [System.Xml.Serialization.XmlElementAttribute("ЕГРПО", typeof(string))]
-    [System.Xml.Serialization.XmlElementAttribute("ИНН", typeof(string))]
-    [System.Xml.Serialization.XmlElementAttribute("Имя", typeof(string))]
-    [System.Xml.Serialization.XmlElementAttribute("КПП", typeof(string))]
-    [System.Xml.Serialization.XmlElementAttribute("МестоРождения", typeof(Адрес))]
-    [System.Xml.Serialization.XmlElementAttribute("ОКВЭД", typeof(string))]
-    [System.Xml.Serialization.XmlElementAttribute("ОКДП", typeof(string))]
-    [System.Xml.Serialization.XmlElementAttribute("ОКОПФ", typeof(string))]
-    [System.Xml.Serialization.XmlElementAttribute("ОКПО", typeof(string))]
-    [System.Xml.Serialization.XmlElementAttribute("ОКФС", typeof(string))]
-    [System.Xml.Serialization.XmlElementAttribute("Обращение", typeof(string))]
-    [System.Xml.Serialization.XmlElementAttribute("Организация", typeof(КонтрагентОрганизация))]
-    [System.Xml.Serialization.XmlElementAttribute("ОсновнойВидДеятельности", typeof(string))]
-    [System.Xml.Serialization.XmlElementAttribute("Отчество", typeof(string))]
-    [System.Xml.Serialization.XmlElementAttribute("ОфициальноеНаименование", typeof(string))]
-    [System.Xml.Serialization.XmlElementAttribute("Пол", typeof(ПолТип))]
-    [System.Xml.Serialization.XmlElementAttribute("ПолноеНаименование", typeof(string))]
-    [System.Xml.Serialization.XmlElementAttribute("РасчетныеСчета", typeof(КонтрагентРасчетныеСчета))]
-    [System.Xml.Serialization.XmlElementAttribute("Руководитель", typeof(Руководитель))]
-    [System.Xml.Serialization.XmlElementAttribute("УдостоверениеЛичности", typeof(УдостоверениеЛичности))]
-    [System.Xml.Serialization.XmlElementAttribute("Фамилия", typeof(string))]
-    [System.Xml.Serialization.XmlElementAttribute("ЮридическийАдрес", typeof(Адрес))]
-    [System.Xml.Serialization.XmlChoiceIdentifierAttribute("ItemsElementName")]
-    public object[]? Items { get; set; }
-
-    /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute("ItemsElementName")]
-
-    public ItemsChoiceType[]? ItemsElementName { get; set; }
-
-    /// <remarks/>
     public string? Комментарий { get; set; }
 
     /// <remarks/>
@@ -716,6 +608,12 @@ public partial class Представитель
 
     /// <remarks/>
     public string? Отношение { get; set; }
+
+    /// <remarks/>
+    public РеквизитыФизЛица? РеквизитыФизЛица { get; set; }
+
+    /// <remarks/>
+    public РеквизитыЮрЛица? РеквизитыЮрЛица { get; set; }
 }
 
 /// <remarks/>
@@ -768,94 +666,7 @@ public partial class КонтрагентОрганизация
     public required РасчетныйСчет[] РасчетныеСчета { get; set; }
 }
 
-/// <remarks/>
-public partial class КонтрагентРасчетныеСчета
-{
-    /// <remarks/>
-    public required РасчетныйСчет[] РасчетныйСчет { get; set; }
-}
 
-/// <remarks/>
-public enum ItemsChoiceType
-{
-    /// <remarks/>
-    АдресРегистрации,
-
-    /// <remarks/>
-    ДатаРегистрации,
-
-    /// <remarks/>
-    ДатаРождения,
-
-    /// <remarks/>
-    Должность,
-
-    /// <remarks/>
-    ЕГРПО,
-
-    /// <remarks/>
-    ИНН,
-
-    /// <remarks/>
-    Имя,
-
-    /// <remarks/>
-    КПП,
-
-    /// <remarks/>
-    МестоРождения,
-
-    /// <remarks/>
-    ОКВЭД,
-
-    /// <remarks/>
-    ОКДП,
-
-    /// <remarks/>
-    ОКОПФ,
-
-    /// <remarks/>
-    ОКПО,
-
-    /// <remarks/>
-    ОКФС,
-
-    /// <remarks/>
-    Обращение,
-
-    /// <remarks/>
-    Организация,
-
-    /// <remarks/>
-    ОсновнойВидДеятельности,
-
-    /// <remarks/>
-    Отчество,
-
-    /// <remarks/>
-    ОфициальноеНаименование,
-
-    /// <remarks/>
-    Пол,
-
-    /// <remarks/>
-    ПолноеНаименование,
-
-    /// <remarks/>
-    РасчетныеСчета,
-
-    /// <remarks/>
-    Руководитель,
-
-    /// <remarks/>
-    УдостоверениеЛичности,
-
-    /// <remarks/>
-    Фамилия,
-
-    /// <remarks/>
-    ЮридическийАдрес,
-}
 
 /// <summary>
 /// Определяет хоз. операцию и реквизиты документа, а также роль предприятия в хоз операции

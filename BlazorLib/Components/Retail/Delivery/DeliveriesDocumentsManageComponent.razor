@@ -91,7 +91,9 @@
     <HeaderContent>
         <MudTh>Тип/Статус</MudTh>
         <MudTh>
-            <MudTableSortLabel T="DeliveryDocumentRetailModelDB" InitialDirection="@SortDirection.Descending" SortLabel="@(nameof(DeliveryDocumentRetailModelDB.CreatedAtUTC))">
+            <MudTableSortLabel T="DeliveryDocumentRetailModelDB"
+                               InitialDirection="@SortDirection.Descending"
+                               SortLabel="@(nameof(DeliveryDocumentRetailModelDB.CreatedAtUTC))">
                 Дата
             </MudTableSortLabel>
         </MudTh>
@@ -109,7 +111,6 @@
     <RowTemplate>
         @{
             DateTime cdt = context.CreatedAtUTC.GetCustomTime();
-            DateTime? udt = context.LastUpdatedAtUTC?.GetCustomTime();
         }
         <MudTd DataLabel="Тип/Статус">
             <MudLink Href="@($"/retail/delivery-document/{context.Id}")">
@@ -131,13 +132,6 @@
                     <span>
                         @cdt.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@cdt.ToString("t", GlobalStaticConstants.RU)</sup>
                     </span>
-                    @if (udt.HasValue && udt != default)
-                    {
-                        <text>/</text>
-                        <span>
-                            @udt.Value.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@udt.Value.ToString("t", GlobalStaticConstants.RU)</sup>
-                        </span>
-                    }
                 </MudLink>
             }
             else

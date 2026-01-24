@@ -419,12 +419,6 @@ public partial class RetailService : IRetailService
         if (!string.IsNullOrWhiteSpace(req.FindQuery))
             q = q.Where(x => x.Name.Contains(req.FindQuery));
 
-        IQueryable<DeliveryStatusRetailDocumentModelDB>? pq = q
-            .OrderBy(x => x.DateOperation)
-            .ThenBy(os => os.Id)
-            .Skip(req.PageNum * req.PageSize)
-            .Take(req.PageSize);
-
         return new()
         {
             PageNum = req.PageNum,
@@ -432,7 +426,10 @@ public partial class RetailService : IRetailService
             SortingDirection = req.SortingDirection,
             SortBy = req.SortBy,
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
-            Response = await pq.ToListAsync(cancellationToken: token)
+            Response = await q.OrderByDescending(x => x.DateOperation)
+                              .ThenBy(os => os.Id).Skip(req.PageNum * req.PageSize)
+                              .Take(req.PageSize)
+                              .ToListAsync(cancellationToken: token)
         };
     }
 }
