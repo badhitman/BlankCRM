@@ -140,13 +140,6 @@
                     <span>
                         @cdt.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@cdt.ToString("t", GlobalStaticConstants.RU)</sup>
                     </span>
-                    @if (udt.HasValue && udt != default)
-                    {
-                        <text>/</text>
-                        <span>
-                            @udt.Value.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@udt.Value.ToString("t", GlobalStaticConstants.RU)</sup>
-                        </span>
-                    }
                 </MudLink>
             }
 

@@ -11,7 +11,7 @@ public class РеквизитыФизЛица
     /// <summary>
     /// Например: Г-н, Г-жа, Докт., Проф. и т.д.
     /// </summary>
-    public string Обращение { get; set; }
+    public string? Обращение { get; set; }
 
     /// <remarks/>
     public required string Фамилия { get; set; }
@@ -26,7 +26,7 @@ public class РеквизитыФизЛица
     public required DateOnly ДатаРождения { get; set; }
 
     /// <remarks/>
-    public Адрес МестоРождения { get; set; }
+    public Адрес? МестоРождения { get; set; }
 
     /// <remarks/>
     public ПолТип? Пол { get; set; }
@@ -45,9 +45,8 @@ public class РеквизитыФизЛица
     public УдостоверениеЛичности? УдостоверениеЛичности { get; set; }
 
     /// <remarks/>
-    public Адрес АдресРегистрации { get; set; }
+    public Адрес? АдресРегистрации { get; set; }
 
     /// <remarks/>
-    public ПодписантМестоРаботы МестоРаботы { get; set; }
+    public ПодписантМестоРаботы? МестоРаботы { get; set; }
 }
-#pragma warning restore CS8618 // Поле, не допускающее значения NULL, должно содержать значение, отличное от NULL, при выходе из конструктора. Рассмотрите возможность добавления модификатора "required" или объявления значения, допускающего значение NULL.

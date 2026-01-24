@@ -106,10 +106,7 @@ public partial class ПодчиненныйДокумент
     public ХозОперацияТип ХозОперация { get; set; }
 
     /// <remarks/>
-    public РольТип Роль { get; set; }
-
-    /// <remarks/>
-    public bool РольSpecified { get; set; }
+    public РольТип? Роль { get; set; }
 
     /// <remarks/>
     public string Валюта { get; set; }
@@ -117,33 +114,26 @@ public partial class ПодчиненныйДокумент
     /// <remarks/>
     public string Курс { get; set; }
 
-    /// <remarks/>
+    /// <summary>
+    /// Общая сумма по документу.
+    /// Налоги, скидки и дополнительные расходы включаются в данную сумму в зависимости от установленных флажков "УчтеноВСумме"
+    /// </summary>
     public decimal Сумма { get; set; }
-
-    /// <remarks/>
-    public bool СуммаSpecified { get; set; }
 
     /// <remarks/>
     public required ПодчиненныйДокументКонтрагент[] Контрагенты { get; set; }
 
     /// <remarks/>
-    public TimeOnly Время { get; set; }
+    public TimeOnly? Время { get; set; }
 
     /// <remarks/>
-
-    public bool ВремяSpecified { get; set; }
-
-    /// <remarks/>
-    public DateTime СрокПлатежа { get; set; }
-
-    /// <remarks/>
-    public bool СрокПлатежаSpecified { get; set; }
+    public DateOnly? СрокПлатежа { get; set; }
 
     /// <remarks/>
     public string Комментарий { get; set; }
 
     /// <remarks/>
-    public required ПодчиненныйДокументНалог[] Налоги { get; set; }
+    public required СтавкаСуммаНалога[] Налоги { get; set; }
 
     /// <remarks/>
     public required Скидка[] Скидки { get; set; }
@@ -162,16 +152,6 @@ public partial class ПодчиненныйДокумент
 
     /// <remarks/>
     public required Подписант[] Подписанты { get; set; }
-}
-
-/// <remarks/>
-public partial class ПодчиненныйДокументНалог : Налог
-{
-    /// <remarks/>
-    public decimal Сумма { get; set; }
-
-    /// <remarks/>
-    public string Ставка { get; set; }
 }
 
 /// <remarks/>
@@ -217,7 +197,7 @@ public partial class ПодчиненныйДокументТовар : Това
     public string ГТД { get; set; }
 
     /// <remarks/>
-    public required ПодчиненныйДокументТоварНалог[] Налоги { get; set; }
+    public required СтавкаСуммаНалога[] Налоги { get; set; }
 
     /// <remarks/>
     public required ПодчиненныйДокументТоварСкидка[] Скидки { get; set; }
@@ -230,16 +210,6 @@ public partial class ПодчиненныйДокументТовар : Това
 
     /// <remarks/>
     public required ПодчиненныйДокументТоварСклад[] Склады { get; set; }
-}
-
-/// <remarks/>
-public partial class ПодчиненныйДокументТоварНалог : Налог
-{
-    /// <remarks/>
-    public decimal Сумма { get; set; }
-
-    /// <remarks/>
-    public string Ставка { get; set; }
 }
 
 /// <remarks/>
@@ -718,7 +688,7 @@ public partial class Документ
     public string? Комментарий { get; set; }
 
     /// <remarks/>
-    public required ДокументНалог[] Налоги { get; set; }
+    public required СтавкаСуммаНалога[] Налоги { get; set; }
 
     /// <remarks/>
     public required Скидка[] Скидки { get; set; }
@@ -753,16 +723,6 @@ public partial class ДокументКонтрагент : Контрагент
 
     /// <remarks/>
     public Склад? Склад { get; set; }
-}
-
-/// <remarks/>
-public partial class ДокументНалог : Налог
-{
-    /// <remarks/>
-    public decimal Сумма { get; set; }
-
-    /// <remarks/>
-    public string? Ставка { get; set; }
 }
 
 /// <remarks/>
