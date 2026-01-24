@@ -326,28 +326,6 @@ public partial class Цена
 }
 
 /// <summary>
-/// Описывает цену, идентифицированную в каталоге с указанием кода валюты (если ранее не определена)
-/// </summary>
-public partial class ТипЦены
-{
-    /// <remarks/>
-    public required string Ид { get; set; }
-
-    /// <remarks/>
-    public required string Наименование { get; set; }
-
-    /// <remarks/>
-    public string? Валюта { get; set; }
-
-    /// <remarks/>
-    public string? Описание { get; set; }
-
-    /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute("Налог")]
-    public Налог[]? Налог { get; set; }
-}
-
-/// <summary>
 /// Описывает свойство товара и возможные варианты значений этого свойства
 /// </summary>
 public partial class Свойство
@@ -542,110 +520,6 @@ public partial class ИзмененияПакетаПредложений
     public required ИзмененияПакетаПредложенийПредложение[] Предложения { get; set; }
 
     /// <remarks/>
-    public bool СодержитТолькоИзменения { get; set; }
-}
-
-/// <remarks/>
-public partial class ИзмененияПакетаПредложенийПредложение
-{
-    /// <remarks/>
-    public required string Ид { get; set; }
-
-    /// <summary>
-    /// Штрихкод (GTIN) товара (код EAN/UPC).
-    /// </summary>
-    [StringLength(14, MinimumLength = 8)]
-    public string? Штрихкод { get; set; }
-
-    /// <remarks/>
-    [StringLength(maximumLength: 255)]
-    public string? Артикул { get; set; }
-
-    /// <remarks/>
-    public string? ИдХарактеристики { get; set; }
-
-    /// <remarks/>
-    public string? КодЕдиницыИзмерения { get; set; }
-
-    /// <remarks/>
-    public ОстаткиПоСкладам[]? Склады { get; set; }
-
-    /// <remarks/>
-    public required Цена[] Цены { get; set; }
-
-    /// <remarks/>
-    public decimal Количество { get; set; }
-}
-
-/// <summary>
-/// Содержит перечень коммерческих предложений.
-/// Пакет предложений составляется по определенному (только одному) каталогу, а предложения в пакете могут быть описаны по классификатору.
-/// </summary>
-public partial class ПакетПредложений
-{
-    /// <remarks/>
-    public required string Ид { get; set; }
-
-    /// <remarks/>
-    public required string Наименование { get; set; }
-
-    /// <remarks/>
-    public string? ИдКаталога { get; set; }
-
-    /// <remarks/>
-    public string? ИдКлассификатора { get; set; }
-
-    /// <remarks/>
-    public DateOnly? ДействительноС { get; set; }
-
-    /// <remarks/>
-    public DateOnly? ДействительноДо { get; set; }
-
-    /// <remarks/>
-    public string? Описание { get; set; }
-
-    /// <remarks/>
-    public Контрагент? Владелец { get; set; }
-
-    /// <remarks/>
-    public ПакетПредложенийТипыЦен? ТипыЦен { get; set; }
-
-    /// <remarks/>
-    public required Склад[] Склады { get; set; }
-
-    /// <remarks/>
-    public required ЗначенияСвойства[] ЗначенияСвойств { get; set; }
-
-    /// <remarks/>
-    public required ПакетПредложенийПредложение[] Предложения { get; set; }
-
-    /// <remarks/>
-    public required Подписант[] Подписанты { get; set; }
-
-    /// <remarks/>
     public bool? СодержитТолькоИзменения { get; set; }
-}
-
-/// <remarks/>
-public partial class ПакетПредложенийТипыЦен
-{
-    /// <remarks/>
-    public required string ИдКлассификатора { get; set; }
-
-    /// <remarks/>
-    public ТипЦены[]? ТипЦены { get; set; }
-}
-
-/// <remarks/>
-public partial class ПакетПредложенийПредложение : Товар
-{
-    /// <remarks/>
-    public required Цена[] Цены { get; set; }
-
-    /// <remarks/>
-    public decimal Количество { get; set; }
-
-    /// <remarks/>
-    public ОстаткиПоСкладам[]? Склад { get; set; }
 }
 #pragma warning restore CS8618 // Поле, не допускающее значения NULL, должно содержать значение, отличное от NULL, при выходе из конструктора. Рассмотрите возможность добавления модификатора "required" или объявления значения, допускающего значение NULL.

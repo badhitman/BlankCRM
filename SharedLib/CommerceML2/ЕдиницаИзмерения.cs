@@ -1,4 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿////////////////////////////////////////////////
+// © https://github.com/badhitman - @FakeGov 
+////////////////////////////////////////////////
+
+using System.ComponentModel.DataAnnotations;
 
 namespace SharedLib.CommerceML2;
 
@@ -22,4 +26,3 @@ public partial class ЕдиницаИзмерения
     /// <remarks/>
     public required ЗначениеРеквизита[] ДополнительныеДанные { get; set; }
 }
-#pragma warning restore CS8618 // Поле, не допускающее значения NULL, должно содержать значение, отличное от NULL, при выходе из конструктора. Рассмотрите возможность добавления модификатора "required" или объявления значения, допускающего значение NULL.
