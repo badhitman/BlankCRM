@@ -8,8 +8,8 @@
 
 @inherits BlazorBusyComponentBaseAuthModel
 
-<div class="card">
-    <div class="card-body">
+<MudCard>
+    <MudCardContent>
         @if (IsBusyProgress || editDoc is null)
         {
             <MudProgressLinear Color="Color.Primary" Indeterminate Class="my-3" />
@@ -25,36 +25,39 @@
                 </div>
             }
             <MudGrid>
-                <MudItem xs="2">
+                <MudItem xs="6" sm="6" md="6" lg="2">
                     <div class="mb-3">
                         <label for="exampleInputWeightShipping" class="form-label">Вес (кг)</label>
                         <input type="number" class="form-control" id="exampleInputWeightShipping" @bind-value="editDoc.WeightShipping" @bind-value:event="oninput">
                     </div>
                 </MudItem>
-                <MudItem xs="1">
+                <MudItem xs="6" sm="6" md="6" lg="1">
                     <div class="mb-3">
                         <label for="exampleInputShippingCost" class="form-label">Стоимость</label>
                         <input type="number" class="form-control" id="exampleInputShippingCost" @bind-value="editDoc.ShippingCost" @bind-value:event="oninput">
                     </div>
                 </MudItem>
-                <MudItem xs="3">
+                <MudItem xs="6" sm="6" md="6" lg="3">
                     <div class="mb-3">
                         <label for="exampleInputPackageSize" class="form-label">Габариты</label>
                         <input type="text" class="form-control" id="exampleInputPackageSize" @bind-value="editDoc.PackageSize" @bind-value:event="oninput">
                     </div>
                 </MudItem>
-                <MudItem xs="3">
+                <MudItem xs="6" sm="6" md="6" lg="3">
                     <div class="mb-3">
                         <label for="exampleInputDeliveryCode" class="form-label">Трек-код</label>
                         <input type="text" class="form-control" id="exampleInputDeliveryCode" @bind-value="editDoc.DeliveryCode" @bind-value:event="oninput">
                     </div>
                 </MudItem>
-                <MudItem xs="3">
+                <MudItem xs="12" sm="12" md="12" lg="3">
                     <div class="mb-3">
                         <label for="exampleInputName" class="form-label">Примечание</label>
                         <input type="text" class="form-control" id="exampleInputName" @bind-value="editDoc.Name" @bind-value:event="oninput">
                     </div>
                 </MudItem>
+
+
+
                 <MudItem xs="12">
                     <div class="mb-3">
                         <label for="exampleInputNotes" class="form-label">Описание</label>
@@ -181,5 +184,5 @@
                 }
             </div>
         }
-    </div>
-</div>
+    </MudCardContent>
+</MudCard>
