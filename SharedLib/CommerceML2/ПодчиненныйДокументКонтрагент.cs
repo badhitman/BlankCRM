@@ -1,4 +1,8 @@
-﻿namespace SharedLib.CommerceML2;
+﻿////////////////////////////////////////////////
+// © https://github.com/badhitman - @FakeGov 
+////////////////////////////////////////////////
+
+namespace SharedLib.CommerceML2;
 
 /// <remarks/>
 public partial class ПодчиненныйДокументКонтрагент : Контрагент

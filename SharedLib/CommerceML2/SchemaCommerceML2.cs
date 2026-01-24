@@ -313,95 +313,13 @@ public partial class ХарактеристикиТовараХарактери�
     public string Значение { get; set; }
 }
 
-/// <remarks/>
-public partial class Подписант
-{
-    /// <remarks/>
-    public string Фамилия { get; set; }
-
-    /// <remarks/>
-    public string Имя { get; set; }
-
-    /// <remarks/>
-    public string Отчество { get; set; }
-
-    /// <summary>
-    /// Например: Г-н, Г-жа, Докт., Проф. и т.д.
-    /// </summary>
-    public string Обращение { get; set; }
-
-    /// <remarks/>
-    public УдостоверениеЛичности УдостоверениеЛичности { get; set; }
-
-    /// <remarks/>
-    public Адрес АдресРегистрации { get; set; }
-
-    /// <remarks/>
-    public ПодписантМестоРаботы МестоРаботы { get; set; }
-
-    /// <remarks/>
-    public string Должность { get; set; }
-
-    /// <remarks/>
-    public string Комментарий { get; set; }
-}
-
-/// <remarks/>
-public partial class ПодписантМестоРаботы
-{
-    /// <remarks/>
-    public required string ОфициальноеНаименование { get; set; }
-
-    /// <remarks/>
-    public Адрес? ЮридическийАдрес { get; set; }
-
-    /// <remarks/>
-    public string? ИНН { get; set; }
-
-    /// <remarks/>
-    public string? КПП { get; set; }
-
-    /// <remarks/>
-    public string? ОсновнойВидДеятельности { get; set; }
-
-    /// <remarks/>
-    public string? ЕГРПО { get; set; }
-
-    /// <remarks/>
-    public string? ОКВЭД { get; set; }
-
-    /// <remarks/>
-    public string? ОКДП { get; set; }
-
-    /// <remarks/>
-    public string? ОКОПФ { get; set; }
-
-    /// <remarks/>
-    public string? ОКФС { get; set; }
-
-    /// <remarks/>
-    public string? ОКПО { get; set; }
-
-    /// <remarks/>
-    public DateOnly ДатаРегистрации { get; set; }
-
-    /// <remarks/>
-    public bool ДатаРегистрацииSpecified { get; set; }
-
-    /// <remarks/>
-    public Руководитель? Руководитель { get; set; }
-
-    /// <remarks/>
-    public required РасчетныйСчет[] РасчетныеСчета { get; set; }
-}
-
 /// <summary>
 /// Цена по номенклатурной позиции
 /// </summary>
 public partial class Цена
 {
     /// <summary>
-    /// Представление цены так, как оно отбражается в прайс-листе. Например: 10у.е./за 1000 шт
+    /// Представление цены так, как оно отображается в прайс-листе. Например: 10у.е./за 1000 шт
     /// </summary>
     public required string Представление { get; set; }
 

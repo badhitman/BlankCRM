@@ -1,4 +1,8 @@
-﻿namespace SharedLib.CommerceML2;
+﻿////////////////////////////////////////////////
+// © https://github.com/badhitman - @FakeGov 
+////////////////////////////////////////////////
+
+namespace SharedLib.CommerceML2;
 
 /// <summary>
 /// Содержит описание возможных способов связи (по телефону, электронной почте и т.д.)

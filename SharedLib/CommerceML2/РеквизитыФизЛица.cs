@@ -1,4 +1,8 @@
-﻿namespace SharedLib.CommerceML2;
+﻿////////////////////////////////////////////////
+// © https://github.com/badhitman - @FakeGov 
+////////////////////////////////////////////////
+
+namespace SharedLib.CommerceML2;
 
 /// <summary>
 /// Содержит описание реквизитов контрагента, специфических для физических лиц
@@ -48,5 +52,5 @@ public class РеквизитыФизЛица
     public Адрес? АдресРегистрации { get; set; }
 
     /// <remarks/>
-    public ПодписантМестоРаботы? МестоРаботы { get; set; }
+    public РеквизитыЮрЛица? МестоРаботы { get; set; }
 }

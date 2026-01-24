@@ -1,4 +1,8 @@
-﻿namespace SharedLib.CommerceML2;
+﻿////////////////////////////////////////////////
+// © https://github.com/badhitman - @FakeGov 
+////////////////////////////////////////////////
+
+namespace SharedLib.CommerceML2;
 
 /// <summary>
 /// Элементы типа «Товар» - определяют аналогичные товары, например, в другом каталоге
