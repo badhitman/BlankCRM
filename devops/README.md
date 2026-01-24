@@ -15,7 +15,7 @@ ufw enable
 ```
 
 #### .NET10
-ref - https://learn.microsoft.com/ru-ru/dotnet/core/install/linux-ubuntu-install?tabs=dotnet9&pivots=os-linux-ubuntu-2404
+ref - https://learn.microsoft.com/ru-ru/dotnet/core/install/linux-ubuntu-install?tabs=dotnet10&pivots=os-linux-ubuntu-2404
 ```
 sudo add-apt-repository ppa:dotnet/backports
 sudo apt update && sudo apt install -y dotnet-sdk-10.0
