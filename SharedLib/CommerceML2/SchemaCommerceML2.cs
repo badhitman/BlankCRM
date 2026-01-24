@@ -167,28 +167,13 @@ public partial class ПодчиненныйДокументТовар : Това
     public decimal ЦенаЗаЕдиницу { get; set; }
 
     /// <remarks/>
-    public bool ЦенаЗаЕдиницуSpecified { get; set; }
-
-    /// <remarks/>
     public decimal Количество { get; set; }
-
-    /// <remarks/>
-    public bool КоличествоSpecified { get; set; }
 
     /// <remarks/>
     public decimal Сумма { get; set; }
 
     /// <remarks/>
-    public bool СуммаSpecified { get; set; }
-
-    /// <remarks/>
-    public string Единица { get; set; }
-
-    /// <remarks/>
-    public string Коэффициент { get; set; }
-
-    /// <remarks/>
-    public required ЗначениеРеквизита[] ДополнительныеДанные { get; set; }
+    public ЕдиницаИзмерения? ЕдиницаИзмерения { get; set; }
 
     /// <remarks/>
     public string СтранаПроисхождения { get; set; }
@@ -200,7 +185,7 @@ public partial class ПодчиненныйДокументТовар : Това
     public required СтавкаСуммаНалога[] Налоги { get; set; }
 
     /// <remarks/>
-    public required ПодчиненныйДокументТоварСкидка[] Скидки { get; set; }
+    public required Скидка[] Скидки { get; set; }
 
     /// <remarks/>
     public required ДопРасход[] ДопРасходы { get; set; }
@@ -213,18 +198,10 @@ public partial class ПодчиненныйДокументТовар : Това
 }
 
 /// <remarks/>
-public partial class ПодчиненныйДокументТоварСкидка : Скидка
-{
-}
-
-/// <remarks/>
 public partial class ПодчиненныйДокументТоварСклад : Склад
 {
     /// <remarks/>
     public decimal Количество { get; set; }
-
-    /// <remarks/>
-    public bool КоличествоSpecified { get; set; }
 }
 
 /// <summary>
@@ -337,13 +314,7 @@ public partial class Цена
     public required string Валюта { get; set; }
 
     /// <remarks/>
-    public string? Единица { get; set; }
-
-    /// <remarks/>
-    public string? Коэффициент { get; set; }
-
-    /// <remarks/>
-    public required ЗначениеРеквизита[] ДополнительныеДанные { get; set; }
+    public ЕдиницаИзмерения? ЕдиницаИзмерения { get; set; }
 
     /// <summary>
     /// Минимальное количество товара в указанных единицах, для которого действует данная цена.
@@ -373,12 +344,7 @@ public partial class ТипЦены
 
     /// <remarks/>
     [System.Xml.Serialization.XmlElementAttribute("Налог")]
-    public ТипЦеныНалог[]? Налог { get; set; }
-}
-
-/// <remarks/>
-public partial class ТипЦеныНалог : Налог
-{
+    public Налог[]? Налог { get; set; }
 }
 
 /// <summary>
@@ -399,19 +365,10 @@ public partial class Свойство
     public ОбязательностьСвойствТип Обязательное { get; set; }
 
     /// <remarks/>
-    public bool ОбязательноеSpecified { get; set; }
-
-    /// <remarks/>
     public bool Множественное { get; set; }
 
     /// <remarks/>
-    public bool МножественноеSpecified { get; set; }
-
-    /// <remarks/>
     public ТипЗначенийТип ТипЗначений { get; set; }
-
-    /// <remarks/>
-    public bool ТипЗначенийSpecified { get; set; }
 
     /// <remarks/>
     public СвойствоВариантыЗначений? ВариантыЗначений { get; set; }
@@ -420,19 +377,10 @@ public partial class Свойство
     public bool ДляТоваров { get; set; }
 
     /// <remarks/>
-    public bool ДляТоваровSpecified { get; set; }
-
-    /// <remarks/>
     public bool ДляПредложений { get; set; }
 
     /// <remarks/>
-    public bool ДляПредложенийSpecified { get; set; }
-
-    /// <remarks/>
     public bool ДляДокументов { get; set; }
-
-    /// <remarks/>
-    public bool ДляДокументовSpecified { get; set; }
 }
 
 /// <remarks/>
@@ -454,107 +402,6 @@ public partial class СвойствоВариантыЗначенийСправ�
     /// <remarks/>
     public required string Значение { get; set; }
 }
-
-/// <summary>
-/// Описывает группу товаров в каталоге
-/// </summary>
-public partial class Группа
-{
-    /// <remarks/>
-    public required string Ид { get; set; }
-
-    /// <remarks/>
-    public required string Наименование { get; set; }
-
-    /// <remarks/>
-    public string? Описание { get; set; }
-
-    /// <remarks/>
-    public required Свойство[] Свойства { get; set; }
-
-    /// <remarks/>
-    public required Группа[] Группы { get; set; }
-}
-
-/// <remarks/>
-public partial class Представитель
-{
-    /// <remarks/>
-    public required string Ид { get; set; }
-
-    /// <remarks/>
-    public required string Наименование { get; set; }
-
-    /// <remarks/>
-    public string? Комментарий { get; set; }
-
-    /// <remarks/>
-    public Адрес? Адрес { get; set; }
-
-    /// <remarks/>
-    public required КонтактнаяИнформация[] Контакты { get; set; }
-
-    /// <remarks/>
-    public string? Отношение { get; set; }
-
-    /// <remarks/>
-    public РеквизитыФизЛица? РеквизитыФизЛица { get; set; }
-
-    /// <remarks/>
-    public РеквизитыЮрЛица? РеквизитыЮрЛица { get; set; }
-}
-
-/// <remarks/>
-public partial class КонтрагентОрганизация
-{
-    /// <remarks/>
-    public required string ОфициальноеНаименование { get; set; }
-
-    /// <remarks/>
-    public Адрес? ЮридическийАдрес { get; set; }
-
-    /// <remarks/>
-    public string? ИНН { get; set; }
-
-    /// <remarks/>
-    public string? КПП { get; set; }
-
-    /// <remarks/>
-    public string? ОсновнойВидДеятельности { get; set; }
-
-    /// <remarks/>
-    public string? ЕГРПО { get; set; }
-
-    /// <remarks/>
-    public string? ОКВЭД { get; set; }
-
-    /// <remarks/>
-    public string? ОКДП { get; set; }
-
-    /// <remarks/>
-    public string? ОКОПФ { get; set; }
-
-    /// <remarks/>
-    public string? ОКФС { get; set; }
-
-    /// <remarks/>
-    public string? ОКПО { get; set; }
-
-    /// <remarks/>
-    public DateOnly ДатаРегистрации { get; set; }
-
-    /// <remarks/>
-
-    public bool ДатаРегистрацииSpecified { get; set; }
-
-    /// <remarks/>
-    public Руководитель? Руководитель { get; set; }
-
-    /// <remarks/>
-    public required РасчетныйСчет[] РасчетныеСчета { get; set; }
-}
-
-
 
 /// <summary>
 /// Определяет хоз. операцию и реквизиты документа, а также роль предприятия в хоз операции
@@ -586,48 +433,40 @@ public partial class Документ
     public decimal Сумма { get; set; }
 
     /// <remarks/>
-    public required ДокументКонтрагент[] Контрагенты { get; set; }
+    public ДокументКонтрагент[] Контрагенты { get; set; }
 
     /// <remarks/>
-    public TimeOnly Время { get; set; }
+    public TimeOnly? Время { get; set; }
 
     /// <remarks/>
-
-    public bool ВремяSpecified { get; set; }
-
-    /// <remarks/>
-    public DateTime СрокПлатежа { get; set; }
-
-    /// <remarks/>
-
-    public bool СрокПлатежаSpecified { get; set; }
+    public DateTime? СрокПлатежа { get; set; }
 
     /// <remarks/>
     public string? Комментарий { get; set; }
 
     /// <remarks/>
-    public required СтавкаСуммаНалога[] Налоги { get; set; }
+    public СтавкаСуммаНалога[] Налоги { get; set; }
 
     /// <remarks/>
-    public required Скидка[] Скидки { get; set; }
+    public Скидка[] Скидки { get; set; }
 
     /// <remarks/>
-    public required ДопРасход[] ДопРасходы { get; set; }
+    public ДопРасход[] ДопРасходы { get; set; }
 
     /// <remarks/>
-    public required Склад[] Склады { get; set; }
+    public Склад[] Склады { get; set; }
 
     /// <remarks/>
-    public required ДокументТовар[] Товары { get; set; }
+    public ДокументТовар[] Товары { get; set; }
 
     /// <remarks/>
-    public required ЗначениеРеквизита[] ЗначенияРеквизитов { get; set; }
+    public ЗначениеРеквизита[] ЗначенияРеквизитов { get; set; }
 
     /// <remarks/>
-    public required Подписант[] Подписанты { get; set; }
+    public Подписант[] Подписанты { get; set; }
 
     /// <remarks/>
-    public required ПодчиненныйДокумент[] ПодчиненныеДокументы { get; set; }
+    public ПодчиненныйДокумент[] ПодчиненныеДокументы { get; set; }
 }
 
 /// <remarks/>
@@ -656,31 +495,13 @@ public partial class ДокументТовар : Товар
     public decimal ЦенаЗаЕдиницу { get; set; }
 
     /// <remarks/>
-
-    public bool ЦенаЗаЕдиницуSpecified { get; set; }
-
-    /// <remarks/>
     public decimal Количество { get; set; }
-
-    /// <remarks/>
-
-    public bool КоличествоSpecified { get; set; }
 
     /// <remarks/>
     public decimal Сумма { get; set; }
 
     /// <remarks/>
-
-    public bool СуммаSpecified { get; set; }
-
-    /// <remarks/>
-    public string? Единица { get; set; }
-
-    /// <remarks/>
-    public string? Коэффициент { get; set; }
-
-    /// <remarks/>
-    public required ЗначениеРеквизита[] ДополнительныеДанные { get; set; }
+    public ЕдиницаИзмерения? ЕдиницаИзмерения { get; set; }
 
     /// <remarks/>
     public string? СтранаПроисхождения { get; set; }
@@ -689,7 +510,7 @@ public partial class ДокументТовар : Товар
     public string? ГТД { get; set; }
 
     /// <remarks/>
-    public required ДокументТоварНалог[] Налоги { get; set; }
+    public СтавкаСуммаНалога[]? Налоги { get; set; }
 
     /// <remarks/>
     public required Скидка[] Скидки { get; set; }
@@ -704,16 +525,6 @@ public partial class ДокументТовар : Товар
     /// Склад, на котором доступен товар и остатки товара на складе
     /// </summary>
     public required ДокументТоварСклад[] Склады { get; set; }
-}
-
-/// <remarks/>
-public partial class ДокументТоварНалог : Налог
-{
-    /// <remarks/>
-    public decimal Сумма { get; set; }
-
-    /// <remarks/>
-    public required string Ставка { get; set; }
 }
 
 /// <summary>
@@ -732,9 +543,6 @@ public partial class ИзмененияПакетаПредложений
 
     /// <remarks/>
     public bool СодержитТолькоИзменения { get; set; }
-
-    /// <remarks/>
-    public bool СодержитТолькоИзмененияSpecified { get; set; }
 }
 
 /// <remarks/>
@@ -770,41 +578,6 @@ public partial class ИзмененияПакетаПредложенийПре�
 }
 
 /// <summary>
-/// Каталог товаров содержит перечень товаров.
-/// Может составляться разными предприятиями (например, каталог продукции фирмы «1С»).
-/// У каталога всегда определен владелец, а товары могут описываться по классификатору.
-/// </summary>
-public partial class Каталог
-{
-    /// <remarks/>
-    public required string Ид { get; set; }
-
-    /// <remarks/>
-    public string? ИдКлассификатора { get; set; }
-
-    /// <remarks/>
-    public required string Наименование { get; set; }
-
-    /// <remarks/>
-    public Контрагент? Владелец { get; set; }
-
-    /// <remarks/>
-    public required Товар[] Товары { get; set; }
-
-    /// <remarks/>
-    public string? Описание { get; set; }
-
-    /// <remarks/>
-    public required Подписант[] Подписанты { get; set; }
-
-    /// <remarks/>    
-    public bool СодержитТолькоИзменения { get; set; }
-
-    /// <remarks/>    
-    public bool СодержитТолькоИзмененияSpecified { get; set; }
-}
-
-/// <summary>
 /// Содержит перечень коммерческих предложений.
 /// Пакет предложений составляется по определенному (только одному) каталогу, а предложения в пакете могут быть описаны по классификатору.
 /// </summary>
@@ -823,16 +596,10 @@ public partial class ПакетПредложений
     public string? ИдКлассификатора { get; set; }
 
     /// <remarks/>
-    public DateTime ДействительноС { get; set; }
+    public DateOnly? ДействительноС { get; set; }
 
     /// <remarks/>
-    public bool ДействительноСSpecified { get; set; }
-
-    /// <remarks/>
-    public DateTime ДействительноДо { get; set; }
-
-    /// <remarks/>
-    public bool ДействительноДоSpecified { get; set; }
+    public DateOnly? ДействительноДо { get; set; }
 
     /// <remarks/>
     public string? Описание { get; set; }
@@ -856,10 +623,7 @@ public partial class ПакетПредложений
     public required Подписант[] Подписанты { get; set; }
 
     /// <remarks/>
-    public bool СодержитТолькоИзменения { get; set; }
-
-    /// <remarks/>
-    public bool СодержитТолькоИзмененияSpecified { get; set; }
+    public bool? СодержитТолькоИзменения { get; set; }
 }
 
 /// <remarks/>
@@ -880,9 +644,6 @@ public partial class ПакетПредложенийПредложение : Т
 
     /// <remarks/>
     public decimal Количество { get; set; }
-
-    /// <remarks/>
-    public bool КоличествоSpecified { get; set; }
 
     /// <remarks/>
     public ОстаткиПоСкладам[]? Склад { get; set; }

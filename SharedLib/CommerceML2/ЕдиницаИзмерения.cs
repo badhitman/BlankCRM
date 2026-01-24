@@ -1,8 +1,4 @@
-﻿////////////////////////////////////////////////
-// © https://github.com/badhitman - @FakeGov 
-////////////////////////////////////////////////
-
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace SharedLib.CommerceML2;
 
@@ -10,7 +6,7 @@ namespace SharedLib.CommerceML2;
 /// Определяет единицу измерения товара и коэффициент пересчета количества в базовую единицу.
 /// Если отсутствует, то используется базовая единица товара.
 /// </summary>
-public partial class ТоварБазоваяЕдиницаПересчет
+public partial class ЕдиницаИзмерения
 {
     /// <summary>
     /// Имя единицы измерения товара по ОКЕИ.
@@ -23,8 +19,7 @@ public partial class ТоварБазоваяЕдиницаПересчет
     /// </summary>
     public required string Коэффициент { get; set; }
 
-    /// <summary>
-    /// Содержит дополнительную информацию о единице измерения товара
-    /// </summary>
-    public ЗначениеРеквизита[]? ДополнительныеДанные { get; set; }
+    /// <remarks/>
+    public required ЗначениеРеквизита[] ДополнительныеДанные { get; set; }
 }
+#pragma warning restore CS8618 // Поле, не допускающее значения NULL, должно содержать значение, отличное от NULL, при выходе из конструктора. Рассмотрите возможность добавления модификатора "required" или объявления значения, допускающего значение NULL.
