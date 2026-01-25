@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsd:schema targetNamespace="urn:moo-sodi.ru:commerceml_sodi" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:cml="urn:moo-sodi.ru:commerceml_sodi" elementFormDefault="qualified" attributeFormDefault="unqualified" version="3.00" id="commerceml_sodi">
-	<!--Сложные типы-->
+	<!-- Сложные типы -->
 	<xsd:complexType name="GLN">
 		<xsd:annotation>
 			<xsd:documentation>Код в справочнике Ассоциации автоматической идентификации GS1 Global Location Number</xsd:documentation>
@@ -193,7 +193,7 @@
 			</xsd:restriction>
 		</xsd:simpleContent>
 	</xsd:complexType>
-	<!--Простые типы-->
+	<!-- Простые типы -->
 	<xsd:simpleType name="ВеличинаСтавкиНалога">
 		<xsd:annotation>
 			<xsd:documentation>Выражение величины ставки налога (в %)</xsd:documentation>
@@ -242,7 +242,7 @@
 			<xsd:enumeration value="НДС"/>
 		</xsd:restriction>
 	</xsd:simpleType>
-	<!--Глобальные элементы-->
+	<!-- Элементы -->
 	<xsd:element name="ВеличинаСтавкиНалога" type="cml:ВеличинаСтавкиНалога">
 		<xsd:annotation>
 			<xsd:documentation>Величина ставки налога</xsd:documentation>

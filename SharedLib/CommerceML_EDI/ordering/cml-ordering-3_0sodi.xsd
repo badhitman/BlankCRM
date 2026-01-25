@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsd:schema targetNamespace="urn:moo-sodi.ru:commerceml_sodi" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:cml="urn:moo-sodi.ru:commerceml_sodi" elementFormDefault="qualified" attributeFormDefault="unqualified" version="3.00" id="commerceml_sodi">
-	<xsd:include schemaLocation="cml-common-3_0sodi.xsd"/>
+	<xsd:include schemaLocation="../common/cml-common-3_0sodi.xsd"/>
 	<!-- Сложные типы -->
 	<xsd:complexType name="АкцептЗаказа">
 		<xsd:annotation>

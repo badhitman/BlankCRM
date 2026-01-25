@@ -47,6 +47,7 @@
   </Folder>
   <Folder Name="/Solution Items/">
     <File Path=".gitignore" />
+    <File Path="bin_obj_delete.ps1" />
     <File Path="CONTACT.md" />
     <File Path="README.md" />
     <Project Path="../HtmlGenerator/HtmlGenerator.csproj" />

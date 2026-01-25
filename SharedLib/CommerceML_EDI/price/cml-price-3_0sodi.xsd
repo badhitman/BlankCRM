@@ -2,7 +2,7 @@
 <!-- edited with XMLSPY v2004 rel. 2 U (http://www.xmlspy.com) by george (zzz) -->
 <!-- edited with XMLSpy v2006 sp1 U (http://www.altova.com) by george (zeves) -->
 <xsd:schema targetNamespace="urn:moo-sodi.ru:commerceml_sodi" xmlns:cml="urn:moo-sodi.ru:commerceml_sodi" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified" version="3.00" id="commerceml_sodi">
-	<xsd:include schemaLocation="cml-common-3_0sodi.xsd"/>
+	<xsd:include schemaLocation="../common/cml-common-3_0sodi.xsd"/>
 	<!-- Сложные типы -->
 	<xsd:complexType name="ЗапросПрайсЛист">
 		<xsd:annotation>
