@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v2004 rel. 2 U (http://www.xmlspy.com) by george (zzz) -->
+<!-- edited with XMLSpy v2006 sp1 U (http://www.altova.com) by george (zeves) -->
+<xsd:schema targetNamespace="urn:moo-sodi.ru:commerceml_sodi" xmlns:cml="urn:moo-sodi.ru:commerceml_sodi" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified" version="3.00" id="commerceml_sodi">
+	<xsd:include schemaLocation="cml-common-3.0sodi.xsd"/>
+	<!-- Коммерческие документы -->
+	<xsd:element name="ЗапросПрайсЛист" type="cml:ЗапросПрайсЛист"/>
+	<xsd:element name="ПрайсЛист" type="cml:ПрайсЛист"/>
+	<xsd:element name="ПрайсЛистКРаботе" type="cml:ПрайсЛистКРаботе"/>
+	<!--Элементы-->
+	<xsd:element name="Цена">
+		<xsd:annotation>
+			<xsd:documentation>Цена единицы товара</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="cml:СтоимостьТип"/>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="ТоварПрайЛист" type="cml:ТоварПрайсЛист">
+		<xsd:annotation>
+			<xsd:documentation>Элемент, определяющий строку заказа</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<!-- Типы коммерческих документов -->
+	<xsd:complexType name="ЗапросПрайсЛист">
+		<xsd:annotation>
+			<xsd:documentation>Документ "Запрос на предоставление прайс-листа" формируется клиентом и передается поставщику в случае необходимости получения данных о ценах товаров поставщика</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="cml:КоммерческийДокумент">
+				<xsd:sequence>
+					<xsd:element ref="cml:ДлительностьОжиданияОтвета"/>
+					<xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="ПрайсЛист">
+		<xsd:annotation>
+			<xsd:documentation>Документ "Прайс-лист" формируется поставщиком и передается клиенту в ответ на запрос на предоставление прайс-листа или в случае произошедших в прайс-листе изменений</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="cml:КоммерческийДокумент">
+				<xsd:sequence>
+					<xsd:element ref="cml:НомерИсходногоДокумента" minOccurs="0"/>
+					<xsd:element ref="cml:ДлительностьОжиданияОтвета"/>
+					<xsd:element name="ПолныйПрайсЛист" type="xsd:boolean" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Документ содержит полный прайс-лист</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="НачалоДействия" type="xsd:dateTime" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Дата и время начала действия спецификации</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="ОкончаниеДействия" type="xsd:dateTime" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Дата и время окончания действия спецификации</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="ТоварПрайсЛист" type="cml:ТоварПрайсЛист" maxOccurs="unbounded"/>
+					<xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="ПрайсЛистКРаботе">
+		<xsd:annotation>
+			<xsd:documentation>Документ "Прайс-лист, принятый к работе" формируется клиентом и передается поставщику в момент утверждения ценовых предложений поставщика</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="cml:КоммерческийДокумент">
+				<xsd:sequence>
+					<xsd:element ref="cml:НомерИсходногоДокумента"/>
+					<xsd:element name="НачалоДействия" type="xsd:dateTime" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Дата и время начала действия спецификации</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="ОкончаниеДействия" type="xsd:dateTime" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Дата и время окончания действия спецификации</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="ТоварПрайсЛист" type="cml:ТоварПрайсЛист" maxOccurs="unbounded"/>
+					<xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- Вспомогательные типы -->
+	<xsd:complexType name="ТоварПрайсЛист">
+		<xsd:annotation>
+			<xsd:documentation>Строка прайс-листа</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element ref="cml:ИдТовара" maxOccurs="unbounded"/>
+			<xsd:element ref="cml:Цена"/>
+			<xsd:element ref="cml:Примечание" minOccurs="0"/>
+			<xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+</xsd:schema>

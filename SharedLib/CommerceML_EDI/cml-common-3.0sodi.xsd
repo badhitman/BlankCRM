@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema targetNamespace="urn:moo-sodi.ru:commerceml_sodi" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:cml="urn:moo-sodi.ru:commerceml_sodi" elementFormDefault="qualified" attributeFormDefault="unqualified" version="3.00" id="commerceml_sodi">
+  <xsd:element name="ИдОтправителя" type="cml:ИдентификаторКонтрагента">
+    <xsd:annotation>
+      <xsd:documentation>Идентификатор отправителя документа. Используется:  GLN, ИННРФ, КонтрагентИД</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="ИдПолучателя" type="cml:ИдентификаторКонтрагента">
+    <xsd:annotation>
+      <xsd:documentation>Идентификатор получателя документа Используется:  GLN, ИННРФ, КонтрагентИД</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="НомерДокумента" type="cml:ИдентификаторДокумента">
+    <xsd:annotation>
+      <xsd:documentation>Уникальный номер документа в ИС отправителя. Используется: ДокументИД</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="МоментСоздания" type="xsd:dateTime">
+    <xsd:annotation>
+      <xsd:documentation>Дата и время создания документа</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="Примечание">
+    <xsd:annotation>
+      <xsd:documentation>Примечание</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleType>
+      <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="255"/>
+      </xsd:restriction>
+    </xsd:simpleType>
+  </xsd:element>
+  <xsd:element name="Стоимость" type="cml:СтоимостьТип">
+    <xsd:annotation>
+      <xsd:documentation>Элемент, определяющий стоимость</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="Сумма" type="cml:СуммаТип">
+    <xsd:annotation>
+      <xsd:documentation>Элемент, определяющий сумму</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="Количество" type="cml:КоличествоТип">
+    <xsd:annotation>
+      <xsd:documentation>Элемент представляющий количество</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="ИдТовара" type="cml:ИдентификаторТовара">
+    <xsd:annotation>
+      <xsd:documentation>Идентификаторы товара в системе получателя: GTIN, Артикул или любой уникальный в системе обмена код товара (от1 до 80 символов)</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="Налог" type="cml:СтоимостьНалогТип">
+    <xsd:annotation>
+      <xsd:documentation>Элемент, определяющий налог</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="ТипНалога" type="cml:ТипНалога">
+    <xsd:annotation>
+      <xsd:documentation>Элемент, определяющий тип налога</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="ВеличинаСтавкиНалога" type="cml:ВеличинаСтавкиНалога">
+    <xsd:annotation>
+      <xsd:documentation>Величина ставки налога</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="НомерИсходногоДокумента" type="cml:ИдентификаторДокумента">
+    <xsd:annotation>
+      <xsd:documentation>Номер исходного документа, на основании которого формируется данный документ </xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="ДлительностьОжиданияОтвета" type="xsd:duration">
+    <xsd:annotation>
+      <xsd:documentation>Период времени с момента создания документа, в течение которого ожидается реакция на данный документ.</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:complexType name="КоммерческийДокумент" abstract="true">
+    <xsd:annotation>
+      <xsd:documentation>Базовый тип для всех коммерческих документов</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element ref="cml:ИдОтправителя"/>
+      <xsd:element ref="cml:ИдПолучателя"/>
+      <xsd:element ref="cml:НомерДокумента"/>
+      <xsd:element ref="cml:МоментСоздания"/>
+      <xsd:element ref="cml:Примечание" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:anyAttribute namespace="##other" processContents="lax"/>
+    <!-- информация, общая для всех типов коммерческих документов -->
+  </xsd:complexType>
+  <!--Описание класса идентификаторов-->
+  <xsd:simpleType name="ЗначениеИдентификатора">
+    <xsd:restriction base="xsd:normalizedString">
+      <xsd:maxLength value="255"/>
+      <xsd:whiteSpace value="collapse"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="ИдентификаторДокумента" abstract="true">
+    <xsd:annotation>
+      <xsd:documentation>Базовый тип идентификаторов документа</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="cml:ЗначениеИдентификатора"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ДокументИД">
+    <xsd:annotation>
+      <xsd:documentation>Идентификатор документа</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:restriction base="cml:ИдентификаторДокумента">
+        <xsd:maxLength value="80"/>
+      </xsd:restriction>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ИдентификаторКонтрагента" abstract="true">
+    <xsd:annotation>
+      <xsd:documentation>Базовый тип идентификаторов контрагента</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="cml:ЗначениеИдентификатора"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="КонтрагентИД">
+    <xsd:annotation>
+      <xsd:documentation>Идентификатор контрагента, представленный в виде UUID.  Universally Unique Identifier (http://www.opengroup.org/dce/info/draft-leach-uuids-guids-01.txt)</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:restriction base="cml:ИдентификаторКонтрагента">
+        <xsd:pattern value="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"/>
+      </xsd:restriction>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="GLN">
+    <xsd:annotation>
+      <xsd:documentation>Код в справочнике Ассоциации автоматической идентификации GS1 Global Location Number</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:restriction base="cml:ИдентификаторКонтрагента">
+        <xsd:pattern value="\d{13}"/>
+      </xsd:restriction>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ИННРФ">
+    <xsd:annotation>
+      <xsd:documentation>Номер налогоплательщика РФ</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:restriction base="cml:ИдентификаторКонтрагента">
+        <xsd:pattern value="[0-9]{10}"/>
+        <xsd:pattern value="[0-9]{12}"/>
+      </xsd:restriction>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ИдентификаторТовара" abstract="true">
+    <xsd:annotation>
+      <xsd:documentation>Базовый тип идентификаторов товара</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="cml:ЗначениеИдентификатора"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ТоварИД">
+    <xsd:annotation>
+      <xsd:documentation>
+        Идентификатор товара
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:restriction base="cml:ИдентификаторТовара">
+        <xsd:minLength value="1"/>
+        <xsd:maxLength value="80"/>
+      </xsd:restriction>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="GTIN">
+    <xsd:annotation>
+      <xsd:documentation>Код товара в справочнике Ассоциации автоматической идентификации GS1 Global Trade Item Number</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:restriction base="cml:ИдентификаторТовара">
+        <xsd:pattern value="\d{14}"/>
+      </xsd:restriction>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="КлассификаторТип" abstract="true">
+    <xsd:annotation>
+      <xsd:documentation>Базовый тип классификаторов</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="cml:ЗначениеИдентификатора"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:element name="ОКЕИ" type="cml:ОКЕИ">
+    <xsd:annotation>
+      <xsd:documentation>Код по Общероссийскому классификатору единиц измерения</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="ОКП" type="cml:ОКП">
+    <xsd:annotation>
+      <xsd:documentation>Код по Общероссийскиому классификатору продукции</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="ОКВЭД" type="cml:ОКВЭД">
+    <xsd:annotation>
+      <xsd:documentation>Код по Общероссийскому классификатору внешнеэкономической деятельности</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="ИСО3166" type="cml:ИСО3166">
+    <xsd:annotation>
+      <xsd:documentation>3-значный числовой код страны в  соответствии классификатором [МК Стран мира]</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:complexType name="ОКЕИ">
+    <xsd:annotation>
+      <xsd:documentation>Представление Кода по Общероссийскому классификатору единиц измерения ОКЕИ</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:restriction base="cml:КлассификаторТип">
+        <xsd:pattern value="[0-9]{3}"/>
+      </xsd:restriction>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ОКП">
+    <xsd:annotation>
+      <xsd:documentation>Представление Кода по Общероссийскому классификатору продукции ОКП</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:restriction base="cml:КлассификаторТип">
+        <xsd:pattern value="[0-9]{6}"/>
+      </xsd:restriction>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ОКВЭД">
+    <xsd:annotation>
+      <xsd:documentation>Представление Кода по Общероссийскому классификатору внешнеэкономической деятельности ОКВЭД</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:restriction base="cml:КлассификаторТип">
+        <xsd:pattern value="[0-9]{2}.[0-9]{2}.[0-9]{2}"/>
+      </xsd:restriction>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ИСО3166">
+    <xsd:annotation>
+      <xsd:documentation>Представление числового кода страны в  соответствии классификатором [МК Стран мира]</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:restriction base="cml:КлассификаторТип">
+        <xsd:pattern value="[0-9]{3}"/>
+      </xsd:restriction>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="СуммаТип">
+    <xsd:annotation>
+      <xsd:documentation>Определяет сумму и код валюты</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="cml:ВеличинаСуммыТип">
+        <xsd:attribute name="Валюта" type="cml:КодВалютыТип" use="optional">
+          <xsd:annotation>
+            <xsd:documentation>Атрибут, представляющий код валюты</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="СтоимостьТип">
+    <xsd:annotation>
+      <xsd:documentation>Каждый объект типа СтоимостьТип может включать несколько объектов Налог, имеющих разное значение элемента "ТипНалога". Все применимые налоги должны быть специфицированы в обязательном порядке. Отсутсвие специфицированного налога означает, что применимых налогов нет.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="Сумма" type="cml:СуммаТип"/>
+      <xsd:element name="Налог" type="cml:СтоимостьНалогТип" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <!--Простые типы-->
+  <xsd:simpleType name="КодВалютыТип">
+    <xsd:annotation>
+      <xsd:documentation>3-значный числовой код валюты в соответствии с классификатором [ОК Валют]</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:integer">
+      <xsd:totalDigits value="3"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="ТипНалога">
+    <xsd:annotation>
+      <xsd:documentation>Строка-идентификатор налога</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:token">
+      <xsd:enumeration value="НДС"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="КоличествоТип">
+    <xsd:annotation>
+      <xsd:documentation>Выражение количества</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:decimal">
+      <xsd:fractionDigits value="3"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="ВеличинаСуммыТип">
+    <xsd:annotation>
+      <xsd:documentation>Допустимая величина выражения суммы</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:decimal">
+      <xsd:totalDigits value="18"/>
+      <xsd:fractionDigits value="2"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="ВеличинаСтавкиНалога">
+    <xsd:annotation>
+      <xsd:documentation>Выражение величины ставки налога (в %)</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:decimal">
+      <xsd:minInclusive value="0"/>
+      <xsd:fractionDigits value="2"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="СтоимостьНалогТип">
+    <xsd:annotation>
+      <xsd:documentation>Определяет тип налога, величину ставки налога, сумму налога и включение налога в указанную стоимость</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element ref="cml:ТипНалога"/>
+      <xsd:element ref="cml:ВеличинаСтавкиНалога"/>
+      <xsd:element ref="cml:Сумма">
+        <xsd:annotation>
+          <xsd:documentation>Сумма налога, рассчитанная по указанной ставке</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ВключеноВСтоимость" type="xsd:boolean">
+        <xsd:annotation>
+          <xsd:documentation>Указывает, включен ли данный налог в указанную стоимость</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+</xsd:schema>

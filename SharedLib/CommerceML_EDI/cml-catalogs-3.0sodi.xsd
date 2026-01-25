@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema targetNamespace="urn:moo-sodi.ru:commerceml_sodi" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:cml="urn:moo-sodi.ru:commerceml_sodi" elementFormDefault="qualified" attributeFormDefault="unqualified" version="3.00" id="commerceml_sodi">
+	<xsd:include schemaLocation="cml-common-3.0sodi.xsd"/>
+	<!-- Коммерческие документы -->
+	<xsd:element name="ЗапросКаталога" type="cml:ЗапросКаталога">
+		<xsd:annotation>
+			<xsd:documentation>Документ "Запрос на предоставление каталога товаров" формируется клиентом и передается поставщику в случае необходимости получения данных о товаре</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="КаталогТоваров" type="cml:КаталогТоваров">
+		<xsd:annotation>
+			<xsd:documentation>Документ "Каталог товаров" формируется поставщиком и передается клиенту в ответ на запрос на предоставление каталога товаров или в случае изменения каталога товаров</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="ТоварКРаботе" type="cml:ТоварКРаботе">
+		<xsd:annotation>
+			<xsd:documentation>Документ "Список принятых к работе товаров" формируется клиентом и передается поставщику после обработки документа "Каталог товаров". </xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="Наименование" type="xsd:string">
+		<xsd:annotation>
+			<xsd:documentation>Элемент, определяюший наименование</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="ИдТовараПоставщика" type="cml:ИдентификаторТовара">
+		<xsd:annotation>
+			<xsd:documentation>Идентификаторы товара в ИС поставщика</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="ИдТовараКлиента" type="cml:ИдентификаторТовара">
+		<xsd:annotation>
+			<xsd:documentation>Идентификаторы товара в ИС клиента. Поле заполняется в случае если клиент уже передавал поставщику данные о кодах данного товара в своей ИС</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="ШтриховойКод" type="cml:ИдентификаторТовара">
+		<xsd:annotation>
+			<xsd:documentation> Штриховой код товара</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:group name="КлассификаторТовараГруппа">
+		<xsd:annotation>
+			<xsd:documentation>Классификация товара, как минимум по ОКЕИ, ОКП, ОКВЭД, ISO 3166</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element ref="cml:ОКЕИ"/>
+			<xsd:element ref="cml:ОКП"/>
+			<xsd:element ref="cml:ИСО3166"/>
+			<xsd:element ref="cml:ОКВЭД" minOccurs="0"/>
+			<xsd:element name="КлассификаторТовара" type="cml:КлассификаторТип" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>Классификация товара в альтернативных классификаторах</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:group>
+	<xsd:group name="ИдТовараГруппа">
+		<xsd:annotation>
+			<xsd:documentation>Группа элементов для идентификации товара</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element ref="cml:ИдТовараПоставщика" maxOccurs="unbounded"/>
+			<xsd:element ref="cml:ИдТовараКлиента" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element ref="cml:ШтриховойКод" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:group ref="cml:КлассификаторТовараГруппа"/>
+		</xsd:sequence>
+	</xsd:group>
+	<!-- Типы коммерческих документов -->
+	<xsd:complexType name="ЗапросКаталога">
+		<xsd:annotation>
+			<xsd:documentation>Тип документа "Запрос на предоставление каталога товаров" </xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="cml:КоммерческийДокумент">
+				<xsd:sequence>
+					<xsd:element ref="cml:ДлительностьОжиданияОтвета">
+						<xsd:annotation>
+							<xsd:documentation>Период времени с момента создания документа, в течение которого ожидается реакция на данный документ.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="КаталогТоваров">
+		<xsd:annotation>
+			<xsd:documentation>Тип документа "Каталог товаров" </xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="cml:КоммерческийДокумент">
+				<xsd:sequence>
+					<xsd:element ref="cml:НомерИсходногоДокумента" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Номер документа, инициировавшего данный. В данном случае номер запроса на предоставление каталога товаров</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element ref="cml:ДлительностьОжиданияОтвета">
+						<xsd:annotation>
+							<xsd:documentation>Период времени с момента создания документа, в течение которого ожидается реакция на данный документ.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="ЭтоПолныйКаталог" type="xsd:boolean" minOccurs="0"/>
+					<xsd:element name="Товар" type="cml:СтрокаКаталога" maxOccurs="unbounded"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="ТоварКРаботе">
+		<xsd:annotation>
+			<xsd:documentation>Тип документа "Каталог товаров" </xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="cml:КоммерческийДокумент">
+				<xsd:sequence>
+					<xsd:element ref="cml:НомерИсходногоДокумента">
+						<xsd:annotation>
+							<xsd:documentation>Номер документа, инициировавшего данный. В данном случае номер запроса на предоставление каталога товаров</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="Товар" type="cml:СтрокаТовараКРаботе" maxOccurs="unbounded"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- Вспомогательные типы -->
+	<xsd:complexType name="СтрокаКаталога">
+		<xsd:annotation>
+			<xsd:documentation>Информация о единице товара, присутствующей в каталоге</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:group ref="cml:ИдТовараГруппа"/>
+			<xsd:element ref="cml:Наименование">
+				<xsd:annotation>
+					<xsd:documentation>Название товара в ИС поставщика</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ТорговаяМарка">
+				<xsd:annotation>
+					<xsd:documentation>Название торговой марки, бренд</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string"/>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="Производитель">
+				<xsd:annotation>
+					<xsd:documentation>Производитель товара</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string"/>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="Описание" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Произвольное описание товара, включающее в себя свойства, отличающие товар от другого</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string"/>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="ВесНетто" type="cml:ВесТип" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Чистый вес товара</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ВесБрутто" type="cml:ВесТип" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Вес товара с упаковкой</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ВысотаСлояТовара" type="cml:Габариты" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Высота слоя товара на стандартной Евро-паллете (1200х800)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ВысотаТовара" type="cml:Габариты" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Высота товара в метрах</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ШиринаТовара" type="cml:Габариты" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Ширина товара в метрах</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ГлубинаТовара" type="cml:Габариты" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Глубина товара в метрах</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ОбъемТовара" type="cml:ОбъемТип" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Объем в м3</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="МинКоличествоДляЗаказа" type="cml:КоличествоТип" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Минимальное количество товара к поставке</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="КоличествоВСлоеНаЕвропалете" type="cml:КоличествоТип" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Количество товара в одном слое на стандартной Евро-паллете (1200х800)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="СрокХранения" type="xsd:duration" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Срок хранения товара с момента его изготовления в днях</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ТемператураХранения" type="xsd:integer" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Оптимальная температура хранения в градусах Цельсия</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Кратность" type="cml:КратностьТип" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Количество товара в упаковке нижнего уровня</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="КоличесвоЕдиницОбъектаВерхнегоУровня" type="cml:КоличествоТип" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Количество единиц в объекте верхнего уровня</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element ref="cml:Примечание" minOccurs="0"/>
+			<xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="СтрокаТовараКРаботе">
+		<xsd:annotation>
+			<xsd:documentation>Информация о единице товара, принятой клиентом к работе во взаимодействии с поставщиком</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element ref="cml:ИдТовараКлиента">
+				<xsd:annotation>
+					<xsd:documentation>Идентификатор товара в ИС клиента. </xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element ref="cml:ИдТовараПоставщика" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>Идентификаторы товара в ИС поставщика, в том числе универсальные идентификаторы (штрих-код)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element ref="cml:Наименование">
+				<xsd:annotation>
+					<xsd:documentation>Название товара в ИС клиента</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="КоэффициентПересчета" type="cml:КратностьТип" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Коэффициент пересчета (отношение учетной единицы измерения поставщика к учетной единице измерения клиента)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element ref="cml:Примечание" minOccurs="0"/>
+			<xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:simpleType name="ВесТип">
+		<xsd:annotation>
+			<xsd:documentation>Представление веса товара</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:decimal">
+			<xsd:fractionDigits value="3"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="Габариты">
+		<xsd:annotation>
+			<xsd:documentation>Представление габаритных размеров товара</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:decimal">
+			<xsd:fractionDigits value="2"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="ОбъемТип">
+		<xsd:annotation>
+			<xsd:documentation>Представление объема товара</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:decimal">
+			<xsd:fractionDigits value="3"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="КратностьТип">
+		<xsd:annotation>
+			<xsd:documentation>Выражение кратности</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:decimal">
+			<xsd:fractionDigits value="3"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+</xsd:schema>
