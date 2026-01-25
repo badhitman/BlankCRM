@@ -1,4 +1,8 @@
-﻿using System.ComponentModel;
+﻿////////////////////////////////////////////////
+// © https://github.com/badhitman - @FakeGov 
+////////////////////////////////////////////////
+
+using System.ComponentModel;
 
 namespace SharedLib.CommerceML2;
 

@@ -4,14 +4,9 @@
 
 namespace SharedLib.CommerceML2;
 
-/// <summary>
-/// Пол (мужской, женский)
-/// </summary>
-public enum ПолТип
+/// <remarks/>
+public partial class ПодчиненныйДокументТоварСклад : Склад
 {
     /// <remarks/>
-    М,
-
-    /// <remarks/>
-    Ж,
+    public decimal Количество { get; set; }
 }
