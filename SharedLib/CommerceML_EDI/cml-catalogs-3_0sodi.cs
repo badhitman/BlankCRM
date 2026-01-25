@@ -1,4 +1,8 @@
-﻿/// <remarks/>
+﻿////////////////////////////////////////////////
+// © https://github.com/badhitman - @FakeGov 
+////////////////////////////////////////////////
+
+/// <remarks/>
 [System.Xml.Serialization.XmlIncludeAttribute(typeof(ИННРФ))]
 [System.Xml.Serialization.XmlIncludeAttribute(typeof(GLN))]
 [System.Xml.Serialization.XmlIncludeAttribute(typeof(КонтрагентИД))]
