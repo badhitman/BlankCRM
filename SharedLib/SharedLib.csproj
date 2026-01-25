@@ -17,14 +17,12 @@
 
 	<ItemGroup>
 	  <Compile Remove="CommerceML_EDI\cml-catalogs-3_0sodi.cs" />
-	  <Compile Remove="CommerceML_EDI\cml-common-3_0sodi.cs" />
 	  <Compile Remove="CommerceML_EDI\cml-delivery-3_0sodi.cs" />
 	  <Compile Remove="CommerceML_EDI\cml-invoice-3_0sodi.cs" />
 	  <Compile Remove="CommerceML_EDI\cml-ordering-3_0sodi.cs" />
 	  <Compile Remove="CommerceML_EDI\cml-price-3_0sodi.cs" />
 	
 	  <None Include="CommerceML_EDI\cml-catalogs-3_0sodi.cs" />
-	  <None Include="CommerceML_EDI\cml-common-3_0sodi.cs" />
 	  <None Include="CommerceML_EDI\cml-delivery-3_0sodi.cs" />
 	  <None Include="CommerceML_EDI\cml-invoice-3_0sodi.cs" />
 	  <None Include="CommerceML_EDI\cml-ordering-3_0sodi.cs" />

@@ -1,136 +1,134 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsd:schema targetNamespace="urn:moo-sodi.ru:commerceml_sodi" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:cml="urn:moo-sodi.ru:commerceml_sodi" elementFormDefault="qualified" attributeFormDefault="unqualified" version="3.00" id="commerceml_sodi">
-  <xsd:include schemaLocation="cml-common-3_0sodi.xsd"/>
-  <!-- Коммерческие документы -->
-  <xsd:element name="Заказ" type="cml:Заказ">
-    <xsd:annotation>
-      <xsd:documentation>Документ "Заказ" формируется клиентом и передается поставщику</xsd:documentation>
-    </xsd:annotation>
-  </xsd:element>
-  <xsd:element name="АкцептЗаказа" type="cml:АкцептЗаказа">
-    <xsd:annotation>
-      <xsd:documentation>Документ "Акцепт заказа" формируется поставщиком и передается клиенту в ответ на заказ</xsd:documentation>
-    </xsd:annotation>
-  </xsd:element>
-  <xsd:element name="РеджектЗаказа" type="cml:РеджектЗаказа">
-    <xsd:annotation>
-      <xsd:documentation>Документ "Реджект заказа" формируется поставщиком и передается клиенту в ответ на заказ</xsd:documentation>
-    </xsd:annotation>
-  </xsd:element>
-  <!--Элементы-->
-  <xsd:element name="ДатаВремяДоставки" type="xsd:dateTime">
-    <xsd:annotation>
-      <xsd:documentation>Дата и время, на которые ожидается доставка товара</xsd:documentation>
-    </xsd:annotation>
-  </xsd:element>
-  <xsd:element name="ДлительностьОжиданияДоставки" type="xsd:duration">
-    <xsd:annotation>
-      <xsd:documentation>Длительность ожидания доставки</xsd:documentation>
-    </xsd:annotation>
-  </xsd:element>
-  <xsd:element name="ДлительностьОжиданияРеакции" type="xsd:duration">
-    <xsd:annotation>
-      <xsd:documentation>Период времени с момента создания документа, в течение которого ожидается реакция на документ</xsd:documentation>
-    </xsd:annotation>
-  </xsd:element>
-  <xsd:element name="ИдПолучателяТовара" type="cml:ИдентификаторКонтрагента">
-    <xsd:annotation>
-      <xsd:documentation>Идентификатор получателя товара</xsd:documentation>
-    </xsd:annotation>
-  </xsd:element>
-  <xsd:element name="Товар" type="cml:СтрокаЗаказа">
-    <xsd:annotation>
-      <xsd:documentation>Элемент, определяющий строку заказа</xsd:documentation>
-    </xsd:annotation>
-  </xsd:element>
-  <!-- Типы коммерческих документов -->
-  <xsd:complexType name="Заказ">
-    <xsd:annotation>
-      <xsd:documentation>Тип окумента "Заказ" </xsd:documentation>
-    </xsd:annotation>
-    <xsd:complexContent>
-      <xsd:extension base="cml:КоммерческийДокумент">
-        <xsd:sequence>
-          <xsd:element ref="cml:ДлительностьОжиданияОтвета"/>
-          <xsd:element name="ИдСклада" type="cml:ИдентификаторКонтрагента">
-            <xsd:annotation>
-              <xsd:documentation>Идентификатор места доставки товара</xsd:documentation>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element name="АдресСклада" minOccurs="0">
-            <xsd:simpleType>
-              <xsd:restriction base="xsd:string">
-                <xsd:maxLength value="255"/>
-              </xsd:restriction>
-            </xsd:simpleType>
-          </xsd:element>
-          <xsd:element ref="cml:ИдПолучателяТовара" minOccurs="0">
-            <xsd:annotation>
-              <xsd:documentation>Идентификатор получателя товара</xsd:documentation>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element ref="cml:ДатаВремяДоставки"/>
-          <xsd:element ref="cml:ДлительностьОжиданияДоставки"/>
-          <xsd:element ref="cml:Товар" maxOccurs="unbounded"/>
-          <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
-        </xsd:sequence>
-      </xsd:extension>
-    </xsd:complexContent>
-  </xsd:complexType>
-  <xsd:complexType name="АкцептЗаказа">
-    <xsd:annotation>
-      <xsd:documentation>Тип документа "Акцепт заказа" </xsd:documentation>
-    </xsd:annotation>
-    <xsd:complexContent>
-      <xsd:extension base="cml:КоммерческийДокумент">
-        <xsd:sequence>
-          <xsd:element ref="cml:НомерИсходногоДокумента">
-            <xsd:annotation>
-              <xsd:documentation>Номер акцептуемого заказа</xsd:documentation>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
-        </xsd:sequence>
-      </xsd:extension>
-    </xsd:complexContent>
-  </xsd:complexType>
-  <xsd:complexType name="РеджектЗаказа">
-    <xsd:annotation>
-      <xsd:documentation>Тип документа "Реджект заказа" </xsd:documentation>
-    </xsd:annotation>
-    <xsd:complexContent>
-      <xsd:extension base="cml:КоммерческийДокумент">
-        <xsd:sequence>
-          <xsd:element ref="cml:НомерИсходногоДокумента">
-            <xsd:annotation>
-              <xsd:documentation>Номер исходного заказа клиента</xsd:documentation>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element ref="cml:ДлительностьОжиданияРеакции"/>
-          <xsd:element ref="cml:ДатаВремяДоставки"/>
-          <xsd:element ref="cml:ДлительностьОжиданияДоставки"/>
-          <xsd:element name="ПревышениеЛимита" type="cml:СуммаТип" minOccurs="0">
-            <xsd:annotation>
-              <xsd:documentation>Сумма превышения клиентом кредитного лимита</xsd:documentation>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element ref="cml:Товар" minOccurs="0" maxOccurs="unbounded"/>
-          <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
-        </xsd:sequence>
-      </xsd:extension>
-    </xsd:complexContent>
-  </xsd:complexType>
-  <!-- Вспомогательные типы -->
-  <xsd:complexType name="СтрокаЗаказа">
-    <xsd:annotation>
-      <xsd:documentation>Информация о единице товара, присутствующей в заказе</xsd:documentation>
-    </xsd:annotation>
-    <xsd:sequence>
-      <xsd:element ref="cml:ИдТовара"/>
-      <xsd:element ref="cml:Количество"/>
-      <xsd:element ref="cml:Стоимость" minOccurs="0"/>
-      <xsd:element ref="cml:Примечание" minOccurs="0"/>
-      <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
-    </xsd:sequence>
-  </xsd:complexType>
+	<xsd:include schemaLocation="cml-common-3_0sodi.xsd"/>
+	<!-- Сложные типы -->
+	<xsd:complexType name="АкцептЗаказа">
+		<xsd:annotation>
+			<xsd:documentation>Тип документа "Акцепт заказа" </xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="cml:КоммерческийДокумент">
+				<xsd:sequence>
+					<xsd:element ref="cml:НомерИсходногоДокумента">
+						<xsd:annotation>
+							<xsd:documentation>Номер акцептуемого заказа</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="Заказ">
+		<xsd:annotation>
+			<xsd:documentation>Тип окумента "Заказ" </xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="cml:КоммерческийДокумент">
+				<xsd:sequence>
+					<xsd:element ref="cml:ДлительностьОжиданияОтвета"/>
+					<xsd:element name="ИдСклада" type="cml:ИдентификаторКонтрагента">
+						<xsd:annotation>
+							<xsd:documentation>Идентификатор места доставки товара</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="АдресСклада" minOccurs="0">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="255"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element ref="cml:ИдПолучателяТовара" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Идентификатор получателя товара</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element ref="cml:ДатаВремяДоставки"/>
+					<xsd:element ref="cml:ДлительностьОжиданияДоставки"/>
+					<xsd:element ref="cml:Товар" maxOccurs="unbounded"/>
+					<xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="РеджектЗаказа">
+		<xsd:annotation>
+			<xsd:documentation>Тип документа "Реджект заказа" </xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="cml:КоммерческийДокумент">
+				<xsd:sequence>
+					<xsd:element ref="cml:НомерИсходногоДокумента">
+						<xsd:annotation>
+							<xsd:documentation>Номер исходного заказа клиента</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element ref="cml:ДлительностьОжиданияРеакции"/>
+					<xsd:element ref="cml:ДатаВремяДоставки"/>
+					<xsd:element ref="cml:ДлительностьОжиданияДоставки"/>
+					<xsd:element name="ПревышениеЛимита" type="cml:СуммаТип" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Сумма превышения клиентом кредитного лимита</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element ref="cml:Товар" minOccurs="0" maxOccurs="unbounded"/>
+					<xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="СтрокаЗаказа">
+		<xsd:annotation>
+			<xsd:documentation>Информация о единице товара, присутствующей в заказе</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element ref="cml:ИдТовара"/>
+			<xsd:element ref="cml:Количество"/>
+			<xsd:element ref="cml:Стоимость" minOccurs="0"/>
+			<xsd:element ref="cml:Примечание" minOccurs="0"/>
+			<xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<!--Элементы-->
+	<xsd:element name="АкцептЗаказа" type="cml:АкцептЗаказа">
+		<xsd:annotation>
+			<xsd:documentation>Документ "Акцепт заказа" формируется поставщиком и передается клиенту в ответ на заказ</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="ДатаВремяДоставки" type="xsd:dateTime">
+		<xsd:annotation>
+			<xsd:documentation>Дата и время, на которые ожидается доставка товара</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="ДлительностьОжиданияДоставки" type="xsd:duration">
+		<xsd:annotation>
+			<xsd:documentation>Длительность ожидания доставки</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="ДлительностьОжиданияРеакции" type="xsd:duration">
+		<xsd:annotation>
+			<xsd:documentation>Период времени с момента создания документа, в течение которого ожидается реакция на документ</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="Заказ" type="cml:Заказ">
+		<xsd:annotation>
+			<xsd:documentation>Документ "Заказ" формируется клиентом и передается поставщику</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="ИдПолучателяТовара" type="cml:ИдентификаторКонтрагента">
+		<xsd:annotation>
+			<xsd:documentation>Идентификатор получателя товара</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="РеджектЗаказа" type="cml:РеджектЗаказа">
+		<xsd:annotation>
+			<xsd:documentation>Документ "Реджект заказа" формируется поставщиком и передается клиенту в ответ на заказ</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="Товар" type="cml:СтрокаЗаказа">
+		<xsd:annotation>
+			<xsd:documentation>Элемент, определяющий строку заказа</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
 </xsd:schema>

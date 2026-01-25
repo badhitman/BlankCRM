@@ -1,60 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <xsd:schema targetNamespace="urn:moo-sodi.ru:commerceml_sodi" xmlns:cml="urn:moo-sodi.ru:commerceml_sodi" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified" version="3.00" id="commerceml_sodi">
 	<xsd:include schemaLocation="cml-common-3_0sodi.xsd"/>
-	<!-- Коммерческие документы -->
-	<xsd:element name="СчетФактура" type="cml:СчетФактура">
-		<xsd:annotation>
-			<xsd:documentation>Документ "Счет-фактура" формируется поставщиком и передается клиенту</xsd:documentation>
-		</xsd:annotation>
-	</xsd:element>
-	<xsd:element name="АкцептСчетФактура" type="cml:АкцептСчетФактура">
-		<xsd:annotation>
-			<xsd:documentation>Документ "Акцепт счета-фактуры" формируется клиентом  и передается поставщику в ответ на документ "Счет-фактура"</xsd:documentation>
-		</xsd:annotation>
-	</xsd:element>
-	<xsd:element name="РеджектСчетФактура" type="cml:РеджектСчетФактура">
-		<xsd:annotation>
-			<xsd:documentation>Документ "Реджект  счета-фактуры" формируется клиентом  и передается поставщику в ответ на документ "Счет-фактура"</xsd:documentation>
-		</xsd:annotation>
-	</xsd:element>
-	<!--Элементы-->
-  <!-- Фейгин: уже объявлено в cml-common
-	<xsd:element name="Стоимость" type="cml:СтоимостьТип">
-		<xsd:annotation>
-			<xsd:documentation>Элемент, определяющий стоимость</xsd:documentation>
-		</xsd:annotation>
-	</xsd:element>
-  -->
-	<xsd:element name="СтрокаСчетФактура" type="cml:СтрокаСчетФактура">
-		<xsd:annotation>
-			<xsd:documentation>Элемент, определяющий строки ("тело документа")</xsd:documentation>
-		</xsd:annotation>
-	</xsd:element>
-	<!-- Типы коммерческих документов -->
-	<xsd:complexType name="СчетФактура">
-		<xsd:annotation>
-			<xsd:documentation>Тип документа "Счет-фактура" </xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:extension base="cml:КоммерческийДокумент">
-				<xsd:sequence>
-					<xsd:element name="НомерСчетФактураПоставщик" type="cml:ИдентификаторДокумента">
-						<xsd:annotation>
-							<xsd:documentation>Номер счета-фактуры в ИС поставщика</xsd:documentation>
-						</xsd:annotation>
-					</xsd:element>
-					<xsd:element name="ДатаСчетФактураПоставщик" type="xsd:dateTime">
-						<xsd:annotation>
-							<xsd:documentation>Дата счета-фактуры в ИС поставщика</xsd:documentation>
-						</xsd:annotation>
-					</xsd:element>
-					<xsd:element ref="cml:ДлительностьОжиданияОтвета"/>
-					<xsd:element ref="cml:СтрокаСчетФактура" maxOccurs="unbounded"/>
-					<xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
+	<!-- Сложные типы -->
 	<xsd:complexType name="АкцептСчетФактура">
 		<xsd:annotation>
 			<xsd:documentation>Тип документа "Акцепт счета-фактуры" </xsd:documentation>
@@ -99,7 +46,6 @@
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
-	<!-- Вспомогательные типы -->
 	<xsd:complexType name="СтрокаСчетФактура">
 		<xsd:annotation>
 			<xsd:documentation>Информация о единице товара, присутствующей в счете-фактуре</xsd:documentation>
@@ -121,4 +67,55 @@
 			<xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
 		</xsd:sequence>
 	</xsd:complexType>
+	<xsd:complexType name="СчетФактура">
+		<xsd:annotation>
+			<xsd:documentation>Тип документа "Счет-фактура" </xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="cml:КоммерческийДокумент">
+				<xsd:sequence>
+					<xsd:element name="НомерСчетФактураПоставщик" type="cml:ИдентификаторДокумента">
+						<xsd:annotation>
+							<xsd:documentation>Номер счета-фактуры в ИС поставщика</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="ДатаСчетФактураПоставщик" type="xsd:dateTime">
+						<xsd:annotation>
+							<xsd:documentation>Дата счета-фактуры в ИС поставщика</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element ref="cml:ДлительностьОжиданияОтвета"/>
+					<xsd:element ref="cml:СтрокаСчетФактура" maxOccurs="unbounded"/>
+					<xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- Элементы -->
+	<xsd:element name="АкцептСчетФактура" type="cml:АкцептСчетФактура">
+		<xsd:annotation>
+			<xsd:documentation>Документ "Акцепт счета-фактуры" формируется клиентом  и передается поставщику в ответ на документ "Счет-фактура"</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="РеджектСчетФактура" type="cml:РеджектСчетФактура">
+		<xsd:annotation>
+			<xsd:documentation>Документ "Реджект  счета-фактуры" формируется клиентом  и передается поставщику в ответ на документ "Счет-фактура"</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="СтрокаСчетФактура" type="cml:СтрокаСчетФактура">
+		<xsd:annotation>
+			<xsd:documentation>Элемент, определяющий строки ("тело документа")</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="СчетФактура" type="cml:СчетФактура">
+		<xsd:annotation>
+			<xsd:documentation>Документ "Счет-фактура" формируется поставщиком и передается клиенту</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<!-- Фейгин: уже объявлено в cml-common
+	<xsd:element name="Стоимость" type="cml:СтоимостьТип">
+		<xsd:annotation>
+			<xsd:documentation>Элемент, определяющий стоимость</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element> -->
 </xsd:schema>

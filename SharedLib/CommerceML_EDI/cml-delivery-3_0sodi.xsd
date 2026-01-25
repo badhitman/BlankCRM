@@ -1,255 +1,254 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsd:schema targetNamespace="urn:moo-sodi.ru:commerceml_sodi" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:cml="urn:moo-sodi.ru:commerceml_sodi" elementFormDefault="qualified" attributeFormDefault="unqualified" version="3.00" id="commerceml_sodi">
-  <xsd:include schemaLocation="cml-common-3_0sodi.xsd"/>
-  <!-- Коммерческие документы -->
-  <xsd:element name="ЭлектроннаяНакладная" type="cml:ЭлектроннаяНакладная">
-    <xsd:annotation>
-      <xsd:documentation>Документ "Электронная накладная" формируется Поставщиком и передается в ИС Клиента не позднее чем дата поставки товара.</xsd:documentation>
-    </xsd:annotation>
-  </xsd:element>
-  <xsd:element name="АкцептНакладной" type="cml:АкцептНакладной">
-    <xsd:annotation>
-      <xsd:documentation>Документ формируется Клиентом в случае принятия поставки и со списком принятых товаров передается в ИС Поставщика</xsd:documentation>
-    </xsd:annotation>
-  </xsd:element>
-  <xsd:element name="РеджектНакладной" type="cml:РеджектНакладной">
-    <xsd:annotation>
-      <xsd:documentation>Документ формируется Клиентом в случае расхождения в данных или отказе принятия поставки и передается в ИС Поставщика. </xsd:documentation>
-    </xsd:annotation>
-  </xsd:element>
-  <xsd:element name="ЗапросПодтверждениеНакладной" type="cml:ЗапросПодтверждениеНакладной">
-    <xsd:annotation>
-      <xsd:documentation>Документ формируется клиентом перед формированием электронной накладной и передается в ИС поставщика для подтверждения корректности</xsd:documentation>
-    </xsd:annotation>
-  </xsd:element>
-  <xsd:element name="АкцептПодтверждениеНакладной" type="cml:АкцептПодтверждениеНакладной">
-    <xsd:annotation>
-      <xsd:documentation>Документ формируется клиентом в случае успешной обработки накладной поставщика</xsd:documentation>
-    </xsd:annotation>
-  </xsd:element>
-  <xsd:element name="РеджектПодтверждениеНакладной" type="cml:РеджектПодтверждениеНакладной">
-    <xsd:annotation>
-      <xsd:documentation>Документ формируется клиентом в случае неуспешной обработки накладной поставщика</xsd:documentation>
-    </xsd:annotation>
-  </xsd:element>
-  <!--Типы коммерческих документов-->
-  <xsd:complexType name="ЭлектроннаяНакладная">
-    <xsd:annotation>
-      <xsd:documentation>Тип документа "Электронная накладная"</xsd:documentation>
-    </xsd:annotation>
-    <xsd:complexContent>
-      <xsd:extension base="cml:КоммерческийДокумент">
-        <xsd:sequence>
-          <xsd:element ref="cml:ДлительностьОжиданияОтвета">
-            <xsd:annotation>
-              <xsd:documentation>Период времени с момента создания документа, в течение которого ожидается реакция на данный документ.</xsd:documentation>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element name="ИдСклада" type="cml:ИдентификаторКонтрагента">
-            <xsd:annotation>
-              <xsd:documentation>Идентификатор места доставки товара</xsd:documentation>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element name="АдресСклада" minOccurs="0">
-            <xsd:simpleType>
-              <xsd:restriction base="xsd:string">
-                <xsd:maxLength value="255"/>
-              </xsd:restriction>
-            </xsd:simpleType>
-          </xsd:element>
-          <xsd:element name="НомерТоварнойНакладной" type="cml:ЗначениеИдентификатора">
-            <xsd:annotation>
-              <xsd:documentation>Номер товарной накладной в ИС поставщика</xsd:documentation>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element name="ДатаТоварнойНакладной" type="xsd:dateTime">
-            <xsd:annotation>
-              <xsd:documentation>Дата товарной накладной в ИС поставщика</xsd:documentation>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element name="Товар" type="cml:ТоварВНакладной" maxOccurs="unbounded"/>
-          <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
-        </xsd:sequence>
-      </xsd:extension>
-    </xsd:complexContent>
-  </xsd:complexType>
-  <xsd:complexType name="АкцептНакладной">
-    <xsd:complexContent>
-      <xsd:extension base="cml:КоммерческийДокумент">
-        <xsd:sequence>
-          <xsd:element ref="cml:НомерИсходногоДокумента">
-            <xsd:annotation>
-              <xsd:documentation>Номер электронной накладной</xsd:documentation>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element name="НомерНакладнойКлиента" type="cml:ЗначениеИдентификатора">
-            <xsd:annotation>
-              <xsd:documentation>Номер товарной накладной в ИС клиента</xsd:documentation>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element name="ДатаНакладной" type="xsd:dateTime">
-            <xsd:annotation>
-              <xsd:documentation>Дата товарной накладной в ИС клиента</xsd:documentation>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element name="НачалоРазгрузки" type="xsd:dateTime" minOccurs="0">
-            <xsd:annotation>
-              <xsd:documentation>Дата и время начала разгрузки машины поставщика</xsd:documentation>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element name="ОкончаниеРазгрузки" type="xsd:dateTime" minOccurs="0">
-            <xsd:annotation>
-              <xsd:documentation>Дата и время окончания разгрузки машины поставщика</xsd:documentation>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element name="Товар" type="cml:ТоварАкцептРеджектНакладная" maxOccurs="unbounded"/>
-          <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
-        </xsd:sequence>
-      </xsd:extension>
-    </xsd:complexContent>
-  </xsd:complexType>
-  <xsd:complexType name="РеджектНакладной">
-    <xsd:complexContent>
-      <xsd:extension base="cml:КоммерческийДокумент">
-        <xsd:sequence>
-          <xsd:element ref="cml:НомерИсходногоДокумента">
-            <xsd:annotation>
-              <xsd:documentation>Номер электронной накладной</xsd:documentation>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
-        </xsd:sequence>
-      </xsd:extension>
-    </xsd:complexContent>
-  </xsd:complexType>
-  <xsd:complexType name="ЗапросПодтверждениеНакладной">
-    <xsd:complexContent>
-      <xsd:extension base="cml:КоммерческийДокумент">
-        <xsd:sequence>
-          <xsd:element ref="cml:ДлительностьОжиданияОтвета">
-            <xsd:annotation>
-              <xsd:documentation>Период времени с момента создания документа, в течение которого ожидается реакция на данный документ.</xsd:documentation>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element name="ИдСклада" type="cml:ИдентификаторКонтрагента">
-            <xsd:annotation>
-              <xsd:documentation>Идентификатор места доставки товара</xsd:documentation>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element name="АдресСклада" minOccurs="0">
-            <xsd:simpleType>
-              <xsd:restriction base="xsd:string">
-                <xsd:maxLength value="255"/>
-              </xsd:restriction>
-            </xsd:simpleType>
-          </xsd:element>
-          <xsd:element name="Товар" type="cml:ТоварВНакладной" maxOccurs="unbounded"/>
-          <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
-        </xsd:sequence>
-      </xsd:extension>
-    </xsd:complexContent>
-  </xsd:complexType>
-  <xsd:complexType name="АкцептПодтверждениеНакладной">
-    <xsd:annotation>
-      <xsd:documentation>Тип документа "Акцепт-подтверждение накладной"</xsd:documentation>
-    </xsd:annotation>
-    <xsd:complexContent>
-      <xsd:extension base="cml:КоммерческийДокумент">
-        <xsd:sequence>
-          <xsd:element ref="cml:НомерИсходногоДокумента">
-            <xsd:annotation>
-              <xsd:documentation>Номер электронной накладной</xsd:documentation>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element name="ДатаНакладной" type="xsd:dateTime">
-            <xsd:annotation>
-              <xsd:documentation>Дата товарной накладной в ИС клиента</xsd:documentation>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
-        </xsd:sequence>
-      </xsd:extension>
-    </xsd:complexContent>
-  </xsd:complexType>
-  <xsd:complexType name="РеджектПодтверждениеНакладной">
-    <xsd:annotation>
-      <xsd:documentation>Тип документа "Реджект-подтверждение накладной"</xsd:documentation>
-    </xsd:annotation>
-    <xsd:complexContent>
-      <xsd:extension base="cml:КоммерческийДокумент">
-        <xsd:sequence>
-          <xsd:element ref="cml:НомерИсходногоДокумента">
-            <xsd:annotation>
-              <xsd:documentation>Номер электронной накладной</xsd:documentation>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element name="Товар" type="cml:ТоварАкцептРеджектНакладная" maxOccurs="unbounded"/>
-          <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
-        </xsd:sequence>
-      </xsd:extension>
-    </xsd:complexContent>
-  </xsd:complexType>
-  <!--Вспомогательные типы-->
-  <xsd:complexType name="ТоварВНакладной">
-    <xsd:annotation>
-      <xsd:documentation>Строка в накладной</xsd:documentation>
-    </xsd:annotation>
-    <xsd:sequence>
-      <xsd:element name="ИдТовара" type="cml:ИдентификаторТовара" maxOccurs="unbounded">
-        <xsd:annotation>
-          <xsd:documentation>Идентификатор товара</xsd:documentation>
-        </xsd:annotation>
-      </xsd:element>
-      <xsd:element name="НомерАкцептованногоЗаказа" type="cml:ИдентификаторДокумента" minOccurs="0">
-        <xsd:annotation>
-          <xsd:documentation>Номер акцептованного заказа, на который сформирована электронная накладная</xsd:documentation>
-        </xsd:annotation>
-      </xsd:element>
-      <xsd:element name="Количество" type="cml:КоличествоТип">
-        <xsd:annotation>
-          <xsd:documentation>Количество товара в строке накладной в единицах измерения, соответствующих установленным для данного ИдТовара, например, в рамках бизнес-процесса "Обмена данными о товаре"</xsd:documentation>
-        </xsd:annotation>
-      </xsd:element>
-      <xsd:element name="УчетныйНомерСертификата" type="cml:ЗначениеИдентификатора" minOccurs="0" maxOccurs="unbounded">
-        <xsd:annotation>
-          <xsd:documentation>Идентификатор сертификата на данный товар в ИС поставщика</xsd:documentation>
-        </xsd:annotation>
-      </xsd:element>
-      <xsd:element name="СуммаПоСтроке" type="cml:СтоимостьТип">
-        <xsd:annotation>
-          <xsd:documentation>Сумма по строке накладной</xsd:documentation>
-        </xsd:annotation>
-      </xsd:element>
-      <xsd:element name="СрокРеализации" type="xsd:dateTime" minOccurs="0">
-        <xsd:annotation>
-          <xsd:documentation>Дата окончания срока реализации товара</xsd:documentation>
-        </xsd:annotation>
-      </xsd:element>
-      <xsd:element name="НомерГТД" type="cml:ЗначениеИдентификатора" minOccurs="0" maxOccurs="unbounded">
-        <xsd:annotation>
-          <xsd:documentation>Номер грузовой таможенной декларации на товар</xsd:documentation>
-        </xsd:annotation>
-      </xsd:element>
-      <xsd:element ref="cml:Примечание" minOccurs="0"/>
-    </xsd:sequence>
-  </xsd:complexType>
-  <xsd:complexType name="ТоварАкцептРеджектНакладная">
-    <xsd:annotation>
-      <xsd:documentation>Товар в накладной акцептованный</xsd:documentation>
-    </xsd:annotation>
-    <xsd:sequence>
-      <xsd:element name="ИдТовара" type="cml:ИдентификаторТовара" maxOccurs="unbounded"/>
-      <xsd:element name="Количество" type="cml:КоличествоТип">
-        <xsd:annotation>
-          <xsd:documentation>Количество товара в строке накладной в единицах измерения, соответствующих установленным для данного ИдТовара, например, в рамках бизнес-процесса "Обмена данными о товаре"</xsd:documentation>
-        </xsd:annotation>
-      </xsd:element>
-      <xsd:element name="СуммаПоСтроке" type="cml:СтоимостьТип">
-        <xsd:annotation>
-          <xsd:documentation>Сумма по строке накладной</xsd:documentation>
-        </xsd:annotation>
-      </xsd:element>
-      <xsd:element ref="cml:Примечание" minOccurs="0"/>
-    </xsd:sequence>
-  </xsd:complexType>
+	<xsd:include schemaLocation="cml-common-3_0sodi.xsd"/>
+	<!-- Сложные типы -->
+	<xsd:complexType name="АкцептНакладной">
+		<xsd:complexContent>
+			<xsd:extension base="cml:КоммерческийДокумент">
+				<xsd:sequence>
+					<xsd:element ref="cml:НомерИсходногоДокумента">
+						<xsd:annotation>
+							<xsd:documentation>Номер электронной накладной</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="НомерНакладнойКлиента" type="cml:ЗначениеИдентификатора">
+						<xsd:annotation>
+							<xsd:documentation>Номер товарной накладной в ИС клиента</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="ДатаНакладной" type="xsd:dateTime">
+						<xsd:annotation>
+							<xsd:documentation>Дата товарной накладной в ИС клиента</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="НачалоРазгрузки" type="xsd:dateTime" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Дата и время начала разгрузки машины поставщика</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="ОкончаниеРазгрузки" type="xsd:dateTime" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Дата и время окончания разгрузки машины поставщика</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="Товар" type="cml:ТоварАкцептРеджектНакладная" maxOccurs="unbounded"/>
+					<xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="АкцептПодтверждениеНакладной">
+		<xsd:annotation>
+			<xsd:documentation>Тип документа "Акцепт-подтверждение накладной"</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="cml:КоммерческийДокумент">
+				<xsd:sequence>
+					<xsd:element ref="cml:НомерИсходногоДокумента">
+						<xsd:annotation>
+							<xsd:documentation>Номер электронной накладной</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="ДатаНакладной" type="xsd:dateTime">
+						<xsd:annotation>
+							<xsd:documentation>Дата товарной накладной в ИС клиента</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="ЗапросПодтверждениеНакладной">
+		<xsd:complexContent>
+			<xsd:extension base="cml:КоммерческийДокумент">
+				<xsd:sequence>
+					<xsd:element ref="cml:ДлительностьОжиданияОтвета">
+						<xsd:annotation>
+							<xsd:documentation>Период времени с момента создания документа, в течение которого ожидается реакция на данный документ.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="ИдСклада" type="cml:ИдентификаторКонтрагента">
+						<xsd:annotation>
+							<xsd:documentation>Идентификатор места доставки товара</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="АдресСклада" minOccurs="0">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="255"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="Товар" type="cml:ТоварВНакладной" maxOccurs="unbounded"/>
+					<xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="РеджектНакладной">
+		<xsd:complexContent>
+			<xsd:extension base="cml:КоммерческийДокумент">
+				<xsd:sequence>
+					<xsd:element ref="cml:НомерИсходногоДокумента">
+						<xsd:annotation>
+							<xsd:documentation>Номер электронной накладной</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="РеджектПодтверждениеНакладной">
+		<xsd:annotation>
+			<xsd:documentation>Тип документа "Реджект-подтверждение накладной"</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="cml:КоммерческийДокумент">
+				<xsd:sequence>
+					<xsd:element ref="cml:НомерИсходногоДокумента">
+						<xsd:annotation>
+							<xsd:documentation>Номер электронной накладной</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="Товар" type="cml:ТоварАкцептРеджектНакладная" maxOccurs="unbounded"/>
+					<xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="ТоварАкцептРеджектНакладная">
+		<xsd:annotation>
+			<xsd:documentation>Товар в накладной акцептованный</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="ИдТовара" type="cml:ИдентификаторТовара" maxOccurs="unbounded"/>
+			<xsd:element name="Количество" type="cml:КоличествоТип">
+				<xsd:annotation>
+					<xsd:documentation>Количество товара в строке накладной в единицах измерения, соответствующих установленным для данного ИдТовара, например, в рамках бизнес-процесса "Обмена данными о товаре"</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="СуммаПоСтроке" type="cml:СтоимостьТип">
+				<xsd:annotation>
+					<xsd:documentation>Сумма по строке накладной</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element ref="cml:Примечание" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="ТоварВНакладной">
+		<xsd:annotation>
+			<xsd:documentation>Строка в накладной</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="ИдТовара" type="cml:ИдентификаторТовара" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>Идентификатор товара</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="НомерАкцептованногоЗаказа" type="cml:ИдентификаторДокумента" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Номер акцептованного заказа, на который сформирована электронная накладная</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Количество" type="cml:КоличествоТип">
+				<xsd:annotation>
+					<xsd:documentation>Количество товара в строке накладной в единицах измерения, соответствующих установленным для данного ИдТовара, например, в рамках бизнес-процесса "Обмена данными о товаре"</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="УчетныйНомерСертификата" type="cml:ЗначениеИдентификатора" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>Идентификатор сертификата на данный товар в ИС поставщика</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="СуммаПоСтроке" type="cml:СтоимостьТип">
+				<xsd:annotation>
+					<xsd:documentation>Сумма по строке накладной</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="СрокРеализации" type="xsd:dateTime" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Дата окончания срока реализации товара</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="НомерГТД" type="cml:ЗначениеИдентификатора" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>Номер грузовой таможенной декларации на товар</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element ref="cml:Примечание" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="ЭлектроннаяНакладная">
+		<xsd:annotation>
+			<xsd:documentation>Тип документа "Электронная накладная"</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="cml:КоммерческийДокумент">
+				<xsd:sequence>
+					<xsd:element ref="cml:ДлительностьОжиданияОтвета">
+						<xsd:annotation>
+							<xsd:documentation>Период времени с момента создания документа, в течение которого ожидается реакция на данный документ.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="ИдСклада" type="cml:ИдентификаторКонтрагента">
+						<xsd:annotation>
+							<xsd:documentation>Идентификатор места доставки товара</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="АдресСклада" minOccurs="0">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="255"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="НомерТоварнойНакладной" type="cml:ЗначениеИдентификатора">
+						<xsd:annotation>
+							<xsd:documentation>Номер товарной накладной в ИС поставщика</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="ДатаТоварнойНакладной" type="xsd:dateTime">
+						<xsd:annotation>
+							<xsd:documentation>Дата товарной накладной в ИС поставщика</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="Товар" type="cml:ТоварВНакладной" maxOccurs="unbounded"/>
+					<xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- Простые документы -->
+	<xsd:element name="АкцептНакладной" type="cml:АкцептНакладной">
+		<xsd:annotation>
+			<xsd:documentation>Документ формируется Клиентом в случае принятия поставки и со списком принятых товаров передается в ИС Поставщика</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="АкцептПодтверждениеНакладной" type="cml:АкцептПодтверждениеНакладной">
+		<xsd:annotation>
+			<xsd:documentation>Документ формируется клиентом в случае успешной обработки накладной поставщика</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="ЗапросПодтверждениеНакладной" type="cml:ЗапросПодтверждениеНакладной">
+		<xsd:annotation>
+			<xsd:documentation>Документ формируется клиентом перед формированием электронной накладной и передается в ИС поставщика для подтверждения корректности</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="РеджектНакладной" type="cml:РеджектНакладной">
+		<xsd:annotation>
+			<xsd:documentation>Документ формируется Клиентом в случае расхождения в данных или отказе принятия поставки и передается в ИС Поставщика. </xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="РеджектПодтверждениеНакладной" type="cml:РеджектПодтверждениеНакладной">
+		<xsd:annotation>
+			<xsd:documentation>Документ формируется клиентом в случае неуспешной обработки накладной поставщика</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="ЭлектроннаяНакладная" type="cml:ЭлектроннаяНакладная">
+		<xsd:annotation>
+			<xsd:documentation>Документ "Электронная накладная" формируется Поставщиком и передается в ИС Клиента не позднее чем дата поставки товара.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
 </xsd:schema>
