@@ -2,9 +2,33 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using System.Xml.Serialization;
+
 namespace SharedLib.CommerceMLEDI;
 
 #pragma warning disable CS8618 // Поле, не допускающее значения NULL, должно содержать значение, отличное от NULL, при выходе из конструктора. Рассмотрите возможность добавления модификатора "required" или объявления значения, допускающего значение NULL.
+/// <remarks/>
+[XmlInclude(typeof(ТоварКРаботе))]
+[XmlInclude(typeof(КаталогТоваров))]
+[XmlInclude(typeof(ЗапросКаталога))]
+public abstract partial class КоммерческийДокументКаталог
+{
+    /// <remarks/>
+    public ИдентификаторКонтрагента ИдОтправителя { get; set; }
+
+    /// <remarks/>
+    public ИдентификаторКонтрагента ИдПолучателя { get; set; }
+
+    /// <remarks/>
+    public ИдентификаторДокумента НомерДокумента { get; set; }
+
+    /// <remarks/>
+    public System.DateTime МоментСоздания { get; set; }
+
+    /// <remarks/>
+    public string Примечание { get; set; }
+}
+
 /// <remarks/>
 public partial class СтрокаТовараКРаботе
 {
@@ -21,7 +45,6 @@ public partial class СтрокаТовараКРаботе
     public decimal КоэффициентПересчета { get; set; }
 
     /// <remarks/>
-
     public bool КоэффициентПересчетаSpecified { get; set; }
 
     /// <remarks/>
@@ -77,115 +100,82 @@ public partial class СтрокаКаталога
     public decimal ВесНетто { get; set; }
 
     /// <remarks/>
-
     public bool ВесНеттоSpecified { get; set; }
 
     /// <remarks/>
     public decimal ВесБрутто { get; set; }
 
     /// <remarks/>
-
     public bool ВесБруттоSpecified { get; set; }
 
     /// <remarks/>
     public decimal ВысотаСлояТовара { get; set; }
 
     /// <remarks/>
-
     public bool ВысотаСлояТовараSpecified { get; set; }
 
     /// <remarks/>
     public decimal ВысотаТовара { get; set; }
 
     /// <remarks/>
-
     public bool ВысотаТовараSpecified { get; set; }
 
     /// <remarks/>
     public decimal ШиринаТовара { get; set; }
 
     /// <remarks/>
-
     public bool ШиринаТовараSpecified { get; set; }
 
     /// <remarks/>
     public decimal ГлубинаТовара { get; set; }
 
     /// <remarks/>
-
     public bool ГлубинаТовараSpecified { get; set; }
 
     /// <remarks/>
     public decimal ОбъемТовара { get; set; }
 
     /// <remarks/>
-
     public bool ОбъемТовараSpecified { get; set; }
 
     /// <remarks/>
     public decimal МинКоличествоДляЗаказа { get; set; }
 
     /// <remarks/>
-
     public bool МинКоличествоДляЗаказаSpecified { get; set; }
 
     /// <remarks/>
     public decimal КоличествоВСлоеНаЕвропалете { get; set; }
 
     /// <remarks/>
-
     public bool КоличествоВСлоеНаЕвропалетеSpecified { get; set; }
 
     /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute(DataType = "duration")]
+    [XmlElement(DataType = "duration")]
     public TimeSpan СрокХранения { get; set; }
 
     /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute(DataType = "integer")]
+    [XmlElement(DataType = "integer")]
     public int ТемператураХранения { get; set; }
 
     /// <remarks/>
     public decimal Кратность { get; set; }
 
     /// <remarks/>
-
     public bool КратностьSpecified { get; set; }
 
     /// <remarks/>
     public decimal КоличесвоЕдиницОбъектаВерхнегоУровня { get; set; }
 
     /// <remarks/>
-
     public bool КоличесвоЕдиницОбъектаВерхнегоУровняSpecified { get; set; }
 
     /// <remarks/>
     public string Примечание { get; set; }
 
     /// <remarks/>
-    [System.Xml.Serialization.XmlAnyElementAttribute()]
+    [XmlAnyElement()]
     public System.Xml.XmlElement[] Any { get; set; }
-}
-
-/// <remarks/>
-[System.Xml.Serialization.XmlIncludeAttribute(typeof(ТоварКРаботе))]
-[System.Xml.Serialization.XmlIncludeAttribute(typeof(КаталогТоваров))]
-[System.Xml.Serialization.XmlIncludeAttribute(typeof(ЗапросКаталога))]
-public abstract partial class КоммерческийДокументКаталог
-{
-    /// <remarks/>
-    public ИдентификаторКонтрагента ИдОтправителя { get; set; }
-
-    /// <remarks/>
-    public ИдентификаторКонтрагента ИдПолучателя { get; set; }
-
-    /// <remarks/>
-    public ИдентификаторДокумента НомерДокумента { get; set; }
-
-    /// <remarks/>
-    public System.DateTime МоментСоздания { get; set; }
-
-    /// <remarks/>
-    public string Примечание { get; set; }
 }
 
 /// <remarks/>

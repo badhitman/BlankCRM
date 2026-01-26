@@ -8,9 +8,9 @@ namespace SharedLib.CommerceMLEDI;
 
 #pragma warning disable CS8618 // Поле, не допускающее значения NULL, должно содержать значение, отличное от NULL, при выходе из конструктора. Рассмотрите возможность добавления модификатора "required" или объявления значения, допускающего значение NULL.
 /// <remarks/>
-[System.Xml.Serialization.XmlIncludeAttribute(typeof(РеджектСчетФактура))]
-[System.Xml.Serialization.XmlIncludeAttribute(typeof(АкцептСчетФактура))]
-[System.Xml.Serialization.XmlIncludeAttribute(typeof(СчетФактура))]
+[XmlInclude(typeof(РеджектСчетФактура))]
+[XmlInclude(typeof(АкцептСчетФактура))]
+[XmlInclude(typeof(СчетФактура))]
 public abstract partial class КоммерческийДокументИнвойс
 {
     /// <remarks/>
@@ -29,12 +29,12 @@ public abstract partial class КоммерческийДокументИнвой
     public string Примечание { get; set; }
 
     /// <remarks/>
-    [System.Xml.Serialization.XmlAnyAttributeAttribute()]
+    [XmlAnyAttribute()]
     public System.Xml.XmlAttribute[] AnyAttr { get; set; }
 }
 
 /// <remarks/>
-public partial class СчетФактура : КоммерческийДокумент
+public partial class СчетФактура : КоммерческийДокументИнвойс
 {
     /// <remarks/>
     public ИдентификаторДокумента НомерСчетФактураПоставщик { get; set; }
@@ -43,15 +43,15 @@ public partial class СчетФактура : КоммерческийДокум
     public System.DateTime ДатаСчетФактураПоставщик { get; set; }
 
     /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute(DataType = "duration")]
+    [XmlElement(DataType = "duration")]
     public string ДлительностьОжиданияОтвета { get; set; }
 
     /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute("СтрокаСчетФактура")]
+    [XmlElement("СтрокаСчетФактура")]
     public СтрокаСчетФактура[] СтрокаСчетФактура { get; set; }
 
     /// <remarks/>
-    
+
     public System.Xml.XmlElement[] Any { get; set; }
 }
 
@@ -62,7 +62,7 @@ public partial class СтрокаСчетФактура
     public ИдентификаторДокумента ИдНакладной { get; set; }
 
     /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute("ИдТовара")]
+    [XmlElement("ИдТовара")]
     public ИдентификаторТовара[] ИдТовара { get; set; }
 
     /// <remarks/>
@@ -75,12 +75,12 @@ public partial class СтрокаСчетФактура
     public СтоимостьТип Стоимость { get; set; }
 
     /// <remarks/>
-    
+
     public System.Xml.XmlElement[] Any { get; set; }
 }
 
 /// <remarks/>
-public partial class АкцептСчетФактура : КоммерческийДокумент
+public partial class АкцептСчетФактура : КоммерческийДокументИнвойс
 {
     /// <remarks/>
     public ИдентификаторДокумента НомерИсходногоДокумента { get; set; }
@@ -89,12 +89,12 @@ public partial class АкцептСчетФактура : Коммерчески
     public ИдентификаторДокумента НомерСчетФактураКлиент { get; set; }
 
     /// <remarks/>
-    
+
     public System.Xml.XmlElement[] Any { get; set; }
 }
 
 /// <remarks/>
-public partial class РеджектСчетФактура : КоммерческийДокумент
+public partial class РеджектСчетФактура : КоммерческийДокументИнвойс
 {
     /// <remarks/>
     public ИдентификаторДокумента НомерИсходногоДокумента { get; set; }
@@ -103,7 +103,7 @@ public partial class РеджектСчетФактура : Коммерческ
     public ИдентификаторДокумента НомерСчетФактураКлиент { get; set; }
 
     /// <remarks/>
-    
+
     public System.Xml.XmlElement[] Any { get; set; }
 }
 #pragma warning restore CS8618 // Поле, не допускающее значения NULL, должно содержать значение, отличное от NULL, при выходе из конструктора. Рассмотрите возможность добавления модификатора "required" или объявления значения, допускающего значение NULL.

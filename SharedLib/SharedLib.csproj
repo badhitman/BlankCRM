@@ -16,15 +16,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Remove="CommerceML\verEDI\invoice\cml-invoice-3_0sodi.cs" />
-	  <Compile Remove="CommerceML\verEDI\ordering\cml-ordering-3_0sodi.cs" />
-	  <Compile Remove="CommerceML\verEDI\price\cml-price-3_0sodi.cs" />
-	  <None Include="CommerceML\verEDI\invoice\cml-invoice-3_0sodi.cs" />
-	  <None Include="CommerceML\verEDI\ordering\cml-ordering-3_0sodi.cs" />
-	  <None Include="CommerceML\verEDI\price\cml-price-3_0sodi.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<PackageReference Include="HtmlAgilityPack" Version="1.12.4" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="10.0.2" />
 		<PackageReference Include="Microsoft.Extensions.Options" Version="10.0.2" />

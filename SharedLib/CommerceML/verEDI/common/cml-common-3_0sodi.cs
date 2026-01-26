@@ -2,6 +2,8 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using System.Xml.Serialization;
+
 namespace SharedLib.CommerceMLEDI;
 
 #pragma warning disable CS8618 // Поле, не допускающее значения NULL, должно содержать значение, отличное от NULL, при выходе из конструктора. Рассмотрите возможность добавления модификатора "required" или объявления значения, допускающего значение NULL.
@@ -14,10 +16,10 @@ public partial class GLN : ИдентификаторКонтрагента
 /// <summary>
 /// Базовый тип идентификаторов контрагента
 /// </summary>
-[System.Xml.Serialization.XmlIncludeAttribute(typeof(ИННРФ))]
-[System.Xml.Serialization.XmlIncludeAttribute(typeof(GLN))]
-[System.Xml.Serialization.XmlIncludeAttribute(typeof(КонтрагентИД))]
-[System.Xml.Serialization.XmlRootAttribute("ИдОтправителя", Namespace = "urn:moo-sodi.ru:commerceml_sodi", IsNullable = false)]
+[XmlInclude(typeof(ИННРФ))]
+[XmlInclude(typeof(GLN))]
+[XmlInclude(typeof(КонтрагентИД))]
+[XmlRoot("ИдОтправителя", Namespace = "urn:moo-sodi.ru:commerceml_sodi", IsNullable = false)]
 public abstract partial class ИдентификаторКонтрагента
 {
     /// <remarks/>    
@@ -25,10 +27,10 @@ public abstract partial class ИдентификаторКонтрагента
 }
 
 /// <remarks/>
-[System.Xml.Serialization.XmlIncludeAttribute(typeof(ИСО3166))]
-[System.Xml.Serialization.XmlIncludeAttribute(typeof(ОКВЭД))]
-[System.Xml.Serialization.XmlIncludeAttribute(typeof(ОКП))]
-[System.Xml.Serialization.XmlIncludeAttribute(typeof(ОКЕИ))]
+[XmlInclude(typeof(ИСО3166))]
+[XmlInclude(typeof(ОКВЭД))]
+[XmlInclude(typeof(ОКП))]
+[XmlInclude(typeof(ОКЕИ))]
 public abstract partial class КлассификаторТип
 {
     /// <remarks/>    
@@ -46,8 +48,8 @@ public partial class КонтрагентИД : ИдентификаторКон
 }
 
 /// <remarks/>
-[System.Xml.Serialization.XmlIncludeAttribute(typeof(ДокументИД))]
-[System.Xml.Serialization.XmlRootAttribute("НомерДокумента", Namespace = "urn:moo-sodi.ru:commerceml_sodi", IsNullable = false)]
+[XmlInclude(typeof(ДокументИД))]
+[XmlRoot("НомерДокумента", Namespace = "urn:moo-sodi.ru:commerceml_sodi", IsNullable = false)]
 public abstract partial class ИдентификаторДокумента
 {
     /// <remarks/>    
@@ -60,32 +62,32 @@ public partial class ДокументИД : ИдентификаторДокум
 }
 
 /// <remarks/>
-[System.Xml.Serialization.XmlRootAttribute("Стоимость", Namespace = "urn:moo-sodi.ru:commerceml_sodi", IsNullable = false)]
+[XmlRoot("Стоимость", Namespace = "urn:moo-sodi.ru:commerceml_sodi", IsNullable = false)]
 public partial class СтоимостьТип
 {
     /// <remarks/>
     public СуммаТип Сумма { get; set; }
 
     /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute("Налог")]
+    [XmlElement("Налог")]
     public СтоимостьНалогТип[] Налог { get; set; }
 }
 
 /// <remarks/>
-[System.Xml.Serialization.XmlRootAttribute("Сумма", Namespace = "urn:moo-sodi.ru:commerceml_sodi", IsNullable = false)]
+[XmlRoot("Сумма", Namespace = "urn:moo-sodi.ru:commerceml_sodi", IsNullable = false)]
 public partial class СуммаТип
 {
     /// <remarks/>
-    [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+    [XmlAttribute(DataType = "integer")]
     public string Валюта { get; set; }
 
     /// <remarks/>
-    [System.Xml.Serialization.XmlTextAttribute()]
+    [XmlText()]
     public decimal Value { get; set; }
 }
 
 /// <remarks/>
-[System.Xml.Serialization.XmlRootAttribute("Налог", Namespace = "urn:moo-sodi.ru:commerceml_sodi", IsNullable = false)]
+[XmlRoot("Налог", Namespace = "urn:moo-sodi.ru:commerceml_sodi", IsNullable = false)]
 public partial class СтоимостьНалогТип
 {
     /// <remarks/>
@@ -109,9 +111,9 @@ public enum ТипНалога
 }
 
 /// <remarks/>
-[System.Xml.Serialization.XmlIncludeAttribute(typeof(GTIN))]
-[System.Xml.Serialization.XmlIncludeAttribute(typeof(ТоварИД))]
-[System.Xml.Serialization.XmlRootAttribute("ИдТовара", Namespace = "urn:moo-sodi.ru:commerceml_sodi", IsNullable = false)]
+[XmlInclude(typeof(GTIN))]
+[XmlInclude(typeof(ТоварИД))]
+[XmlRoot("ИдТовара", Namespace = "urn:moo-sodi.ru:commerceml_sodi", IsNullable = false)]
 public abstract partial class ИдентификаторТовара
 {
     /// <remarks/>    

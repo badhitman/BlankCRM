@@ -8,9 +8,9 @@ namespace SharedLib.CommerceMLEDI;
 
 #pragma warning disable CS8618 // Поле, не допускающее значения NULL, должно содержать значение, отличное от NULL, при выходе из конструктора. Рассмотрите возможность добавления модификатора "required" или объявления значения, допускающего значение NULL.
 /// <remarks/>
-[System.Xml.Serialization.XmlIncludeAttribute(typeof(ПрайсЛистКРаботе))]
-[System.Xml.Serialization.XmlIncludeAttribute(typeof(ПрайсЛист))]
-[System.Xml.Serialization.XmlIncludeAttribute(typeof(ЗапросПрайсЛист))]
+[XmlInclude(typeof(ПрайсЛистКРаботе))]
+[XmlInclude(typeof(ПрайсЛист))]
+[XmlInclude(typeof(ЗапросПрайсЛист))]
 public abstract partial class КоммерческийДокументПрайс
 {
     /// <remarks/>
@@ -29,15 +29,15 @@ public abstract partial class КоммерческийДокументПрайс
     public string Примечание { get; set; }
 
     /// <remarks/>
-    [System.Xml.Serialization.XmlAnyAttributeAttribute()]
+    [XmlAnyAttribute()]
     public System.Xml.XmlAttribute[] AnyAttr { get; set; }
 }
 
 /// <remarks/>
-public partial class ЗапросПрайсЛист : КоммерческийДокумент
+public partial class ЗапросПрайсЛист : КоммерческийДокументПрайс
 {
     /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute(DataType = "duration")]
+    [XmlElement(DataType = "duration")]
     public string ДлительностьОжиданияОтвета { get; set; }
 
     /// <remarks/>    
@@ -45,51 +45,51 @@ public partial class ЗапросПрайсЛист : КоммерческийД
 }
 
 /// <remarks/>
-public partial class ПрайсЛист : КоммерческийДокумент
+public partial class ПрайсЛист : КоммерческийДокументПрайс
 {
     /// <remarks/>
     public ИдентификаторДокумента НомерИсходногоДокумента { get; set; }
 
     /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute(DataType = "duration")]
+    [XmlElement(DataType = "duration")]
     public string ДлительностьОжиданияОтвета { get; set; }
 
     /// <remarks/>
     public bool ПолныйПрайсЛист { get; set; }
 
     /// <remarks/>
-    
+
     public bool ПолныйПрайсЛистSpecified { get; set; }
 
     /// <remarks/>
     public System.DateTime НачалоДействия { get; set; }
 
     /// <remarks/>
-    
+
     public bool НачалоДействияSpecified { get; set; }
 
     /// <remarks/>
     public System.DateTime ОкончаниеДействия { get; set; }
 
     /// <remarks/>
-    
+
     public bool ОкончаниеДействияSpecified { get; set; }
 
     /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute("ТоварПрайсЛист")]
+    [XmlElement("ТоварПрайсЛист")]
     public ТоварПрайсЛист[] ТоварПрайсЛист { get; set; }
 
     /// <remarks/>
-    
+
     public System.Xml.XmlElement[] Any { get; set; }
 }
 
 /// <remarks/>
-[System.Xml.Serialization.XmlRootAttribute("ТоварПрайЛист", Namespace = "urn:moo-sodi.ru:commerceml_sodi", IsNullable = false)]
+[XmlRoot("ТоварПрайЛист", Namespace = "urn:moo-sodi.ru:commerceml_sodi", IsNullable = false)]
 public partial class ТоварПрайсЛист
 {
     /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute("ИдТовара")]
+    [XmlElement("ИдТовара")]
     public ИдентификаторТовара[] ИдТовара { get; set; }
 
     /// <remarks/>
@@ -98,19 +98,19 @@ public partial class ТоварПрайсЛист
     /// <remarks/>
     public string Примечание { get; set; }
 
-    /// <remarks/>    
+    /// <remarks/>
     public System.Xml.XmlElement[] Any { get; set; }
 }
 
 /// <remarks/>
-[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:moo-sodi.ru:commerceml_sodi")]
+[XmlType(AnonymousType = true, Namespace = "urn:moo-sodi.ru:commerceml_sodi")]
 
 public partial class Цена : СтоимостьТип
 {
 }
 
 /// <remarks/>
-public partial class ПрайсЛистКРаботе : КоммерческийДокумент
+public partial class ПрайсЛистКРаботе : КоммерческийДокументПрайс
 {
     /// <remarks/>
     public ИдентификаторДокумента НомерИсходногоДокумента { get; set; }
@@ -119,18 +119,18 @@ public partial class ПрайсЛистКРаботе : Коммерческий
     public System.DateTime НачалоДействия { get; set; }
 
     /// <remarks/>
-    
+
     public bool НачалоДействияSpecified { get; set; }
 
     /// <remarks/>
     public System.DateTime ОкончаниеДействия { get; set; }
 
     /// <remarks/>
-    
+
     public bool ОкончаниеДействияSpecified { get; set; }
 
     /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute("ТоварПрайсЛист")]
+    [XmlElement("ТоварПрайсЛист")]
     public ТоварПрайсЛист[] ТоварПрайсЛист { get; set; }
 
     /// <remarks/>    

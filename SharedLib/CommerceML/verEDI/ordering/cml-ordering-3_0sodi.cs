@@ -8,9 +8,9 @@ namespace SharedLib.CommerceMLEDI;
 
 #pragma warning disable CS8618 // Поле, не допускающее значения NULL, должно содержать значение, отличное от NULL, при выходе из конструктора. Рассмотрите возможность добавления модификатора "required" или объявления значения, допускающего значение NULL.
 /// <remarks/>
-[System.Xml.Serialization.XmlIncludeAttribute(typeof(РеджектЗаказа))]
-[System.Xml.Serialization.XmlIncludeAttribute(typeof(АкцептЗаказа))]
-[System.Xml.Serialization.XmlIncludeAttribute(typeof(Заказ))]
+[XmlInclude(typeof(РеджектЗаказа))]
+[XmlInclude(typeof(АкцептЗаказа))]
+[XmlInclude(typeof(Заказ))]
 public abstract partial class КоммерческийДокументЗаказ
 {
     /// <remarks/>
@@ -29,15 +29,15 @@ public abstract partial class КоммерческийДокументЗаказ
     public string Примечание { get; set; }
 
     /// <remarks/>
-    [System.Xml.Serialization.XmlAnyAttributeAttribute()]
+    [XmlAnyAttribute()]
     public System.Xml.XmlAttribute[] AnyAttr { get; set; }
 }
 
 /// <remarks/>
-public partial class Заказ : КоммерческийДокумент
+public partial class Заказ : КоммерческийДокументЗаказ
 {
     /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute(DataType = "duration")]
+    [XmlElement(DataType = "duration")]
     public string ДлительностьОжиданияОтвета { get; set; }
 
     /// <remarks/>
@@ -53,11 +53,11 @@ public partial class Заказ : КоммерческийДокумент
     public System.DateTime ДатаВремяДоставки { get; set; }
 
     /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute(DataType = "duration")]
+    [XmlElement(DataType = "duration")]
     public string ДлительностьОжиданияДоставки { get; set; }
 
     /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute("Товар")]
+    [XmlElement("Товар")]
     public СтрокаЗаказа[] Товар { get; set; }
 
     /// <remarks/>    
@@ -65,7 +65,7 @@ public partial class Заказ : КоммерческийДокумент
 }
 
 /// <remarks/>
-[System.Xml.Serialization.XmlRootAttribute("Товар", Namespace = "urn:moo-sodi.ru:commerceml_sodi", IsNullable = false)]
+[XmlRoot("Товар", Namespace = "urn:moo-sodi.ru:commerceml_sodi", IsNullable = false)]
 public partial class СтрокаЗаказа
 {
     /// <remarks/>
@@ -85,7 +85,7 @@ public partial class СтрокаЗаказа
 }
 
 /// <remarks/>
-public partial class АкцептЗаказа : КоммерческийДокумент
+public partial class АкцептЗаказа : КоммерческийДокументЗаказ
 {
     /// <remarks/>
     public ИдентификаторДокумента НомерИсходногоДокумента { get; set; }
@@ -95,27 +95,27 @@ public partial class АкцептЗаказа : КоммерческийДоку
 }
 
 /// <remarks/>
-public partial class РеджектЗаказа : КоммерческийДокумент
+public partial class РеджектЗаказа : КоммерческийДокументЗаказ
 {
     /// <remarks/>
     public ИдентификаторДокумента НомерИсходногоДокумента { get; set; }
 
     /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute(DataType = "duration")]
+    [XmlElement(DataType = "duration")]
     public string ДлительностьОжиданияРеакции { get; set; }
 
     /// <remarks/>
     public System.DateTime ДатаВремяДоставки { get; set; }
 
     /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute(DataType = "duration")]
+    [XmlElement(DataType = "duration")]
     public string ДлительностьОжиданияДоставки { get; set; }
 
     /// <remarks/>
     public СуммаТип ПревышениеЛимита { get; set; }
 
     /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute("Товар")]
+    [XmlElement("Товар")]
     public СтрокаЗаказа[] Товар { get; set; }
 
     /// <remarks/>    
