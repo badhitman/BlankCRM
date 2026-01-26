@@ -32,8 +32,7 @@ public partial class RetailService : IRetailService
             .FirstAsync(x => x.Id == req.Payload.DocumentId, cancellationToken: token);
 
         DocumentNewVersionResponseModel res = new();
-        using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
-        loggerRepo.LogWarning($"{nameof(CreateRowOfDeliveryDocumentAsync)}:\n{JsonConvert.SerializeObject(req.Payload)}");
+        using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);        
         string msg;
 
         if (!offDeliveriesStatuses.Contains(docDb.DeliveryStatus))
