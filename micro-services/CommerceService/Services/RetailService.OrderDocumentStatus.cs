@@ -353,7 +353,6 @@ public partial class RetailService : IRetailService
     /// <inheritdoc/>
     async Task<ResponseBaseModel> DoIt(CommerceContext context, IDbContextTransaction transaction, List<RowOfRetailOrderDocumentModelDB> rows, bool reserveForRetailOrder, bool isEnableDocument, List<OfferAvailabilityModelDB> offerAvailabilityDB, DocumentRetailModelDB retailOrderDb, CancellationToken token = default)
     {
-        loggerRepo.LogInformation($"{nameof(retailOrderDb)}: {JsonConvert.SerializeObject(retailOrderDb, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
         foreach (RowOfRetailOrderDocumentModelDB row in rows)
         {
             OfferAvailabilityModelDB? regOfferAv = offerAvailabilityDB
