@@ -11,26 +11,9 @@ namespace SharedLib.CommerceMLEDI;
 [XmlInclude(typeof(РеджектСчетФактура))]
 [XmlInclude(typeof(АкцептСчетФактура))]
 [XmlInclude(typeof(СчетФактура))]
-public abstract partial class КоммерческийДокументИнвойс
+public abstract partial class КоммерческийДокументИнвойс : КоммерческийДокумент
 {
-    /// <remarks/>
-    public ИдентификаторКонтрагента ИдОтправителя { get; set; }
 
-    /// <remarks/>
-    public ИдентификаторКонтрагента ИдПолучателя { get; set; }
-
-    /// <remarks/>
-    public ИдентификаторДокумента НомерДокумента { get; set; }
-
-    /// <remarks/>
-    public System.DateTime МоментСоздания { get; set; }
-
-    /// <remarks/>
-    public string Примечание { get; set; }
-
-    /// <remarks/>
-    [XmlAnyAttribute()]
-    public System.Xml.XmlAttribute[] AnyAttr { get; set; }
 }
 
 /// <remarks/>
@@ -65,8 +48,13 @@ public partial class СтрокаСчетФактура
     [XmlElement("ИдТовара")]
     public ИдентификаторТовара[] ИдТовара { get; set; }
 
-    /// <remarks/>
-    public ОКЕИ ОКЕИ { get; set; }
+    /// <summary>
+    /// Представление Кода по Общероссийскому классификатору единиц измерения ОКЕИ
+    /// </summary>
+    /// <remarks>
+    /// pattern: [0-9]{3}
+    /// </remarks>
+    public string? ОКЕИ { get; set; }
 
     /// <remarks/>
     public decimal Количество { get; set; }

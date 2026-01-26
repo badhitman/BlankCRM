@@ -11,26 +11,9 @@ namespace SharedLib.CommerceMLEDI;
 [XmlInclude(typeof(РеджектЗаказа))]
 [XmlInclude(typeof(АкцептЗаказа))]
 [XmlInclude(typeof(Заказ))]
-public abstract partial class КоммерческийДокументЗаказ
+public abstract partial class КоммерческийДокументЗаказ : КоммерческийДокумент
 {
-    /// <remarks/>
-    public ИдентификаторКонтрагента ИдОтправителя { get; set; }
 
-    /// <remarks/>
-    public ИдентификаторКонтрагента ИдПолучателя { get; set; }
-
-    /// <remarks/>
-    public ИдентификаторДокумента НомерДокумента { get; set; }
-
-    /// <remarks/>
-    public System.DateTime МоментСоздания { get; set; }
-
-    /// <remarks/>
-    public string Примечание { get; set; }
-
-    /// <remarks/>
-    [XmlAnyAttribute()]
-    public System.Xml.XmlAttribute[] AnyAttr { get; set; }
 }
 
 /// <remarks/>

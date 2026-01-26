@@ -1,0 +1,12 @@
+﻿////////////////////////////////////////////////
+// © https://github.com/badhitman - @FakeGov 
+////////////////////////////////////////////////
+
+namespace SharedLib.CommerceMLEDI;
+
+/// <remarks/>
+public enum ТипНалога
+{
+    /// <remarks/>
+    НДС,
+}

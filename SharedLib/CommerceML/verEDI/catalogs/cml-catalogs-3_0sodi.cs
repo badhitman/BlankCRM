@@ -11,22 +11,9 @@ namespace SharedLib.CommerceMLEDI;
 [XmlInclude(typeof(ТоварКРаботе))]
 [XmlInclude(typeof(КаталогТоваров))]
 [XmlInclude(typeof(ЗапросКаталога))]
-public abstract partial class КоммерческийДокументКаталог
+public abstract partial class КоммерческийДокументКаталог : КоммерческийДокумент
 {
-    /// <remarks/>
-    public ИдентификаторКонтрагента ИдОтправителя { get; set; }
 
-    /// <remarks/>
-    public ИдентификаторКонтрагента ИдПолучателя { get; set; }
-
-    /// <remarks/>
-    public ИдентификаторДокумента НомерДокумента { get; set; }
-
-    /// <remarks/>
-    public System.DateTime МоментСоздания { get; set; }
-
-    /// <remarks/>
-    public string Примечание { get; set; }
 }
 
 /// <remarks/>
@@ -51,23 +38,35 @@ public partial class СтрокаТовараКРаботе
     public string Примечание { get; set; }
 }
 
-/// <remarks/>
+/// <summary>
+/// Информация о единице товара, присутствующей в каталоге
+/// </summary>
 public partial class СтрокаКаталога
 {
     /// <remarks/>
-    public ИдентификаторТовара[] ИдТовараПоставщика { get; set; }
+    public ИдентификаторТовара ИдТовараПоставщика { get; set; }
 
     /// <remarks/>
-    public ИдентификаторТовара[] ИдТовараКлиента { get; set; }
+    public ИдентификаторТовара ИдТовараКлиента { get; set; }
 
     /// <remarks/>
-    public ИдентификаторТовара[] ШтриховойКод { get; set; }
+    public ИдентификаторТовара ШтриховойКод { get; set; }
 
-    /// <remarks/>
-    public ОКЕИ ОКЕИ { get; set; }
+    /// <summary>
+    /// Представление Кода по Общероссийскому классификатору единиц измерения ОКЕИ
+    /// </summary>
+    /// <remarks>
+    /// pattern: [0-9]{3}
+    /// </remarks>
+    public string? ОКЕИ { get; set; }
 
-    /// <remarks/>
-    public ОКП ОКП { get; set; }
+    /// <summary>
+    /// Представление Кода по Общероссийскому классификатору продукции ОКП
+    /// </summary>
+    /// <remarks>
+    /// pattern: [0-9]{6}
+    /// </remarks>
+    public string? ОКП { get; set; }
 
     /// <summary>
     /// Представление числового кода страны в  соответствии классификатором [МК Стран мира].
@@ -78,8 +77,13 @@ public partial class СтрокаКаталога
     /// </remarks>
     public string? ИСО3166 { get; set; }
 
-    /// <remarks/>
-    public ОКВЭД ОКВЭД { get; set; }
+    /// <summary>
+    /// Представление Кода по Общероссийскому классификатору внешнеэкономической деятельности ОКВЭД
+    /// </summary>
+    /// <remarks>
+    /// pattern: [0-9]{2}.[0-9]{2}.[0-9]{2}
+    /// </remarks>
+    public string? ОКВЭД { get; set; }
 
     /// <remarks/>
     public КлассификаторТип[] КлассификаторТовара { get; set; }
@@ -97,65 +101,36 @@ public partial class СтрокаКаталога
     public string Описание { get; set; }
 
     /// <remarks/>
-    public decimal ВесНетто { get; set; }
+    public decimal? ВесНетто { get; set; }
 
     /// <remarks/>
-    public bool ВесНеттоSpecified { get; set; }
+    public decimal? ВесБрутто { get; set; }
 
     /// <remarks/>
-    public decimal ВесБрутто { get; set; }
+    public decimal? ВысотаСлояТовара { get; set; }
 
     /// <remarks/>
-    public bool ВесБруттоSpecified { get; set; }
+    public decimal? ВысотаТовара { get; set; }
 
     /// <remarks/>
-    public decimal ВысотаСлояТовара { get; set; }
+    public decimal? ШиринаТовара { get; set; }
 
     /// <remarks/>
-    public bool ВысотаСлояТовараSpecified { get; set; }
+    public decimal? ГлубинаТовара { get; set; }
 
     /// <remarks/>
-    public decimal ВысотаТовара { get; set; }
+    public decimal? ОбъемТовара { get; set; }
 
     /// <remarks/>
-    public bool ВысотаТовараSpecified { get; set; }
+    public decimal? МинКоличествоДляЗаказа { get; set; }
 
     /// <remarks/>
-    public decimal ШиринаТовара { get; set; }
+    public decimal? КоличествоВСлоеНаЕвропалете { get; set; }
 
     /// <remarks/>
-    public bool ШиринаТовараSpecified { get; set; }
-
-    /// <remarks/>
-    public decimal ГлубинаТовара { get; set; }
-
-    /// <remarks/>
-    public bool ГлубинаТовараSpecified { get; set; }
-
-    /// <remarks/>
-    public decimal ОбъемТовара { get; set; }
-
-    /// <remarks/>
-    public bool ОбъемТовараSpecified { get; set; }
-
-    /// <remarks/>
-    public decimal МинКоличествоДляЗаказа { get; set; }
-
-    /// <remarks/>
-    public bool МинКоличествоДляЗаказаSpecified { get; set; }
-
-    /// <remarks/>
-    public decimal КоличествоВСлоеНаЕвропалете { get; set; }
-
-    /// <remarks/>
-    public bool КоличествоВСлоеНаЕвропалетеSpecified { get; set; }
-
-    /// <remarks/>
-    [XmlElement(DataType = "duration")]
     public TimeSpan СрокХранения { get; set; }
 
     /// <remarks/>
-    [XmlElement(DataType = "integer")]
     public int ТемператураХранения { get; set; }
 
     /// <remarks/>
@@ -165,17 +140,10 @@ public partial class СтрокаКаталога
     public bool КратностьSpecified { get; set; }
 
     /// <remarks/>
-    public decimal КоличесвоЕдиницОбъектаВерхнегоУровня { get; set; }
-
-    /// <remarks/>
-    public bool КоличесвоЕдиницОбъектаВерхнегоУровняSpecified { get; set; }
+    public decimal? КоличествоЕдиницОбъектаВерхнегоУровня { get; set; }
 
     /// <remarks/>
     public string Примечание { get; set; }
-
-    /// <remarks/>
-    [XmlAnyElement()]
-    public System.Xml.XmlElement[] Any { get; set; }
 }
 
 /// <remarks/>

@@ -11,26 +11,9 @@ namespace SharedLib.CommerceMLEDI;
 [XmlInclude(typeof(ПрайсЛистКРаботе))]
 [XmlInclude(typeof(ПрайсЛист))]
 [XmlInclude(typeof(ЗапросПрайсЛист))]
-public abstract partial class КоммерческийДокументПрайс
+public abstract partial class КоммерческийДокументПрайс : КоммерческийДокумент
 {
-    /// <remarks/>
-    public ИдентификаторКонтрагента ИдОтправителя { get; set; }
 
-    /// <remarks/>
-    public ИдентификаторКонтрагента ИдПолучателя { get; set; }
-
-    /// <remarks/>
-    public ИдентификаторДокумента НомерДокумента { get; set; }
-
-    /// <remarks/>
-    public System.DateTime МоментСоздания { get; set; }
-
-    /// <remarks/>
-    public string Примечание { get; set; }
-
-    /// <remarks/>
-    [XmlAnyAttribute()]
-    public System.Xml.XmlAttribute[] AnyAttr { get; set; }
 }
 
 /// <remarks/>
@@ -58,30 +41,23 @@ public partial class ПрайсЛист : КоммерческийДокумен
     public bool ПолныйПрайсЛист { get; set; }
 
     /// <remarks/>
-
     public bool ПолныйПрайсЛистSpecified { get; set; }
 
     /// <remarks/>
     public System.DateTime НачалоДействия { get; set; }
 
     /// <remarks/>
-
     public bool НачалоДействияSpecified { get; set; }
 
     /// <remarks/>
     public System.DateTime ОкончаниеДействия { get; set; }
 
     /// <remarks/>
-
     public bool ОкончаниеДействияSpecified { get; set; }
 
     /// <remarks/>
     [XmlElement("ТоварПрайсЛист")]
     public ТоварПрайсЛист[] ТоварПрайсЛист { get; set; }
-
-    /// <remarks/>
-
-    public System.Xml.XmlElement[] Any { get; set; }
 }
 
 /// <remarks/>
@@ -97,13 +73,9 @@ public partial class ТоварПрайсЛист
 
     /// <remarks/>
     public string Примечание { get; set; }
-
-    /// <remarks/>
-    public System.Xml.XmlElement[] Any { get; set; }
 }
 
 /// <remarks/>
-[XmlType(AnonymousType = true, Namespace = "urn:moo-sodi.ru:commerceml_sodi")]
 
 public partial class Цена : СтоимостьТип
 {
@@ -116,24 +88,12 @@ public partial class ПрайсЛистКРаботе : Коммерческий
     public ИдентификаторДокумента НомерИсходногоДокумента { get; set; }
 
     /// <remarks/>
-    public System.DateTime НачалоДействия { get; set; }
+    public DateTime? НачалоДействия { get; set; }
 
     /// <remarks/>
-
-    public bool НачалоДействияSpecified { get; set; }
-
-    /// <remarks/>
-    public System.DateTime ОкончаниеДействия { get; set; }
+    public DateTime? ОкончаниеДействия { get; set; }
 
     /// <remarks/>
-
-    public bool ОкончаниеДействияSpecified { get; set; }
-
-    /// <remarks/>
-    [XmlElement("ТоварПрайсЛист")]
     public ТоварПрайсЛист[] ТоварПрайсЛист { get; set; }
-
-    /// <remarks/>    
-    public System.Xml.XmlElement[] Any { get; set; }
 }
 #pragma warning restore CS8618 // Поле, не допускающее значения NULL, должно содержать значение, отличное от NULL, при выходе из конструктора. Рассмотрите возможность добавления модификатора "required" или объявления значения, допускающего значение NULL.
