@@ -16,12 +16,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Remove="CommerceML_EDI\invoice\cml-invoice-3_0sodi.cs" />
-	  <Compile Remove="CommerceML_EDI\ordering\cml-ordering-3_0sodi.cs" />
-	  <Compile Remove="CommerceML_EDI\price\cml-price-3_0sodi.cs" />
-	  <None Include="CommerceML_EDI\invoice\cml-invoice-3_0sodi.cs" />
-	  <None Include="CommerceML_EDI\ordering\cml-ordering-3_0sodi.cs" />
-	  <None Include="CommerceML_EDI\price\cml-price-3_0sodi.cs" />
+	  <Compile Remove="CommerceML\verEDI\invoice\cml-invoice-3_0sodi.cs" />
+	  <Compile Remove="CommerceML\verEDI\ordering\cml-ordering-3_0sodi.cs" />
+	  <Compile Remove="CommerceML\verEDI\price\cml-price-3_0sodi.cs" />
+	  <None Include="CommerceML\verEDI\invoice\cml-invoice-3_0sodi.cs" />
+	  <None Include="CommerceML\verEDI\ordering\cml-ordering-3_0sodi.cs" />
+	  <None Include="CommerceML\verEDI\price\cml-price-3_0sodi.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
