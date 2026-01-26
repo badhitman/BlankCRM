@@ -17,7 +17,7 @@ public abstract partial class КоммерческийДокумент
     public ИдентификаторКонтрагента ИдПолучателя { get; set; }
 
     /// <remarks/>
-    public ИдентификаторДокумента НомерДокумента { get; set; }
+    public string НомерДокумента { get; set; }
 
     /// <remarks/>
     public DateTime МоментСоздания { get; set; }
@@ -60,20 +60,6 @@ public partial class КлассификаторТип
     /// pattern: [0-9]{3}
     /// </remarks>
     public string? ОКЕИ { get; set; }
-}
-
-/// <remarks/>
-[XmlInclude(typeof(ДокументИД))]
-[XmlRoot("НомерДокумента", Namespace = "urn:moo-sodi.ru:commerceml_sodi", IsNullable = false)]
-public abstract partial class ИдентификаторДокумента
-{
-    /// <remarks/>    
-    public string Value { get; set; }
-}
-
-/// <remarks/>
-public partial class ДокументИД : ИдентификаторДокумента
-{
 }
 
 /// <remarks/>

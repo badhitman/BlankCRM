@@ -42,9 +42,6 @@ public partial class Заказ : КоммерческийДокументЗак
     /// <remarks/>
     [XmlElement("Товар")]
     public СтрокаЗаказа[] Товар { get; set; }
-
-    /// <remarks/>    
-    public System.Xml.XmlElement[] Any { get; set; }
 }
 
 /// <remarks/>
@@ -62,33 +59,27 @@ public partial class СтрокаЗаказа
 
     /// <remarks/>
     public string Примечание { get; set; }
-
-    /// <remarks/>    
-    public System.Xml.XmlElement[] Any { get; set; }
 }
 
 /// <remarks/>
 public partial class АкцептЗаказа : КоммерческийДокументЗаказ
 {
     /// <remarks/>
-    public ИдентификаторДокумента НомерИсходногоДокумента { get; set; }
-
-    /// <remarks/>    
-    public System.Xml.XmlElement[] Any { get; set; }
+    public string НомерИсходногоДокумента { get; set; }
 }
 
 /// <remarks/>
 public partial class РеджектЗаказа : КоммерческийДокументЗаказ
 {
     /// <remarks/>
-    public ИдентификаторДокумента НомерИсходногоДокумента { get; set; }
+    public string НомерИсходногоДокумента { get; set; }
 
     /// <remarks/>
     [XmlElement(DataType = "duration")]
     public string ДлительностьОжиданияРеакции { get; set; }
 
     /// <remarks/>
-    public System.DateTime ДатаВремяДоставки { get; set; }
+    public DateTime ДатаВремяДоставки { get; set; }
 
     /// <remarks/>
     [XmlElement(DataType = "duration")]
@@ -100,8 +91,5 @@ public partial class РеджектЗаказа : КоммерческийДок
     /// <remarks/>
     [XmlElement("Товар")]
     public СтрокаЗаказа[] Товар { get; set; }
-
-    /// <remarks/>    
-    public System.Xml.XmlElement[] Any { get; set; }
 }
 #pragma warning restore CS8618 // Поле, не допускающее значения NULL, должно содержать значение, отличное от NULL, при выходе из конструктора. Рассмотрите возможность добавления модификатора "required" или объявления значения, допускающего значение NULL.

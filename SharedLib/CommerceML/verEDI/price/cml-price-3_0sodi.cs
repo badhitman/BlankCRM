@@ -31,7 +31,7 @@ public partial class ЗапросПрайсЛист : КоммерческийД
 public partial class ПрайсЛист : КоммерческийДокументПрайс
 {
     /// <remarks/>
-    public ИдентификаторДокумента НомерИсходногоДокумента { get; set; }
+    public string НомерИсходногоДокумента { get; set; }
 
     /// <remarks/>
     [XmlElement(DataType = "duration")]
@@ -44,13 +44,13 @@ public partial class ПрайсЛист : КоммерческийДокумен
     public bool ПолныйПрайсЛистSpecified { get; set; }
 
     /// <remarks/>
-    public System.DateTime НачалоДействия { get; set; }
+    public DateTime НачалоДействия { get; set; }
 
     /// <remarks/>
     public bool НачалоДействияSpecified { get; set; }
 
     /// <remarks/>
-    public System.DateTime ОкончаниеДействия { get; set; }
+    public DateTime ОкончаниеДействия { get; set; }
 
     /// <remarks/>
     public bool ОкончаниеДействияSpecified { get; set; }
@@ -85,7 +85,7 @@ public partial class Цена : СтоимостьТип
 public partial class ПрайсЛистКРаботе : КоммерческийДокументПрайс
 {
     /// <remarks/>
-    public ИдентификаторДокумента НомерИсходногоДокумента { get; set; }
+    public string НомерИсходногоДокумента { get; set; }
 
     /// <remarks/>
     public DateTime? НачалоДействия { get; set; }

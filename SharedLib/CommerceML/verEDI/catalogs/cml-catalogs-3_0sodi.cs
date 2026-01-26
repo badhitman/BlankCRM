@@ -157,7 +157,7 @@ public partial class ЗапросКаталога : КоммерческийДо
 public partial class КаталогТоваров : КоммерческийДокументКаталог
 {
     /// <remarks/>
-    public ИдентификаторДокумента НомерИсходногоДокумента { get; set; }
+    public string НомерИсходногоДокумента { get; set; }
 
     /// <remarks/>
     public TimeSpan ДлительностьОжиданияОтвета { get; set; }
@@ -177,7 +177,7 @@ public partial class КаталогТоваров : КоммерческийДо
 public partial class ТоварКРаботе : КоммерческийДокументКаталог
 {
     /// <remarks/>
-    public ИдентификаторДокумента НомерИсходногоДокумента { get; set; }
+    public string НомерИсходногоДокумента { get; set; }
 
     /// <remarks/>
     public СтрокаТовараКРаботе[] Товар { get; set; }
