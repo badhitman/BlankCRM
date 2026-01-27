@@ -41,8 +41,7 @@ public partial class СтрокаСчетФактура
     public string ИдНакладной { get; set; }
 
     /// <remarks/>
-    [XmlElement("ИдТовара")]
-    public ИдентификаторТовара[] ИдТовара { get; set; }
+    public string ИдТовара { get; set; }
 
     /// <summary>
     /// Представление Кода по Общероссийскому классификатору единиц измерения ОКЕИ

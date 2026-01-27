@@ -20,19 +20,16 @@ public abstract partial class КоммерческийДокументКатал
 public partial class СтрокаТовараКРаботе
 {
     /// <remarks/>
-    public ИдентификаторТовара ИдТовараКлиента { get; set; }
+    public string ИдТовараКлиента { get; set; }
 
     /// <remarks/>
-    public ИдентификаторТовара[] ИдТовараПоставщика { get; set; }
+    public string ИдТовараПоставщика { get; set; }
 
     /// <remarks/>
     public string Наименование { get; set; }
 
     /// <remarks/>
-    public decimal КоэффициентПересчета { get; set; }
-
-    /// <remarks/>
-    public bool КоэффициентПересчетаSpecified { get; set; }
+    public decimal? КоэффициентПересчета { get; set; }
 
     /// <remarks/>
     public string Примечание { get; set; }
@@ -44,13 +41,13 @@ public partial class СтрокаТовараКРаботе
 public partial class СтрокаКаталога
 {
     /// <remarks/>
-    public ИдентификаторТовара ИдТовараПоставщика { get; set; }
+    public string ИдТовараПоставщика { get; set; }
 
     /// <remarks/>
-    public ИдентификаторТовара ИдТовараКлиента { get; set; }
+    public string ИдТовараКлиента { get; set; }
 
     /// <remarks/>
-    public ИдентификаторТовара ШтриховойКод { get; set; }
+    public string ШтриховойКод { get; set; }
 
     /// <summary>
     /// Представление Кода по Общероссийскому классификатору единиц измерения ОКЕИ
@@ -84,9 +81,6 @@ public partial class СтрокаКаталога
     /// pattern: [0-9]{2}.[0-9]{2}.[0-9]{2}
     /// </remarks>
     public string? ОКВЭД { get; set; }
-
-    /// <remarks/>
-    public КлассификаторТип[] КлассификаторТовара { get; set; }
 
     /// <remarks/>
     public string Наименование { get; set; }
@@ -128,22 +122,19 @@ public partial class СтрокаКаталога
     public decimal? КоличествоВСлоеНаЕвропалете { get; set; }
 
     /// <remarks/>
-    public TimeSpan СрокХранения { get; set; }
+    public TimeSpan? СрокХранения { get; set; }
 
     /// <remarks/>
-    public int ТемператураХранения { get; set; }
+    public int? ТемператураХранения { get; set; }
 
     /// <remarks/>
-    public decimal Кратность { get; set; }
-
-    /// <remarks/>
-    public bool КратностьSpecified { get; set; }
+    public decimal? Кратность { get; set; }
 
     /// <remarks/>
     public decimal? КоличествоЕдиницОбъектаВерхнегоУровня { get; set; }
 
     /// <remarks/>
-    public string Примечание { get; set; }
+    public string? Примечание { get; set; }
 }
 
 /// <remarks/>
@@ -163,17 +154,15 @@ public partial class КаталогТоваров : КоммерческийДо
     public TimeSpan ДлительностьОжиданияОтвета { get; set; }
 
     /// <remarks/>
-    public bool ЭтоПолныйКаталог { get; set; }
-
-    /// <remarks/>
-
-    public bool ЭтоПолныйКаталогSpecified { get; set; }
+    public bool? ЭтоПолныйКаталог { get; set; }
 
     /// <remarks/>
     public СтрокаКаталога[] Товар { get; set; }
 }
 
-/// <remarks/>
+/// <summary>
+/// Тип документа "Каталог товаров"
+/// </summary>
 public partial class ТоварКРаботе : КоммерческийДокументКаталог
 {
     /// <remarks/>

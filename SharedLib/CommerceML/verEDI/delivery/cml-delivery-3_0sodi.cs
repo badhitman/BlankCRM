@@ -24,8 +24,7 @@ public abstract partial class КоммерческийДокументДоста
 public partial class ТоварАкцептРеджектНакладная
 {
     /// <remarks/>
-    [XmlElement("ИдТовара")]
-    public ИдентификаторТовара[] ИдТовара { get; set; }
+    public string ИдТовара { get; set; }
 
     /// <remarks/>
     public decimal Количество { get; set; }
@@ -41,8 +40,7 @@ public partial class ТоварАкцептРеджектНакладная
 public partial class ТоварВНакладной
 {
     /// <remarks/>
-    [XmlElement("ИдТовара")]
-    public ИдентификаторТовара[] ИдТовара { get; set; }
+    public string ИдТовара { get; set; }
 
     /// <remarks/>
     public string НомерАкцептованногоЗаказа { get; set; }
@@ -58,10 +56,7 @@ public partial class ТоварВНакладной
     public СтоимостьТип СуммаПоСтроке { get; set; }
 
     /// <remarks/>
-    public DateTime СрокРеализации { get; set; }
-
-    /// <remarks/>
-    public bool СрокРеализацииSpecified { get; set; }
+    public DateTime? СрокРеализации { get; set; }
 
     /// <remarks/>
     [XmlElement("НомерГТД", DataType = "normalizedString")]
@@ -108,16 +103,10 @@ public partial class АкцептНакладной : КоммерческийД
     public DateTime ДатаНакладной { get; set; }
 
     /// <remarks/>
-    public DateTime НачалоРазгрузки { get; set; }
+    public DateTime? НачалоРазгрузки { get; set; }
 
     /// <remarks/>
-    public bool НачалоРазгрузкиSpecified { get; set; }
-
-    /// <remarks/>
-    public DateTime ОкончаниеРазгрузки { get; set; }
-
-    /// <remarks/>
-    public bool ОкончаниеРазгрузкиSpecified { get; set; }
+    public DateTime? ОкончаниеРазгрузки { get; set; }
 
     /// <remarks/>
     [XmlElement("Товар")]

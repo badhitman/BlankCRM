@@ -38,22 +38,13 @@ public partial class ПрайсЛист : КоммерческийДокумен
     public string ДлительностьОжиданияОтвета { get; set; }
 
     /// <remarks/>
-    public bool ПолныйПрайсЛист { get; set; }
+    public bool? ПолныйПрайсЛист { get; set; }
 
     /// <remarks/>
-    public bool ПолныйПрайсЛистSpecified { get; set; }
+    public DateTime? НачалоДействия { get; set; }
 
     /// <remarks/>
-    public DateTime НачалоДействия { get; set; }
-
-    /// <remarks/>
-    public bool НачалоДействияSpecified { get; set; }
-
-    /// <remarks/>
-    public DateTime ОкончаниеДействия { get; set; }
-
-    /// <remarks/>
-    public bool ОкончаниеДействияSpecified { get; set; }
+    public DateTime? ОкончаниеДействия { get; set; }
 
     /// <remarks/>
     [XmlElement("ТоварПрайсЛист")]
@@ -65,8 +56,7 @@ public partial class ПрайсЛист : КоммерческийДокумен
 public partial class ТоварПрайсЛист
 {
     /// <remarks/>
-    [XmlElement("ИдТовара")]
-    public ИдентификаторТовара[] ИдТовара { get; set; }
+    public string ИдТовара { get; set; }
 
     /// <remarks/>
     public Цена Цена { get; set; }

@@ -49,7 +49,7 @@ public partial class Заказ : КоммерческийДокументЗак
 public partial class СтрокаЗаказа
 {
     /// <remarks/>
-    public ИдентификаторТовара ИдТовара { get; set; }
+    public string ИдТовара { get; set; }
 
     /// <remarks/>
     public decimal Количество { get; set; }
