@@ -2,8 +2,10 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using BlazorLib.Components.FileView;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using MudBlazor;
 using SharedLib;
 
 namespace BlazorLib.Components.Storage;
@@ -20,6 +22,8 @@ public partial class FolderRootViewComponent : BlazorBusyComponentBaseAuthModel
     [Inject]
     IStorageTransmission StorageRepo { get; set; } = default!;
 
+    [Inject]
+    IDialogService DialogService { get; set; } = default!;
 
     /// <inheritdoc/>
     [Parameter, EditorRequired]
@@ -38,6 +42,21 @@ public partial class FolderRootViewComponent : BlazorBusyComponentBaseAuthModel
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         DirectoryData = res.Response;
         await SetBusyAsync(false);
+    }
+
+    Task OpenDialogAsync(DirectoryItemModel _fiElement)
+    {
+        DialogParameters<FileViewDialogComponent> parameters = new() { { x => x.DirectoryItem, _fiElement } };
+        DialogOptions options = new()
+        {
+            CloseOnEscapeKey = true,
+            BackdropClick = true,
+            CloseButton = true,
+            FullScreen = true,
+            FullWidth = true,
+        };
+
+        return DialogService.ShowAsync<FileViewDialogComponent>("View file data", parameters, options);
     }
 
     /// <inheritdoc/>

@@ -42,6 +42,13 @@ else
                                     <div style="display: grid; grid-template-columns: 1fr auto; align-items: center; width: 100%">
                                         <MudText Style="justify-self: start;">@($"{(startSegment < 0 ? _fiElement.FullPath : $"...{_fiElement.FullPath.Substring(startSegment + DirectoryData.FullPath.Length)}")}{(_fiElement.IsDirectory ? "" : $" - {GlobalToolsStandard.SizeDataAsString(_fiElement.FileSizeBytes)}")}")</MudText>
                                         <div style="justify-self: end;">
+                                            @if (!_fiElement.IsDirectory)
+                                            {
+                                                <MudIconButton Icon="@Icons.Material.Filled.Pageview"
+                                                               Size="Size.Small"
+                                                               OnClick="() => OpenDialogAsync(_fiElement)"
+                                                               title="Просмотр файла" />
+                                            }
                                             <MudIconButton Icon="@Icons.Material.Filled.ContentCopy"
                                                            OnClick="() => ClipboardCopyHandle(_fiElement.FullPath, _fiElement.IsDirectory)"
                                                            Size="Size.Small"

@@ -1,0 +1,21 @@
+﻿@inherits BlazorBusyComponentBaseModel
+
+@using MudBlazor
+
+<MudDialog>
+    <DialogContent>
+        <MudSlider Max="DirectoryItem.FileSizeBytes" @bind-Value="ValueSlider">
+            Value: @_valueSliderString / @FileSizeString
+        </MudSlider>
+        <MudTextField Variant="Variant.Outlined"
+                      @bind-Text="RawData"
+                      Label="RawData"
+                      T="string"
+                      Lines="13"
+                      ReadOnly />
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">OK</MudButton>
+    </DialogActions>
+</MudDialog>
