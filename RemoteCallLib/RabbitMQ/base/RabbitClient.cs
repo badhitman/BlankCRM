@@ -120,6 +120,7 @@ public class RabbitClient : IRabbitClient
             {
                 await _channel.BasicAckAsync(e.DeliveryTag, false, tokenOuter);
             }
+            catch (TaskCanceledException) { }
             catch (Exception ex)
             {
                 msg = "exception basic ask. error {A62029D4-1A23-461D-99AD-349C6B7500A8}";

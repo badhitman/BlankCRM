@@ -4,7 +4,6 @@
 
 namespace SharedLib.CommerceMLEDI;
 
-
 /// <remarks/>
 public partial class Заказ : КоммерческийДокумент
 {
