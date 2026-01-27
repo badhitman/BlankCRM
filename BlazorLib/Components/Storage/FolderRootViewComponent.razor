@@ -32,7 +32,7 @@ else
             }
             else
             {
-                <MudPaper Elevation="0" title="Чтобы скопировать в буфер путь к файлу - двойной клик (mouse double click)">
+                <MudPaper Elevation="0">
                     <MudTreeView Hover @bind-SelectedValue="SelectedValue" SelectionMode="@SelectionMode.SingleSelection">
                         <ItemTemplate Context="item">
                             @foreach (DirectoryItemModel _fiElement in DirectoryData.DirectoryItems)
@@ -47,8 +47,12 @@ else
                                         <div style="display: grid; grid-template-columns: 1fr auto; align-items: center; width: 100%">
                                             <MudText Style="justify-self: start;">@item.Text</MudText>
                                             <div style="justify-self: end;">
-                                                <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Medium" Color="Color.Inherit" />
-                                                <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Medium" Color="Color.Inherit" />
+                                                <MudIconButton OnClick="() => ClipboardCopyHandle(_fiElement.FullPath)"
+                                                               title="Чтобы скопировать в буфер путь к файлу"
+                                                               Icon="@Icons.Material.Filled.ContentCopy"
+                                                               Color="Color.Inherit"
+                                                               Size="Size.Medium" />
+                                                @* <MudIconButton Icon="@Icons.Material.Filled.Preview" Size="Size.Medium" Color="Color.Inherit" /> *@
                                             </div>
                                         </div>
                                     </BodyContent>
