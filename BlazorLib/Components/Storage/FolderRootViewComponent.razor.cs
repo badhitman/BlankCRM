@@ -41,9 +41,9 @@ public partial class FolderRootViewComponent : BlazorBusyComponentBaseAuthModel
     }
 
     /// <inheritdoc/>
-    protected async Task ClipboardCopyHandle(string textCopy)
+    protected async Task ClipboardCopyHandle(string textCopy, bool isDirectory)
     {
         await JsRuntimeRepo.InvokeVoidAsync("clipboardCopy.copyText", textCopy);
-        SnackBarRepo.Info($"Путь к папке `{textCopy}` скопирован в буфер обмена");
+        SnackBarRepo.Info($"Путь к {(isDirectory ? "папке" : "файлу")} `{textCopy}` скопирован в буфер обмена");
     }
 }
