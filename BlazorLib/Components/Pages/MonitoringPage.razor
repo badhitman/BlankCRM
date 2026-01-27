@@ -25,7 +25,9 @@
         <MudTabPanel Text="Файлы/Папки">
             <MudTable Items="@ServerConfig.Value.DirectoriesReadList">
                 <RowTemplate>
-                    <MudTd><FolderRootViewComponent FolderPath="@context" /></MudTd>
+                    <MudTd>
+                        <FolderRootViewComponent FolderPath="@context" />
+                    </MudTd>
                 </RowTemplate>
                 <PagerContent>
                     <MudTablePager PageSizeOptions="new int[] { 3, 5, 10, int.MaxValue }" />
