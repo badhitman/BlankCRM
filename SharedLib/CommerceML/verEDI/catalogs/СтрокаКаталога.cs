@@ -2,29 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using System.Xml.Serialization;
-
 namespace SharedLib.CommerceMLEDI;
-
-#pragma warning disable CS8618 // Поле, не допускающее значения NULL, должно содержать значение, отличное от NULL, при выходе из конструктора. Рассмотрите возможность добавления модификатора "required" или объявления значения, допускающего значение NULL.
-/// <remarks/>
-public partial class СтрокаТовараКРаботе
-{
-    /// <remarks/>
-    public string ИдТовараКлиента { get; set; }
-
-    /// <remarks/>
-    public string ИдТовараПоставщика { get; set; }
-
-    /// <remarks/>
-    public string Наименование { get; set; }
-
-    /// <remarks/>
-    public decimal? КоэффициентПересчета { get; set; }
-
-    /// <remarks/>
-    public string Примечание { get; set; }
-}
 
 /// <summary>
 /// Информация о единице товара, присутствующей в каталоге
@@ -32,13 +10,13 @@ public partial class СтрокаТовараКРаботе
 public partial class СтрокаКаталога
 {
     /// <remarks/>
-    public string ИдТовараПоставщика { get; set; }
+    public required string ИдТовараПоставщика { get; set; }
 
     /// <remarks/>
-    public string ИдТовараКлиента { get; set; }
+    public required string ИдТовараКлиента { get; set; }
 
     /// <remarks/>
-    public string ШтриховойКод { get; set; }
+    public string? ШтриховойКод { get; set; }
 
     /// <summary>
     /// Представление Кода по Общероссийскому классификатору единиц измерения ОКЕИ
@@ -74,16 +52,16 @@ public partial class СтрокаКаталога
     public string? ОКВЭД { get; set; }
 
     /// <remarks/>
-    public string Наименование { get; set; }
+    public required string Наименование { get; set; }
 
     /// <remarks/>
-    public string ТорговаяМарка { get; set; }
+    public string? ТорговаяМарка { get; set; }
 
     /// <remarks/>
-    public string Производитель { get; set; }
+    public string? Производитель { get; set; }
 
     /// <remarks/>
-    public string Описание { get; set; }
+    public string? Описание { get; set; }
 
     /// <remarks/>
     public decimal? ВесНетто { get; set; }
@@ -127,39 +105,3 @@ public partial class СтрокаКаталога
     /// <remarks/>
     public string? Примечание { get; set; }
 }
-
-/// <remarks/>
-public partial class ЗапросКаталога : КоммерческийДокумент
-{
-    /// <remarks/>
-    public TimeSpan ДлительностьОжиданияОтвета { get; set; }
-}
-
-/// <remarks/>
-public partial class КаталогТоваров : КоммерческийДокумент
-{
-    /// <remarks/>
-    public string НомерИсходногоДокумента { get; set; }
-
-    /// <remarks/>
-    public TimeSpan ДлительностьОжиданияОтвета { get; set; }
-
-    /// <remarks/>
-    public bool? ЭтоПолныйКаталог { get; set; }
-
-    /// <remarks/>
-    public СтрокаКаталога[] Товар { get; set; }
-}
-
-/// <summary>
-/// Тип документа "Каталог товаров"
-/// </summary>
-public partial class ТоварКРаботе : КоммерческийДокумент
-{
-    /// <remarks/>
-    public string НомерИсходногоДокумента { get; set; }
-
-    /// <remarks/>
-    public СтрокаТовараКРаботе[] Товар { get; set; }
-}
-#pragma warning restore CS8618 // Поле, не допускающее значения NULL, должно содержать значение, отличное от NULL, при выходе из конструктора. Рассмотрите возможность добавления модификатора "required" или объявления значения, допускающего значение NULL.
