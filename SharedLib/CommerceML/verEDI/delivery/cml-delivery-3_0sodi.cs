@@ -9,18 +9,6 @@ namespace SharedLib.CommerceMLEDI;
 
 #pragma warning disable CS8618 // Поле, не допускающее значения NULL, должно содержать значение, отличное от NULL, при выходе из конструктора. Рассмотрите возможность добавления модификатора "required" или объявления значения, допускающего значение NULL.
 /// <remarks/>
-[XmlInclude(typeof(РеджектПодтверждениеНакладной))]
-[XmlInclude(typeof(АкцептПодтверждениеНакладной))]
-[XmlInclude(typeof(ЗапросПодтверждениеНакладной))]
-[XmlInclude(typeof(РеджектНакладной))]
-[XmlInclude(typeof(АкцептНакладной))]
-[XmlInclude(typeof(ЭлектроннаяНакладная))]
-public abstract partial class КоммерческийДокументДоставка : КоммерческийДокумент
-{
-
-}
-
-/// <remarks/>
 public partial class ТоварАкцептРеджектНакладная
 {
     /// <remarks/>
@@ -67,7 +55,7 @@ public partial class ТоварВНакладной
 }
 
 /// <remarks/>
-public partial class ЭлектроннаяНакладная : КоммерческийДокументДоставка
+public partial class ЭлектроннаяНакладная : КоммерческийДокумент
 {
     /// <remarks/>
     [XmlElement(DataType = "duration")]
@@ -91,7 +79,7 @@ public partial class ЭлектроннаяНакладная : Коммерче
 }
 
 /// <remarks/>
-public partial class АкцептНакладной : КоммерческийДокументДоставка
+public partial class АкцептНакладной : КоммерческийДокумент
 {
     /// <remarks/>
     public string НомерИсходногоДокумента { get; set; }
@@ -114,14 +102,14 @@ public partial class АкцептНакладной : КоммерческийД
 }
 
 /// <remarks/>
-public partial class РеджектНакладной : КоммерческийДокументДоставка
+public partial class РеджектНакладной : КоммерческийДокумент
 {
     /// <remarks/>
     public string НомерИсходногоДокумента { get; set; }
 }
 
 /// <remarks/>
-public partial class ЗапросПодтверждениеНакладной : КоммерческийДокументДоставка
+public partial class ЗапросПодтверждениеНакладной : КоммерческийДокумент
 {
     /// <remarks/>
     [XmlElement(DataType = "duration")]
@@ -139,7 +127,7 @@ public partial class ЗапросПодтверждениеНакладной : 
 }
 
 /// <remarks/>
-public partial class АкцептПодтверждениеНакладной : КоммерческийДокументДоставка
+public partial class АкцептПодтверждениеНакладной : КоммерческийДокумент
 {
     /// <remarks/>
     public string НомерИсходногоДокумента { get; set; }
@@ -149,7 +137,7 @@ public partial class АкцептПодтверждениеНакладной : 
 }
 
 /// <remarks/>
-public partial class РеджектПодтверждениеНакладной : КоммерческийДокументДоставка
+public partial class РеджектПодтверждениеНакладной : КоммерческийДокумент
 {
     /// <remarks/>
     public string НомерИсходногоДокумента { get; set; }

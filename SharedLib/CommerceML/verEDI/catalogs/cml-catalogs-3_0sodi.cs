@@ -8,15 +8,6 @@ namespace SharedLib.CommerceMLEDI;
 
 #pragma warning disable CS8618 // Поле, не допускающее значения NULL, должно содержать значение, отличное от NULL, при выходе из конструктора. Рассмотрите возможность добавления модификатора "required" или объявления значения, допускающего значение NULL.
 /// <remarks/>
-[XmlInclude(typeof(ТоварКРаботе))]
-[XmlInclude(typeof(КаталогТоваров))]
-[XmlInclude(typeof(ЗапросКаталога))]
-public abstract partial class КоммерческийДокументКаталог : КоммерческийДокумент
-{
-
-}
-
-/// <remarks/>
 public partial class СтрокаТовараКРаботе
 {
     /// <remarks/>
@@ -138,14 +129,14 @@ public partial class СтрокаКаталога
 }
 
 /// <remarks/>
-public partial class ЗапросКаталога : КоммерческийДокументКаталог
+public partial class ЗапросКаталога : КоммерческийДокумент
 {
     /// <remarks/>
     public TimeSpan ДлительностьОжиданияОтвета { get; set; }
 }
 
 /// <remarks/>
-public partial class КаталогТоваров : КоммерческийДокументКаталог
+public partial class КаталогТоваров : КоммерческийДокумент
 {
     /// <remarks/>
     public string НомерИсходногоДокумента { get; set; }
@@ -163,7 +154,7 @@ public partial class КаталогТоваров : КоммерческийДо
 /// <summary>
 /// Тип документа "Каталог товаров"
 /// </summary>
-public partial class ТоварКРаботе : КоммерческийДокументКаталог
+public partial class ТоварКРаботе : КоммерческийДокумент
 {
     /// <remarks/>
     public string НомерИсходногоДокумента { get; set; }

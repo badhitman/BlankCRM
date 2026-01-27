@@ -8,16 +8,7 @@ namespace SharedLib.CommerceMLEDI;
 
 #pragma warning disable CS8618 // Поле, не допускающее значения NULL, должно содержать значение, отличное от NULL, при выходе из конструктора. Рассмотрите возможность добавления модификатора "required" или объявления значения, допускающего значение NULL.
 /// <remarks/>
-[XmlInclude(typeof(РеджектСчетФактура))]
-[XmlInclude(typeof(АкцептСчетФактура))]
-[XmlInclude(typeof(СчетФактура))]
-public abstract partial class КоммерческийДокументИнвойс : КоммерческийДокумент
-{
-
-}
-
-/// <remarks/>
-public partial class СчетФактура : КоммерческийДокументИнвойс
+public partial class СчетФактура : КоммерческийДокумент
 {
     /// <remarks/>
     public string НомерСчетФактураПоставщик { get; set; }
@@ -59,7 +50,7 @@ public partial class СтрокаСчетФактура
 }
 
 /// <remarks/>
-public partial class АкцептСчетФактура : КоммерческийДокументИнвойс
+public partial class АкцептСчетФактура : КоммерческийДокумент
 {
     /// <remarks/>
     public string НомерИсходногоДокумента { get; set; }
@@ -69,7 +60,7 @@ public partial class АкцептСчетФактура : Коммерчески
 }
 
 /// <remarks/>
-public partial class РеджектСчетФактура : КоммерческийДокументИнвойс
+public partial class РеджектСчетФактура : КоммерческийДокумент
 {
     /// <remarks/>
     public string НомерИсходногоДокумента { get; set; }
