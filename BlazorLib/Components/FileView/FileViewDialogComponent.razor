@@ -10,20 +10,23 @@
                 <option value="@_sp">@_sp.DescriptionInfo()</option>
             }
         </select>
-        <MudSlider Max="DirectoryItem.FileSizeBytes" @bind-Value="ValueSlider">
-            Value: @_valueSliderString / @FileSizeString ( @rawData?.Count )
+        <MudSlider T=uint Max="1024" @bind-Value="ReadSizeArea">
+            Размер данных: @GlobalToolsStandard.SizeDataAsString(ReadSizeArea) (x2 = @GlobalToolsStandard.SizeDataAsString(ReadSizeArea * 2))
+        </MudSlider>
+        <MudSlider Max="DirectoryItem.FileSizeBytes" @bind-Value="FilePositionSlider">
+            Position: @_valueSliderString (of @FileSizeString)
         </MudSlider>
         <MudTextField Variant="Variant.Outlined"
                       @bind-Text="RawDataStart"
                       Label="Start RawData"
                       T="string"
-                      Lines="7"
+                      Lines="17"
                       ReadOnly />
         <MudTextField Variant="Variant.Outlined"
                       @bind-Text="RawDataEnd"
                       Label="End RawData"
                       T="string"
-                      Lines="7"
+                      Lines="17"
                       ReadOnly />
     </DialogContent>
     <DialogActions>

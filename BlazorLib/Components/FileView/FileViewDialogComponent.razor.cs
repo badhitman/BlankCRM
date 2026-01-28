@@ -58,14 +58,25 @@ public partial class FileViewDialogComponent : BlazorBusyComponentBaseModel
         }
     }
 
-    long _valueSlider;
-    long ValueSlider
+    uint _readSizeArea = 512;
+    uint ReadSizeArea
     {
-        get => _valueSlider;
+        get => _readSizeArea;
         set
         {
-            _valueSlider = value;
-            _valueSliderString = GlobalToolsStandard.SizeDataAsString(ValueSlider);
+            _readSizeArea = value;
+            InvokeAsync(ReadFileDataAboutPositionAsync);
+        }
+    }
+
+    long _filePositionSlider;
+    long FilePositionSlider
+    {
+        get => _filePositionSlider;
+        set
+        {
+            _filePositionSlider = value;
+            _valueSliderString = GlobalToolsStandard.SizeDataAsString(FilePositionSlider);
             InvokeAsync(ReadFileDataAboutPositionAsync);
         }
     }
@@ -79,8 +90,8 @@ public partial class FileViewDialogComponent : BlazorBusyComponentBaseModel
         TResponseModel<Dictionary<DirectionsEnum, byte[]>> res = await StorageRepo.ReadFileDataAboutPositionAsync(new()
         {
             FileFullPath = DirectoryItem.FullPath,
-            Position = ValueSlider,
-            SizeArea = 512
+            Position = FilePositionSlider,
+            SizeArea = ReadSizeArea
         }, token);
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         rawData = res.Response;

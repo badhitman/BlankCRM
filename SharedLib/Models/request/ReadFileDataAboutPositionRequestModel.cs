@@ -22,5 +22,5 @@ public class ReadFileDataAboutPositionRequestModel
     /// <summary>
     /// Желаемый размер данных в каждом из направлений от точки (в начало и в конец)
     /// </summary>
-    public int SizeArea { get; set; }
+    public uint SizeArea { get; set; }
 }
