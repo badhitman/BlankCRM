@@ -73,6 +73,7 @@ public partial class FileViewDialogComponent : BlazorBusyComponentBaseModel
     async Task ReadFileDataAboutPositionAsync()
     {
         cts.Cancel();
+        cts = new();
         token = cts.Token;
 
         try
