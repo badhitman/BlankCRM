@@ -76,23 +76,16 @@ public partial class FileViewDialogComponent : BlazorBusyComponentBaseModel
         cts = new();
         token = cts.Token;
 
-        try
+        TResponseModel<Dictionary<DirectionsEnum, byte[]>> res = await StorageRepo.ReadFileDataAboutPositionAsync(new()
         {
-            TResponseModel<Dictionary<DirectionsEnum, byte[]>> res = await StorageRepo.ReadFileDataAboutPositionAsync(new()
-            {
-                FileFullPath = DirectoryItem.FullPath,
-                Position = ValueSlider,
-                SizeArea = 512
-            }, token);
-            SnackBarRepo.ShowMessagesResponse(res.Messages);
-            rawData = res.Response;
+            FileFullPath = DirectoryItem.FullPath,
+            Position = ValueSlider,
+            SizeArea = 512
+        }, token);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
+        rawData = res.Response;
 
-            FlushEncoding();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.ToString());
-        }
+        FlushEncoding();
     }
 
     void FlushEncoding()
@@ -103,7 +96,7 @@ public partial class FileViewDialogComponent : BlazorBusyComponentBaseModel
         if (rawData is null)
             return;
 
-        foreach (KeyValuePair<DirectionsEnum, byte[]> nodeElement in rawData)
+        foreach (KeyValuePair<DirectionsEnum, byte[]> nodeElement in rawData.Where(x => x.Value.Length != 0))
         {
             switch (nodeElement.Key)
             {
@@ -115,6 +108,7 @@ public partial class FileViewDialogComponent : BlazorBusyComponentBaseModel
                     break;
             }
         }
+        StateHasChanged();
     }
 
     /// <inheritdoc/>
