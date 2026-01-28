@@ -42,4 +42,8 @@ public class StorageTransmission(IRabbitClient rabbitClient) : IStorageTransmiss
     /// <inheritdoc/>
     public async Task<TResponseModel<DirectoryReadResponseModel>> GetDirectoryInfoAsync(DirectoryReadRequestModel req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<DirectoryReadResponseModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.GetDirectoryInfoReceive, req, token: token) ?? new();
+
+    /// <inheritdoc/>
+    public async Task<TResponseModel<Dictionary<DirectionsEnum, byte[]>>> ReadFileDataAboutPositionAsync(ReadFileDataAboutPositionRequestModel req, CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<TResponseModel<Dictionary<DirectionsEnum, byte[]>>>(GlobalStaticConstantsTransmission.TransmissionQueues.ReadFileDataAboutPositionReceive, req, token: token) ?? new();
 }

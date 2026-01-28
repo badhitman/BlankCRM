@@ -36,7 +36,7 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<FilesAreaGetMetadataReceive, FilesAreaMetadataRequestModel, TResponseModel<FilesAreaMetadataModel[]>>()
             .RegisterMqListener<FilesSelectReceive, TPaginationRequestStandardModel<SelectMetadataRequestModel>, TPaginationResponseStandardModel<StorageFileModelDB>>()
             .RegisterMqListener<GetDirectoryInfoReceive, DirectoryReadRequestModel, TResponseModel<DirectoryReadResponseModel>>()
-
+            .RegisterMqListener<ReadFileDataAboutPositionReceive, ReadFileDataAboutPositionRequestModel, TResponseModel<Dictionary<DirectionsEnum, byte[]>>>()
             ;
     }
 }

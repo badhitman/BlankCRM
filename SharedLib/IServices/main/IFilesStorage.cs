@@ -39,4 +39,9 @@ public interface IFilesStorage
     /// Файлы и папки внутри указанного пути
     /// </remarks>
     public Task<TResponseModel<DirectoryReadResponseModel>> GetDirectoryInfoAsync(DirectoryReadRequestModel req, CancellationToken token = default);
+
+    /// <summary>
+    /// Прочитать массив байт слева и справа от указанной точки указанного размера в байтах
+    /// </summary>
+    public Task<TResponseModel<Dictionary<DirectionsEnum, byte[]>>> ReadFileDataAboutPositionAsync(ReadFileDataAboutPositionRequestModel req, CancellationToken token = default);
 }

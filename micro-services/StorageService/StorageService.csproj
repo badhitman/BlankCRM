@@ -37,6 +37,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\..\..\DataFileScanerLib\TextFileScanerLib.csproj" />
 		<ProjectReference Include="..\..\BlankCRM.ServiceDefaults\BlankCRM.ServiceDefaults.csproj" />
 		<ProjectReference Include="..\..\DBContextLibs\DbPostgreLib\DbPostgreLib.csproj" />
 		<ProjectReference Include="..\..\RemoteCallLib\RabbitMQ\RabbitMQCallLib.csproj" />

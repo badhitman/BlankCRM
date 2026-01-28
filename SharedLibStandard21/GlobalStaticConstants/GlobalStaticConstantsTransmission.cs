@@ -1107,6 +1107,11 @@ public static partial class GlobalStaticConstantsTransmission
         /// </summary>
         public readonly static string GetDirectoryInfoReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.STORAGE_CONTROLLER_NAME, $"{Routes.DIRECTORY_CONTROLLER_NAME}-{Routes.INFO_CONTROLLER_NAME}", $"{Routes.READ_ACTION_NAME}-{Routes.FILES_CONTROLLER_NAME}-{Routes.SYSTEM_CONTROLLER_NAME}");
 
+        /// <summary>
+        /// Прочитать массив байт слева и справа от указанной точки указанного размера в байтах
+        /// </summary>
+        public readonly static string ReadFileDataAboutPositionReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.FILES_CONTROLLER_NAME, $"{Routes.DATA_CONTROLLER_NAME}-{Routes.ABOUT_CONTROLLER_NAME}-{Routes.POSITION_CONTROLLER_NAME}", Routes.READ_ACTION_NAME);
+
         /// <inheritdoc/>
         public readonly static string SaveCloudParameterReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CLOUD_CONTROLLER_NAME, Routes.PROPERTY_CONTROLLER_NAME, Routes.SET_ACTION_NAME);
 

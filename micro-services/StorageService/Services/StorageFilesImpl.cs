@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using Amazon.Runtime.Internal.Transform;
 using DbcLib;
 using ImageMagick;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@ using MongoDB.Driver.GridFS;
 using SharedLib;
 using System.Text;
 using System.Text.RegularExpressions;
+using TextFileScannerLib;
 using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace StorageService;
@@ -281,6 +283,30 @@ public class StorageFilesImpl(
             };
         }
         return res;
+    }
+
+    /// <inheritdoc/>
+    public async Task<TResponseModel<Dictionary<DirectionsEnum, byte[]>>> ReadFileDataAboutPositionAsync(ReadFileDataAboutPositionRequestModel req, CancellationToken token = default)
+    {
+        if (!File.Exists(req.FileFullPath))
+            return new()
+            {
+                Messages = [new() { Text = "file not exist", TypeMessage = MessagesTypesEnum.Error }]
+            };
+
+        using AdapterFileScanner adapterFile = new();
+        adapterFile.OpenFile(req.FileFullPath);
+        Dictionary<ReadingDirection, byte[]> data = adapterFile.ReadDataAboutPosition(req.Position, req.SizeArea);
+        Dictionary<DirectionsEnum, byte[]> res = [];
+        foreach (KeyValuePair<ReadingDirection, byte[]> _part in data)
+        {
+            DirectionsEnum _direct = _part.Key == ReadingDirection.Left ? DirectionsEnum.Down : DirectionsEnum.Up;
+            res.Add(_direct, _part.Value);
+        }
+        return new()
+        {
+            Response = res
+        };
     }
 
     /// <inheritdoc/>
