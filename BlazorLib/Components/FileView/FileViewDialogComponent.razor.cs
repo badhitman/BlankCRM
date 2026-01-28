@@ -74,16 +74,24 @@ public partial class FileViewDialogComponent : BlazorBusyComponentBaseModel
     {
         cts.Cancel();
         token = cts.Token;
-        TResponseModel<Dictionary<DirectionsEnum, byte[]>> res = await StorageRepo.ReadFileDataAboutPositionAsync(new() 
-        { 
-            FileFullPath = DirectoryItem.FullPath, 
-            Position = ValueSlider, 
-            SizeArea = 512
-        }, token);
-        SnackBarRepo.ShowMessagesResponse(res.Messages);
-        rawData = res.Response;
 
-        FlushEncoding();
+        try
+        {
+            TResponseModel<Dictionary<DirectionsEnum, byte[]>> res = await StorageRepo.ReadFileDataAboutPositionAsync(new()
+            {
+                FileFullPath = DirectoryItem.FullPath,
+                Position = ValueSlider,
+                SizeArea = 512
+            }, token);
+            SnackBarRepo.ShowMessagesResponse(res.Messages);
+            rawData = res.Response;
+
+            FlushEncoding();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.ToString());
+        }
     }
 
     void FlushEncoding()
