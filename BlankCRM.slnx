@@ -56,6 +56,7 @@
   </Folder>
   <Folder Name="/Solution Items/devops/">
     <File Path="devops/build-win.ps1" />
+    <File Path="devops/debug.clone-and-build.sh" />
     <File Path="devops/docker-compose.yml" />
     <File Path="devops/dumps.sh" />
     <File Path="devops/prod-builds.update.sh" />
