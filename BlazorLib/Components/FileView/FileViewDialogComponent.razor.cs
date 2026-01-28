@@ -8,6 +8,9 @@ using SharedLib;
 
 namespace BlazorLib.Components.FileView;
 
+/// <summary>
+/// FileViewDialogComponent
+/// </summary>
 public partial class FileViewDialogComponent : BlazorBusyComponentBaseModel
 {
     [Inject]

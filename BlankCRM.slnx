@@ -50,6 +50,7 @@
     <File Path="bin_obj_delete.ps1" />
     <File Path="CONTACT.md" />
     <File Path="README.md" />
+    <Project Path="../DataFileScanerLib/TextFileScanerLib.csproj" />
     <Project Path="../HtmlGenerator/HtmlGenerator.csproj" />
     <Project Path="../TinkofClientApi/TinkoffPaymentClientApi/TinkoffPaymentClientApi.csproj" />
   </Folder>

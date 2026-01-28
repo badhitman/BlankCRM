@@ -33,7 +33,10 @@ public interface IFilesStorage
     public Task<TResponseModel<StorageFileModelDB>> SaveFileAsync(TAuthRequestStandardModel<StorageFileMetadataModel> req, CancellationToken token = default);
 
     /// <summary>
-    /// GetDirectoryInfo
+    /// Информация о директории на сервере
     /// </summary>
+    /// <remarks>
+    /// Файлы и папки внутри указанного пути
+    /// </remarks>
     public Task<TResponseModel<DirectoryReadResponseModel>> GetDirectoryInfoAsync(DirectoryReadRequestModel req, CancellationToken token = default);
 }

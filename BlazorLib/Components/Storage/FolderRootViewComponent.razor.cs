@@ -25,6 +25,7 @@ public partial class FolderRootViewComponent : BlazorBusyComponentBaseAuthModel
     [Inject]
     IDialogService DialogService { get; set; } = default!;
 
+
     /// <inheritdoc/>
     [Parameter, EditorRequired]
     public required string FolderPath { get; set; }
