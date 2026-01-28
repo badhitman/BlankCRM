@@ -300,7 +300,7 @@ public class StorageFilesImpl(
         Dictionary<DirectionsEnum, byte[]> res = [];
         foreach (KeyValuePair<ReadingDirection, byte[]> _part in data)
         {
-            DirectionsEnum _direct = _part.Key == ReadingDirection.Left ? DirectionsEnum.Down : DirectionsEnum.Up;
+            DirectionsEnum _direct = _part.Key == ReadingDirection.Left ? DirectionsEnum.Up : DirectionsEnum.Down;
             res.Add(_direct, _part.Value);
         }
         return new()

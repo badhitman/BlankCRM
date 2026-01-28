@@ -4,14 +4,26 @@
 
 <MudDialog>
     <DialogContent>
+        <select class="form-select" id="exampleInputStatusPayment" @bind="SelectedEncoding">
+            @foreach (EncodingsEnum _sp in Enum.GetValues(typeof(EncodingsEnum)))
+            {
+                <option value="@_sp">@_sp.DescriptionInfo()</option>
+            }
+        </select>
         <MudSlider Max="DirectoryItem.FileSizeBytes" @bind-Value="ValueSlider">
-            Value: @_valueSliderString / @FileSizeString
+            Value: @_valueSliderString / @FileSizeString ( @rawData?.Count )
         </MudSlider>
         <MudTextField Variant="Variant.Outlined"
-                      @bind-Text="RawData"
-                      Label="RawData"
+                      @bind-Text="RawDataStart"
+                      Label="Start RawData"
                       T="string"
-                      Lines="13"
+                      Lines="7"
+                      ReadOnly />
+        <MudTextField Variant="Variant.Outlined"
+                      @bind-Text="RawDataEnd"
+                      Label="End RawData"
+                      T="string"
+                      Lines="7"
                       ReadOnly />
     </DialogContent>
     <DialogActions>
