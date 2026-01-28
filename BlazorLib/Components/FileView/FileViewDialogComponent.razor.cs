@@ -32,6 +32,9 @@ public partial class FileViewDialogComponent : BlazorBusyComponentBaseModel
         RawDataStart = "",
         RawDataEnd = "";
 
+    CancellationTokenSource cts = new();
+    CancellationToken token = default!;
+
     Dictionary<DirectionsEnum, byte[]>? rawData;
     Encoding EncodingMode { get; set; } = Encoding.UTF8;
 
@@ -69,12 +72,14 @@ public partial class FileViewDialogComponent : BlazorBusyComponentBaseModel
 
     async Task ReadFileDataAboutPositionAsync()
     {
+        cts.Cancel();
+        token = cts.Token;
         TResponseModel<Dictionary<DirectionsEnum, byte[]>> res = await StorageRepo.ReadFileDataAboutPositionAsync(new() 
         { 
             FileFullPath = DirectoryItem.FullPath, 
             Position = ValueSlider, 
             SizeArea = 512
-        });
+        }, token);
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         rawData = res.Response;
 
