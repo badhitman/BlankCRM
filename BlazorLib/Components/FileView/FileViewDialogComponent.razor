@@ -10,7 +10,7 @@
                 <option value="@_sp">@_sp.DescriptionInfo()</option>
             }
         </select>
-        <MudSlider T=uint Max="1024" @bind-Value="ReadSizeArea">
+        <MudSlider T=uint Max="10240" @bind-Value="ReadSizeArea">
             Размер данных: @GlobalToolsStandard.SizeDataAsString(ReadSizeArea) (x2 = @GlobalToolsStandard.SizeDataAsString(ReadSizeArea * 2))
         </MudSlider>
         <MudSlider Max="DirectoryItem.FileSizeBytes" @bind-Value="FilePositionSlider">
