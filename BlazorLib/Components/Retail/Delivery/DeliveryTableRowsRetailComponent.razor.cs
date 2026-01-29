@@ -350,12 +350,29 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
                 else
                 {
                     await SetBusyAsync();
-                    TResponseModel<int> res = await RetailRepo.CreateRowOfDeliveryDocumentAsync(new()
+
+                    if (off.Id == 0)
                     {
-                        Payload = off,
-                        SenderActionUserId = CurrentUserSession.UserId,
-                    });
-                    SnackBarRepo.ShowMessagesResponse(res.Messages);
+                        TResponseModel<int> res = await RetailRepo.CreateRowOfDeliveryDocumentAsync(new()
+                        {
+                            Payload = off,
+                            SenderActionUserId = CurrentUserSession.UserId,
+                        });
+                        SnackBarRepo.ShowMessagesResponse(res.Messages);
+                    }
+                    else
+                    {
+                        TResponseModel<Guid?> res = await RetailRepo.UpdateRowOfDeliveryDocumentAsync(new()
+                        {
+                            Payload = off,
+                            SenderActionUserId = CurrentUserSession.UserId,
+                        });
+                        SnackBarRepo.ShowMessagesResponse(res.Messages);
+                        if (res.Response is not null)
+                            Document.Version = res.Response.Value;
+                    }
+
+
                     await ElementsReload();
                     if (tableRef is not null)
                         await tableRef.ReloadServerData();
