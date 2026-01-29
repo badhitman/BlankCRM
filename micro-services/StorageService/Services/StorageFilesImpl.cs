@@ -295,7 +295,21 @@ public class StorageFilesImpl(
             };
 
         using AdapterFileScanner adapterFile = new();
-        adapterFile.OpenFile(req.FileFullPath);
+
+        try
+        {
+            adapterFile.OpenFile(req.FileFullPath);
+        }
+        catch (Exception ex)
+        {
+            ResponseBaseModel _br = new();
+            _br.Messages.InjectException(ex);
+            return new() 
+            { 
+                Messages = _br.Messages 
+            };
+        }
+
         Dictionary<ReadingDirection, byte[]> data = adapterFile.ReadDataAboutPosition(req.Position, req.SizeArea);
         Dictionary<DirectionsEnum, byte[]> res = [];
         foreach (KeyValuePair<ReadingDirection, byte[]> _part in data)
