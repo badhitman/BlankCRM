@@ -2,8 +2,9 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Microsoft.AspNetCore.Components;
 using BlazorLib.Components.Shared;
+using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using MudBlazor;
 using SharedLib;
 
@@ -16,6 +17,13 @@ public partial class LogsComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
     ILogsService LogsRepo { get; set; } = default!;
+
+    [Inject]
+    NavigationManager NavRepo { get; set; } = default!;
+
+    [Inject]
+    IJSRuntime JsRuntimeRepo { get; set; } = default!;
+
 
     /// <summary>
     /// HidePanels
@@ -152,6 +160,16 @@ public partial class LogsComponent : BlazorBusyComponentBaseModel
             table.NavigateTo(0);
     }
 
+
+    /// <inheritdoc/>
+    protected async Task ClipboardCopyHandle(int logRowId)
+    {
+        string _link = $"{NavRepo.BaseUri}/monitoring-tools?id={logRowId}&tab={GetType().Name}".Replace("//", "/");
+        await JsRuntimeRepo.InvokeVoidAsync("clipboardCopy.copyText", _link);
+        SnackBarRepo.Add($"Ссылка `{_link}` скопирована в буфер обмена", Severity.Info, c => c.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+    }
+
+
     void OnChipClosed(MudChip<NLogRecordModelDB> chip)
     {
         NLogRecordModelDB? el = favoritesRecords.FirstOrDefault(x => x.Id == chip.Value?.Id);
@@ -191,7 +209,7 @@ public partial class LogsComponent : BlazorBusyComponentBaseModel
 
     static string GetClassLevel(string? recordLevel)
     {
-        if(string.IsNullOrWhiteSpace(recordLevel))
+        if (string.IsNullOrWhiteSpace(recordLevel))
             return "";
 
         if (recordLevel.StartsWith("I", StringComparison.OrdinalIgnoreCase))

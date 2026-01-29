@@ -10,19 +10,19 @@
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 @attribute [Authorize(Roles = GlobalStaticConstantsRoles.Roles.Admin)]
 
-<MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-6">
-    <MudTabPanel Text="Logs">
+<MudTabs @ref="_tabs" Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-6">
+    <MudTabPanel Text="Logs" ID="@typeof(LogsComponent).Name">
         <LogsComponent />
     </MudTabPanel>
-    <MudTabPanel Text="История">
+    <MudTabPanel Text="История" ID="@typeof(HistoryMainWrapperComponent).Name">
         <HistoryMainWrapperComponent />
     </MudTabPanel>
-    <MudTabPanel Text="SnackBar stack">
+    <MudTabPanel Text="SnackBar stack" ID="@typeof(SnackBarHistoryComponent).Name">
         <SnackBarHistoryComponent />
     </MudTabPanel>
     @if (ServerConfig.Value.DirectoriesReadList is not null && ServerConfig.Value.DirectoriesReadList.Length != 0)
     {
-        <MudTabPanel Text="Файлы/Папки">
+        <MudTabPanel Text="Файлы/Папки" ID="@typeof(FolderRootViewComponent).Name">
             <MudTable Items="@ServerConfig.Value.DirectoriesReadList">
                 <RowTemplate>
                     <MudTd>
@@ -36,7 +36,19 @@
         </MudTabPanel>
     }
 </MudTabs>
-@code {
+    @code {
+    [Inject]
+    NavigationManager NavRepo { get; set; } = default!;
+
     [Inject]
     IOptions<ServerConfigModel> ServerConfig { get; set; } = default!;
+
+    MudTabs _tabs = default!;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        //_tabs.ActivatePanelAsync(id);
+    }
+
 }

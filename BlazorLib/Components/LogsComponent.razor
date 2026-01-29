@@ -117,7 +117,13 @@
                            Class="p-1"
                            OnClick="() => SelectRow(context)" />
         </MudTd>
-        <MudTd DataLabel="RecordTime" Class="@_classLevel">@context.RecordTime</MudTd>
+        <MudTd DataLabel="RecordTime" Class="@_classLevel">
+            @context.RecordTime
+            <sup @onclick="() => ClipboardCopyHandle(context.Id)"
+                 title="Скопировать ссылку в буфер обмена"
+                 class="ms-1 bi bi-link"
+                 style="cursor:pointer;"></sup>
+        </MudTd>
         @if (!HideAppColumn)
         {
             <MudTd DataLabel="App" Class="@_classLevel">

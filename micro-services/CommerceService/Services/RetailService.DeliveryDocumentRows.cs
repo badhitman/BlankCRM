@@ -100,7 +100,7 @@ public partial class RetailService : IRetailService
         req.Payload.Version = Guid.NewGuid();
 
         await context.RowsDeliveryDocumentsRetail.AddAsync(req.Payload, token);
-        loggerRepo.LogInformation($"{nameof(CreateRowOfDeliveryDocumentAsync)}:\n{JsonConvert.SerializeObject(req.Payload)}");
+        // loggerRepo.LogInformation($"{nameof(CreateRowOfDeliveryDocumentAsync)}:\n{JsonConvert.SerializeObject(req.Payload)}");
         await context.SaveChangesAsync(token);
 
         res.DocumentNewVersion = Guid.NewGuid();
