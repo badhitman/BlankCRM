@@ -372,7 +372,6 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
                             Document.Version = res.Response.Value;
                     }
 
-
                     await ElementsReload();
                     if (tableRef is not null)
                         await tableRef.ReloadServerData();
