@@ -43,12 +43,22 @@
     [Inject]
     IOptions<ServerConfigModel> ServerConfig { get; set; } = default!;
 
-    MudTabs _tabs = default!;
 
-    protected override void OnInitialized()
+    [SupplyParameterFromQuery(Name = "tab")]
+    public string? TabActivate { get; set; }
+
+
+    MudTabs? _tabs;
+    bool tabIsSet;
+    protected override void OnAfterRender(bool firstRender)
     {
-        base.OnInitialized();
-        //_tabs.ActivatePanelAsync(id);
+        base.OnAfterRender(firstRender);
+        if (!tabIsSet && _tabs is not null)
+        {
+            tabIsSet = true;
+            if (!string.IsNullOrWhiteSpace(TabActivate))
+                _tabs.ActivatePanelAsync(TabActivate);
+        }
     }
 
 }

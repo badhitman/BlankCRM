@@ -110,8 +110,10 @@
     <RowTemplate>
         @{
             string _classLevel = GetClassLevel(context.RecordLevel);
+            if (context.Id == selectedRecord)
+                _classLevel += " border-double border-4 mud-border-primary pa-4";
         }
-        <MudTd>
+        <MudTd Class="@(context.Id == selectedRecord ? "border-double border-4 mud-border-primary pa-4" : "")">
             <MudIconButton aria-label="select"
                            Icon="@GetCheckBoxIcon(context)"
                            Class="p-1"
@@ -120,7 +122,7 @@
         <MudTd DataLabel="RecordTime" Class="@_classLevel">
             @context.RecordTime
             <sup @onclick="() => ClipboardCopyHandle(context.Id)"
-                 title="Скопировать ссылку в буфер обмена"
+                 title="Скопировать ссылку в буфер обмена @context.Id"
                  class="ms-1 bi bi-link"
                  style="cursor:pointer;"></sup>
         </MudTd>
@@ -174,10 +176,11 @@
         @if (selectedRecord == 0)
         {
             <div class="d-flex flex-column align-center">
-                <MudPagination MiddleCount="5"
+                <MudPagination @ref="paginationRef"
+                               MiddleCount="5"
                                BoundaryCount="5"
                                SelectedChanged="PageChanged"
-                               Count="@((table.GetFilteredItemsCount() + table.RowsPerPage - 1) / table.RowsPerPage)"
+                               Count="@((table is null ? 0 : ((table.GetFilteredItemsCount() + table.RowsPerPage - 1) / table.RowsPerPage)))"
                                Class="pa-4" />
             </div>
         }

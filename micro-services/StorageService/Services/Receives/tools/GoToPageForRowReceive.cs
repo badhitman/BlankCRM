@@ -11,15 +11,15 @@ namespace Transmission.Receives.storage;
 /// GoToPageForRowReceive
 /// </summary>
 public class GoToPageForRowReceive(ILogsService storeRepo)
-    : IResponseReceive<TPaginationRequestStandardModel<int>?, TPaginationResponseStandardModel<NLogRecordModelDB>?>
+    : IResponseReceive<TPaginationRequestStandardModel<GoToPageForRowLogsRequestModel>?, TPaginationResponseStandardModel<NLogRecordModelDB>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.GoToPageForRowLogsReceive;
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseStandardModel<NLogRecordModelDB>?> ResponseHandleActionAsync(TPaginationRequestStandardModel<int>? payload, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<NLogRecordModelDB>?> ResponseHandleActionAsync(TPaginationRequestStandardModel<GoToPageForRowLogsRequestModel>? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
-        return await storeRepo.GoToPageForRowAsync(payload, token);
+        return await storeRepo.GoToPageForRowLogsAsync(payload, token);
     }
 }

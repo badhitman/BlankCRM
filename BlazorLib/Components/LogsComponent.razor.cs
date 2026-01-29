@@ -43,6 +43,12 @@ public partial class LogsComponent : BlazorBusyComponentBaseModel
     [Parameter]
     public string[]? ApplicationsFilterSet { get; set; }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    [SupplyParameterFromQuery(Name = "id")]
+    public string? RowId { get; set; }
+
 
     LogsMetadataResponseModel? _metaData;
     MudDateRangePicker _picker = default!;
@@ -51,7 +57,12 @@ public partial class LogsComponent : BlazorBusyComponentBaseModel
     DateRange DateRangeBind
     {
         get => _dateRangeBind;
-        set { _dateRangeBind = value; InvokeAsync(table.ReloadServerData); }
+        set
+        {
+            _dateRangeBind = value;
+            if (table is not null)
+                InvokeAsync(table.ReloadServerData);
+        }
     }
 
     #region columns visible
@@ -62,7 +73,8 @@ public partial class LogsComponent : BlazorBusyComponentBaseModel
         set
         {
             _AllEventProperties = value;
-            InvokeAsync(table.ReloadServerData);
+            if (table is not null)
+                InvokeAsync(table.ReloadServerData);
         }
     }
 
@@ -73,7 +85,8 @@ public partial class LogsComponent : BlazorBusyComponentBaseModel
         set
         {
             _ExceptionMessage = value;
-            InvokeAsync(table.ReloadServerData);
+            if (table is not null)
+                InvokeAsync(table.ReloadServerData);
         }
     }
 
@@ -84,7 +97,8 @@ public partial class LogsComponent : BlazorBusyComponentBaseModel
         set
         {
             _Logger = value;
-            InvokeAsync(table.ReloadServerData);
+            if (table is not null)
+                InvokeAsync(table.ReloadServerData);
         }
     }
 
@@ -95,7 +109,8 @@ public partial class LogsComponent : BlazorBusyComponentBaseModel
         set
         {
             _CallSite = value;
-            InvokeAsync(table.ReloadServerData);
+            if (table is not null)
+                InvokeAsync(table.ReloadServerData);
         }
     }
 
@@ -106,7 +121,8 @@ public partial class LogsComponent : BlazorBusyComponentBaseModel
         set
         {
             _StackTrace = value;
-            InvokeAsync(table.ReloadServerData);
+            if (table is not null)
+                InvokeAsync(table.ReloadServerData);
         }
     }
 
@@ -117,20 +133,77 @@ public partial class LogsComponent : BlazorBusyComponentBaseModel
         set
         {
             _ContextPrefix = value;
-            InvokeAsync(table.ReloadServerData);
+            if (table is not null)
+                InvokeAsync(table.ReloadServerData);
         }
     }
     #endregion
 
-    MudTable<NLogRecordModelDB> table = default!;
+    MudTable<NLogRecordModelDB>? table;
+    MudPagination? paginationRef;
     readonly HashSet<NLogRecordModelDB> favoritesRecords = [];
-
+    List<NLogRecordModelDB>? tableItems;
     FiltersUniversalComponent? ContextsPrefixesAvailable = default!;
     FiltersUniversalComponent? ApplicationsAvailable = default!;
     FiltersUniversalComponent? LevelsAvailable = default!;
     FiltersUniversalComponent? LoggersAvailable = default!;
 
     int selectedRecord;
+    string? navigatedRowId;
+    /// <inheritdoc/>
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+
+        if (table is not null && /*paginationRef is not null &&*/ !string.IsNullOrWhiteSpace(RowId) && table.FilteredItems.Any() && RowId != navigatedRowId)
+        {
+            navigatedRowId = RowId;
+            if (int.TryParse(RowId, out selectedRecord))
+                await GoToRowId(selectedRecord);
+        }
+        if (tableItems is not null && selectedRecord > 0)
+        {
+            NLogRecordModelDB? currentItem = tableItems.FirstOrDefault(x => x.Id == selectedRecord);
+            if (table is not null && currentItem is not null)
+            {
+                await table.ScrollToItemAsync(currentItem);
+                selectedRecord = 0;
+            }
+        }
+    }
+
+    async Task GoToRowId(int rowId)
+    {
+        if (table is null)
+            return;
+        await SetBusyAsync();
+        TPaginationResponseStandardModel<NLogRecordModelDB> res = await LogsRepo.GoToPageForRowLogsAsync(new()
+        {
+            PageNum = table.CurrentPage,
+            PageSize = table.RowsPerPage,
+            Payload = new()
+            {
+                RowId = rowId,
+                WithOutRowsData = true,
+            }
+        });
+        //await paginationRef.NavigateToAsync(res.PageNum);
+        SnackBarRepo.Info($"go to page [{res.PageNum + 1}] for id #`{rowId}`");
+        await SetBusyAsync(false);
+        if (table.CurrentPage != res.PageNum)
+        {
+            table.NavigateTo(res.PageNum);
+            StateHasChanged();
+        }
+        else
+            StateHasChanged();
+    }
+
+    void CheckedChangedAction()
+    {
+        if (table is not null)
+            InvokeAsync(table.ReloadServerData);
+    }
 
     string GetCheckBoxIcon(NLogRecordModelDB _row)
     {
@@ -140,12 +213,9 @@ public partial class LogsComponent : BlazorBusyComponentBaseModel
         return Icons.Material.Filled.CheckBoxOutlineBlank;
     }
 
-    bool navInit = false;
     async Task OnChipClick(NLogRecordModelDB chip)
     {
-        await SetBusyAsync();
         selectedRecord = chip.Id;
-
         _dateRangeBind = new(null, null);
 
         ApplicationsAvailable = null;
@@ -153,13 +223,8 @@ public partial class LogsComponent : BlazorBusyComponentBaseModel
         LevelsAvailable = null;
         LoggersAvailable = null;
 
-        navInit = true;
-        if (table.CurrentPage == 0)
-            await table.ReloadServerData();
-        else
-            table.NavigateTo(0);
+        await GoToRowId(chip.Id);
     }
-
 
     /// <inheritdoc/>
     protected async Task ClipboardCopyHandle(int logRowId)
@@ -168,7 +233,6 @@ public partial class LogsComponent : BlazorBusyComponentBaseModel
         await JsRuntimeRepo.InvokeVoidAsync("clipboardCopy.copyText", _link);
         SnackBarRepo.Add($"Ссылка `{_link}` скопирована в буфер обмена", Severity.Info, c => c.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
     }
-
 
     void OnChipClosed(MudChip<NLogRecordModelDB> chip)
     {
@@ -180,16 +244,11 @@ public partial class LogsComponent : BlazorBusyComponentBaseModel
     void SelectRow(NLogRecordModelDB _row)
     {
         NLogRecordModelDB? el = favoritesRecords.FirstOrDefault(x => x.Id == _row.Id);
-
+        selectedRecord = 0;
         if (el is not null)
             favoritesRecords.Remove(el);
         else
             favoritesRecords.Add(_row);
-    }
-
-    void CheckedChangedAction()
-    {
-        InvokeAsync(table.ReloadServerData);
     }
 
     async Task ReloadTable()
@@ -204,7 +263,7 @@ public partial class LogsComponent : BlazorBusyComponentBaseModel
 
     private void PageChanged(int i)
     {
-        table.NavigateTo(i - 1);
+        table?.NavigateTo(i - 1);
     }
 
     static string GetClassLevel(string? recordLevel)
@@ -223,8 +282,6 @@ public partial class LogsComponent : BlazorBusyComponentBaseModel
 
         return "";
     }
-
-    TPaginationResponseStandardModel<NLogRecordModelDB>? DirectPage;
 
     string[]? ApplicationsFilter
     {
@@ -262,48 +319,18 @@ public partial class LogsComponent : BlazorBusyComponentBaseModel
             PageSize = state.PageSize,
             SortingDirection = state.SortDirection.Convert(),
         };
-        await SetBusyAsync(token: token);
-        if (selectedRecord != 0)
-        {
-            if (navInit)
-            {
-                DirectPage = await LogsRepo.GoToPageForRowAsync(new()
-                {
-                    Payload = selectedRecord,
-                    PageNum = state.Page,
-                    PageSize = state.PageSize,
-                    SortBy = req.SortBy,
-                    SortingDirection = req.SortingDirection,
-                }, token);
-                navInit = false;
-                await SetBusyAsync(false, token);
-            }
-
-            if (DirectPage is not null)
-            {
-                if (DirectPage.PageNum == state.Page)
-                {
-                    int trc = DirectPage.TotalRowsCount;
-                    List<NLogRecordModelDB>? items = DirectPage.Response;
-                    DirectPage = null;
-                    return new TableData<NLogRecordModelDB>() { TotalItems = trc, Items = items };
-                }
-                else
-                    table.NavigateTo(DirectPage.PageNum);
-            }
-        }
 
         TPaginationResponseStandardModel<NLogRecordModelDB> selector = default!;
         TResponseModel<LogsMetadataResponseModel> md = default!;
+        await SetBusyAsync(token: token);
 
-        await Task.WhenAll([
-                Task.Run(async () => selector = await LogsRepo.LogsSelectAsync(req, token)),
-                Task.Run(async () => md = await LogsRepo.MetadataLogsAsync(new() { StartAt = DateRangeBind.Start, FinalOff = DateRangeBind.End })),
-                ]);
+        await Task.WhenAll([Task.Run(async () => selector = await LogsRepo.LogsSelectAsync(req, token)),
+                            Task.Run(async () => md = await LogsRepo.MetadataLogsAsync(new() { StartAt = DateRangeBind.Start, FinalOff = DateRangeBind.End }))]);
 
         _metaData = md.Response;
 
         await SetBusyAsync(false, token);
+        tableItems = selector.Response;
         return new TableData<NLogRecordModelDB>() { TotalItems = selector.TotalRowsCount, Items = selector.Response };
     }
 }

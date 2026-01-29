@@ -14,38 +14,42 @@ namespace StorageService;
 public class LogsNavigationImpl(IDbContextFactory<NLogsContext> logsDbFactory) : ILogsService
 {
     /// <inheritdoc/>
-    public async Task<TPaginationResponseStandardModel<NLogRecordModelDB>> GoToPageForRowAsync(TPaginationRequestStandardModel<int> req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<NLogRecordModelDB>> GoToPageForRowLogsAsync(TPaginationRequestStandardModel<GoToPageForRowLogsRequestModel> req, CancellationToken token = default)
     {
+        if (req.Payload is null)
+            return new() { Status = new() { Messages = [new() { Text = "req.Payload is null", TypeMessage = MessagesTypesEnum.Error }] } };
+
         if (req.PageSize < 10)
             req.PageSize = 10;
 
         using NLogsContext ctx = await logsDbFactory.CreateDbContextAsync(token);
+
         IQueryable<NLogRecordModelDB> q = ctx.Logs.AsQueryable();
+
+        IOrderedQueryable<NLogRecordModelDB> oq = req.SortingDirection == DirectionsEnum.Up
+          ? ctx.Logs.OrderBy(x => x.RecordTime).ThenBy(x => x.Id)
+          : ctx.Logs.OrderByDescending(x => x.RecordTime).ThenByDescending(x => x.Id);
+
+        int _cnt = req.SortingDirection == DirectionsEnum.Up
+                ? await oq.CountAsync(x => x.Id <= req.Payload.RowId, cancellationToken: token)
+                : await oq.CountAsync(x => x.Id >= req.Payload.RowId, cancellationToken: token);
+
+        double _pos = (double)_cnt / req.PageSize;
+        _pos = Math.Floor(_pos) == _pos 
+            ? _pos - 1 
+            : Math.Floor(_pos);
 
         TPaginationResponseStandardModel<NLogRecordModelDB> res = new()
         {
-            TotalRowsCount = await q.CountAsync(cancellationToken: token),
+            TotalRowsCount = await ctx.Logs.CountAsync(cancellationToken: token),
             PageSize = req.PageSize,
             SortingDirection = req.SortingDirection,
             SortBy = req.SortBy,
+            PageNum = (int)_pos,
         };
 
-        if (!await q.AnyAsync(x => x.Id == req.Payload, cancellationToken: token))
-            return res;
-
-        IOrderedQueryable<NLogRecordModelDB> oq = req.SortingDirection == DirectionsEnum.Up
-          ? q.OrderBy(x => x.RecordTime)
-          : q.OrderByDescending(x => x.RecordTime);
-
-        res.PageNum = (await oq.CountAsync(cancellationToken: token)) / req.PageSize;
-
-        if (!await oq.Skip(res.PageNum * req.PageSize).Take(req.PageSize).AnyAsync(x => x.Id == req.Payload, cancellationToken: token))
-            res.PageNum++;
-
-        res.Response = [.. await oq.Skip(res.PageNum * req.PageSize).Take(req.PageSize).ToArrayAsync(cancellationToken: token)];
-
-        if (!res.Response.Any(x => x.Id == req.Payload))
-            return await GoToPageForRowAsync(req, token);
+        if (!req.Payload.WithOutRowsData)
+            res.Response = [.. await oq.Skip(res.PageNum * req.PageSize).Take(req.PageSize).ToArrayAsync(cancellationToken: token)];
 
         return res;
     }
@@ -155,8 +159,8 @@ public class LogsNavigationImpl(IDbContextFactory<NLogsContext> logsDbFactory) :
             q = q.Where(x => req.Payload.ApplicationsFilter.Contains(x.ApplicationName));
 
         IOrderedQueryable<NLogRecordModelDB> oq = req.SortingDirection == DirectionsEnum.Up
-          ? q.OrderBy(x => x.RecordTime)
-          : q.OrderByDescending(x => x.RecordTime);
+          ? q.OrderBy(x => x.RecordTime).ThenBy(x => x.Id)
+          : q.OrderByDescending(x => x.RecordTime).ThenByDescending(x => x.Id);
 
         int trc = await q.CountAsync(cancellationToken: token);
 

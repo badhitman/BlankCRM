@@ -26,7 +26,7 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<TagSetReceive, TagSetModel, ResponseBaseModel>()
             .RegisterMqListener<TagsSelectReceive, TPaginationRequestStandardModel<SelectMetadataRequestModel>, TPaginationResponseStandardModel<TagViewModel>>()
 
-            .RegisterMqListener<GoToPageForRowReceive, TPaginationRequestStandardModel<int>, TPaginationResponseStandardModel<NLogRecordModelDB>>()
+            .RegisterMqListener<GoToPageForRowReceive, TPaginationRequestStandardModel<GoToPageForRowLogsRequestModel>, TPaginationResponseStandardModel<NLogRecordModelDB>>()
             .RegisterMqListener<MetadataLogsReceive, PeriodDatesTimesModel, TResponseModel<LogsMetadataResponseModel>>()
             .RegisterMqListener<LogsSelectReceive, TPaginationRequestStandardModel<LogsSelectRequestModel>, TPaginationResponseStandardModel<NLogRecordModelDB>>()
             .RegisterMqListener<SetWebConfigReceive, WebConfigModel, ResponseBaseModel>()

@@ -33,9 +33,9 @@ public class ToolsController(
     /// Перейти к странице логов с искомой строкой
     /// </summary>
     [HttpPost($"/{Routes.API_CONTROLLER_NAME}/{Routes.TOOLS_CONTROLLER_NAME}/{Routes.LOGS_ACTION_NAME}-{Routes.PAGE_CONTROLLER_NAME}/{Routes.GOTO_ACTION_NAME}-for-{Routes.RECORD_CONTROLLER_NAME}"), LoggerNolog]
-    public async Task<TPaginationResponseStandardModel<NLogRecordModelDB>> GoToPageForRow(TPaginationRequestStandardModel<int> req)
+    public async Task<TPaginationResponseStandardModel<NLogRecordModelDB>> GoToPageForRow(TPaginationRequestStandardModel<GoToPageForRowLogsRequestModel> req)
     {
-        return await storeRepo.GoToPageForRowAsync(req);
+        return await storeRepo.GoToPageForRowLogsAsync(req);
     }
 
     /// <summary>

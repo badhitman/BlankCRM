@@ -12,8 +12,8 @@ namespace ServerLib;
 public class LogsService(IStorageTransmission storeRepo) : ILogsService
 {
     /// <inheritdoc/>
-    public async Task<TPaginationResponseStandardModel<NLogRecordModelDB>> GoToPageForRowAsync(TPaginationRequestStandardModel<int> req, CancellationToken token = default)
-        => await storeRepo.GoToPageForRowAsync(req, token);
+    public async Task<TPaginationResponseStandardModel<NLogRecordModelDB>> GoToPageForRowLogsAsync(TPaginationRequestStandardModel<GoToPageForRowLogsRequestModel> req, CancellationToken token = default)
+        => await storeRepo.GoToPageForRowLogsAsync(req, token);
 
     /// <inheritdoc/>
     public async Task<TPaginationResponseStandardModel<NLogRecordModelDB>> LogsSelectAsync(TPaginationRequestStandardModel<LogsSelectRequestModel> req, CancellationToken token = default)

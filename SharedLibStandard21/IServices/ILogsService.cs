@@ -15,7 +15,7 @@ public interface ILogsService
     /// <summary>
     /// Определить номер страницы для строки
     /// </summary>
-    public Task<TPaginationResponseStandardModel<NLogRecordModelDB>> GoToPageForRowAsync(TPaginationRequestStandardModel<int> req, CancellationToken token = default);
+    public Task<TPaginationResponseStandardModel<NLogRecordModelDB>> GoToPageForRowLogsAsync(TPaginationRequestStandardModel<GoToPageForRowLogsRequestModel> req, CancellationToken token = default);
 
     /// <summary>
     /// LogsSelect
