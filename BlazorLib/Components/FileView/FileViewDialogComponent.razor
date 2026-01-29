@@ -4,6 +4,7 @@
 
 <MudDialog>
     <DialogContent>
+        <code>@DirectoryItem.FullPath</code>
         <select class="form-select" id="exampleInputStatusPayment" @bind="SelectedEncoding">
             @foreach (EncodingsEnum _sp in Enum.GetValues(typeof(EncodingsEnum)))
             {

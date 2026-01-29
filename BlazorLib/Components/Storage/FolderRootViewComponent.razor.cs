@@ -57,7 +57,7 @@ public partial class FolderRootViewComponent : BlazorBusyComponentBaseAuthModel
             FullWidth = true,
         };
 
-        return DialogService.ShowAsync<FileViewDialogComponent>("View file data", parameters, options);
+        return DialogService.ShowAsync<FileViewDialogComponent>($"View file data", parameters, options);
     }
 
     /// <inheritdoc/>
