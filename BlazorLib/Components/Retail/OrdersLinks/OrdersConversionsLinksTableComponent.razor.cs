@@ -61,6 +61,8 @@ public partial class OrdersConversionsLinksTableComponent : OrderLinkBaseCompone
             {
                 AmountPayment = other.AmountPayment,
                 Id = other.Id,
+                ConversionDocumentId = other.ConversionDocumentId,
+                OrderDocumentId = other.OrderDocumentId,
             };
             await SetBusyAsync();
             ResponseBaseModel res = await RetailRepo.UpdateConversionOrderLinkDocumentRetailAsync(new()
