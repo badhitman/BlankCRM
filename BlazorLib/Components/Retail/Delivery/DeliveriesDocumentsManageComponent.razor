@@ -114,7 +114,7 @@
         }
         <MudTd DataLabel="Тип/Статус">
             <MudLink Href="@($"/retail/delivery-document/{context.Id}")">
-                @context.DeliveryType.DescriptionInfo()
+                @(RubricsCache.FirstOrDefault(x => x.Id == context.DeliveryTypeId)?.Name ?? $"#{context.DeliveryTypeId}")
             </MudLink>
             @if (context.DeliveryStatus.HasValue)
             {

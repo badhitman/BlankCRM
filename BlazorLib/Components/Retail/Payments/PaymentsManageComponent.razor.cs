@@ -16,6 +16,9 @@ public partial class PaymentsManageComponent : BlazorBusyComponentUsersCachedMod
     [Inject]
     IRetailService RetailRepo { get; set; } = default!;
 
+    [Inject]
+    IRubricsTransmission RubricsRepo { get; set; } = default!;
+
 
     /// <inheritdoc/>
     [CascadingParameter(Name = "ClientId")]
@@ -31,6 +34,11 @@ public partial class PaymentsManageComponent : BlazorBusyComponentUsersCachedMod
 
 
     MudTable<PaymentRetailDocumentModelDB>? _tableRef;
+
+    /// <summary>
+    /// RubricsCache
+    /// </summary>
+    protected List<RubricStandardModel> RubricsCache = [];
 
     DateRange? _dateRange;
     DateRange? DateRangeProp
@@ -82,6 +90,27 @@ public partial class PaymentsManageComponent : BlazorBusyComponentUsersCachedMod
         _visible = true;
     }
 
+    /// <summary>
+    /// CacheRubricsUpdate
+    /// </summary>
+    protected async Task CacheRubricsUpdate(IEnumerable<int> rubricsIds)
+    {
+        rubricsIds = rubricsIds.Where(x => x > 0 && !RubricsCache.Any(y => y.Id == x)).Distinct();
+        if (!rubricsIds.Any())
+            return;
+
+        await SetBusyAsync();
+        TResponseModel<List<RubricStandardModel>> rubrics = await RubricsRepo.RubricsGetAsync([.. rubricsIds]);
+        SnackBarRepo.ShowMessagesResponse(rubrics.Messages);
+        if (rubrics.Success() && rubrics.Response is not null && rubrics.Response.Count != 0)
+            lock (RubricsCache)
+            {
+                RubricsCache.AddRange(rubrics.Response.Where(x => !RubricsCache.Any(y => y.Id == x.Id)));
+            }
+
+        await SetBusyAsync(false);
+    }
+
     void RowClickEvent(TableRowClickEventArgs<PaymentRetailDocumentModelDB> tableRowClickEventArgs)
     {
         if (RowClickEventHandler is not null)
@@ -119,10 +148,14 @@ public partial class PaymentsManageComponent : BlazorBusyComponentUsersCachedMod
             req.Payload.ExcludeOrderId = ExcludeOrder.Id;
 
         TPaginationResponseStandardModel<PaymentRetailDocumentModelDB>? res = await RetailRepo.SelectPaymentsDocumentsAsync(req, token);
-        await SetBusyAsync(false, token: token);
 
         if (res.Response is not null)
+        {
             await CacheUsersUpdate([.. res.Response.Select(x => x.Wallet!.UserIdentityId)]);
+            await CacheRubricsUpdate([.. res.Response.Select(x => x.TypePaymentId)]);
+        }
+
+        await SetBusyAsync(false, token: token);
 
         return new TableData<PaymentRetailDocumentModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };
     }

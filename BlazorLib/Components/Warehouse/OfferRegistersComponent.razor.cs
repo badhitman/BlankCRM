@@ -2,9 +2,10 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using static SharedLib.GlobalStaticConstantsRoutes;
+using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using SharedLib;
+using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace BlazorLib.Components.Warehouse;
 
@@ -13,6 +14,13 @@ namespace BlazorLib.Components.Warehouse;
 /// </summary>
 public partial class OfferRegistersComponent : BlazorBusyComponentRubricsCachedModel
 {
+    /// <summary>
+    /// Commerce
+    /// </summary>
+    [Inject]
+    protected ICommerceTransmission CommerceRepo { get; set; } = default!;
+
+
     MudTable<OfferAvailabilityModelDB>? table;
 
     List<UniversalBaseModel> Warehouses = [];
@@ -39,7 +47,7 @@ public partial class OfferRegistersComponent : BlazorBusyComponentRubricsCachedM
             ContextName = Routes.WAREHOUSE_CONTROLLER_NAME,
         };
 
-        Warehouses = await HelpDeskRepo.RubricsChildListAsync(req);
+        Warehouses = await RubricsRepo.RubricsChildListAsync(req);
         await SetBusyAsync(false);
     }
 

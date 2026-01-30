@@ -2,7 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using BlazorLib;
+using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using SharedLib;
 
@@ -13,6 +13,13 @@ namespace BlazorLib.Components.Warehouse;
 /// </summary>
 public partial class WarehouseMainComponent : BlazorBusyComponentRubricsCachedModel
 {
+    /// <summary>
+    /// Commerce
+    /// </summary>
+    [Inject]
+    protected ICommerceTransmission CommerceRepo { get; set; } = default!;
+
+
     MudTable<WarehouseDocumentModelDB>? table;
 
     string? searchString = null;
@@ -54,7 +61,7 @@ public partial class WarehouseMainComponent : BlazorBusyComponentRubricsCachedMo
 
         if (context.WritingOffWarehouseId > 0)
             res = $"{RubricsCache.FirstOrDefault(x => x.Id == context.WritingOffWarehouseId)?.Name ?? context.WritingOffWarehouseId.ToString()} -> {res}";
-       
+
         return res;
     }
 

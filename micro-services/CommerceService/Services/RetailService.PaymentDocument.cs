@@ -284,7 +284,6 @@ public partial class RetailService : IRetailService
         Dictionary<string, int> map = [];
         foreach (PaymentRetailDocumentModelDB pmDb in paymentsMigrateDb)
         {
-
             if (map.ContainsKey(pmDb.TypePayment.DescriptionInfo()))
                 await q.Where(x => x.Id == pmDb.Id)
                     .ExecuteUpdateAsync(set => set

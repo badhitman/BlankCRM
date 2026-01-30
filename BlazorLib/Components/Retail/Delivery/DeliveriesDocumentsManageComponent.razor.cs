@@ -23,6 +23,9 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
     [Inject]
     IParametersStorageTransmission StorageRepo { get; set; } = default!;
 
+    [Inject]
+    IRubricsTransmission RubricsRepo { get; set; } = default!;
+
 
     /// <inheritdoc/>
     [CascadingParameter(Name = "ClientId")]
@@ -48,9 +51,13 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
     [Parameter]
     public IReadOnlyCollection<DeliveryStatusesEnum?>? PresetStatusesDocuments { get; set; }
 
+
     bool _equalSumFilter;
     string? searchString = null;
-
+    /// <summary>
+    /// RubricsCache
+    /// </summary>
+    protected List<RubricStandardModel> RubricsCache = [];
     bool EqualSumFilter
     {
         get => _equalSumFilter;
@@ -146,6 +153,27 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
             }
         });
         SnackBarRepo.ShowMessagesResponse(res.Messages);
+        await SetBusyAsync(false);
+    }
+
+    /// <summary>
+    /// CacheRubricsUpdate
+    /// </summary>
+    protected async Task CacheRubricsUpdate(IEnumerable<int> rubricsIds)
+    {
+        rubricsIds = rubricsIds.Where(x => x > 0 && !RubricsCache.Any(y => y.Id == x)).Distinct();
+        if (!rubricsIds.Any())
+            return;
+
+        await SetBusyAsync();
+        TResponseModel<List<RubricStandardModel>> rubrics = await RubricsRepo.RubricsGetAsync([.. rubricsIds]);
+        SnackBarRepo.ShowMessagesResponse(rubrics.Messages);
+        if (rubrics.Success() && rubrics.Response is not null && rubrics.Response.Count != 0)
+            lock (RubricsCache)
+            {
+                RubricsCache.AddRange(rubrics.Response.Where(x => !RubricsCache.Any(y => y.Id == x.Id)));
+            }
+
         await SetBusyAsync(false);
     }
 
@@ -266,6 +294,7 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
         TPaginationRequestStandardModel<SelectDeliveryDocumentsRetailRequestModel> req = new()
         {
             Payload = GetRequestPayload(),
+            FindQuery = searchString,
             PageNum = state.Page,
             PageSize = state.PageSize,
             SortingDirection = state.SortDirection.Convert(),
@@ -275,7 +304,10 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
         TPaginationResponseStandardModel<DeliveryDocumentRetailModelDB>? res = await RetailRepo.SelectDeliveryDocumentsAsync(req, token);
         SnackBarRepo.ShowMessagesResponse(res.Status.Messages);
         if (res.Response is not null)
+        {
             await CacheUsersUpdate([.. res.Response.Select(x => x.RecipientIdentityUserId)]);
+            await CacheRubricsUpdate([.. res.Response.Select(x => x.DeliveryTypeId)]);
+        }
 
         await SetBusyAsync(false, token);
         return new TableData<DeliveryDocumentRetailModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };
