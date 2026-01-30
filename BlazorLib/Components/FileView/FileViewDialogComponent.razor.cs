@@ -81,6 +81,19 @@ public partial class FileViewDialogComponent : BlazorBusyComponentBaseModel
         }
     }
 
+    void PositionStepMove(int stepVal)
+    {
+        long _preSet = FilePositionSlider + stepVal;
+        if (_preSet < 0)
+            _preSet = 0;
+
+        if (_preSet > DirectoryItem.FileSizeBytes)
+            _preSet = DirectoryItem.FileSizeBytes;
+
+        if (FilePositionSlider != _preSet)
+            FilePositionSlider = _preSet;
+    }
+
     async Task ReadFileDataAboutPositionAsync()
     {
         cts.Cancel();

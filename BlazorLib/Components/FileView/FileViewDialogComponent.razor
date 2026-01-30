@@ -1,7 +1,11 @@
 ﻿@inherits BlazorBusyComponentBaseModel
 
 @using MudBlazor
-
+<style>
+    #position-step-move span.badge {
+        cursor: pointer;
+    }
+</style>
 <MudDialog>
     <DialogContent>
         <code>@DirectoryItem.FullPath</code>
@@ -15,7 +19,17 @@
             Размер данных: @GlobalToolsStandard.SizeDataAsString(ReadSizeArea) (x2 = @GlobalToolsStandard.SizeDataAsString(ReadSizeArea * 2))
         </MudSlider>
         <MudSlider Max="DirectoryItem.FileSizeBytes" @bind-Value="FilePositionSlider">
-            Position: @_valueSliderString (of @FileSizeString)
+            <div class="hstack gap-1" id="position-step-move" title="Перемещение позиции">
+                <div class="me-3">Position: @_valueSliderString (of @FileSizeString)</div>
+                <div><span class="badge rounded-pill text-bg-light" @onclick="() => PositionStepMove(-50)">-50</span></div>
+                <div><span class="badge rounded-pill text-bg-light" @onclick="() => PositionStepMove(-20)">-20</span></div>
+                <div><span class="badge rounded-pill text-bg-light" @onclick="() => PositionStepMove(-5)">-5</span></div>
+                <div><span class="badge rounded-pill text-bg-light" @onclick="() => PositionStepMove(-1)">-1</span></div>
+                <div><span class="badge rounded-pill text-bg-light" @onclick="() => PositionStepMove(1)">+1</span></div>
+                <div><span class="badge rounded-pill text-bg-light" @onclick="() => PositionStepMove(5)">+5</span></div>
+                <div><span class="badge rounded-pill text-bg-light" @onclick="() => PositionStepMove(20)">+20</span></div>
+                <div><span class="badge rounded-pill text-bg-light" @onclick="() => PositionStepMove(50)">+50</span></div>
+            </div>
         </MudSlider>
         <MudTextField Variant="Variant.Outlined"
                       @bind-Text="RawDataStart"
