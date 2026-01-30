@@ -36,7 +36,7 @@
         </MudTabPanel>
     }
 </MudTabs>
-    @code {
+@code {
     [Inject]
     NavigationManager NavRepo { get; set; } = default!;
 
@@ -60,5 +60,4 @@
                 _tabs.ActivatePanelAsync(TabActivate);
         }
     }
-
 }

@@ -11,27 +11,57 @@
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 @attribute [Authorize(Roles = $"{GlobalStaticConstantsRoles.Roles.Admin},{GlobalStaticConstantsRoles.Roles.Debug},{GlobalStaticConstantsRoles.Roles.RetailManage}")]
 
-<MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-6">
-    <MudTabPanel Text="Заказы">
+<MudTabs @ref="_tabs" Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-6" ActivePanelIndexChanged="ActivePanelIndexChangedHandler">
+    <MudTabPanel Text="Заказы" ID="@nameof(RetailOrdersListComponent)">
         <RetailOrdersListComponent />
     </MudTabPanel>
-    <MudTabPanel Text="Клиенты">
+    <MudTabPanel Text="Клиенты" ID="@nameof(ClientsRetailWrapperComponent)">
         <ClientsRetailWrapperComponent />
     </MudTabPanel>
-    <MudTabPanel Text="Платежи">
+    <MudTabPanel Text="Платежи" ID="@nameof(PaymentsManageComponent)">
         <PaymentsManageComponent />
     </MudTabPanel>
-    <MudTabPanel Text="Переводы">
+    <MudTabPanel Text="Переводы" ID="@nameof(ConversionsTableManageComponent)">
         <ConversionsTableManageComponent />
     </MudTabPanel>
-    <MudTabPanel Text="Доставка">
+    <MudTabPanel Text="Доставка" ID="@nameof(DeliveriesDocumentsManageComponent)">
         <DeliveriesDocumentsManageComponent />
     </MudTabPanel>
     <AuthorizeView Roles="@($"{GlobalStaticConstantsRoles.Roles.Admin},{GlobalStaticConstantsRoles.Roles.Debug},{GlobalStaticConstantsRoles.Roles.RetailReports}")">
         <Authorized>
-            <MudTabPanel Text="Отчёты">
+            <MudTabPanel Text="Отчёты" ID="@nameof(MMMWrapperComponent)">
                 <MMMWrapperComponent />
             </MudTabPanel>
         </Authorized>
     </AuthorizeView>
 </MudTabs>
+@code {
+    [Inject]
+    NavigationManager NavigationManager { get; set; } = default!;
+
+
+    [SupplyParameterFromQuery(Name = "tab")]
+    public string? TabActivate { get; set; }
+
+
+    MudTabs? _tabs;
+    bool tabIsSet;
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+        if (!tabIsSet && _tabs is not null)
+        {
+            tabIsSet = true;
+            if (!string.IsNullOrWhiteSpace(TabActivate))
+                _tabs.ActivatePanelAsync(TabActivate);
+        }
+    }
+
+    void ActivePanelIndexChangedHandler(int args)
+    {
+        if (_tabs?.ActivePanel?.ID is null || string.IsNullOrWhiteSpace(TabActivate) || TabActivate == _tabs?.ActivePanel?.ID.ToString())
+            return;
+
+        NavigationManager.NavigateTo("/retail");
+    }
+}

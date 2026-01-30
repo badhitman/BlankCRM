@@ -6,8 +6,15 @@
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 @attribute [Authorize]
 
-<h4>Платёж/оплата # @PaymentId</h4>
-
+<div style="display: grid; grid-template-columns: 1fr auto; align-items: center; width: 100%">
+    <h4 style="justify-self: start;">Платёж/оплата # @PaymentId</h4>
+    <div style="justify-self: end;">
+        <a class="btn btn-link bi bi-arrow-90deg-up"
+           title="Перейти в журнал документов"
+           href="/retail?tab=@nameof(PaymentsManageComponent)"
+           role="button"> В журнал</a>
+    </div>
+</div>
 <PaymentDocumentComponent PaymentId="PaymentId" />
 
 @code {

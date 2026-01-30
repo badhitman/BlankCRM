@@ -4,8 +4,15 @@
 @using BlazorLib.Components.Retail.Payments
 @using MudBlazor
 
-<h5>Каточка клиента #@ClientId</h5>
-
+<div style="display: grid; grid-template-columns: 1fr auto; align-items: center; width: 100%">
+    <h5 style="justify-self: start;">Каточка клиента #@ClientId</h5>
+    <div style="justify-self: end;">
+        <a class="btn btn-link bi bi-arrow-90deg-up"
+           title="Перейти в справочник клиентов"
+           href="/retail?tab=@nameof(ClientsRetailWrapperComponent)"
+           role="button"> В справочник</a>
+    </div>
+</div>
 <MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-6">
     <MudTabPanel Text="Клиент">
         <ClientAboutComponent ClientId="@ClientId" />
