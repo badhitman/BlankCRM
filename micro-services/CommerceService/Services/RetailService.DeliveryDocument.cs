@@ -272,8 +272,9 @@ public partial class RetailService : IRetailService
         foreach (DeliveryDocumentRetailModelDB pmDb in migrateDb)
         {
             if (map.ContainsKey(pmDb.DeliveryType.DescriptionInfo()))
-                await q.ExecuteUpdateAsync(set => set
-                            .SetProperty(p => p.DeliveryTypeId, map[pmDb.DeliveryType.DescriptionInfo()]), cancellationToken: token);
+                await q.Where(x => x.Id == pmDb.Id)
+                    .ExecuteUpdateAsync(set => set
+                        .SetProperty(p => p.DeliveryTypeId, map[pmDb.DeliveryType.DescriptionInfo()]), cancellationToken: token);
             else
             {
                 TResponseModel<int> getRubric = await RubricRepo.RubricCreateOrUpdateAsync(new()
@@ -284,7 +285,9 @@ public partial class RetailService : IRetailService
                 if (getRubric.Response > 0)
                 {
                     map.Add(pmDb.DeliveryType.DescriptionInfo(), getRubric.Response);
-                    await q.ExecuteUpdateAsync(set => set.SetProperty(p => p.DeliveryTypeId, getRubric.Response), cancellationToken: token);
+                    await q.Where(x => x.Id == pmDb.Id)
+                        .ExecuteUpdateAsync(set => set
+                            .SetProperty(p => p.DeliveryTypeId, getRubric.Response), cancellationToken: token);
                 }
             }
         }
