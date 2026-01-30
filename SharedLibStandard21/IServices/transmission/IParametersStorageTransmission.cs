@@ -11,7 +11,7 @@ namespace SharedLib;
 /// <summary>
 /// IParametersStorageTransmission
 /// </summary>
-public interface IParametersStorageTransmission
+public interface IParametersStorageTransmission : IParametersStorageBase
 {
     /// <summary>
     /// Прочитать значение параметра. null - если значения нет
@@ -36,7 +36,7 @@ public interface IParametersStorageTransmission
     /// <summary>
     /// Сохранить параметр
     /// </summary>
-    public Task<TResponseModel<int>> SaveParameterAsync<T>(T payload_query, StorageMetadataModel store, bool trim, bool waitResponse = true, CancellationToken token = default);
+    public Task<TResponseModel<int>> SaveParameterAsync<T>(T payload_query, StorageMetadataModel store, bool trimHistory, bool waitResponse = true, CancellationToken token = default);
 
     /// <summary>
     /// Удалить параметр
@@ -47,16 +47,4 @@ public interface IParametersStorageTransmission
     /// Найти/подобрать значения параметров (со всей историей значений)
     /// </summary>
     public Task<TResponseModel<T?[]?>> FindParametersAsync<T>(RequestStorageBaseModel req, CancellationToken token = default);
-
-    #region tag`s
-    /// <summary>
-    /// TagSet
-    /// </summary>
-    public Task<TResponseModel<bool>> TagSetAsync(TagSetModel req, CancellationToken token = default);
-
-    /// <summary>
-    /// TagsSelect
-    /// </summary>
-    public Task<TPaginationResponseStandardModel<TagViewModel>> TagsSelectAsync(TPaginationRequestStandardModel<SelectMetadataRequestModel> req, CancellationToken token = default);
-    #endregion
 }

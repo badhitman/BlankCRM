@@ -11,9 +11,9 @@
                         Class="me-2"
                         Variant="Variant.Text"
                         Color="Color.Info">
-                @foreach (PaymentsRetailTypesEnum pt in Enum.GetValues(typeof(PaymentsRetailTypesEnum)))
+                @foreach (UniversalBaseModel pt in AllPaymentsTypes)
                 {
-                    <MudChip Value="@pt" Text="@pt.DescriptionInfo()" />
+                    <MudChip Value="@pt.Id" Text="@pt.Name" />
                 }
             </MudChipSet>
             <MudChip T="string" Icon="@(includeUnset? @Icons.Material.Filled.Check : "")" Selected=includeUnset OnClick="OnChipClicked" Color="Color.Default">Переводы</MudChip>

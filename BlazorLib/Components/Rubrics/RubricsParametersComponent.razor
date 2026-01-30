@@ -41,6 +41,7 @@
             </MudTabPanel>
             <MudTabPanel Text="Офисы">
                 <RubricsManageComponent TEntity="RubricNodeBodyComponent"
+                                        SingleLevelMode
                                         ContextName="@Routes.OFFICES_CONTROLLER_NAME" />
             </MudTabPanel>
             <MudTabPanel Text="Issues/Обращения">
@@ -88,6 +89,7 @@
                             <h5 class="card-title">Категории</h5>
                             <h6 class="card-subtitle mb-2 text-body-secondary">Категории статей</h6>
                             <RubricsManageComponent TEntity="RubricNodeBodyComponent"
+                                                    SingleLevelMode
                                                     ContextName="@Routes.ARTICLES_CONTROLLER_NAME" />
                         </div>
                     </div>

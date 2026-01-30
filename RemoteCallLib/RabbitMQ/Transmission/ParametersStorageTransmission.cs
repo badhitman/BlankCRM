@@ -18,8 +18,8 @@ public class ParametersStorageTransmission(IRabbitClient rabbitClient) : IParame
         => await rabbitClient.MqRemoteCallAsync<TPaginationResponseStandardModel<TagViewModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.TagsSelectReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<bool>> TagSetAsync(TagSetModel req, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<TResponseModel<bool>>(GlobalStaticConstantsTransmission.TransmissionQueues.TagSetReceive, req, token: token) ?? new();
+    public async Task<ResponseBaseModel> TagSetAsync(TagSetModel req, CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.TagSetReceive, req, token: token) ?? new();
     #endregion
 
     #region parameter`s

@@ -58,7 +58,7 @@ public partial class WalletSelectInputComponent : BlazorBusyComponentBaseModel
 
     /// <inheritdoc/>
     [Parameter]
-    public PaymentsRetailTypesEnum? PaymentRetailTypeFilter { get; set; }
+    public int? PaymentRetailTypeFilter { get; set; }
 
 
     UserInfoModel? currentUser;

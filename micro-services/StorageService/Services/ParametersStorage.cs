@@ -69,7 +69,7 @@ public class ParametersStorage(
             if (!q.Any())
                 res.AddSuccess("Тег отсутствует");
             else
-                res.AddInfo($"Тег удалён: {await q.ExecuteDeleteAsync(cancellationToken: token)}");
+                res.AddInfo($"Тег '{req.Name}' удалён: {await q.ExecuteDeleteAsync(cancellationToken: token)}");
         }
 
         return res;
@@ -120,7 +120,17 @@ public class ParametersStorage(
             SortingDirection = req.SortingDirection,
             SortBy = req.SortBy,
             TotalRowsCount = trc,
-            Response = [.. _resDb.Select(x => (TagViewModel)x)],
+            Response = [.. _resDb.Select(x => new TagViewModel()
+            {
+                ApplicationName = x.ApplicationName,
+                CreatedAt = x.CreatedAt,
+                Id = x.Id,
+                NormalizedTagNameUpper = x.NormalizedTagNameUpper,
+                OwnerPrimaryKey = x.OwnerPrimaryKey,
+                PrefixPropertyName = x.PrefixPropertyName,
+                PropertyName = x.PropertyName,
+                TagName = x.TagName,
+            })],
         };
     }
     #endregion
@@ -191,7 +201,7 @@ public class ParametersStorage(
     }
 
     /// <inheritdoc/>
-    public async Task SaveAsync<T>(T obj, StorageMetadataModel set, bool trimHistory = false, CancellationToken token = default)
+    public async Task SaveParameterAsync<T>(T obj, StorageMetadataModel set, bool trimHistory = false, CancellationToken token = default)
     {
         if (obj is null)
             throw new ArgumentNullException(nameof(obj));

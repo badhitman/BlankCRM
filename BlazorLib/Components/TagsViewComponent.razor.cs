@@ -36,7 +36,7 @@ public partial class TagsViewComponent : MetaPropertyBaseComponent
         if (string.IsNullOrWhiteSpace(_value) || !OwnerPrimaryKey.HasValue)
             return;
         await SetBusyAsync();
-        TResponseModel<bool> res = await TagsRepo.TagSetAsync(new()
+        ResponseBaseModel res = await TagsRepo.TagSetAsync(new()
         {
             PrefixPropertyName = PrefixPropertyName,
             ApplicationName = ApplicationsNames.Single(),
@@ -64,7 +64,7 @@ public partial class TagsViewComponent : MetaPropertyBaseComponent
         if (!string.IsNullOrWhiteSpace(chip.Value?.TagName) && OwnerPrimaryKey.HasValue)
         {
             await SetBusyAsync();
-            TResponseModel<bool> res = await TagsRepo.TagSetAsync(new()
+            ResponseBaseModel res = await TagsRepo.TagSetAsync(new()
             {
                 PrefixPropertyName = PrefixPropertyName,
                 ApplicationName = ApplicationsNames.Single(),

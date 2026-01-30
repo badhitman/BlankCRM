@@ -14,25 +14,13 @@ namespace SharedLib;
 /// <remarks>
 /// Значения/данные сериализуются в JSON строку при сохранении и де-сериализируются при чтении
 /// </remarks>
-public interface IParametersStorage
+public interface IParametersStorage : IParametersStorageBase
 {
-    #region tag`s
-    /// <summary>
-    /// TagSet
-    /// </summary>
-    public Task<ResponseBaseModel> TagSetAsync(TagSetModel req, CancellationToken token = default);
-
-    /// <summary>
-    /// TagsSelect
-    /// </summary>
-    public Task<TPaginationResponseStandardModel<TagViewModel>> TagsSelectAsync(TPaginationRequestStandardModel<SelectMetadataRequestModel> req, CancellationToken token = default);
-    #endregion
-
     #region parameter`s
     /// <summary>
     /// Сохранить параметр
     /// </summary>
-    public Task SaveAsync<T>(T obj, StorageMetadataModel set, bool trimHistory = false, CancellationToken token = default);
+    public Task SaveParameterAsync<T>(T payload_query, StorageMetadataModel store, bool trimHistory = false, CancellationToken token = default);
 
     /// <summary>
     /// Прочитать значение параметра. null - если значения нет

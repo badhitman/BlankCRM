@@ -5,6 +5,7 @@
 using BlazorLib.Components.Retail.Wallet;
 using Microsoft.AspNetCore.Components;
 using SharedLib;
+using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace BlazorLib.Components.Retail.Payments;
 
@@ -22,6 +23,9 @@ public partial class PaymentDocumentComponent : BlazorBusyComponentBaseAuthModel
     [Inject]
     NavigationManager NavRepo { get; set; } = default!;
 
+    [Inject]
+    IRubricsTransmission RubricsRepo { get; set; } = default!;
+
 
     /// <inheritdoc/>
     [Parameter]
@@ -36,6 +40,7 @@ public partial class PaymentDocumentComponent : BlazorBusyComponentBaseAuthModel
     public string? ClientId { get; set; }
 
 
+    List<UniversalBaseModel> AllPaymentsTypes = [];
     PaymentRetailDocumentModelDB? currentDoc, editDoc;
     UserInfoModel? userRecipient;
     WalletSelectInputComponent? recipientWalletRef;
@@ -63,7 +68,7 @@ public partial class PaymentDocumentComponent : BlazorBusyComponentBaseAuthModel
             return
                 currentDoc.Id > 0 &&
                 currentDoc.WalletId == editDoc.WalletId &&
-                currentDoc.TypePayment == editDoc.TypePayment &&
+                currentDoc.TypePaymentId == editDoc.TypePaymentId &&
                 currentDoc.StatusPayment == editDoc.StatusPayment &&
                 currentDoc.PaymentSource == editDoc.PaymentSource &&
                 currentDoc.Description == editDoc.Description &&
@@ -159,6 +164,9 @@ public partial class PaymentDocumentComponent : BlazorBusyComponentBaseAuthModel
 
         if (CurrentUserSession is null)
             throw new InvalidOperationException("CurrentUserSession is null");
+
+        string ctx = Path.Combine(Routes.PAYMENTS_CONTROLLER_NAME, Routes.TYPES_CONTROLLER_NAME);
+        AllPaymentsTypes = await RubricsRepo.RubricsChildListAsync(new() { ContextName = ctx });
 
         if (PaymentId < 1)
         {

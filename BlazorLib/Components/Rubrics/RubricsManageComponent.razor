@@ -80,10 +80,11 @@
     public bool SingleLevelMode { get; set; }
 
 
-    IDictionary<string, object> parameters(TreeItemData<UniversalBaseModel?> _node)
+    IDictionary<string, object?> parameters(TreeItemData<UniversalBaseModel?> _node)
     {
-        Dictionary<string, object> _res = new();
+        Dictionary<string, object?> _res = new();
         _res.Add("Node", _node);
+        _res.Add("ContextName", ContextName);
         return _res;
     }
 

@@ -11,20 +11,13 @@ namespace SharedLib;
 /// <summary>
 /// PaymentRetailDocumentModelDB
 /// </summary>
-[Index(nameof(PaymentSource)), Index(nameof(TypePayment)), Index(nameof(TypePaymentId)), Index(nameof(StatusPayment))]
+[Index(nameof(PaymentSource)), Index(nameof(TypePaymentId)), Index(nameof(StatusPayment))]
 [Index(nameof(Name)), Index(nameof(DatePayment)), Index(nameof(AuthorUserIdentity))]
 public class PaymentRetailDocumentModelDB : EntryUpdatedModel
 {
     /// <inheritdoc/>
     [Required]
     public required DateTime DatePayment { get; set; }
-
-    /// <summary>
-    /// Тип/способ оплаты
-    /// </summary>
-    [System.Text.Json.Serialization.JsonConverter(typeof(StringEnumConverter))]
-    [Newtonsoft.Json.JsonConverter(typeof(StringEnumConverter))]
-    public PaymentsRetailTypesEnum TypePayment { get; set; }
 
     /// <summary>
     /// Тип/способ оплаты
@@ -67,7 +60,7 @@ public class PaymentRetailDocumentModelDB : EntryUpdatedModel
     /// <inheritdoc/>
     public override string ToString()
     {
-        return $"[{DatePayment} {TypePayment.DescriptionInfo()}] `{StatusPayment.DescriptionInfo()}` - {Amount}";
+        return $"[{DatePayment}] `{StatusPayment.DescriptionInfo()}` - {Amount}";
     }
 
     /// <inheritdoc/>
@@ -77,7 +70,7 @@ public class PaymentRetailDocumentModelDB : EntryUpdatedModel
         {
             AuthorUserIdentity = other.AuthorUserIdentity,
             DatePayment = other.DatePayment,
-            TypePayment = other.TypePayment,
+            TypePaymentId = other.TypePaymentId,
             Version = other.Version,
             PaymentSource = other.PaymentSource,
             StatusPayment = other.StatusPayment,

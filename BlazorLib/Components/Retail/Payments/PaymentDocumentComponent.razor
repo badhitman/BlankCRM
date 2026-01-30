@@ -19,10 +19,10 @@
                     <MudGrid>
                         <MudItem xs="12" md="6" Class="mb-3">
                             <label for="exampleInputTypePayment" class="form-label">Тип/способ оплаты</label>
-                            <select class="form-select" id="exampleInputTypePayment" @bind="editDoc.TypePayment">
-                                @foreach (PaymentsRetailTypesEnum _pt in Enum.GetValues(typeof(PaymentsRetailTypesEnum)))
+                            <select class="form-select" id="exampleInputTypePayment" @bind="editDoc.TypePaymentId">
+                                @foreach (UniversalBaseModel _pt in AllPaymentsTypes)
                                 {
-                                    <option value="@_pt">@_pt.DescriptionInfo()</option>
+                                    <option value="@_pt.Id">@_pt.Name</option>
                                 }
                             </select>
                         </MudItem>
@@ -66,7 +66,7 @@
                                                     SelectUserHandler="SelectUserRecipientAction"
                                                     WalletInit="editDoc.Wallet"
                                                     PresetClientId="@(InjectToOrder?.BuyerIdentityUserId)"
-                                                    PaymentRetailTypeFilter="editDoc.TypePayment"
+                                                    PaymentRetailTypeFilter="editDoc.TypePaymentId"
                                                     @ref=recipientWalletRef
                                                     Title="Плательщик"
                                                     HideSystemWallets />

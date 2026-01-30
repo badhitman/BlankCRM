@@ -2,24 +2,23 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-
 namespace SharedLib;
 
 /// <summary>
-/// PaymentOrderNoSiteRetailModel
+/// PaymentOrderRetailModel
 /// </summary>
-public class PaymentOrderNoSiteRetailModel(decimal amountPayment, PaymentsRetailTypesEnum typePayment)
+public class PaymentOrderRetailModel(decimal amountPayment, int typePayment)
 {
     /// <inheritdoc/>
     public decimal AmountPayment { get; } = amountPayment;
 
     /// <inheritdoc/>
-    public PaymentsRetailTypesEnum TypePayment { get; } = typePayment;
+    public int TypePayment { get; } = typePayment;
 
     /// <inheritdoc/>
     public override bool Equals(object? obj)
     {
-        return obj is PaymentOrderNoSiteRetailModel other &&
+        return obj is PaymentOrderRetailModel other &&
                AmountPayment == other.AmountPayment &&
                TypePayment == other.TypePayment;
     }

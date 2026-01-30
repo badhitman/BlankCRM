@@ -5,6 +5,8 @@
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using SharedLib;
+using System.Collections.Generic;
+using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace BlazorLib.Components.Retail.Payments;
 
@@ -34,7 +36,7 @@ public partial class PaymentsManageComponent : BlazorBusyComponentUsersCachedMod
 
 
     MudTable<PaymentRetailDocumentModelDB>? _tableRef;
-
+    List<UniversalBaseModel> AllPaymentsTypes = [];
     /// <summary>
     /// RubricsCache
     /// </summary>
@@ -52,8 +54,8 @@ public partial class PaymentsManageComponent : BlazorBusyComponentUsersCachedMod
         }
     }
 
-    IReadOnlyCollection<PaymentsRetailTypesEnum> _selectedPaymentsTypes = [];
-    IReadOnlyCollection<PaymentsRetailTypesEnum> SelectedPaymentsTypes
+    IReadOnlyCollection<int> _selectedPaymentsTypes = [];
+    IReadOnlyCollection<int> SelectedPaymentsTypes
     {
         get => _selectedPaymentsTypes;
         set
@@ -84,6 +86,32 @@ public partial class PaymentsManageComponent : BlazorBusyComponentUsersCachedMod
         MaxWidth = MaxWidth.ExtraLarge,
         CloseButton = true
     };
+
+    /// <inheritdoc/>
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        string ctx = Path.Combine(Routes.PAYMENTS_CONTROLLER_NAME, Routes.TYPES_CONTROLLER_NAME);
+        await SetBusyAsync();
+        AllPaymentsTypes = await RubricsRepo.RubricsChildListAsync(new() { ContextName = ctx });
+        if (AllPaymentsTypes.Count != 0)
+            RubricsCache.AddRange(AllPaymentsTypes.Select(x => new RubricStandardModel()
+            {
+                ContextName = ctx,
+                Description = x.Description,
+                IsDisabled = x.IsDisabled,
+                CreatedAtUTC = x.CreatedAtUTC,
+                Id = x.Id,
+                LastUpdatedAtUTC = x.LastUpdatedAtUTC,
+                Name = x.Name,
+                ParentId = x.ParentId,
+                SortIndex = x.SortIndex,
+                ProjectId = x.ProjectId,
+                NormalizedNameUpper = x.Name?.ToUpper()
+            }));
+
+        await SetBusyAsync(false);
+    }
 
     void CreateNewOrderOpenDialog()
     {

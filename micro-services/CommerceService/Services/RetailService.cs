@@ -3,9 +3,9 @@
 ////////////////////////////////////////////////
 
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using SharedLib;
 using DbcLib;
-using Newtonsoft.Json;
 
 namespace CommerceService;
 
@@ -145,21 +145,18 @@ public partial class RetailService(IIdentityTransmission identityRepo,
         IQueryable<ConversionOrderRetailLinkModelDB> qco = context.ConversionsOrdersLinksRetail
             .Where(x => !x.ConversionDocument!.IsDisabled && q.Any(y => y.Id == x.OrderDocumentId));
 
-        var v = await qpo
-            .Where(x => x.PaymentDocument!.TypePayment != PaymentsRetailTypesEnum.OnSite)
-            .Select(x => new PaymentOrderNoSiteRetailModel(x.AmountPayment, x.PaymentDocument!.TypePayment))
-            .ToListAsync(cancellationToken: token);
+        //var v = await qpo
+        //    .Where(x => x.PaymentDocument!.TypePayment != PaymentsRetailTypesEnum.OnSite)
+        //    .Select(x => new PaymentOrderNoSiteRetailModel(x.AmountPayment, x.PaymentDocument!.TypePayment))
+        //    .ToListAsync(cancellationToken: token);
 
         MainReportResponseModel res = new()
         {
             DoneOrdersCount = await q.CountAsync(cancellationToken: token),
             DoneOrdersSumAmount = await context.RowsOrdersRetails.Where(x => q.Any(y => y.Id == x.OrderId)).SumAsync(x => x.Amount, cancellationToken: token),
 
-            PaidOnSitePaymentsSumAmount = await qpo.Where(x => x.PaymentDocument!.TypePayment == PaymentsRetailTypesEnum.OnSite).SumAsync(x => x.AmountPayment, cancellationToken: token),
-            PaidOnSitePaymentsCount = await qpo.Where(x => x.PaymentDocument!.TypePayment == PaymentsRetailTypesEnum.OnSite).CountAsync(token),
+            Payments = await qpo.Select(x => new PaymentOrderRetailModel(x.AmountPayment, x.PaymentDocument!.TypePaymentId)).ToListAsync(cancellationToken: token),
 
-            PaidNoSitePayments = await qpo.Where(x => x.PaymentDocument!.TypePayment != PaymentsRetailTypesEnum.OnSite).Select(x => new PaymentOrderNoSiteRetailModel(x.AmountPayment, x.PaymentDocument!.TypePayment)).ToListAsync(cancellationToken: token),
-            
             ConversionsSumAmount = await qco.SumAsync(x => x.AmountPayment, cancellationToken: token),
             ConversionsCount = await qco.CountAsync(token),
         };

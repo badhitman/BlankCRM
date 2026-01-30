@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using MudBlazor;
 using SharedLib;
+using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace BlazorLib.Components.Retail.Reports.test;
 
@@ -24,12 +25,16 @@ public partial class MainRetailReportComponent : BlazorBusyComponentBaseModel
     [Inject]
     IJSRuntime JsRuntimeRepo { get; set; } = default!;
 
+    [Inject]
+    IRubricsTransmission RubricsRepo { get; set; } = default!;
+
 
     /// <inheritdoc/>
     [CascadingParameter]
     public required MMMWrapperComponent Owner { get; set; }
 
 
+    List<UniversalBaseModel> AllPaymentsTypes = [];
     MainReportResponseModel? ReportData;
 
     DateRange? _dateRange;
@@ -289,10 +294,10 @@ public partial class MainRetailReportComponent : BlazorBusyComponentBaseModel
         my_table.TBody.AddRow(["&nbsp;&nbsp;&nbsp;&nbsp;Перевод/конвертация (поступило)", $"{ReportData.ConversionsSumAmount:C} [x {ReportData.ConversionsCount} шт.] ({Math.Round(ReportData.ConversionsSumAmount / 120, 2)})"]);
         my_table.TBody.AddRow(["&nbsp;&nbsp;&nbsp;&nbsp;Платежи", $"{ReportData.PaidNoSitePaymentsSumAmount:C} [x {ReportData.PaidNoSitePaymentsCount} шт.] ({Math.Round(ReportData.PaidNoSitePaymentsSumAmount / 120, 2)})"]);
 
-        foreach (IGrouping<PaymentsRetailTypesEnum, PaymentOrderNoSiteRetailModel> _gp in ReportData.PaidNoSitePayments.GroupBy(x => x.TypePayment))
+        foreach (IGrouping<int, PaymentOrderRetailModel> _gp in ReportData.PaidNoSitePayments.GroupBy(x => x.TypePayment))
         {
             decimal _sum = _gp.Sum(y => y.AmountPayment);
-            my_table.TBody.AddRow([$"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{_gp.Key.DescriptionInfo()}", $"{_sum:C} [x {_gp.Count()} шт.] ({Math.Round(_sum / 120, 2)})"]);
+            my_table.TBody.AddRow([$"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{AllPaymentsTypes.First(x => x.Id == _gp.Key).Name}", $"{_sum:C} [x {_gp.Count()} шт.] ({Math.Round(_sum / 120, 2)})"]);
         }
 
         my_table.TBody.AddRow(["Итого:", $"{Math.Round(ReportData.PaidOnSitePaymentsSumAmount + ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount, 2):C} [x {ReportData.PaidOnSitePaymentsCount + ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount} шт.] ({Math.Round((ReportData.PaidOnSitePaymentsSumAmount + ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount) / 120, 2)})"]);
@@ -355,6 +360,8 @@ public partial class MainRetailReportComponent : BlazorBusyComponentBaseModel
         await base.OnInitializedAsync();
 
         await SetBusyAsync();
+        string ctx = Path.Combine(Routes.PAYMENTS_CONTROLLER_NAME, Routes.TYPES_CONTROLLER_NAME);
+        AllPaymentsTypes = await RubricsRepo.RubricsChildListAsync(new() { ContextName = ctx });
 
         if (Owner?.SelectedWeek is not null)
             _dateRange = new()

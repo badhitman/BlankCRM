@@ -11,7 +11,7 @@
         <RemoveTelegramJoinComponent TelegramUserId="TelegramUser.TelegramId" IdentityUserId="@User.UserId" />
     }
 </p>
-<div class="input-group input-group-sm mb-3">
+<div class="input-group input-group-sm">
     <span title="Привязка аккаунта Telegram к учётной записи сайта" class="input-group-text" id="inputGroup-sizing-sm">Привязка Telegram к у/з</span>
     <input value="@(TelegramJoinAccount?.GuidToken ?? "Токен отсутствует")" readonly type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
     <button disabled="@IsBusyProgress" class="btn btn-outline-secondary" type="button" id="button-addon2" @onclick="CreateToken">@(TelegramJoinAccount is null ? "Создать" : "перевыпустить") токен</button>

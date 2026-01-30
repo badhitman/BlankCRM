@@ -9,7 +9,7 @@ namespace SharedLib;
 /// <summary>
 /// Типы оплаты в рознице
 /// </summary>
-public enum PaymentsRetailTypesEnum
+public enum PaymentsRetailTypesEnumObsolete
 {
     /// <summary>
     /// Онлайн (картой)

@@ -40,6 +40,9 @@ public partial class ClaimsManageComponent
     string? claimType;
     string? claimValue;
 
+
+    bool CannotAddClaim => string.IsNullOrWhiteSpace(claimType) || string.IsNullOrWhiteSpace(claimValue);
+
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {

@@ -4,6 +4,7 @@
 
 using Microsoft.AspNetCore.Components;
 using SharedLib;
+using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace BlazorLib.Components.Retail.Wallet;
 
@@ -15,6 +16,9 @@ public partial class WalletRetailTypeElementComponent : BlazorBusyComponentBaseA
     [Inject]
     IRetailService RetailRepo { get; set; } = default!;
 
+    [Inject]
+    IRubricsTransmission RubricsRepo { get; set; } = default!;
+
 
     /// <inheritdoc/>
     [Parameter, EditorRequired]
@@ -24,8 +28,19 @@ public partial class WalletRetailTypeElementComponent : BlazorBusyComponentBaseA
     bool CannotSave => !IsEdited || IsBusyProgress;
 
     WalletRetailTypeViewModel? _walletCopy;
-
+    List<UniversalBaseModel> AllPaymentsTypes = [];
     bool IsEdited => _walletCopy is not null && !WalletTypeElement.Equals(_walletCopy);
+
+
+    /// <inheritdoc/>
+    protected override async Task OnInitializedAsync()
+    {
+        await SetBusyAsync();
+        await base.OnInitializedAsync();
+        string ctx = Path.Combine(Routes.PAYMENTS_CONTROLLER_NAME, Routes.TYPES_CONTROLLER_NAME);
+        AllPaymentsTypes = await RubricsRepo.RubricsChildListAsync(new() { ContextName = ctx });
+        await SetBusyAsync(false);
+    }
 
     void InitEdit()
     {
@@ -37,7 +52,7 @@ public partial class WalletRetailTypeElementComponent : BlazorBusyComponentBaseA
         _walletCopy = null;
     }
 
-    async Task ChangeState(PaymentsRetailTypesEnum prt, WalletRetailTypeViewModel walletType)
+    async Task ChangeState(int prt, WalletRetailTypeViewModel walletType)
     {
         if (CurrentUserSession is null)
         {

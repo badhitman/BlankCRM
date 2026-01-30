@@ -6,6 +6,7 @@ using BlazorLib.Components.Retail.Reports.mmm;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using SharedLib;
+using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace BlazorLib.Components.Retail.Reports.test;
 
@@ -17,6 +18,9 @@ public partial class PaymentsRetailReportComponent : BlazorBusyComponentBaseMode
     [Inject]
     IRetailService RetailRepo { get; set; } = default!;
 
+    [Inject]
+    IRubricsTransmission RubricsRepo { get; set; } = default!;
+
 
     /// <inheritdoc/>
     [CascadingParameter]
@@ -24,7 +28,7 @@ public partial class PaymentsRetailReportComponent : BlazorBusyComponentBaseMode
 
 
     MudTable<WalletRetailReportRowModel>? _tableRef;
-
+    List<UniversalBaseModel> AllPaymentsTypes = [];
     bool includeUnset;
 
     DateRange? _dateRange;
@@ -39,8 +43,8 @@ public partial class PaymentsRetailReportComponent : BlazorBusyComponentBaseMode
         }
     }
 
-    IReadOnlyCollection<PaymentsRetailTypesEnum> _selectedPaymentsTypes = [];
-    IReadOnlyCollection<PaymentsRetailTypesEnum> SelectedPaymentsTypes
+    IReadOnlyCollection<int> _selectedPaymentsTypes = [];
+    IReadOnlyCollection<int> SelectedPaymentsTypes
     {
         get => _selectedPaymentsTypes;
         set
@@ -55,6 +59,11 @@ public partial class PaymentsRetailReportComponent : BlazorBusyComponentBaseMode
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
+        await SetBusyAsync();
+        string ctx = Path.Combine(Routes.PAYMENTS_CONTROLLER_NAME, Routes.TYPES_CONTROLLER_NAME);
+        AllPaymentsTypes = await RubricsRepo.RubricsChildListAsync(new() { ContextName = ctx });
+        await SetBusyAsync(false);
+
         if (Owner?.SelectedWeek is not null)
             _dateRange = new()
             {

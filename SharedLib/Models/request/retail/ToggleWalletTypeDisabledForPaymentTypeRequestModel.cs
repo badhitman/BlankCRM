@@ -10,7 +10,7 @@ namespace SharedLib;
 public class ToggleWalletTypeDisabledForPaymentTypeRequestModel
 {
     /// <inheritdoc/>
-    public PaymentsRetailTypesEnum PaymentType { get; set; }
+    public int PaymentType { get; set; }
 
     /// <inheritdoc/>
     public int WalletTypeId { get; set; }

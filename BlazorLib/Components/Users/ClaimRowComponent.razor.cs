@@ -45,7 +45,11 @@ public partial class ClaimRowComponent : BlazorBusyComponentBaseModel
     string? claimType;
     string? claimValue;
 
-    bool CantSave => string.IsNullOrWhiteSpace(claimType) || string.IsNullOrWhiteSpace(claimValue) || Claim.Equals(claimType, claimValue);
+    bool CantSave
+        => string.IsNullOrWhiteSpace(claimType) || string.IsNullOrWhiteSpace(claimValue) || Claim.Equals(claimType, claimValue);
+
+    bool CannotSveClaim
+        => CantSave || Claim.Equals(claimType, claimValue) || IsBusyProgress;
 
     /// <inheritdoc/>
     protected override void OnInitialized()

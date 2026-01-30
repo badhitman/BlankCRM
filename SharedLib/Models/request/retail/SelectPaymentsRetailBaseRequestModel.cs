@@ -15,5 +15,5 @@ public class SelectPaymentsRetailBaseRequestModel : PeriodBaseModel
     /// <remarks>
     /// Если в перечне есть NULL, тогда он расценивается как перевод/конвертация
     /// </remarks>
-    public List<PaymentsRetailTypesEnum?>? TypesFilter { get; set; }
+    public List<int?>? TypesFilter { get; set; }
 }

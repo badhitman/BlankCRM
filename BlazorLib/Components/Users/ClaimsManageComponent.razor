@@ -5,11 +5,29 @@
 
 <h3>Claims</h3>
 <StatusMessage Messages="@Messages" />
-<div class="input-group input-group-sm mb-3">
+<div class="input-group input-group-sm">
     <span class="input-group-text" id="inputGroup-sizing-sm">Добавить Claim</span>
-    <input @bind-value="claimType" @bind-value:event="oninput" type="text" placeholder="ClaimType" aria-label="Claim type" class="form-control">
-    <input @bind-value="claimValue" @bind-value:event="oninput" type="text" placeholder="ClaimValue" aria-label="Claim value" class="form-control">
-    <button @onclick="AddClaim" disabled="@(string.IsNullOrWhiteSpace(claimType) || string.IsNullOrWhiteSpace(claimValue))" class="btn btn-outline-secondary" type="button" id="button-addon2">Добавить</button>
+    <input @bind-value="claimType"
+           @bind-value:event="oninput"
+           type="text"
+           placeholder="ClaimType"
+           aria-label="Claim type"
+           class="form-control">
+
+    <input @bind-value="claimValue"
+           @bind-value:event="oninput"
+           type="text"
+           placeholder="ClaimValue"
+           aria-label="Claim value"
+           class="form-control">
+
+    <button @onclick="AddClaim"
+            disabled="@CannotAddClaim"
+            class="btn btn-outline-secondary"
+            type="button"
+            id="button-addon2">
+        Добавить
+    </button>
 </div>
 
 @if (claims is null || claims.Count == 0)
@@ -32,7 +50,7 @@ else
         <tbody>
             @foreach (ClaimBaseModel claim in claims)
             {
-                <ClaimRowComponent Claim="claim" ClaimArea="ClaimArea" OwnerId="@OwnerId" ReloadHandler="async () => {claims = await IdentityRepo.GetClaimsAsync(new(){ ClaimArea = ClaimArea, OwnerId = OwnerId}); StateHasChanged(); }" />
+                <ClaimRowComponent Claim="claim" ClaimArea="ClaimArea" OwnerId="@OwnerId" ReloadHandler="async () => { claims = await IdentityRepo.GetClaimsAsync(new() { ClaimArea = ClaimArea, OwnerId = OwnerId }); StateHasChanged(); }" />
             }
         </tbody>
     </table>

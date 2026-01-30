@@ -144,7 +144,6 @@ public partial class RetailService : IRetailService
                     .SetProperty(p => p.Description, req.Payload.Description)
                     .SetProperty(p => p.WalletId, req.Payload.WalletId)
                     .SetProperty(p => p.Version, _ng)
-                    .SetProperty(p => p.TypePayment, req.Payload.TypePayment)
                     .SetProperty(p => p.TypePaymentId, req.Payload.TypePaymentId)
                     .SetProperty(p => p.StatusPayment, req.Payload.StatusPayment)
                     .SetProperty(p => p.PaymentSource, req.Payload.PaymentSource)
@@ -251,7 +250,7 @@ public partial class RetailService : IRetailService
                 .SetProperty(p => p.Description, req.Payload.Description)
                 .SetProperty(p => p.WalletId, req.Payload.WalletId)
                 .SetProperty(p => p.Version, _ng)
-                .SetProperty(p => p.TypePayment, req.Payload.TypePayment)
+                .SetProperty(p => p.TypePaymentId, req.Payload.TypePaymentId)
                 .SetProperty(p => p.StatusPayment, req.Payload.StatusPayment)
                 .SetProperty(p => p.PaymentSource, req.Payload.PaymentSource)
                 .SetProperty(p => p.DatePayment, req.Payload.DatePayment)
@@ -276,36 +275,6 @@ public partial class RetailService : IRetailService
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         IQueryable<PaymentRetailDocumentModelDB> q = context.PaymentsRetailDocuments.AsQueryable();
 
-        #region payment-type migration (from enum to db)
-        PaymentRetailDocumentModelDB[] paymentsMigrateDb = await q
-            .Where(x => x.TypePaymentId == 0)
-            .Take(10)
-            .ToArrayAsync(cancellationToken: token);
-        Dictionary<string, int> map = [];
-        foreach (PaymentRetailDocumentModelDB pmDb in paymentsMigrateDb)
-        {
-            if (map.ContainsKey(pmDb.TypePayment.DescriptionInfo()))
-                await q.Where(x => x.Id == pmDb.Id)
-                    .ExecuteUpdateAsync(set => set
-                        .SetProperty(p => p.TypePaymentId, map[pmDb.TypePayment.DescriptionInfo()]), cancellationToken: token);
-            else
-            {
-                TResponseModel<int> getRubric = await RubricRepo.RubricCreateOrUpdateAsync(new()
-                {
-                    ContextName = Path.Combine(Routes.PAYMENTS_CONTROLLER_NAME, Routes.TYPES_CONTROLLER_NAME),
-                    Name = pmDb.TypePayment.DescriptionInfo(),
-                }, token);
-                if (getRubric.Response > 0)
-                {
-                    map.Add(pmDb.TypePayment.DescriptionInfo(), getRubric.Response);
-                    await q.Where(x => x.Id == pmDb.Id)
-                        .ExecuteUpdateAsync(set => set
-                            .SetProperty(p => p.TypePaymentId, getRubric.Response), cancellationToken: token);
-                }
-            }
-        }
-        #endregion
-
         if (!string.IsNullOrWhiteSpace(req.FindQuery))
             q = q.Where(x => x.Name.Contains(req.FindQuery) || (x.Description != null && x.Description.Contains(req.FindQuery)));
 
@@ -313,7 +282,7 @@ public partial class RetailService : IRetailService
             q = q.Where(x => context.WalletsRetail.Any(y => y.Id == x.WalletId && y.UserIdentityId == req.Payload.PayerFilterIdentityId));
 
         if (req.Payload?.TypesFilter is not null && req.Payload.TypesFilter.Count != 0)
-            q = q.Where(x => req.Payload.TypesFilter.Contains(x.TypePayment));
+            q = q.Where(x => req.Payload.TypesFilter.Contains(x.TypePaymentId));
 
         if (req.Payload?.StatusesFilter is not null && req.Payload.StatusesFilter.Length != 0)
             q = q.Where(x => req.Payload.StatusesFilter.Contains(x.StatusPayment));

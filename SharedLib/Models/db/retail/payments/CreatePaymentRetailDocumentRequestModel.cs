@@ -20,7 +20,7 @@ public class CreatePaymentRetailDocumentRequestModel : PaymentRetailDocumentMode
             AuthorUserIdentity = other.AuthorUserIdentity,
             InjectToOrderId = injectToOrderId,
             DatePayment = other.DatePayment,
-            TypePayment = other.TypePayment,
+            TypePaymentId = other.TypePaymentId,
             Version = other.Version,
             PaymentSource = other.PaymentSource,
             StatusPayment = other.StatusPayment,
