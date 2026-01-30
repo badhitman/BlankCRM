@@ -281,16 +281,26 @@ public partial class RetailService : IRetailService
             .Where(x => x.TypePaymentId == 0)
             .Take(10)
             .ToArrayAsync(cancellationToken: token);
-
+        Dictionary<string, int> map = [];
         foreach (PaymentRetailDocumentModelDB pmDb in paymentsMigrateDb)
         {
-            TResponseModel<int> getRubric = await RubricRepo.RubricCreateOrUpdateAsync(new()
+
+            if (map.ContainsKey(pmDb.TypePayment.DescriptionInfo()))
+                await q.ExecuteUpdateAsync(set => set
+                            .SetProperty(p => p.TypePaymentId, map[pmDb.TypePayment.DescriptionInfo()]), cancellationToken: token);
+            else
             {
-                ContextName = Path.Combine(Routes.PAYMENTS_CONTROLLER_NAME, Routes.TYPES_CONTROLLER_NAME),
-                Name = pmDb.TypePayment.DescriptionInfo(),
-            }, token);
-            if (getRubric.Response > 0)
-                await q.ExecuteUpdateAsync(set => set.SetProperty(p => p.TypePaymentId, getRubric.Response), cancellationToken: token);
+                TResponseModel<int> getRubric = await RubricRepo.RubricCreateOrUpdateAsync(new()
+                {
+                    ContextName = Path.Combine(Routes.PAYMENTS_CONTROLLER_NAME, Routes.TYPES_CONTROLLER_NAME),
+                    Name = pmDb.TypePayment.DescriptionInfo(),
+                }, token);
+                if (getRubric.Response > 0)
+                {
+                    map.Add(pmDb.TypePayment.DescriptionInfo(), getRubric.Response);
+                    await q.ExecuteUpdateAsync(set => set.SetProperty(p => p.TypePaymentId, getRubric.Response), cancellationToken: token);
+                }
+            }
         }
         #endregion
 

@@ -268,16 +268,25 @@ public partial class RetailService : IRetailService
             .Where(x => x.DeliveryTypeId == 0)
             .Take(10)
             .ToArrayAsync(cancellationToken: token);
-
+        Dictionary<string, int> map = [];
         foreach (DeliveryDocumentRetailModelDB pmDb in migrateDb)
         {
-            TResponseModel<int> getRubric = await RubricRepo.RubricCreateOrUpdateAsync(new()
+            if (map.ContainsKey(pmDb.DeliveryType.DescriptionInfo()))
+                await q.ExecuteUpdateAsync(set => set
+                            .SetProperty(p => p.DeliveryTypeId, map[pmDb.DeliveryType.DescriptionInfo()]), cancellationToken: token);
+            else
             {
-                ContextName = Path.Combine(Routes.DELIVERIES_CONTROLLER_NAME, Routes.TYPES_CONTROLLER_NAME),
-                Name = pmDb.DeliveryType.DescriptionInfo(),
-            }, token);
-            if (getRubric.Response > 0)
-                await q.ExecuteUpdateAsync(set => set.SetProperty(p => p.DeliveryTypeId, getRubric.Response), cancellationToken: token);
+                TResponseModel<int> getRubric = await RubricRepo.RubricCreateOrUpdateAsync(new()
+                {
+                    ContextName = Path.Combine(Routes.DELIVERIES_CONTROLLER_NAME, Routes.TYPES_CONTROLLER_NAME),
+                    Name = pmDb.DeliveryType.DescriptionInfo(),
+                }, token);
+                if (getRubric.Response > 0)
+                {
+                    map.Add(pmDb.DeliveryType.DescriptionInfo(), getRubric.Response);
+                    await q.ExecuteUpdateAsync(set => set.SetProperty(p => p.DeliveryTypeId, getRubric.Response), cancellationToken: token);
+                }
+            }
         }
         #endregion
 
