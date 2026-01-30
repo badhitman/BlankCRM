@@ -52,7 +52,11 @@
                 </button>
                 @if (IsEdited && ArticleId > 0)
                 {
-                    <button @onclick="() => { editArticle = GlobalTools.CreateDeepCopy(orignArticle) ?? throw new Exception(); }" type="button" class="btn btn-light">Отмена</button>
+                    <button @onclick="() => { editArticle = GlobalTools.CreateDeepCopy(orignArticle) ?? throw new Exception(); }"
+                            type="button"
+                            class="btn btn-light">
+                        Отмена
+                    </button>
                 }
             </div>
         }
@@ -63,6 +67,7 @@
                 <div class="card-body">
                     <h6 class="card-title">Категории</h6>
                     <RubricsManageComponent TEntity="RubricNodeBodyComponent"
+                                            SingleLevelMode
                                             ContextName="@Routes.ARTICLES_CONTROLLER_NAME"
                                             SelectedValuesChanged="@(new TreeViewOptionsHandler() { SelectedNodes = SelectedNodesRead(), SelectedValuesChangedHandler = SelectedRubricsChange })" />
                 </div>
