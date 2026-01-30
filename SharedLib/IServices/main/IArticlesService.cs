@@ -12,7 +12,7 @@ public interface IArticlesService
     /// <summary>
     /// Установит рубрики для статьи
     /// </summary>
-    public Task<TResponseModel<bool>> UpdateRubricsForArticleAsync(ArticleRubricsSetModel req, CancellationToken token = default);
+    public Task<ResponseBaseModel> UpdateRubricsForArticleAsync(ArticleRubricsSetModel req, CancellationToken token = default);
 
     /// <summary>
     /// Создать/обновить статью

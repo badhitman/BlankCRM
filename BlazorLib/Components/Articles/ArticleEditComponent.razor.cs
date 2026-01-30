@@ -31,7 +31,7 @@ public partial class ArticleEditComponent : BlazorBusyComponentBaseAuthModel
     ArticleModelDB? editArticle;
 
     bool IsEdited => orignArticle is not null && editArticle is not null && !orignArticle.Equals(editArticle);
-
+    bool CannotSaveArticle => editArticle is null || (!IsEdited && editArticle.Id > 0) || string.IsNullOrWhiteSpace(editArticle.Name);
     string images_upload_url = default!;
     Dictionary<string, object> editorConf = default!;
 
@@ -68,6 +68,8 @@ public partial class ArticleEditComponent : BlazorBusyComponentBaseAuthModel
             throw new Exception();
 
         orignArticle = res.Response.Single();
+        editArticle = GlobalTools.CreateDeepCopy(orignArticle) ?? throw new Exception();
+
         await SetBusyAsync(false);
     }
 
@@ -77,11 +79,10 @@ public partial class ArticleEditComponent : BlazorBusyComponentBaseAuthModel
             return;
 
         await SetBusyAsync();
-        ResponseBaseModel res = await ArticlesRepo.UpdateRubricsForArticleAsync(new() { ArticleId = ArticleId, RubricsIds = req.Select(x => x!.Id).ToArray() });
+        ResponseBaseModel res = await ArticlesRepo.UpdateRubricsForArticleAsync(new() { ArticleId = ArticleId, RubricsIds = [.. req.Select(x => x!.Id)] });
         await LoadArticleData();
-        // await SetBusy(false);
-        SnackBarRepo.ShowMessagesResponse(res.Messages);
         await SetBusyAsync(false);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
     }
 
     /// <inheritdoc/>

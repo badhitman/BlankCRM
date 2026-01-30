@@ -44,7 +44,12 @@
             }
 
             <div class="d-grid gap-2 mt-3">
-                <button @onclick="SaveArticle" disabled="@((!IsEdited && editArticle.Id > 0) || string.IsNullOrWhiteSpace(editArticle.Name))" class="btn btn-@(string.IsNullOrWhiteSpace(editArticle.Name) ? "-outline-secondary" : "primary")" type="button">@(string.IsNullOrWhiteSpace(editArticle.Name) ? "Укажите название..." : "Записать")</button>
+                <button @onclick="SaveArticle"
+                        disabled="@CannotSaveArticle"
+                        class="btn btn-@(string.IsNullOrWhiteSpace(editArticle.Name) ? "-outline-secondary" : "primary")"
+                        type="button">
+                    @(string.IsNullOrWhiteSpace(editArticle.Name) ? "Укажите название..." : "Записать")
+                </button>
                 @if (IsEdited && ArticleId > 0)
                 {
                     <button @onclick="() => { editArticle = GlobalTools.CreateDeepCopy(orignArticle) ?? throw new Exception(); }" type="button" class="btn btn-light">Отмена</button>
@@ -57,7 +62,9 @@
             <div class="card">
                 <div class="card-body">
                     <h6 class="card-title">Категории</h6>
-                    <RubricsManageComponent TEntity="RubricNodeBodyComponent" ContextName="@Routes.ARTICLES_CONTROLLER_NAME" SelectedValuesChanged="@(new TreeViewOptionsHandler() { SelectedNodes = SelectedNodesRead(), SelectedValuesChangedHandler = SelectedRubricsChange })" />
+                    <RubricsManageComponent TEntity="RubricNodeBodyComponent"
+                                            ContextName="@Routes.ARTICLES_CONTROLLER_NAME"
+                                            SelectedValuesChanged="@(new TreeViewOptionsHandler() { SelectedNodes = SelectedNodesRead(), SelectedValuesChangedHandler = SelectedRubricsChange })" />
                 </div>
             </div>
         </MudPaper>

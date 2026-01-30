@@ -7,34 +7,12 @@ namespace SharedLib;
 /// <summary>
 /// IHelpDeskTransmission
 /// </summary>
-public interface IHelpDeskTransmission
+public interface IHelpDeskTransmission : IArticlesService
 {
     /// <summary>
     /// Входящее сообщение от клиента в TelegramBot
     /// </summary>
     public Task<ResponseBaseModel> TelegramMessageIncomingAsync(TelegramIncomingMessageModel req, CancellationToken token = default);
-
-    #region articles
-    /// <summary>
-    /// UpdateRubricsForArticle
-    /// </summary>
-    public Task<ResponseBaseModel> UpdateRubricsForArticleAsync(ArticleRubricsSetModel req, CancellationToken token = default);
-
-    /// <summary>
-    /// Получить статьи 
-    /// </summary>
-    public Task<TResponseModel<ArticleModelDB[]>> ArticlesReadAsync(int[] req, CancellationToken token = default);
-
-    /// <summary>
-    /// Подобрать статьи 
-    /// </summary>
-    public Task<TPaginationResponseStandardModel<ArticleModelDB>> ArticlesSelectAsync(TPaginationRequestStandardModel<SelectArticlesRequestModel> req, CancellationToken token = default);
-
-    /// <summary>
-    /// Создать (обновить) статью
-    /// </summary>
-    public Task<TResponseModel<int>> ArticleCreateOrUpdateAsync(ArticleModelDB article, CancellationToken token = default);
-    #endregion
 
     #region issue
     /// <summary>
