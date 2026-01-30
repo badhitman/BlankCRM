@@ -2,9 +2,10 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using DbcLib;
 using Microsoft.EntityFrameworkCore;
 using SharedLib;
-using DbcLib;
+using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace CommerceService;
 
@@ -274,6 +275,24 @@ public partial class RetailService : IRetailService
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         IQueryable<PaymentRetailDocumentModelDB> q = context.PaymentsRetailDocuments.AsQueryable();
+
+        #region payment-type migration (from enum to db)
+        PaymentRetailDocumentModelDB[] paymentsMigrateDb = await q
+            .Where(x => x.TypePaymentId == 0)
+            .Take(10)
+            .ToArrayAsync(cancellationToken: token);
+
+        foreach (PaymentRetailDocumentModelDB pmDb in paymentsMigrateDb)
+        {
+            TResponseModel<int> getRubric = await RubricRepo.RubricCreateOrUpdateAsync(new()
+            {
+                ContextName = Path.Combine(Routes.PAYMENTS_CONTROLLER_NAME, Routes.TYPES_CONTROLLER_NAME),
+                Name = pmDb.TypePayment.DescriptionInfo(),
+            }, token);
+            if (getRubric.Response > 0)
+                await q.ExecuteUpdateAsync(set => set.SetProperty(p => p.TypePaymentId, getRubric.Response), cancellationToken: token);
+        }
+        #endregion
 
         if (!string.IsNullOrWhiteSpace(req.FindQuery))
             q = q.Where(x => x.Name.Contains(req.FindQuery) || (x.Description != null && x.Description.Contains(req.FindQuery)));

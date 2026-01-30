@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using System.Text;
 using SharedLib;
 using DbcLib;
+using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace CommerceService;
 
@@ -260,6 +261,26 @@ public partial class RetailService : IRetailService
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         IQueryable<DeliveryDocumentRetailModelDB> q = context.DeliveryDocumentsRetail.AsQueryable();
+
+
+        #region delivery-type migration (from enum to db)
+        DeliveryDocumentRetailModelDB[] migrateDb = await q
+            .Where(x => x.DeliveryTypeId == 0)
+            .Take(10)
+            .ToArrayAsync(cancellationToken: token);
+
+        foreach (DeliveryDocumentRetailModelDB pmDb in migrateDb)
+        {
+            TResponseModel<int> getRubric = await RubricRepo.RubricCreateOrUpdateAsync(new()
+            {
+                ContextName = Path.Combine(Routes.DELIVERIES_CONTROLLER_NAME, Routes.TYPES_CONTROLLER_NAME),
+                Name = pmDb.DeliveryType.DescriptionInfo(),
+            }, token);
+            if (getRubric.Response > 0)
+                await q.ExecuteUpdateAsync(set => set.SetProperty(p => p.DeliveryTypeId, getRubric.Response), cancellationToken: token);
+        }
+        #endregion
+
 
         if (!string.IsNullOrWhiteSpace(req.FindQuery))
             q = q.Where(x =>
