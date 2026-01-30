@@ -226,10 +226,11 @@ public class RubricsService(
         }
         rubric.NormalizedNameUpper = rubric.Name.ToUpper();
         using HelpDeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
-
-        if (await context.Rubrics.AnyAsync(x => x.Id != rubric.Id && x.ParentId == rubric.ParentId && x.Name == rubric.Name, cancellationToken: token))
+        RubricModelDB? doubleRubricDb = await context.Rubrics.FirstOrDefaultAsync(x => x.ContextName == rubric.ContextName && x.Id != rubric.Id && x.ParentId == rubric.ParentId && x.Name == rubric.Name, cancellationToken: token);
+        if (doubleRubricDb is not null)
         {
             res.AddError("Объект с таким именем уже существует в данном узле");
+            res.Response = doubleRubricDb.Id;
             return res;
         }
 

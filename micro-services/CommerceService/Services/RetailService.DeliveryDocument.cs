@@ -242,6 +242,7 @@ public partial class RetailService : IRetailService
                 .SetProperty(p => p.KladrTitle, req.Payload.KladrTitle)
                 .SetProperty(p => p.KladrCode, req.Payload.KladrCode)
                 .SetProperty(p => p.DeliveryType, req.Payload.DeliveryType)
+                .SetProperty(p => p.DeliveryTypeId, req.Payload.DeliveryTypeId)
                 .SetProperty(p => p.DeliveryPaymentUponReceipt, req.Payload.DeliveryPaymentUponReceipt)
                 .SetProperty(p => p.DeliveryCode, req.Payload.DeliveryCode)
                 .SetProperty(p => p.Version, res.Response)

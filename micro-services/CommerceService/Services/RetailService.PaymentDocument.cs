@@ -144,6 +144,7 @@ public partial class RetailService : IRetailService
                     .SetProperty(p => p.WalletId, req.Payload.WalletId)
                     .SetProperty(p => p.Version, _ng)
                     .SetProperty(p => p.TypePayment, req.Payload.TypePayment)
+                    .SetProperty(p => p.TypePaymentId, req.Payload.TypePaymentId)
                     .SetProperty(p => p.StatusPayment, req.Payload.StatusPayment)
                     .SetProperty(p => p.PaymentSource, req.Payload.PaymentSource)
                     .SetProperty(p => p.DatePayment, req.Payload.DatePayment)

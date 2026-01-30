@@ -13,15 +13,20 @@ namespace SharedLib;
 /// </summary>
 [Index(nameof(DeliveryCode)), Index(nameof(RecipientIdentityUserId)), Index(nameof(DeliveryPaymentUponReceipt))]
 [Index(nameof(KladrCode)), Index(nameof(AddressUserComment)), Index(nameof(AuthorIdentityUserId)), Index(nameof(DeliveryStatus))]
-[Index(nameof(WarehouseId)), Index(nameof(DeliveryType)), Index(nameof(KladrTitle))]
+[Index(nameof(WarehouseId)), Index(nameof(DeliveryType)), Index(nameof(DeliveryTypeId)), Index(nameof(KladrTitle))]
 public class DeliveryDocumentRetailModelDB : EntryUpdatedModel
 {
     /// <summary>
-    /// DeliveryType
+    /// Метод/тип доставки
     /// </summary>
     [System.Text.Json.Serialization.JsonConverter(typeof(StringEnumConverter))]
     [Newtonsoft.Json.JsonConverter(typeof(StringEnumConverter))]
     public DeliveryTypesEnum DeliveryType { get; set; }
+
+    /// <summary>
+    /// Метод/тип доставки
+    /// </summary>
+    public int DeliveryTypeId { get; set; }
 
     /// <summary>
     /// Статус доставки

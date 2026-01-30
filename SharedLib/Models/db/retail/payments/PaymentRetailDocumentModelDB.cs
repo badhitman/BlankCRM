@@ -11,7 +11,7 @@ namespace SharedLib;
 /// <summary>
 /// PaymentRetailDocumentModelDB
 /// </summary>
-[Index(nameof(PaymentSource)), Index(nameof(TypePayment)), Index(nameof(StatusPayment))]
+[Index(nameof(PaymentSource)), Index(nameof(TypePayment)), Index(nameof(TypePaymentId)), Index(nameof(StatusPayment))]
 [Index(nameof(Name)), Index(nameof(DatePayment)), Index(nameof(AuthorUserIdentity))]
 public class PaymentRetailDocumentModelDB : EntryUpdatedModel
 {
@@ -25,6 +25,11 @@ public class PaymentRetailDocumentModelDB : EntryUpdatedModel
     [System.Text.Json.Serialization.JsonConverter(typeof(StringEnumConverter))]
     [Newtonsoft.Json.JsonConverter(typeof(StringEnumConverter))]
     public PaymentsRetailTypesEnum TypePayment { get; set; }
+
+    /// <summary>
+    /// Тип/способ оплаты
+    /// </summary>
+    public int TypePaymentId { get; set; }
 
     /// <summary>
     /// Status
