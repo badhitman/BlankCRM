@@ -2,6 +2,8 @@
 // © https://github.com/badhitman - @fakegov 
 ////////////////////////////////////////////////
 
+using Newtonsoft.Json.Converters;
+
 namespace SharedLib;
 
 /// <summary>
@@ -27,6 +29,7 @@ public class PaymentInitTBankResultModel
     /// <summary>
     /// Статус платежа
     /// </summary>
+    [Newtonsoft.Json.JsonConverter(typeof(StringEnumConverter))]
     public StatusResponsesTBankEnum? Status { get; set; }
 
     /// <summary>

@@ -2,6 +2,8 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using Newtonsoft.Json.Converters;
+
 namespace SharedLib;
 
 /// <summary>
@@ -13,6 +15,8 @@ public class DeleteDeliveryStatusDocumentResponseModel : ResponseBaseModel
     public DeliveryStatusRetailDocumentModelDB? DeliveryStatus { get; set; }
 
     /// <inheritdoc/>
+    [System.Text.Json.Serialization.JsonConverter(typeof(StringEnumConverter))]
+    [Newtonsoft.Json.JsonConverter(typeof(StringEnumConverter))]
     public DeliveryStatusesEnum? NewStatus { get; set; }
 
     /// <inheritdoc/>

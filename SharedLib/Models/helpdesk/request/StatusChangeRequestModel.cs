@@ -2,6 +2,8 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using Newtonsoft.Json.Converters;
+
 namespace SharedLib;
 
 /// <summary>
@@ -12,6 +14,8 @@ public class StatusChangeRequestModel
     /// <summary>
     /// Step
     /// </summary>
+    [System.Text.Json.Serialization.JsonConverter(typeof(StringEnumConverter))]
+    [Newtonsoft.Json.JsonConverter(typeof(StringEnumConverter))]
     public required StatusesDocumentsEnum Step { get; set; }
 
     /// <summary>

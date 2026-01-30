@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////
 
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Converters;
 using System.ComponentModel.DataAnnotations;
 
 namespace SharedLib;
@@ -58,6 +59,8 @@ public class SessionOfDocumentDataModelDB : EntryDescriptionOwnedModel, ICloneab
     /// <summary>
     /// Статус сессии
     /// </summary>
+    [System.Text.Json.Serialization.JsonConverter(typeof(StringEnumConverter))]
+    [Newtonsoft.Json.JsonConverter(typeof(StringEnumConverter))]
     public SessionsStatusesEnum SessionStatus { get; set; }
 
     /// <summary>

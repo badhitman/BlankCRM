@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////
 
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Converters;
 
 namespace SharedLib;
 
@@ -26,5 +27,7 @@ public class UserOrganizationModelDB : PersonalEntryUpdatedModel
     /// <summary>
     /// Статус
     /// </summary>
+    [System.Text.Json.Serialization.JsonConverter(typeof(StringEnumConverter))]
+    [Newtonsoft.Json.JsonConverter(typeof(StringEnumConverter))]
     public UsersOrganizationsStatusesEnum UserStatus { get; set; }
 }

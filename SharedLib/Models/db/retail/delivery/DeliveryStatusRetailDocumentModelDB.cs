@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////
 
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Converters;
 using System.ComponentModel.DataAnnotations;
 
 namespace SharedLib;
@@ -20,6 +21,8 @@ public class DeliveryStatusRetailDocumentModelDB : EntryUpdatedLiteModel
     /// <summary>
     /// Статус доставки
     /// </summary>
+    [System.Text.Json.Serialization.JsonConverter(typeof(StringEnumConverter))]
+    [Newtonsoft.Json.JsonConverter(typeof(StringEnumConverter))]
     public DeliveryStatusesEnum DeliveryStatus { get; set; }
 
     /// <summary>

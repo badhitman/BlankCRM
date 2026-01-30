@@ -2,8 +2,9 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Converters;
+using System.ComponentModel.DataAnnotations;
 
 namespace SharedLib;
 
@@ -21,11 +22,15 @@ public class PaymentRetailDocumentModelDB : EntryUpdatedModel
     /// <summary>
     /// Тип/способ оплаты
     /// </summary>
+    [System.Text.Json.Serialization.JsonConverter(typeof(StringEnumConverter))]
+    [Newtonsoft.Json.JsonConverter(typeof(StringEnumConverter))]
     public PaymentsRetailTypesEnum TypePayment { get; set; }
 
     /// <summary>
     /// Status
     /// </summary>
+    [System.Text.Json.Serialization.JsonConverter(typeof(StringEnumConverter))]
+    [Newtonsoft.Json.JsonConverter(typeof(StringEnumConverter))]
     public required PaymentsRetailStatusesEnum StatusPayment { get; set; }
 
     /// <summary>
