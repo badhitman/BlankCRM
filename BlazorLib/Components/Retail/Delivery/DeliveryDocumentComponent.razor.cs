@@ -70,6 +70,8 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
                 currentDoc.WeightShipping == editDoc.WeightShipping &&
                 currentDoc.Description == editDoc.Description &&
                 currentDoc.WarehouseId == editDoc.WarehouseId &&
+                currentDoc.AddressUserComment == editDoc.AddressUserComment &&
+                currentDoc.KladrCode == editDoc.KladrCode &&
                 currentDoc.Name == editDoc.Name;
         }
     }
