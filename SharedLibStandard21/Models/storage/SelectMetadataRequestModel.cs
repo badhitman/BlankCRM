@@ -12,7 +12,7 @@ public class SelectMetadataRequestModel : SelectRequestAuthBaseModel
     /// <summary>
     /// Приложение
     /// </summary>
-    public string[]? ApplicationsNames { get; set; }
+    public string?[]? ApplicationsNames { get; set; }
 
     /// <summary>
     /// Имя

@@ -21,7 +21,7 @@ public class OrderStatusRetailDocumentModelDB : EntryUpdatedLiteModel
     /// <summary>
     /// Шаг/статус обращения: "Создан", "В работе", "На проверке" и "Готово"
     /// </summary>
-    [System.Text.Json.Serialization.JsonConverter(typeof(StringEnumConverter))]
+    [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
     [Newtonsoft.Json.JsonConverter(typeof(StringEnumConverter))]
     public StatusesDocumentsEnum StatusDocument { get; set; }
 

@@ -62,6 +62,7 @@ public class ParametersStorage(
                     OwnerPrimaryKey = req.Id,
                 }, token);
                 await context.SaveChangesAsync(token);
+                res.AddInfo($"Тег `{req.Name}` добавлен");
             }
         }
         else

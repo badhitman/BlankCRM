@@ -94,7 +94,7 @@ public class Program
             .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
             .Configure<HelpDeskConfigModel>(builder.Configuration.GetSection(HelpDeskConfigModel.Configuration))
         ;
-
+        // 
         builder.Services
             .AddScoped<IArticlesService, ArticlesService>()
             .AddScoped<IFilesIndexing, FileIndexingTransmission>()

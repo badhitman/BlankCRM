@@ -27,7 +27,7 @@ public class PaymentRetailDocumentModelDB : EntryUpdatedModel
     /// <summary>
     /// Status
     /// </summary>
-    [System.Text.Json.Serialization.JsonConverter(typeof(StringEnumConverter))]
+    [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
     [Newtonsoft.Json.JsonConverter(typeof(StringEnumConverter))]
     public required PaymentsRetailStatusesEnum StatusPayment { get; set; }
 

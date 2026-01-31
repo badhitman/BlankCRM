@@ -1,0 +1,23 @@
+﻿@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+<span @onclick="ShowToggle">Chat</span>
+@if (ChatDialogOpen)
+{
+    <div class="offcanvas offcanvas-end show" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasScrollingLabel">Чат</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close" @onclick="ShowToggle"></button>
+        </div>
+        <div class="offcanvas-body">
+            <p>Try scrolling the rest of the page to see this option in action.</p>
+        </div>
+    </div>
+}
+
+@code {
+    bool ChatDialogOpen;
+    void ShowToggle()
+    {
+        ChatDialogOpen = !ChatDialogOpen;
+    }
+}

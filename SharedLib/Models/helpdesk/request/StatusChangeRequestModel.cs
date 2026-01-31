@@ -14,7 +14,7 @@ public class StatusChangeRequestModel
     /// <summary>
     /// Step
     /// </summary>
-    [System.Text.Json.Serialization.JsonConverter(typeof(StringEnumConverter))]
+    [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
     [Newtonsoft.Json.JsonConverter(typeof(StringEnumConverter))]
     public required StatusesDocumentsEnum Step { get; set; }
 

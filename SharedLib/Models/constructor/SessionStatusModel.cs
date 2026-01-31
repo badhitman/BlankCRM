@@ -19,7 +19,7 @@ public class SessionStatusModel
     /// <summary>
     /// Status
     /// </summary>
-    [System.Text.Json.Serialization.JsonConverter(typeof(StringEnumConverter))]
+    [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
     [Newtonsoft.Json.JsonConverter(typeof(StringEnumConverter))]
     public SessionsStatusesEnum Status { get; set; }
 }
