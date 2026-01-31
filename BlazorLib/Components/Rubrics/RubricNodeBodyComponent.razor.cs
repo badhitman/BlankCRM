@@ -28,6 +28,7 @@ public partial class RubricNodeBodyComponent : BlazorBusyComponentBaseModel
 
     string? NewTagName { get; set; }
     TPaginationResponseStandardModel<TagViewModel> TagsCollection = new();
+    bool CannotAddingTag => string.IsNullOrWhiteSpace(NewTagName);
 
 
     async Task CreateNewTag()

@@ -16,33 +16,27 @@ public partial class RubricParameterStorageComponent : BlazorBusyComponentBaseMo
     IParametersStorageTransmission StoreRepo { get; set; } = default!;
 
 
-    /// <summary>
-    /// Label
-    /// </summary>
+    /// <inheritdoc/>
     [Parameter, EditorRequired]
     public required string Label { get; set; }
 
-    /// <summary>
-    /// KeyStorage
-    /// </summary>
+    /// <inheritdoc/>
     [Parameter, EditorRequired]
     public required StorageContextMetadataModel KeyStorage { get; set; }
 
-    /// <summary>
-    /// HelperText
-    /// </summary>
+    /// <inheritdoc/>
     [Parameter]
     public string? HelperText { get; set; }
 
-    /// <summary>
-    /// ModeSelectingRubrics
-    /// </summary>
+    /// <inheritdoc/>
     [Parameter]
     public ModesSelectRubricsEnum ModeSelectingRubrics { get; set; } = ModesSelectRubricsEnum.AllowWithoutRubric;
 
-    /// <summary>
-    /// ShowDisabledRubrics
-    /// </summary>
+    /// <inheritdoc/>
+    [Parameter]
+    public Action<int?>? SetValueEvent { get; set; }
+
+    /// <inheritdoc/>
     [Parameter]
     public bool ShowDisabledRubrics { get; set; } = true;
 
@@ -61,6 +55,9 @@ public partial class RubricParameterStorageComponent : BlazorBusyComponentBaseMo
         TResponseModel<int> res = await StoreRepo.SaveParameterAsync(_rubricSelected, KeyStorage, true);
         await SetBusyAsync(false);
         SnackBarRepo.ShowMessagesResponse(res.Messages);
+
+        if (SetValueEvent is not null)
+            SetValueEvent(_rubricSelected);
     }
 
     /// <inheritdoc/>
@@ -70,5 +67,8 @@ public partial class RubricParameterStorageComponent : BlazorBusyComponentBaseMo
         TResponseModel<int?> res_RubricIssueForCreateOrder = await StoreRepo.ReadParameterAsync<int?>(KeyStorage);
         _rubricSelected = res_RubricIssueForCreateOrder.Response;
         await SetBusyAsync(false);
+
+        if (SetValueEvent is not null)
+            SetValueEvent(_rubricSelected);
     }
 }

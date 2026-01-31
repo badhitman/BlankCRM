@@ -2,7 +2,14 @@
 
 @using BlazorLib.Components.ParametersShared
 @using MudBlazor
-<div class="row row-cols-1 row-cols-md-2 g-1">
+
+<style>
+    #pre-paid-order label {
+        margin-bottom: unset;
+    }
+</style>
+
+<div class="row row-cols-1 row-cols-md-3 g-1 mb-2">
     <div class="col">
         <div class="card">
             <div class="card-body">
@@ -26,10 +33,18 @@
                     </div>
                 </div>
             </div>
+            <div class="col">
+                <div class="card">
+                    <div class="card-body" id="pre-paid-order">
+                        <RubricParameterStorageComponent Label="Предоплаченные"
+                                                         SetValueEvent="PrePaidTypePaymentSetHandle"
+                                                         KeyStorage="GlobalStaticCloudStorageMetadata.RubricPaymentTypeOuter" />
+                    </div>
+                </div>
+            </div>
         </Authorized>
     </AuthorizeView>
 </div>
-
 
 @if (IsBusyProgress || ReportData is null)
 {
@@ -56,17 +71,17 @@ else
                     <tr>
                         <th scope="row">Оплачено "На сайте"</th>
                         <td>
-                            @ReportData.PaidOnSitePaymentsSumAmount.ToString("C")
-                            [<code>x @ReportData.PaidOnSitePaymentsCount шт.</code>]
-                            <span class="ms-2">(@(Math.Round((ReportData.PaidOnSitePaymentsSumAmount / 120), 2).ToString("C")))</span>
+                            @PaidOnSitePaymentsSumAmount.ToString("C")
+                            [<code>x @PaidOnSitePaymentsCount шт.</code>]
+                            <span class="ms-2">(@(Math.Round((PaidOnSitePaymentsSumAmount / 120), 2).ToString("C")))</span>
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">Другое</th>
                         <td>
-                            @((ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount).ToString("C"))
-                            [<code>x @(ReportData.PaidNoSitePaymentsCount + ReportData.ConversionsCount) шт.</code>]
-                            <span class="ms-2">(@(Math.Round(((ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount) / 120), 2).ToString("C")))</span>
+                            @((PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount).ToString("C"))
+                            [<code>x @(PaidNoSitePaymentsCount + ReportData.ConversionsCount) шт.</code>]
+                            <span class="ms-2">(@(Math.Round(((PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount) / 120), 2).ToString("C")))</span>
                         </td>
                     </tr>
                     <tr>
@@ -80,12 +95,12 @@ else
                     <tr>
                         <th scope="row">&nbsp;&nbsp;&nbsp;&nbsp;Платежи</th>
                         <td>
-                            @ReportData.PaidNoSitePaymentsSumAmount.ToString("C")
-                            [<code>x @ReportData.PaidNoSitePaymentsCount шт.</code>]
-                            <span class="ms-2">(@(Math.Round((ReportData.PaidNoSitePaymentsSumAmount / 120), 2).ToString("C")))</span>
+                            @PaidNoSitePaymentsSumAmount.ToString("C")
+                            [<code>x @PaidNoSitePaymentsCount шт.</code>]
+                            <span class="ms-2">(@(Math.Round((PaidNoSitePaymentsSumAmount / 120), 2).ToString("C")))</span>
                         </td>
                     </tr>
-                    @foreach (IGrouping<int, PaymentOrderRetailModel> _gp in ReportData.PaidNoSitePayments.GroupBy(x => x.TypePayment))
+                    @foreach (IGrouping<int, PaymentOrderRetailModel> _gp in PaidNoSitePayments.GroupBy(x => x.TypePayment))
                     {
                         decimal _sum = _gp.Sum(y => y.AmountPayment);
                         <tr>
@@ -104,10 +119,10 @@ else
                             </div>
                         </th>
                         <td>
-                            @(Math.Round(ReportData.PaidOnSitePaymentsSumAmount + ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount, 2).ToString("C"))
-                            [<code class="me-2">x @(ReportData.PaidOnSitePaymentsCount + ReportData.PaidNoSitePaymentsCount + ReportData.ConversionsCount) шт.</code>]
+                            @(Math.Round(PaidOnSitePaymentsSumAmount + PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount, 2).ToString("C"))
+                            [<code class="me-2">x @(PaidOnSitePaymentsCount + PaidNoSitePaymentsCount + ReportData.ConversionsCount) шт.</code>]
                             <span>
-                                (@(Math.Round((ReportData.PaidOnSitePaymentsSumAmount + ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount) / 120, 2).ToString("C")))
+                                (@(Math.Round((PaidOnSitePaymentsSumAmount + PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount) / 120, 2).ToString("C")))
                             </span>
                         </td>
                     </tr>
@@ -121,19 +136,19 @@ else
                         <tr>
                             <th scope="row">Офисные за онлайн контракты</th>
                             <td>
-                                @Math.Round((decimal)(_bonusAmount * (decimal)0.1) * (ReportData.PaidOnSitePaymentsSumAmount * (decimal)0.1) / 120, 2).ToString("C")
+                                @Math.Round((decimal)(_bonusAmount * (decimal)0.1) * (PaidOnSitePaymentsSumAmount * (decimal)0.1) / 120, 2).ToString("C")
                             </td>
                         </tr>
                         <tr>
                             <th scope="row">Офисные при оплате на складе (+переводы/конвертации)</th>
                             <td>
-                                @Math.Round(((decimal)(_bonusAmount * (decimal)0.1) * ((((ReportData.DoneOrdersSumAmount - ReportData.PaidOnSitePaymentsSumAmount))) * (decimal)0.1) / 120), 2).ToString("C")
+                                @Math.Round(((decimal)(_bonusAmount * (decimal)0.1) * ((((ReportData.DoneOrdersSumAmount - PaidOnSitePaymentsSumAmount))) * (decimal)0.1) / 120), 2).ToString("C")
                             </td>
                         </tr>
                         <tr>
                             <th scope="row"><div class="d-flex flex-row-reverse">Итого:</div></th>
                             <td>
-                                @Math.Round(((decimal)(_bonusAmount * (decimal)0.1) * (ReportData.PaidOnSitePaymentsSumAmount * (decimal)0.1) / 120) + (((decimal)(_bonusAmount * (decimal)0.1) * ((((ReportData.DoneOrdersSumAmount - ReportData.PaidOnSitePaymentsSumAmount))) * (decimal)0.1) / 120)), 2).ToString("C")
+                                @Math.Round(((decimal)(_bonusAmount * (decimal)0.1) * (PaidOnSitePaymentsSumAmount * (decimal)0.1) / 120) + (((decimal)(_bonusAmount * (decimal)0.1) * ((((ReportData.DoneOrdersSumAmount - PaidOnSitePaymentsSumAmount))) * (decimal)0.1) / 120)), 2).ToString("C")
                             </td>
                         </tr>
                     </tbody>
@@ -150,15 +165,15 @@ else
                     <tbody>
                         <tr>
                             <td>Сумма заявок:</td>
-                            <td>@(Math.Round((ReportData.DoneOrdersSumAmount - ReportData.PaidOnSitePaymentsSumAmount), 2).ToString("C"))</td>
+                            <td>@(Math.Round((ReportData.DoneOrdersSumAmount - PaidOnSitePaymentsSumAmount), 2).ToString("C"))</td>
                         </tr>
                         <tr>
                             <td>минус [офисные при оплате на складе]</td>
-                            <td>@((Math.Round((decimal)(_bonusAmount * (decimal)0.1) * (((ReportData.DoneOrdersSumAmount - ReportData.PaidOnSitePaymentsSumAmount) * (decimal)0.1) / 120), 2)).ToString("C"))</td>
+                            <td>@((Math.Round((decimal)(_bonusAmount * (decimal)0.1) * (((ReportData.DoneOrdersSumAmount - PaidOnSitePaymentsSumAmount) * (decimal)0.1) / 120), 2)).ToString("C"))</td>
                         </tr>
                         <tr>
                             <td>минус [офисные за онлайн контракты]</td>
-                            <td>@((Math.Round((decimal)(_bonusAmount * (decimal)0.1) * (ReportData.PaidOnSitePaymentsSumAmount * (decimal)0.1) / 120, 2)).ToString("C"))</td>
+                            <td>@((Math.Round((decimal)(_bonusAmount * (decimal)0.1) * (PaidOnSitePaymentsSumAmount * (decimal)0.1) / 120, 2)).ToString("C"))</td>
                         </tr>
                         <tr>
                             <td>минус [перевод в компанию бонусов]</td>
@@ -178,7 +193,7 @@ else
                         </tr>
                         <tr>
                             <td>Итого:</td>
-                            <td>@(Math.Round(((ReportData.DoneOrdersSumAmount - ReportData.PaidOnSitePaymentsSumAmount) - (((decimal)(_bonusAmount * (decimal)0.1) * ((((ReportData.DoneOrdersSumAmount - ReportData.PaidOnSitePaymentsSumAmount))) * (decimal)0.1) / 120))) - ((decimal)(_bonusAmount * (decimal)0.1) * (ReportData.PaidOnSitePaymentsSumAmount * (decimal)0.1) / 120) - (TransferBonusesCompany * 42) - TransferToCompanyBankAccount + Debt - CashPayment, 2).ToString("C"))</td>
+                            <td>@(Math.Round(((ReportData.DoneOrdersSumAmount - PaidOnSitePaymentsSumAmount) - (((decimal)(_bonusAmount * (decimal)0.1) * ((((ReportData.DoneOrdersSumAmount - PaidOnSitePaymentsSumAmount))) * (decimal)0.1) / 120))) - ((decimal)(_bonusAmount * (decimal)0.1) * (PaidOnSitePaymentsSumAmount * (decimal)0.1) / 120) - (TransferBonusesCompany * 42) - TransferToCompanyBankAccount + Debt - CashPayment, 2).ToString("C"))</td>
                         </tr>
                     </tbody>
                 </MudSimpleTable>
@@ -261,8 +276,5 @@ else
                 </tbody>
             </table>
         </MudCardContent>
-        @* <MudCardActions>
-            <MudButton Variant="Variant.Text" Color="Color.Primary">Read more</MudButton>
-        </MudCardActions> *@
     </MudCard>
 }

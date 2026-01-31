@@ -25,7 +25,7 @@ public class MainReportResponseModel
     /// <summary>
     /// Оплаты [не на сайте]
     /// </summary>
-    public List<PaymentOrderRetailModel> Payments { get; set; } = [];
+    public List<PaymentOrderRetailModel>? Payments { get; set; }
 
     /// <summary>
     /// Поступило в переводах/конвертации

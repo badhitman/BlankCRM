@@ -296,6 +296,17 @@ public static partial class GlobalStaticCloudStorageMetadata
     };
 
     /// <summary>
+    /// RubricPaymentTypeOuter
+    /// </summary>
+    public static StorageContextMetadataModel RubricPaymentTypeOuter => new()
+    {
+        ApplicationName = Routes.RETAIL_CONTROLLER_NAME,
+        PropertyName = Path.Combine($"{Routes.REPORT_CONTROLLER_NAME}-{Routes.MAIN_CONTROLLER_NAME}", Routes.PAYMENTS_CONTROLLER_NAME, $"{Routes.OUT_CONTROLLER_NAME}-{Routes.TYPE_CONTROLLER_NAME}"),
+        PrefixPropertyName = Routes.RUBRIC_CONTROLLER_NAME,
+        ContextName = Path.Combine(Routes.PAYMENTS_CONTROLLER_NAME, Routes.TYPES_CONTROLLER_NAME),
+    };
+
+    /// <summary>
     /// Уведомления Telegram о созданных заявках
     /// </summary>
     public static StorageMetadataModel HelpDeskNotificationTelegramForCreateIssue => new()

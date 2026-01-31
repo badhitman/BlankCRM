@@ -145,11 +145,6 @@ public partial class RetailService(IIdentityTransmission identityRepo,
         IQueryable<ConversionOrderRetailLinkModelDB> qco = context.ConversionsOrdersLinksRetail
             .Where(x => !x.ConversionDocument!.IsDisabled && q.Any(y => y.Id == x.OrderDocumentId));
 
-        //var v = await qpo
-        //    .Where(x => x.PaymentDocument!.TypePayment != PaymentsRetailTypesEnum.OnSite)
-        //    .Select(x => new PaymentOrderNoSiteRetailModel(x.AmountPayment, x.PaymentDocument!.TypePayment))
-        //    .ToListAsync(cancellationToken: token);
-
         MainReportResponseModel res = new()
         {
             DoneOrdersCount = await q.CountAsync(cancellationToken: token),

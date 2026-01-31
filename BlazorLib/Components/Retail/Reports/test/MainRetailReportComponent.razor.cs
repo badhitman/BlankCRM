@@ -2,12 +2,12 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using static SharedLib.GlobalStaticConstantsRoutes;
 using BlazorLib.Components.Retail.Reports.mmm;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using MudBlazor;
 using SharedLib;
-using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace BlazorLib.Components.Retail.Reports.test;
 
@@ -34,6 +34,7 @@ public partial class MainRetailReportComponent : BlazorBusyComponentBaseModel
     public required MMMWrapperComponent Owner { get; set; }
 
 
+    int? prePaidTypePayment;
     List<UniversalBaseModel> AllPaymentsTypes = [];
     MainReportResponseModel? ReportData;
 
@@ -47,6 +48,63 @@ public partial class MainRetailReportComponent : BlazorBusyComponentBaseModel
             InvokeAsync(ReloadServerData);
         }
     }
+
+    #region
+    List<PaymentOrderRetailModel> PaidNoSitePayments
+    {
+        get
+        {
+            if (ReportData?.Payments is null || ReportData.Payments.Count == 0)
+                return [];
+
+            return [.. ReportData.Payments.Where(x => x.TypePayment != prePaidTypePayment)];
+        }
+    }
+
+
+    decimal PaidNoSitePaymentsSumAmount
+    {
+        get
+        {
+            if (ReportData?.Payments is null || ReportData.Payments.Count == 0)
+                return 0;
+
+            return ReportData.Payments.Where(x => x.TypePayment != prePaidTypePayment).Sum(x => x.AmountPayment);
+        }
+    }
+    int PaidNoSitePaymentsCount
+    {
+        get
+        {
+            if (ReportData?.Payments is null || ReportData.Payments.Count == 0)
+                return 0;
+
+            return ReportData.Payments.Where(x => x.TypePayment != prePaidTypePayment).Count();
+        }
+    }
+
+
+    decimal PaidOnSitePaymentsSumAmount
+    {
+        get
+        {
+            if (!prePaidTypePayment.HasValue || ReportData?.Payments is null || !ReportData.Payments.Any(x => x.TypePayment == prePaidTypePayment))
+                return 0;
+
+            return ReportData.Payments.Where(x => x.TypePayment == prePaidTypePayment).Sum(x => x.AmountPayment);
+        }
+    }
+    int PaidOnSitePaymentsCount
+    {
+        get
+        {
+            if (!prePaidTypePayment.HasValue || ReportData?.Payments is null || !ReportData.Payments.Any(x => x.TypePayment == prePaidTypePayment))
+                return 0;
+
+            return ReportData.Payments.Where(x => x.TypePayment == prePaidTypePayment).Count();
+        }
+    }
+    #endregion
 
     #region перевод в компанию на расчетный счет
     /// <summary>
@@ -273,7 +331,7 @@ public partial class MainRetailReportComponent : BlazorBusyComponentBaseModel
     #endregion
 
     decimal _bonusAmount = 0;
-    HtmlGenerator.html5.areas.div wrapDiv = new();
+    readonly HtmlGenerator.html5.areas.div wrapDiv = new();
     async Task SaveReport()
     {
         wrapDiv.ClearNestedDom();
@@ -289,18 +347,18 @@ public partial class MainRetailReportComponent : BlazorBusyComponentBaseModel
         wrapDiv.AddDomNode(new HtmlGenerator.html5.textual.p($""));
         HtmlGenerator.html5.tables.table my_table = new() { css_style = "border: 1px solid black; width: 100%; border-collapse: collapse;" };
 
-        my_table.TBody.AddRow(["Оплачено \"На сайте\"", $"{ReportData.PaidOnSitePaymentsSumAmount:C} [x {ReportData.PaidOnSitePaymentsCount} шт.] ({Math.Round((ReportData.PaidOnSitePaymentsSumAmount / 120), 2)})"]);
-        my_table.TBody.AddRow(["Другое", $"{ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount:C} [x {ReportData.PaidNoSitePaymentsCount + ReportData.ConversionsCount} шт.] ({Math.Round((ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount) / 120, 2)})"]);
+        my_table.TBody.AddRow(["Оплачено \"На сайте\"", $"{PaidOnSitePaymentsSumAmount:C} [x {PaidOnSitePaymentsCount} шт.] ({Math.Round((PaidOnSitePaymentsSumAmount / 120), 2)})"]);
+        my_table.TBody.AddRow(["Другое", $"{PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount:C} [x {PaidNoSitePaymentsCount + ReportData.ConversionsCount} шт.] ({Math.Round((PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount) / 120, 2)})"]);
         my_table.TBody.AddRow(["&nbsp;&nbsp;&nbsp;&nbsp;Перевод/конвертация (поступило)", $"{ReportData.ConversionsSumAmount:C} [x {ReportData.ConversionsCount} шт.] ({Math.Round(ReportData.ConversionsSumAmount / 120, 2)})"]);
-        my_table.TBody.AddRow(["&nbsp;&nbsp;&nbsp;&nbsp;Платежи", $"{ReportData.PaidNoSitePaymentsSumAmount:C} [x {ReportData.PaidNoSitePaymentsCount} шт.] ({Math.Round(ReportData.PaidNoSitePaymentsSumAmount / 120, 2)})"]);
+        my_table.TBody.AddRow(["&nbsp;&nbsp;&nbsp;&nbsp;Платежи", $"{PaidNoSitePaymentsSumAmount:C} [x {PaidNoSitePaymentsCount} шт.] ({Math.Round(PaidNoSitePaymentsSumAmount / 120, 2)})"]);
 
-        foreach (IGrouping<int, PaymentOrderRetailModel> _gp in ReportData.PaidNoSitePayments.GroupBy(x => x.TypePayment))
+        foreach (IGrouping<int, PaymentOrderRetailModel> _gp in PaidNoSitePayments.GroupBy(x => x.TypePayment))
         {
             decimal _sum = _gp.Sum(y => y.AmountPayment);
             my_table.TBody.AddRow([$"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{AllPaymentsTypes.First(x => x.Id == _gp.Key).Name}", $"{_sum:C} [x {_gp.Count()} шт.] ({Math.Round(_sum / 120, 2)})"]);
         }
 
-        my_table.TBody.AddRow(["Итого:", $"{Math.Round(ReportData.PaidOnSitePaymentsSumAmount + ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount, 2):C} [x {ReportData.PaidOnSitePaymentsCount + ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount} шт.] ({Math.Round((ReportData.PaidOnSitePaymentsSumAmount + ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount) / 120, 2)})"]);
+        my_table.TBody.AddRow(["Итого:", $"{Math.Round(PaidOnSitePaymentsSumAmount + PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount, 2):C} [x {PaidOnSitePaymentsCount + PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount} шт.] ({Math.Round((PaidOnSitePaymentsSumAmount + PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount) / 120, 2)})"]);
         wrapDiv.AddDomNode(my_table);
         wrapDiv.AddDomNode(new HtmlGenerator.html5.textual.p(""));
 
@@ -321,22 +379,22 @@ public partial class MainRetailReportComponent : BlazorBusyComponentBaseModel
         {
             my_table = new() { css_style = "border: 1px solid black; width: 100%; border-collapse: collapse;" };
 
-            my_table.TBody.AddRow(["Офисные за онлайн контракты", $"{Math.Round((decimal)(_bonusAmount * (decimal)0.1) * (ReportData.PaidOnSitePaymentsSumAmount * (decimal)0.1) / 120, 2):C}"]);
-            my_table.TBody.AddRow(["Офисные при оплате на складе (+переводы/конвертации)", $"{Math.Round(((decimal)(_bonusAmount * (decimal)0.1) * ((((ReportData.DoneOrdersSumAmount - ReportData.PaidOnSitePaymentsSumAmount))) * (decimal)0.1) / 120), 2):C}"]);
-            my_table.TBody.AddRow(["Итого:", $"{Math.Round(((decimal)(_bonusAmount * (decimal)0.1) * (ReportData.PaidOnSitePaymentsSumAmount * (decimal)0.1) / 120) + (((decimal)(_bonusAmount * (decimal)0.1) * ((((ReportData.DoneOrdersSumAmount - ReportData.PaidOnSitePaymentsSumAmount))) * (decimal)0.1) / 120)), 2):C}"]);
+            my_table.TBody.AddRow(["Офисные за онлайн контракты", $"{Math.Round((decimal)(_bonusAmount * (decimal)0.1) * (PaidOnSitePaymentsSumAmount * (decimal)0.1) / 120, 2):C}"]);
+            my_table.TBody.AddRow(["Офисные при оплате на складе (+переводы/конвертации)", $"{Math.Round(((decimal)(_bonusAmount * (decimal)0.1) * ((((ReportData.DoneOrdersSumAmount - PaidOnSitePaymentsSumAmount))) * (decimal)0.1) / 120), 2):C}"]);
+            my_table.TBody.AddRow(["Итого:", $"{Math.Round(((decimal)(_bonusAmount * (decimal)0.1) * (PaidOnSitePaymentsSumAmount * (decimal)0.1) / 120) + (((decimal)(_bonusAmount * (decimal)0.1) * ((((ReportData.DoneOrdersSumAmount - PaidOnSitePaymentsSumAmount))) * (decimal)0.1) / 120)), 2):C}"]);
             wrapDiv.AddDomNode(my_table);
             wrapDiv.AddDomNode(new HtmlGenerator.html5.textual.p(""));
             wrapDiv.AddDomNode(new HtmlGenerator.html5.textual.h4("К оплате:"));
 
             my_table = new() { css_style = "border: 1px solid black; width: 100%; border-collapse: collapse;" };
-            my_table.TBody.AddRow(["Сумма заявок:", $"{Math.Round((ReportData.DoneOrdersSumAmount - ReportData.PaidOnSitePaymentsSumAmount), 2):C}"]);
-            my_table.TBody.AddRow(["минус [офисные при оплате на складе]", $"{((decimal)(_bonusAmount * (decimal)0.1) * ((Math.Round(ReportData.DoneOrdersSumAmount - ReportData.PaidOnSitePaymentsSumAmount) * (decimal)0.1) / 120), 2):C}"]);
-            my_table.TBody.AddRow(["минус [офисные за онлайн контракты]", $"{(Math.Round((decimal)(_bonusAmount * (decimal)0.1) * (ReportData.PaidOnSitePaymentsSumAmount * (decimal)0.1) / 120), 2)}"]);
+            my_table.TBody.AddRow(["Сумма заявок:", $"{Math.Round((ReportData.DoneOrdersSumAmount - PaidOnSitePaymentsSumAmount), 2):C}"]);
+            my_table.TBody.AddRow(["минус [офисные при оплате на складе]", $"{((decimal)(_bonusAmount * (decimal)0.1) * ((Math.Round(ReportData.DoneOrdersSumAmount - PaidOnSitePaymentsSumAmount) * (decimal)0.1) / 120), 2):C}"]);
+            my_table.TBody.AddRow(["минус [офисные за онлайн контракты]", $"{(Math.Round((decimal)(_bonusAmount * (decimal)0.1) * (PaidOnSitePaymentsSumAmount * (decimal)0.1) / 120), 2)}"]);
             my_table.TBody.AddRow(["минус [перевод в компанию бонусов]", $"{TransferBonusesCompany * 42}"]);
             my_table.TBody.AddRow(["минус [перевод в компанию на расчетный счет]", $"{TransferToCompanyBankAccount:C}"]);
             my_table.TBody.AddRow(["плюс [долг]", $"{Debt:C}"]);
             my_table.TBody.AddRow(["минус [оплата наличными]", $"{CashPayment:C}"]);
-            my_table.TBody.AddRow(["Итого:", $"{Math.Round(((ReportData.DoneOrdersSumAmount - ReportData.PaidOnSitePaymentsSumAmount) - (((decimal)(_bonusAmount * (decimal)0.1) * ((((ReportData.DoneOrdersSumAmount - ReportData.PaidOnSitePaymentsSumAmount))) * (decimal)0.1) / 120))) - ((decimal)(_bonusAmount * (decimal)0.1) * (ReportData.PaidOnSitePaymentsSumAmount * (decimal)0.1) / 120) - (TransferBonusesCompany * 42) - TransferToCompanyBankAccount + Debt - CashPayment, 2):C}"]);
+            my_table.TBody.AddRow(["Итого:", $"{Math.Round(((ReportData.DoneOrdersSumAmount - PaidOnSitePaymentsSumAmount) - (((decimal)(_bonusAmount * (decimal)0.1) * ((((ReportData.DoneOrdersSumAmount - PaidOnSitePaymentsSumAmount))) * (decimal)0.1) / 120))) - ((decimal)(_bonusAmount * (decimal)0.1) * (PaidOnSitePaymentsSumAmount * (decimal)0.1) / 120) - (TransferBonusesCompany * 42) - TransferToCompanyBankAccount + Debt - CashPayment, 2):C}"]);
 
             wrapDiv.AddDomNode(my_table);
         }
@@ -351,7 +409,6 @@ public partial class MainRetailReportComponent : BlazorBusyComponentBaseModel
 
         using DotNetStreamReference streamRef = new(stream: ms);
         await JsRuntimeRepo.InvokeVoidAsync("downloadFileFromStream", $"Отчёт (сводный) - {DateTime.Now}.html", streamRef);
-
     }
 
     /// <inheritdoc/>
@@ -441,6 +498,12 @@ public partial class MainRetailReportComponent : BlazorBusyComponentBaseModel
         };
 
         ReportData = await RetailRepo.GetMainReportAsync(req);
+
         await SetBusyAsync(false);
+    }
+    void PrePaidTypePaymentSetHandle(int? val)
+    {
+        prePaidTypePayment = val;
+        StateHasChanged();
     }
 }

@@ -11,24 +11,23 @@
     }
     @if (TagsCollection.Response is not null && TagsCollection.Response.Count != 0)
     {
-        
-            @foreach (TagViewModel tv in TagsCollection.Response)
-            {
-                <AuthorizeView Context="col" Roles="@($"{GlobalStaticConstantsRoles.Roles.Admin}")">
-                    <Authorized>
-                        <MudChip T="string"
-                                 Size="Size.Small"
-                                 Value="@tv.TagName"
-                                 OnClose="DeleteTagHandle">@tv.TagName</MudChip>
-                    </Authorized>
-                    <NotAuthorized>
-                        <MudChip T="string"
-                                 Size="Size.Small"
-                                 Value="@tv.TagName">@tv.TagName</MudChip>
-                    </NotAuthorized>
-                </AuthorizeView>
-            }
-        
+
+        @foreach (TagViewModel tv in TagsCollection.Response)
+        {
+            <AuthorizeView Context="col" Roles="@($"{GlobalStaticConstantsRoles.Roles.Admin}")">
+                <Authorized>
+                    <MudChip T="string"
+                             Size="Size.Small"
+                             Value="@tv.TagName"
+                             OnClose="DeleteTagHandle">@tv.TagName</MudChip>
+                </Authorized>
+                <NotAuthorized>
+                    <MudChip T="string"
+                             Size="Size.Small"
+                             Value="@tv.TagName">@tv.TagName</MudChip>
+                </NotAuthorized>
+            </AuthorizeView>
+        }
     }
     <AuthorizeView Context="col" Roles="@($"{GlobalStaticConstantsRoles.Roles.Admin}")">
         <Authorized>
@@ -41,9 +40,9 @@
                        class="form-control"
                        aria-label="Sizing example input"
                        aria-describedby="inputGroup-sizing-sm">
-                <button class="btn btn-outline-secondary"
+                <button class="btn btn-outline-@(CannotAddingTag ? "secondary" : "info")"
                         type="button"
-                        disabled="@string.IsNullOrWhiteSpace(NewTagName)"
+                        disabled="@CannotAddingTag"
                         id="button-addon2"
                         @onclick="CreateNewTag">
                     add
