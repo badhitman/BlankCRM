@@ -172,6 +172,20 @@ window.clipboardCopy = {
     }
 }
 
+window.getSelectedText = (element) => {
+    // Check if the element is a textarea or input
+    if (element && typeof element.selectionStart === 'number' && typeof element.selectionEnd === 'number') {
+        const Start = element.selectionStart;
+        const End = element.selectionEnd;
+        const StringValue = element.value.slice(start, end)
+        return { Start, End, StringValue };
+    }
+    let gs = window.getSelection();
+    //console.warn(JSON.stringify());
+    // Fallback for other elements, though not strictly needed for textarea
+    return gs.toString(gs);
+};
+
 window.bootstrapTheme = {
     IsDark: function () {
         let attrName = 'data-bs-theme';

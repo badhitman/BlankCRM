@@ -74,7 +74,7 @@ public class ConfigStoreModel
     public void Update(ConfigStoreModel conf)
     {
         AccessToken = conf.AccessToken;
-        LocalDirectory = conf.LocalDirectory;   
+        LocalDirectory = conf.LocalDirectory;
         RemoteDirectory = conf.RemoteDirectory;
         ApiAddress = conf.ApiAddress;
     }
