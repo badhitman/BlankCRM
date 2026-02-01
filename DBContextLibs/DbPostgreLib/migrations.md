@@ -1,5 +1,5 @@
 ```
-Add-Migration MainPostgreContext001 -Context MainAppContext -Project DbPostgreLib -StartupProject BlankBlazorApp
+Add-Migration MainAppContext001 -Context MainAppContext -Project DbPostgreLib -StartupProject BlankBlazorApp
 Update-Database -Context MainAppContext -Project DbPostgreLib -StartupProject BlankBlazorApp
 ```
 
@@ -53,18 +53,18 @@ Update-Database -Context NLogsContext -Project DbPostgreLib -StartupProject Stor
 
 Исключены из решения
 ```
-Add-Migration ApiBreezRuContext001 -Context ApiBreezRuContext -Project DbPostgreLib -StartupProject ApiBreezRuService
+Add-Migration ApiBreezRuContext001 -Context ApiBreezRuContext -OutputDir Migrations/ApiBreezRu -Project DbPostgreLib -StartupProject ApiBreezRuService
 Update-Database -Context ApiBreezRuContext -Project DbPostgreLib -StartupProject ApiBreezRuService
 ```
 ```
-Add-Migration ApiDaichiBusinessContext001 -Context ApiDaichiBusinessContext -Project DbPostgreLib -StartupProject ApiDaichiBusinessService
+Add-Migration ApiDaichiBusinessContext001 -Context ApiDaichiBusinessContext -OutputDir Migrations/ApiDaichiBusiness -Project DbPostgreLib -StartupProject ApiDaichiBusinessService
 Update-Database -Context ApiDaichiBusinessContext -Project DbPostgreLib -StartupProject ApiDaichiBusinessService
 ```
 ```
-Add-Migration ApiRusklimatComContext001 -Context ApiRusklimatComContext -Project DbPostgreLib -StartupProject ApiRusklimatComService
+Add-Migration ApiRusklimatComContext001 -Context ApiRusklimatComContext -OutputDir Migrations/ApiRusklimatCom -Project DbPostgreLib -StartupProject ApiRusklimatComService
 Update-Database -Context ApiRusklimatComContext -Project DbPostgreLib -StartupProject ApiRusklimatComService
 ```
 ```
-Add-Migration FeedsHaierProffRuContext001 -Context FeedsHaierProffRuContext -Project DbPostgreLib -StartupProject FeedsHaierProffRuService
+Add-Migration FeedsHaierProffRuContext001 -Context FeedsHaierProffRuContext -OutputDir Migrations/FeedsHaierProffRu -Project DbPostgreLib -StartupProject FeedsHaierProffRuService
 Update-Database -Context FeedsHaierProffRuContext -Project DbPostgreLib -StartupProject FeedsHaierProffRuService
 ```

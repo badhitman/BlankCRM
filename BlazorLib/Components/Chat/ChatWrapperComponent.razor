@@ -1,5 +1,5 @@
 ﻿@using MudBlazor
-@inherits BlazorBusyComponentBaseModel
+@inherits BlazorBusyComponentBaseAuthModel
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 <span @onclick="ShowToggle" style="cursor:pointer;">Чат</span>
@@ -20,7 +20,6 @@
                 <label for="exampleFormControlTextarea1" class="form-label">Отправка сообщения</label>
                 <div class="input-group">
                     <textarea readonly="@IsBusyProgress"
-                              @ref="myTextArea"
                               @onkeydown="OnKeyPresHandler"
                               @bind:event="oninput"
                               @bind="_textSendMessage"
@@ -29,7 +28,7 @@
                               aria-label="With textarea"
                               id="exampleFormControlTextarea1"></textarea>
                     <button @onclick="SendMessage"
-                            disabled="@(string.IsNullOrWhiteSpace(_textSendMessage) || IsBusyProgress)"
+                            disabled="@CannotSendMessage"
                             class="btn btn-outline-@(string.IsNullOrWhiteSpace(_textSendMessage) ? "secondary" : "success") bi bi-send"
                             type="button"
                             id="button-addon2"></button>
@@ -37,28 +36,24 @@
             </div>
             <hr />
             @{
-                List<IGrouping<string, MessageWebChatModel>> orderedGroups = messages
-                .OrderByDescending(m => m.Time)
-                .GroupBy(m => m.Name)
+                List<IGrouping<string?, MessageWebChatModelDB>> orderedGroups = messages
+                .OrderByDescending(m => m.CreatedAtUTC)
+                .GroupBy(m => m.SenderUserIdentityId)
                 .ToList();
 
                 for (int i = 0; i < orderedGroups.Count; i++)
                 {
-                    IGrouping<string, MessageWebChatModel> group = orderedGroups[i];
+                    IGrouping<string?, MessageWebChatModelDB> group = orderedGroups[i];
                     ChatBubblePosition position = i == 0 ? ChatBubblePosition.Start : ChatBubblePosition.End;
 
                     <MudChat ChatPosition="@position">
-                        <MudAvatar>@group.First().Initials</MudAvatar>
-                        <MudChatHeader Name="@group.Key" Time="@group.First().Time.ToString()" />
-                        @foreach (MessageWebChatModel message in group.OrderByDescending(m => m.Time))
+                        <MudAvatar>US</MudAvatar>
+                        <MudChatHeader Name="@group.Key" Time="@group.First().CreatedAtUTC.ToString()" />
+                        @foreach (MessageWebChatModelDB message in group.OrderByDescending(m => m.CreatedAtUTC))
                         {
                             <MudChatBubble OnClick="@((args) => ClickMessage(args, message))"
                                            OnContextClick="@((args) => RightClickMessage(args, message))">
                                 @message.Text
-                                <MudPopover Open="@(Hovering && message.Equals(_hoverMessage))" Class="hoverarea"
-                                            AnchorOrigin="Origin.CenterRight"
-                                            TransformOrigin="Origin.BottomRight">
-                                </MudPopover>
                             </MudChatBubble>
                             <MudChatFooter>
 
@@ -70,10 +65,10 @@
 
             <MudMenu PositionAtCursor @ref="_contextMenu" id="_contextMenu">
                 <MudMenuItem Icon="@Icons.Material.Filled.Block" OnClick="@BanUser">
-                    Ban @_selectedMessage?.Name
+                    Ban
                 </MudMenuItem>
                 <MudMenuItem Icon="@Icons.Material.Filled.Info" OnClick="@ShowHiddenInfo">
-                    View Details for @_selectedMessage?.Name
+                    View Details for
                 </MudMenuItem>
             </MudMenu>
         </div>

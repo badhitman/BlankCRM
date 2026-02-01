@@ -3,6 +3,7 @@ using System;
 using DbcLib;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations
 {
     [DbContext(typeof(MainAppContext))]
-    partial class MainAppContextModelSnapshot : ModelSnapshot
+    [Migration("20260201194654_MainAppContext002")]
+    partial class MainAppContext002
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -71,46 +74,6 @@ namespace DbPostgreLib.Migrations
                     b.ToTable("Dialogs");
                 });
 
-            modelBuilder.Entity("SharedLib.MessageWebChatModelDB", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("AttachFileId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("CreatedAtUTC")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("DialogOwnerId")
-                        .HasColumnType("integer");
-
-                    b.Property<bool>("IsDisabled")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("SenderUserIdentityId")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Text")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedAtUTC");
-
-                    b.HasIndex("DialogOwnerId");
-
-                    b.HasIndex("IsDisabled");
-
-                    b.HasIndex("SenderUserIdentityId");
-
-                    b.ToTable("Messages");
-                });
-
             modelBuilder.Entity("SharedLib.UserJoinDialogWebChatModelDB", b =>
                 {
                     b.Property<int>("Id")
@@ -134,17 +97,6 @@ namespace DbPostgreLib.Migrations
                         .IsUnique();
 
                     b.ToTable("UsersDialogsJoins");
-                });
-
-            modelBuilder.Entity("SharedLib.MessageWebChatModelDB", b =>
-                {
-                    b.HasOne("SharedLib.DialogWebChatModelDB", "DialogOwner")
-                        .WithMany()
-                        .HasForeignKey("DialogOwnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("DialogOwner");
                 });
 
             modelBuilder.Entity("SharedLib.UserJoinDialogWebChatModelDB", b =>

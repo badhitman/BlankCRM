@@ -19,7 +19,7 @@ public partial class NameValidAttribute : ValidationAttribute
 
     static readonly Regex MyRegexName = new(@"^\w+.*\w$", RegexOptions.Compiled),
         MyRegexPrefixCheck = new(@"^[^\d_]", RegexOptions.Compiled),
-        MyRegexPostfixCheck = new(@"[^_]$");
+        MyRegexPostfixCheck = new(@"[^_]$", RegexOptions.Compiled);
 
     /// <inheritdoc/>
     public override bool IsValid(object? value)

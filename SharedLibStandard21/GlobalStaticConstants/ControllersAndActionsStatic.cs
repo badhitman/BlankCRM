@@ -1099,6 +1099,11 @@ public static partial class GlobalStaticConstantsRoutes
         public const string TITLE_CONTROLLER_NAME = "title";
 
         /// <summary>
+        /// Ticket
+        /// </summary>
+        public const string TICKET_CONTROLLER_NAME = "ticket";
+
+        /// <summary>
         /// configuration
         /// </summary>
         public const string CONFIGURATION_CONTROLLER_NAME = "configuration";

@@ -24,7 +24,7 @@ public partial class ConstructorLayerContext : DbContext
     /// <summary>
     /// Projects
     /// </summary>
-    public DbSet<ManageManufactureModelDB> Manufactures { get; set; } = default!;       
+    public DbSet<ManageManufactureModelDB> Manufactures { get; set; } = default!;
 
     /// <summary>
     /// Системные имена
@@ -100,7 +100,7 @@ public partial class ConstructorLayerContext : DbContext
     /// <summary>
     /// Справочники/списки
     /// </summary>
-    public DbSet<DirectoryConstructorModelDB> Directories { get; set; } = default!;     
+    public DbSet<DirectoryConstructorModelDB> Directories { get; set; } = default!;
 
     /// <summary>
     /// Элементы справочников/списков

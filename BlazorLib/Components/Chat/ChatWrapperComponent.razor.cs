@@ -2,39 +2,36 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Microsoft.AspNetCore.Components;
+using static SharedLib.GlobalStaticConstantsRoutes;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using Newtonsoft.Json;
 using MudBlazor;
 using SharedLib;
 
 namespace BlazorLib.Components.Chat;
 
-public partial class ChatWrapperComponent : BlazorBusyComponentBaseModel
+/// <summary>
+/// ChatWrapperComponent
+/// </summary>
+public partial class ChatWrapperComponent : BlazorBusyComponentBaseAuthModel
 {
-    [Inject]
-    IScrollListenerFactory ScrollListenerFactory { get; set; } = default!;
-
     [Inject]
     IJSRuntime JsRuntime { get; set; } = default!;
 
 
-    ElementReference myTextArea;
     bool ChatDialogOpen;
     void ShowToggle()
     {
         ChatDialogOpen = !ChatDialogOpen;
     }
 
-    List<MessageWebChatModel> messages = [];
-    MessageWebChatModel? _selectedMessage;
+    List<MessageWebChatModelDB> messages = [];
+    MessageWebChatModelDB? _selectedMessage;
     MudMenu? _contextMenu;
-    IScrollListener? _scrollListener;
-    bool Hovering => _bubbleHovering;
-    bool _bubbleHovering;
+
     string? _textSendMessage;
-    MessageWebChatModel? _hoverMessage;
+    bool CannotSendMessage => string.IsNullOrWhiteSpace(_textSendMessage) || IsBusyProgress;
 
 
     async Task SendMessage(MouseEventArgs args)
@@ -43,7 +40,7 @@ public partial class ChatWrapperComponent : BlazorBusyComponentBaseModel
             return;
 
         await SetBusyAsync();
-        messages.Add(new("Name", "OK", _textSendMessage.Trim(), DateTime.Now));
+        messages.Add(new() { Text = _textSendMessage.Trim(), CreatedAtUTC = DateTime.Now });
         _textSendMessage = null;
         await SetBusyAsync(false);
     }
@@ -56,40 +53,37 @@ public partial class ChatWrapperComponent : BlazorBusyComponentBaseModel
         if (args.Key == "Enter" && !args.ShiftKey)
         {
             await SetBusyAsync();
-            messages.Add(new("Name", "OK", _textSendMessage.Trim(), DateTime.Now));
+            messages.Add(new() { Text = _textSendMessage.Trim(), CreatedAtUTC = DateTime.Now });
             _textSendMessage = null;
             await SetBusyAsync(false);
         }
     }
 
     /// <inheritdoc/>
-    protected override void OnInitialized()
-    {
-        _scrollListener = ScrollListenerFactory.Create(null);
-        _scrollListener.OnScroll += OnScrollAsync;
-
-        messages.Add(new MessageWebChatModel("Obi-Wan Kenobi", "OK", "You were my brother Anakin.", DateTime.Now.AddHours(-2)));
-        messages.Add(new MessageWebChatModel("Obi-Wan Kenobi", "OK", "I loved you.", DateTime.Now.AddHours(-2).AddMinutes(23)));
-        messages.Add(new MessageWebChatModel("Anakin Skywalker", "AS", "I'm sorry.", DateTime.Now.AddHours(-1)));
-    }
-
-    void OnScrollAsync(object? sender, ScrollEventArgs e)
-    {
-
+    protected override async Task OnInitializedAsync()
+    {//name, value, seconds, path
+        await base.OnInitializedAsync();
+        UserInfoModel? currentUser = CurrentUserSession;
+        string _cn = Path.Combine(Routes.TICKET_CONTROLLER_NAME, Routes.SESSION_CONTROLLER_NAME);
+        string? currentSessionTicket = await JsRuntime.InvokeAsync<string?>("methods.ReadCookie", _cn);
+        if (string.IsNullOrWhiteSpace(currentSessionTicket))
+        {
+            await JsRuntime.InvokeVoidAsync("methods.CreateCookie", _cn, Guid.NewGuid().ToString(), 60 * 60 * 24 * 14, "/");
+            currentSessionTicket = await JsRuntime.InvokeAsync<string?>("methods.ReadCookie", _cn);
+        }
     }
 
     /// <inheritdoc/>
     public override void Dispose()
     {
-        if (_scrollListener != null)
-            _scrollListener.OnScroll -= OnScrollAsync;
+
     }
 
     void ShowHiddenInfo()
     {
         if (_selectedMessage is not null)
         {
-            SnackBarRepo.Add($"Hidden information for {_selectedMessage.Name}", Severity.Info);
+            SnackBarRepo.Add($"Hidden information for ``", Severity.Info);
         }
     }
 
@@ -97,18 +91,18 @@ public partial class ChatWrapperComponent : BlazorBusyComponentBaseModel
     {
         if (_selectedMessage is not null)
         {
-            SnackBarRepo.Add($"{_selectedMessage.Name} has been banned!", Severity.Error);
+            SnackBarRepo.Add($"`` has been banned!", Severity.Error);
         }
     }
 
-    async Task RightClickMessage(MouseEventArgs args, MessageWebChatModel message)
+    async Task RightClickMessage(MouseEventArgs args, MessageWebChatModelDB message)
     {
         _selectedMessage = message;
         if (_contextMenu != null)
             await _contextMenu.OpenMenuAsync(args);
     }
 
-    async Task ClickMessage(MouseEventArgs args, MessageWebChatModel message)
+    async Task ClickMessage(MouseEventArgs args, MessageWebChatModelDB message)
     {
         _selectedMessage = message;
         SnackBarRepo.Add("Message clicked: " + message.Text, Severity.Info);
