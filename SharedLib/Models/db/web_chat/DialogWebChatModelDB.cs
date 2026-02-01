@@ -24,7 +24,7 @@ public class DialogWebChatModelDB
     public DateTime CreatedAtUTC { get; set; }
 
     /// <inheritdoc/>
-    public DateTime LastMessageAtUTC { get; set; }
+    public DateTime? LastMessageAtUTC { get; set; }
 
     /// <summary>
     /// Последний раз, когда в диалог кто-то обращался
@@ -40,6 +40,10 @@ public class DialogWebChatModelDB
     /// Объект отключён
     /// </summary>
     public bool IsDisabled { get; set; }
+
+
+    /// <inheritdoc/>
+    public required string SessionTicketId { get; set; }
 
     #region Initiator/Author
     /// <summary>

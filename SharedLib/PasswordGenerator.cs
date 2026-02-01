@@ -175,7 +175,7 @@ public static class ExtensionsPassword
     /// </summary>
     public static IEnumerable<T> ShuffleSecure<T>(this IEnumerable<T> source)
     {
-        T[] sourceArray = source.ToArray();
+        T[] sourceArray = [.. source];
         for (int counter = 0; counter < sourceArray.Length; counter++)
         {
             int randomIndex = RandomSecure.Value.Next(counter, sourceArray.Length);

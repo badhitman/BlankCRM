@@ -19,6 +19,9 @@ namespace SharedLib;
 public static partial class GlobalToolsStandard
 {
     /// <inheritdoc/>
+    public static readonly int WebChatTicketSessionDeadlineSeconds = 60 * 60 * 24 * 60;
+
+    /// <inheritdoc/>
     public static string ToReadableString(this TimeSpan span)
     {
         string formatted = string.Format("{0}{1}{2}{3}",

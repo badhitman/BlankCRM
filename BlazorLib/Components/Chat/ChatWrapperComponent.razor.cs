@@ -19,6 +19,9 @@ public partial class ChatWrapperComponent : BlazorBusyComponentBaseAuthModel
     [Inject]
     IJSRuntime JsRuntime { get; set; } = default!;
 
+    [Inject]
+    IWebChatService WebChatRepo { get; set; } = default!;
+
 
     bool ChatDialogOpen;
     void ShowToggle()
@@ -29,7 +32,7 @@ public partial class ChatWrapperComponent : BlazorBusyComponentBaseAuthModel
     List<MessageWebChatModelDB> messages = [];
     MessageWebChatModelDB? _selectedMessage;
     MudMenu? _contextMenu;
-
+    InitWebChatSessionResponseModel? ticketSession;
     string? _textSendMessage;
     bool CannotSendMessage => string.IsNullOrWhiteSpace(_textSendMessage) || IsBusyProgress;
 
@@ -66,11 +69,14 @@ public partial class ChatWrapperComponent : BlazorBusyComponentBaseAuthModel
         UserInfoModel? currentUser = CurrentUserSession;
         string _cn = Path.Combine(Routes.TICKET_CONTROLLER_NAME, Routes.SESSION_CONTROLLER_NAME);
         string? currentSessionTicket = await JsRuntime.InvokeAsync<string?>("methods.ReadCookie", _cn);
-        if (string.IsNullOrWhiteSpace(currentSessionTicket))
-        {
-            await JsRuntime.InvokeVoidAsync("methods.CreateCookie", _cn, Guid.NewGuid().ToString(), 60 * 60 * 24 * 14, "/");
-            currentSessionTicket = await JsRuntime.InvokeAsync<string?>("methods.ReadCookie", _cn);
-        }
+        TResponseModel<InitWebChatSessionResponseModel> initSessionTicket = await WebChatRepo.InitWebChatSessionAsync(new() { SessionTicket = currentSessionTicket, UserIdentityId = currentUser?.UserId });
+        
+        if (currentSessionTicket != initSessionTicket.Response?.SessionTicket)
+            await JsRuntime.InvokeVoidAsync("methods.CreateCookie", _cn, initSessionTicket.Response?.SessionTicket, GlobalToolsStandard.WebChatTicketSessionDeadlineSeconds, "/");
+        else
+            await JsRuntime.InvokeVoidAsync("methods.UpdateCookie", _cn, initSessionTicket.Response?.SessionTicket, GlobalToolsStandard.WebChatTicketSessionDeadlineSeconds, "/");
+        
+        ticketSession = initSessionTicket.Response;
     }
 
     /// <inheritdoc/>
