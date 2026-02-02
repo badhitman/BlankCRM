@@ -177,15 +177,22 @@ public partial class RetailService(IIdentityTransmission identityRepo,
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         IQueryable<DocumentRetailModelDB> q = BuildMainQuery(req.Payload, context.OrdersRetail);
 
-        var DoneOrdersSumAmount = await context.RowsOrdersRetails
+        List<RowOfRetailOrderDocumentModelDB> DoneOrdersSumAmount = await context.RowsOrdersRetails
             .Where(x => q.Any(y => y.Id == x.OrderId))
             .OrderBy(x => x.Order!.CreatedAtUTC)
-            .Include(x => x.Order)
             .Skip(req.PageNum * req.PageSize)
             .Take(req.PageSize)
+            .Include(x => x.Order)
             .ToListAsync(cancellationToken: token);
 
-        throw new NotImplementedException();
+        return new()
+        {
+            PageNum = req.PageNum,
+            PageSize = req.PageSize,
+            TotalRowsCount = await context.RowsOrdersRetails
+            .CountAsync(x => q.Any(y => y.Id == x.OrderId), cancellationToken: token),
+            Response = DoneOrdersSumAmount
+        };
     }
 
 
