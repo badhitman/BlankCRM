@@ -190,8 +190,7 @@ public partial class RetailService(IIdentityTransmission identityRepo,
         {
             PageNum = req.PageNum,
             PageSize = req.PageSize,
-            TotalRowsCount = await context.RowsOrdersRetails
-            .CountAsync(x => q.Any(y => y.Id == x.OrderId), cancellationToken: token),
+            TotalRowsCount = await q.CountAsync(cancellationToken: token),
             Response = DoneOrdersSumAmount
         };
     }
