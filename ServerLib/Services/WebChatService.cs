@@ -11,7 +11,7 @@ namespace ServerLib;
 /// <summary>
 /// WebChatService
 /// </summary>
-public class WebChatService(IDbContextFactory<MainAppContext> mainDbFactory) : IWebChatService
+public partial class WebChatService(IDbContextFactory<MainAppContext> mainDbFactory) : IWebChatService
 {
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> CreateMessageWebChatAsync(MessageWebChatModelDB req, CancellationToken token = default)
@@ -29,20 +29,19 @@ public class WebChatService(IDbContextFactory<MainAppContext> mainDbFactory) : I
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DeleteToggleMessageWebChatAsync(TAuthRequestStandardModel<DeleteToggleMessageWebChatRequestModel> req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> DeleteToggleMessageWebChatAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default)
     {
-        if (req.Payload is null)
-            return ResponseBaseModel.CreateError("req.Payload is null");
+        if (req.Payload < 1)
+            return ResponseBaseModel.CreateError("req.Payload < 1");
 
         MainAppContext context = await mainDbFactory.CreateDbContextAsync(token);
         await context.Messages
-            .Where(x => x.Id == req.Payload.MessageWebChat)
+            .Where(x => x.Id == req.Payload)
             .ExecuteUpdateAsync(set => set
                 .SetProperty(p => p.IsDisabled, r => !r.IsDisabled), cancellationToken: token);
 
         return ResponseBaseModel.CreateSuccess("Ok");
     }
-
 
     /// <inheritdoc/>
     public async Task<TResponseModel<SelectMessagesForWebChatResponseModel>> SelectMessagesWebChatAsync(SelectMessagesForWebChatRequestModel req, CancellationToken token = default)
@@ -123,7 +122,7 @@ public class WebChatService(IDbContextFactory<MainAppContext> mainDbFactory) : I
                     .SetProperty(p => p.DeadlineUTC, DateTime.UtcNow.AddMinutes(GlobalToolsStandard.WebChatTicketSessionDeadlineSeconds)), cancellationToken: cancellationToken);
         }
 
-        if (!string.IsNullOrWhiteSpace(req.UserIdentityId) && readSession.InitiatorIdentityId != req.UserIdentityId)
+        if (!string.IsNullOrWhiteSpace(req.UserIdentityId) && string.IsNullOrWhiteSpace(readSession.InitiatorIdentityId))
             await context.Dialogs.Where(x => x.Id == readSession.Id)
                 .ExecuteUpdateAsync(set => set
                     .SetProperty(p => p.InitiatorIdentityId, req.UserIdentityId), cancellationToken: cancellationToken);
