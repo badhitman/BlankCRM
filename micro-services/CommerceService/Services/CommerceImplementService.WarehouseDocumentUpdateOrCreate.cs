@@ -61,7 +61,7 @@ public partial class CommerceImplementService : ICommerceService
             req.Payload.CreatedAtUTC = dtu;
             req.Payload.LastUpdatedAtUTC = dtu;
             req.Payload.IsDisabled = true;
-            await context.AddAsync(req, token);
+            await context.AddAsync(req.Payload, token);
             await context.SaveChangesAsync(token);
             res.Response = req.Payload.Id;
             res.AddSuccess("Документ создан");
