@@ -32,6 +32,9 @@ public partial class RetailService : IRetailService
         if (req.Payload.WalletId <= 0)
             return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Не указан кошелёк" }] };
 
+        if (req.Payload.TypePaymentId == 0)
+            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Не указан тип платежа" }] };
+
         TResponseModel<int> res = new();
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
@@ -53,8 +56,16 @@ public partial class RetailService : IRetailService
         using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
         PaymentRetailDocumentModelDB docDb = PaymentRetailDocumentModelDB.Build(req.Payload);
 
-        await context.PaymentsRetailDocuments.AddAsync(docDb, token);
-        await context.SaveChangesAsync(token);
+        try
+        {
+            await context.PaymentsRetailDocuments.AddAsync(docDb, token);
+            await context.SaveChangesAsync(token);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.ToString());
+        }
+
         res.Response = docDb.Id;
         res.AddSuccess($"Документ платежа/оплаты создан #{docDb.Id}");
 
