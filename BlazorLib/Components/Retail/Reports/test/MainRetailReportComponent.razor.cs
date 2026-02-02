@@ -505,10 +505,7 @@ public partial class MainRetailReportComponent : BlazorBusyComponentBaseModel
     async Task<TableData<RowOfRetailOrderDocumentModelDB>> ServerReload(TableState state, CancellationToken token)
     {
         if (Owner.SelectedWeek is null)
-        {
-            SnackBarRepo.Error($"Owner.SelectedWeek: IS NULL");
-            throw new ArgumentNullException(nameof(Owner));
-        }
+            return new TableData<RowOfRetailOrderDocumentModelDB>();
 
         MainReportRequestModel req = new()
         {
