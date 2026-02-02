@@ -295,7 +295,6 @@ else
                     <col />
                     <col />
                     <col />
-                    <col style="width:50px;" />
                 </ColGroup>
                 <HeaderContent>
                     <MudTh>Название</MudTh>
@@ -303,7 +302,7 @@ else
                     <MudTh>Количество</MudTh>
                     <MudTh>Вес</MudTh>
                     <MudTh>Сумма</MudTh>
-                    <MudTh></MudTh>
+                    <MudTh>Документ</MudTh>
                 </HeaderContent>
                 <RowTemplate>
                     <MudTd DataLabel="Name">
@@ -312,16 +311,19 @@ else
                         </MudLink>
                     </MudTd>
                     <MudTd DataLabel="Цена">
-                        @($"{context!.Offer!.Price} р/{context.Offer!.OfferUnit.DescriptionInfo().ToLower()}")
+                        @($"{context.Offer!.Price} р/{context.Offer!.OfferUnit.DescriptionInfo().ToLower()}")
                     </MudTd>
                     <MudTd DataLabel="Количество">
-                        @context!.Quantity
+                        @context.Quantity
                     </MudTd>
                     <MudTd DataLabel="Вес">
-                        @context!.WeightOffer
+                        @context.WeightOffer
                     </MudTd>
                     <MudTd DataLabel="Сумма">
-                        @context!.Amount
+                        @context.Amount
+                    </MudTd>
+                    <MudTd DataLabel="Заказ">
+                        @context.Order
                     </MudTd>
                 </RowTemplate>
                 <NoRecordsContent>

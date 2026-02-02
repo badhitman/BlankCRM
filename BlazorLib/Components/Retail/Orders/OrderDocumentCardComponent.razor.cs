@@ -278,6 +278,7 @@ public partial class OrderDocumentCardComponent : BlazorBusyComponentBaseAuthMod
                 AuthorIdentityUserId = CurrentUserSession.UserId,
                 BuyerIdentityUserId = ClientId ?? CurrentUserSession.UserId,
                 WarehouseId = defaultWarehouse.Response ?? 0,
+                CreatedAtUTC = DateTime.UtcNow,
             };
             datePayment = currentDocument.DateDocument;
         }

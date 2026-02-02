@@ -182,6 +182,7 @@ public partial class RetailService(IIdentityTransmission identityRepo,
             .Skip(req.PageNum * req.PageSize)
             .Take(req.PageSize)
             .Include(x => x.Order)
+            .Include(x => x.Offer)
             .ToListAsync(cancellationToken: token);
 
         return new()
