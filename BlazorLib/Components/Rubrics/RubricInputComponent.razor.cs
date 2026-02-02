@@ -156,7 +156,8 @@ public partial class RubricInputComponent : BlazorBusyComponentBaseModel
         if (dump_rubric.Response is null)
         {
             SnackBarRepo.Error("dump_rubric.Response is null");
-            throw new Exception();
+            RubricHierarchy.Clear();
+            return;
         }
         RubricHierarchy = dump_rubric.Response;
         if (_id > 0)

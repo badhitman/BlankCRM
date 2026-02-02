@@ -25,9 +25,11 @@ public class RubricsService(
     public async Task<List<UniversalBaseModel>> RubricsChildListAsync(RubricsListRequestStandardModel req, CancellationToken token = default)
     {
         using HelpDeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
+        string? _ctx1 = req.ContextName?.Replace("/","\\");
+        string? _ctx2 = req.ContextName?.Replace("\\", "/");
         IQueryable<UniversalBaseModel> q = context
             .Rubrics
-            .Where(x => x.ProjectId == req.ProjectId && x.ContextName == req.ContextName)
+            .Where(x => x.ContextName == _ctx1 || x.ContextName == _ctx2)
             .Select(x => new UniversalBaseModel()
             {
                 Name = x.Name,
@@ -44,8 +46,8 @@ public class RubricsService(
             q = q.Where(x => x.ParentId == null || x.ParentId < 1);
         else
             q = q.Where(x => x.ParentId == req.Request);
-
-        return await q.ToListAsync(cancellationToken: token);
+        List<UniversalBaseModel> res = await q.ToListAsync(cancellationToken: token);
+        return res;
     }
 
     /// <inheritdoc/>
