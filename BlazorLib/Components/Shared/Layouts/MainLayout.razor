@@ -14,7 +14,10 @@
 
     <main>
         <div class="top-row px-4">
-            <BlazorLib.Components.Chat.ChatWrapperComponent />
+            @if (WebConfig.Value.WebChatEnable)
+            {
+                <BlazorLib.Components.Chat.ChatWrapperComponent />
+            }
             @if (!WebConfig.Value.HideLanguageSelector)
             {
                 <CultureSelector />

@@ -40,6 +40,11 @@ public class ServerConfigModel
     public bool HideLanguageSelector { get; set; }
 
     /// <summary>
+    /// WebChatEnable
+    /// </summary>
+    public bool WebChatEnable { get; set; }
+
+    /// <summary>
     /// Скрыть навигацию для входа/авторизации
     /// </summary>
     public bool HideAuthArea { get; set; }

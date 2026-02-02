@@ -115,6 +115,7 @@
     <File Path="../secrets-BlankCRM.AppHost/excenge-conf.Development.json" />
     <File Path="../secrets-BlankCRM.AppHost/mongo-conf.json" />
     <File Path="../secrets-BlankCRM.AppHost/rabbitmq-conf.Development.json" />
+    <File Path="../secrets-BlankCRM.AppHost/server-config.Development.json" />
     <File Path="../secrets-BlankCRM.AppHost/telegram-bot.Development.json" />
   </Folder>
   <Folder Name="/Solution Items/secrets/custom/">
