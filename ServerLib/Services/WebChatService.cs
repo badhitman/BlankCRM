@@ -93,7 +93,7 @@ public class WebChatService(IDbContextFactory<MainAppContext> mainDbFactory) : I
     public async Task<TResponseModel<InitWebChatSessionResponseModel>> InitWebChatSessionAsync(InitWebChatSessionRequestModel req, CancellationToken cancellationToken = default)
     {
         MainAppContext context = await mainDbFactory.CreateDbContextAsync(cancellationToken);
-        DialogWebChatModelDB? readSession = string.IsNullOrWhiteSpace(req.SessionTicket)
+        DialogWebChatModelDB? readSession = !string.IsNullOrWhiteSpace(req.SessionTicket)
             ? await context.Dialogs.FirstOrDefaultAsync(x => x.SessionTicketId == req.SessionTicket && !x.IsDisabled && x.DeadlineUTC >= DateTime.UtcNow, cancellationToken: cancellationToken)
             : new()
             {

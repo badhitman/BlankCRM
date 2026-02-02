@@ -45,8 +45,8 @@
                     : ChatBubblePosition.End;
                 }
                 <MudChat ChatPosition="@position">
-                    <MudAvatar>US</MudAvatar>
-                    <MudChatHeader Name="@message.SenderUserIdentityId" Time="@message.CreatedAtUTC.ToString()" />
+                    <MudAvatar>@(position == ChatBubblePosition.Start ? "Вы" : "US")</MudAvatar>
+                    <MudChatHeader Name="@(position == ChatBubblePosition.Start ? "Вы" : message.SenderUserIdentityId)" Time="@message.CreatedAtUTC.ToString()" />
                     <MudChatBubble OnClick="@((args) => ClickMessage(args, message))"
                                    OnContextClick="@((args) => RightClickMessage(args, message))">
                         @message.Text
