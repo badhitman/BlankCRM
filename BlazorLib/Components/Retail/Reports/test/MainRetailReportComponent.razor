@@ -296,10 +296,9 @@ else
                 <RowTemplate>
                     <MudTd DataLabel="Rows">
                         x @context.Rows?.Count() = @context.Rows?.Sum(x => x.Amount)
-                        <table class="table">
+                        <table class="table table-striped table-hover">
                             <thead>
                                 <tr>
-                                    <th scope="col">#</th>
                                     <th scope="col">Offer</th>
                                     <th scope="col">Count</th>
                                     <th scope="col">Amount</th>
