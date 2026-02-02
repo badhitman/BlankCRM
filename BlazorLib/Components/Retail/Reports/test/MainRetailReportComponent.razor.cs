@@ -446,7 +446,6 @@ public partial class MainRetailReportComponent : BlazorBusyComponentBaseModel
             End = Owner.SelectedWeek.Value.End,
         };
 
-
         string _prefix = $"y:{Owner.SelectedYear};w:{Owner.SelectedWeek.Value.NumWeekOfYear}";
 
         DebtStorageMetadata.PrefixPropertyName = _prefix;
@@ -498,17 +497,30 @@ public partial class MainRetailReportComponent : BlazorBusyComponentBaseModel
         };
 
         ReportData = await RetailRepo.GetMainReportAsync(req);
-        
+
         await SetBusyAsync(false);
     }
 
-    
-     async Task<TableData<RowOfRetailOrderDocumentModelDB>> ServerReload(TableState state, CancellationToken token)
+
+    async Task<TableData<RowOfRetailOrderDocumentModelDB>> ServerReload(TableState state, CancellationToken token)
     {
-        
-        return new TableData<RowOfRetailOrderDocumentModelDB>() {TotalItems = 0, Items = []};
+        if (Owner.SelectedWeek is null)
+        {
+            SnackBarRepo.Error($"Owner.SelectedWeek: IS NULL");
+            throw new ArgumentNullException(nameof(Owner));
+        }
+
+        await SetBusyAsync(token: token);
+        MainReportRequestModel req = new()
+        {
+            NumWeekOfYear = Owner.SelectedWeek.Value.NumWeekOfYear,
+            SelectedYear = Owner.SelectedYear,
+        };
+        TPaginationResponseStandardModel<RowOfRetailOrderDocumentModelDB> res = await RetailRepo.SelectRowsDocumentsForMainReportRetailAsync(new() { PageNum = state.Page, PageSize = state.PageSize, Payload = req });
+        await SetBusyAsync(false, token);
+        return new TableData<RowOfRetailOrderDocumentModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };
     }
-     
+
 
     void PrePaidTypePaymentSetHandle(int? val)
     {
