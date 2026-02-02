@@ -10,7 +10,7 @@
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 @attribute [Authorize(Roles = GlobalStaticConstantsRoles.Roles.Admin)]
 
-<MudTabs @ref="_tabs" Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-6">
+<MudTabs @ref="_tabs" Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-2">
     <MudTabPanel Text="Logs" ID="@typeof(LogsComponent).Name">
         <LogsComponent />
     </MudTabPanel>

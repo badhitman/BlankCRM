@@ -10,7 +10,7 @@ namespace SharedLib;
 /// <summary>
 /// DialogWebChatModelDB
 /// </summary>
-[Index(nameof(IsDisabled)), Index(nameof(DeadlineUTC)), Index(nameof(LastMessageAtUTC))]
+[Index(nameof(IsDisabled)), Index(nameof(DeadlineUTC)), Index(nameof(LastMessageAtUTC)), Index(nameof(SessionTicketId), IsUnique = true)]
 [Index(nameof(LastReadAtUTC)), Index(nameof(InitiatorContacts)), Index(nameof(InitiatorIdentityId))]
 public class DialogWebChatModelDB
 {

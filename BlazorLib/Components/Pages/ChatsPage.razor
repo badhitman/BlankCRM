@@ -5,7 +5,7 @@
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 @attribute [Authorize(Roles = $"{GlobalStaticConstantsRoles.Roles.HelpDeskChatsManage},{GlobalStaticConstantsRoles.Roles.Admin}")]
 
-<MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-6">
+<MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-2">
     <MudTabPanel Text="Чаты">
         <TelegramChatsTableComponent />
     </MudTabPanel>

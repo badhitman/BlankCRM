@@ -11,7 +11,7 @@
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 @attribute [Authorize(Roles = $"{GlobalStaticConstantsRoles.Roles.Admin},{GlobalStaticConstantsRoles.Roles.Debug},{GlobalStaticConstantsRoles.Roles.RetailManage}")]
 
-<MudTabs @ref="_tabs" Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-6" ActivePanelIndexChanged="ActivePanelIndexChangedHandler">
+<MudTabs @ref="_tabs" Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-2" ActivePanelIndexChanged="ActivePanelIndexChangedHandler">
     <MudTabPanel Text="Заказы" ID="@nameof(RetailOrdersListComponent)">
         <RetailOrdersListComponent />
     </MudTabPanel>

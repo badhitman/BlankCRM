@@ -108,6 +108,7 @@ public class WebChatService(IDbContextFactory<MainAppContext> mainDbFactory) : I
             DeadlineUTC = DateTime.UtcNow.AddSeconds(GlobalToolsStandard.WebChatTicketSessionDeadlineSeconds),
             CreatedAtUTC = DateTime.UtcNow,
             LastReadAtUTC = DateTime.UtcNow,
+            InitiatorIdentityId = req.UserIdentityId,
         };
 
         if (readSession.Id == 0)
@@ -117,11 +118,15 @@ public class WebChatService(IDbContextFactory<MainAppContext> mainDbFactory) : I
         }
         else
         {
-
             await context.Dialogs.Where(x => x.Id == readSession.Id)
                 .ExecuteUpdateAsync(set => set
                     .SetProperty(p => p.DeadlineUTC, DateTime.UtcNow.AddMinutes(GlobalToolsStandard.WebChatTicketSessionDeadlineSeconds)), cancellationToken: cancellationToken);
         }
+
+        if (!string.IsNullOrWhiteSpace(req.UserIdentityId) && readSession.InitiatorIdentityId != req.UserIdentityId)
+            await context.Dialogs.Where(x => x.Id == readSession.Id)
+                .ExecuteUpdateAsync(set => set
+                    .SetProperty(p => p.InitiatorIdentityId, req.UserIdentityId), cancellationToken: cancellationToken);
 
         return new()
         {
