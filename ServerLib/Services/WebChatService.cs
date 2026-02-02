@@ -66,7 +66,11 @@ public class WebChatService(IDbContextFactory<MainAppContext> mainDbFactory) : I
             SortBy = req.SortBy,
             SortingDirection = req.SortingDirection,
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
-            Response = await q.Skip(req.PageNum * req.PageSize).Take(req.PageSize).ToListAsync(cancellationToken: token),
+            Response = await q
+                .OrderByDescending(x => x.CreatedAtUTC)
+                .Skip(req.PageNum * req.PageSize)
+                .Take(req.PageSize)
+                .ToListAsync(cancellationToken: token),
         };
     }
 
@@ -115,6 +119,19 @@ public class WebChatService(IDbContextFactory<MainAppContext> mainDbFactory) : I
         else
             await context.Dialogs.Where(x => x.Id == readSession.Id).ExecuteUpdateAsync(set => set.SetProperty(p => p.DeadlineUTC, DateTime.UtcNow.AddMinutes(GlobalToolsStandard.WebChatTicketSessionDeadlineSeconds)), cancellationToken: cancellationToken);
 
-        return new() { Response = new() { SessionTicket = readSession.SessionTicketId } };
+        return new()
+        {
+            Response = new()
+            {
+                SessionTicket = readSession.SessionTicketId,
+                DialogId = readSession.Id,
+            }
+        };
+    }
+
+    /// <inheritdoc/>
+    public ValueTask DisposeAsync()
+    {
+        return ValueTask.CompletedTask;
     }
 }

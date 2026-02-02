@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// IWebChatService
 /// </summary>
-public interface IWebChatService
+public interface IWebChatService : IAsyncDisposable
 {
     /// <inheritdoc/>
     public Task<TResponseModel<InitWebChatSessionResponseModel>> InitWebChatSessionAsync(InitWebChatSessionRequestModel req, CancellationToken cancellationToken = default);

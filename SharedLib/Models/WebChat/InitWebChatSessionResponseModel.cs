@@ -13,4 +13,7 @@ public class InitWebChatSessionResponseModel
     /// SessionTicket
     /// </summary>
     public required string SessionTicket { get; set; }
+
+    /// <inheritdoc/>
+    public int DialogId { get; set; }
 }

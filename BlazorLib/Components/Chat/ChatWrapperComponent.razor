@@ -1,4 +1,5 @@
-﻿@using MudBlazor
+﻿@using Microsoft.AspNetCore.Components.Web.Virtualization
+@using MudBlazor
 @inherits BlazorBusyComponentBaseAuthModel
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 
@@ -35,7 +36,31 @@
                 </div>
             </div>
             <hr />
-            @{
+            <Virtualize Context="message"
+                        ItemsProvider="LoadMessages"
+                        @ref="virtualizeComponent">
+                @{
+                    ChatBubblePosition position = string.IsNullOrWhiteSpace(message.SenderUserIdentityId) || CurrentUserSession?.UserId == message.SenderUserIdentityId
+                    ? ChatBubblePosition.Start
+                    : ChatBubblePosition.End;
+                }
+                <MudChat ChatPosition="@position">
+                    <MudAvatar>US</MudAvatar>
+                    <MudChatHeader Name="@message.SenderUserIdentityId" Time="@message.CreatedAtUTC.ToString()" />
+                    <MudChatBubble OnClick="@((args) => ClickMessage(args, message))"
+                                   OnContextClick="@((args) => RightClickMessage(args, message))">
+                        @message.Text
+                    </MudChatBubble>
+                    @if (message.AttachFileId.HasValue)
+                    {
+                        <MudChatFooter>
+
+                        </MudChatFooter>
+                    }
+                </MudChat>
+            </Virtualize>
+
+            @* @{
                 List<IGrouping<string?, MessageWebChatModelDB>> orderedGroups = messages
                 .OrderByDescending(m => m.CreatedAtUTC)
                 .GroupBy(m => m.SenderUserIdentityId)
@@ -61,7 +86,7 @@
                         }
                     </MudChat>
                 }
-            }
+            } *@
 
             <MudMenu PositionAtCursor @ref="_contextMenu" id="_contextMenu">
                 <MudMenuItem Icon="@Icons.Material.Filled.Block" OnClick="@BanUser">
