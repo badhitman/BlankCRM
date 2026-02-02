@@ -37,27 +37,40 @@
             </div>
             <hr />
             <Virtualize Context="message"
+                        OverscanCount="@(virtualCacheSize / 2)"
                         ItemsProvider="LoadMessages"
                         @ref="virtualizeComponent">
-                @{
-                    ChatBubblePosition position = string.IsNullOrWhiteSpace(message.SenderUserIdentityId) || CurrentUserSession?.UserId == message.SenderUserIdentityId
-                    ? ChatBubblePosition.Start
-                    : ChatBubblePosition.End;
-                }
-                <MudChat ChatPosition="@position">
-                    <MudAvatar>@(position == ChatBubblePosition.Start ? "Вы" : "US")</MudAvatar>
-                    <MudChatHeader Name="@(position == ChatBubblePosition.Start ? "Вы" : message.SenderUserIdentityId)" Time="@message.CreatedAtUTC.ToString()" />
-                    <MudChatBubble OnClick="@((args) => ClickMessage(args, message))"
-                                   OnContextClick="@((args) => RightClickMessage(args, message))">
-                        @message.Text
-                    </MudChatBubble>
-                    @if (message.AttachFileId.HasValue)
-                    {
-                        <MudChatFooter>
-
-                        </MudChatFooter>
+                <ItemContent>
+                    @{
+                        ChatBubblePosition position = string.IsNullOrWhiteSpace(message.SenderUserIdentityId) || CurrentUserSession?.UserId == message.SenderUserIdentityId
+                        ? ChatBubblePosition.Start
+                        : ChatBubblePosition.End;
                     }
-                </MudChat>
+                    <MudChat ChatPosition="@position">
+                        <MudAvatar>@(position == ChatBubblePosition.Start ? "Вы" : "US")</MudAvatar>
+                        <MudChatHeader Name="@(position == ChatBubblePosition.Start ? "Вы" : message.SenderUserIdentityId)" Time="@message.CreatedAtUTC.GetCustomTime().ToString()" />
+                        <MudChatBubble OnClick="@((args) => ClickMessage(args, message))"
+                                       OnContextClick="@((args) => RightClickMessage(args, message))">
+                            @message.Text
+                        </MudChatBubble>
+                        @if (message.AttachFileId.HasValue)
+                        {
+                            <MudChatFooter>
+
+                            </MudChatFooter>
+                        }
+                    </MudChat>
+                </ItemContent>
+                <Placeholder>
+                    <p>
+                        <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+                    </p>
+                </Placeholder>
+                <EmptyContent>
+                    <p>
+                        Сообщений нет
+                    </p>
+                </EmptyContent>
             </Virtualize>
 
             @* @{

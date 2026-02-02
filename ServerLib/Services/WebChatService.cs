@@ -45,32 +45,31 @@ public class WebChatService(IDbContextFactory<MainAppContext> mainDbFactory) : I
 
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseStandardModel<MessageWebChatModelDB>> SelectMessagesWebChatAsync(TPaginationRequestStandardModel<SelectMessagesForWebChatRequestModel> req, CancellationToken token = default)
+    public async Task<TResponseModel<SelectMessagesForWebChatResponseModel>> SelectMessagesWebChatAsync(SelectMessagesForWebChatRequestModel req, CancellationToken token = default)
     {
-        if (req.Payload is null)
-            return new() { Status = new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "req.Payload is null" }] } };
-
         MainAppContext context = await mainDbFactory.CreateDbContextAsync(token);
-        if (req.PageSize < 10)
-            req.PageSize = 10;
 
         IQueryable<MessageWebChatModelDB> q = context.Messages
-            .Where(x => x.DialogOwner!.SessionTicketId == req.Payload.SessionTicketId)
-            .Where(x => req.Payload.IncludeDeletedMessages || !x.IsDisabled)
+            .Where(x => x.DialogOwner!.SessionTicketId == req.SessionTicketId)
+            .Where(x => req.IncludeDeletedMessages || !x.IsDisabled)
             ;
 
         return new()
         {
-            PageNum = req.PageNum,
-            PageSize = req.PageSize,
-            SortBy = req.SortBy,
-            SortingDirection = req.SortingDirection,
-            TotalRowsCount = await q.CountAsync(cancellationToken: token),
-            Response = await q
-                .OrderByDescending(x => x.CreatedAtUTC)
-                .Skip(req.PageNum * req.PageSize)
-                .Take(req.PageSize)
-                .ToListAsync(cancellationToken: token),
+            Response = new()
+            {
+                SessionTicketId = req.SessionTicketId,
+                Count = req.Count,
+                StartIndex = req.StartIndex,
+                IncludeDeletedMessages = req.IncludeDeletedMessages,
+                SessionTicket = req.SessionTicket,
+                TotalRowsCount = await q.CountAsync(cancellationToken: token),
+                Messages = await q
+                    .OrderByDescending(x => x.CreatedAtUTC)
+                    .Skip(req.StartIndex)
+                    .Take(req.Count)
+                    .ToListAsync(cancellationToken: token),
+            }
         };
     }
 

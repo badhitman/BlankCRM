@@ -30,7 +30,7 @@ public partial class ChatWrapperComponent : BlazorBusyComponentBaseAuthModel
     Virtualize<MessageWebChatModelDB>? virtualizeComponent;
     string? _textSendMessage;
     bool CannotSendMessage => string.IsNullOrWhiteSpace(_textSendMessage) || IsBusyProgress;
-
+    static readonly int virtualCacheSize = 50;
 
     bool ChatDialogOpen;
     void ShowToggle()
@@ -43,19 +43,16 @@ public partial class ChatWrapperComponent : BlazorBusyComponentBaseAuthModel
         if (ticketSession is null)
             return new ItemsProviderResult<MessageWebChatModelDB>([], 0);
 
-        TPaginationRequestStandardModel<SelectMessagesForWebChatRequestModel> req = new()
+        SelectMessagesForWebChatRequestModel req = new()
         {
-            PageNum = (int)Math.Floor((double)request.StartIndex / 50),
-            PageSize = 50,
-            Payload = new()
-            {
-                SessionTicketId = ticketSession.SessionTicket,
-            }
+            SessionTicketId = ticketSession.SessionTicket,
+            StartIndex = request.StartIndex,
+            Count = request.Count,
         };
-        TPaginationResponseStandardModel<MessageWebChatModelDB> res = await WebChatRepo.SelectMessagesWebChatAsync(req, request.CancellationToken);
+        TResponseModel<SelectMessagesForWebChatResponseModel> res = await WebChatRepo.SelectMessagesWebChatAsync(req, request.CancellationToken);
 
         if (res.Response is null)
-            return new ItemsProviderResult<MessageWebChatModelDB>([], res.TotalRowsCount);
+            return new ItemsProviderResult<MessageWebChatModelDB>([], 0);
 
         //List<KeyValuePair<string?, List<MessageWebChatModelDB>>> chatSrc = [];
         ////KeyValuePair<string?, List<MessageWebChatModelDB>> _nr = new();
@@ -68,7 +65,7 @@ public partial class ChatWrapperComponent : BlazorBusyComponentBaseAuthModel
         //        chatSrc.Last().Value.Add(_msg);
         //}
 
-        return new ItemsProviderResult<MessageWebChatModelDB>(res.Response, res.TotalRowsCount);
+        return new ItemsProviderResult<MessageWebChatModelDB>(res.Response.Messages, res.Response.TotalRowsCount);
     }
 
 
