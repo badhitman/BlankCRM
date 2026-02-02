@@ -14,7 +14,7 @@ public class SelectRowsDocumentsForMainReportRetailReceive(IRetailService commRe
     : IResponseReceive<TPaginationRequestStandardModel<MainReportRequestModel>?, TPaginationResponseStandardModel<RowOfRetailOrderDocumentModelDB>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.OffersOfDeliveriesReportRetailReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.SelectRowsRetailDocumentsForMainReportRetailReceive;
 
     /// <inheritdoc/>
     public async Task<TPaginationResponseStandardModel<RowOfRetailOrderDocumentModelDB>?> ResponseHandleActionAsync(TPaginationRequestStandardModel<MainReportRequestModel>? req, CancellationToken token = default)

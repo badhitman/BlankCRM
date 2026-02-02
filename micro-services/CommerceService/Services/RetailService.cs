@@ -162,7 +162,6 @@ public partial class RetailService(IIdentityTransmission identityRepo,
         return res;
     }
 
-
     /// <inheritdoc/>
     public async Task<TPaginationResponseStandardModel<RowOfRetailOrderDocumentModelDB>> SelectRowsDocumentsForMainReportRetailAsync(TPaginationRequestStandardModel<MainReportRequestModel> req, CancellationToken token = default)
     {
@@ -194,7 +193,6 @@ public partial class RetailService(IIdentityTransmission identityRepo,
             Response = DoneOrdersSumAmount
         };
     }
-
 
     /// <inheritdoc/>
     public async Task<TPaginationResponseStandardModel<WalletRetailReportRowModel>> FinancialsReportRetailAsync(TPaginationRequestStandardModel<SelectPaymentsRetailReportRequestModel> req, CancellationToken token = default)
