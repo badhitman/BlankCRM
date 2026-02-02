@@ -25,8 +25,8 @@ public partial class RetailService(IIdentityTransmission identityRepo,
     /// <remarks>
     /// Движения остатков на складах
     /// </remarks>
-    static readonly StatusesDocumentsEnum?[] offOrdersStatuses = [StatusesDocumentsEnum.Canceled, null];
-    static readonly DeliveryStatusesEnum?[] offDeliveriesStatuses = [null, DeliveryStatusesEnum.Canceled, DeliveryStatusesEnum.Created];
+    static readonly StatusesDocumentsEnum?[] offOrdersStatuses = [StatusesDocumentsEnum.Canceled, null, 0];
+    static readonly DeliveryStatusesEnum?[] offDeliveriesStatuses = [null, 0, DeliveryStatusesEnum.Canceled, DeliveryStatusesEnum.Created];
 
     /// <inheritdoc/>
     public async Task<TPaginationResponseStandardModel<OffersRetailReportRowModel>> OffersOfOrdersReportRetailAsync(TPaginationRequestStandardModel<SelectOffersOfOrdersRetailReportRequestModel> req, CancellationToken token = default)
