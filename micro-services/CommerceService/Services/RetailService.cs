@@ -2,9 +2,10 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using DbcLib;
+using DocumentFormat.OpenXml.InkML;
 using Microsoft.EntityFrameworkCore;
 using SharedLib;
-using DbcLib;
 
 namespace CommerceService;
 
@@ -113,14 +114,9 @@ public partial class RetailService(IIdentityTransmission identityRepo,
         };
     }
 
-    /// <inheritdoc/>
-    public async Task<MainReportResponseModel> GetMainReportAsync(MainReportRequestModel req, CancellationToken token = default)
+    static IQueryable<DocumentRetailModelDB> BuildMainQuery(MainReportRequestModel req, IQueryable<DocumentRetailModelDB> q)
     {
-        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-
-        IQueryable<DocumentRetailModelDB> q = context.OrdersRetail
-            .Where(x => x.StatusDocument == StatusesDocumentsEnum.Done)
-            .AsQueryable();
+        q = q.Where(x => x.StatusDocument == StatusesDocumentsEnum.Done);
 
         if (req.SelectedYear > 0)
             q = q.Where(x => x.DateDocument.Year == req.SelectedYear);
@@ -137,6 +133,14 @@ public partial class RetailService(IIdentityTransmission identityRepo,
             req.End = req.End.Value.AddHours(23).AddMinutes(59).AddSeconds(59).SetKindUtc();
             q = q.Where(x => x.DateDocument <= req.End);
         }
+        return q;
+    }
+
+    /// <inheritdoc/>
+    public async Task<MainReportResponseModel> GetMainReportAsync(MainReportRequestModel req, CancellationToken token = default)
+    {
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        IQueryable<DocumentRetailModelDB> q = BuildMainQuery(req, context.OrdersRetail);
 
         IQueryable<PaymentOrderRetailLinkModelDB> qpo = context.PaymentsOrdersLinks
             .Where(x => x.PaymentDocument!.StatusPayment == PaymentsRetailStatusesEnum.Paid && q.Any(y => y.Id == x.OrderDocumentId));
@@ -157,6 +161,33 @@ public partial class RetailService(IIdentityTransmission identityRepo,
 
         return res;
     }
+
+
+    /// <inheritdoc/>
+    public async Task<TPaginationResponseStandardModel<RowOfRetailOrderDocumentModelDB>> SelectRowsDocumentsForMainReportRetailAsync(TPaginationRequestStandardModel<MainReportRequestModel> req, CancellationToken token = default)
+    {
+        if (req.Payload is null)
+            return new()
+            {
+                PageNum = req.PageNum,
+                PageSize = req.PageSize,
+                Status = new() { Messages = [new() { Text = "req.Payload is null", TypeMessage = MessagesTypesEnum.Error }] }
+            };
+
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        IQueryable<DocumentRetailModelDB> q = BuildMainQuery(req.Payload, context.OrdersRetail);
+
+        var DoneOrdersSumAmount = await context.RowsOrdersRetails
+            .Where(x => q.Any(y => y.Id == x.OrderId))
+            .OrderBy(x => x.Order!.CreatedAtUTC)
+            .Include(x => x.Order)
+            .Skip(req.PageNum * req.PageSize)
+            .Take(req.PageSize)
+            .ToListAsync(cancellationToken: token);
+
+        throw new NotImplementedException();
+    }
+
 
     /// <inheritdoc/>
     public async Task<TPaginationResponseStandardModel<WalletRetailReportRowModel>> FinancialsReportRetailAsync(TPaginationRequestStandardModel<SelectPaymentsRetailReportRequestModel> req, CancellationToken token = default)

@@ -498,9 +498,18 @@ public partial class MainRetailReportComponent : BlazorBusyComponentBaseModel
         };
 
         ReportData = await RetailRepo.GetMainReportAsync(req);
-
+        
         await SetBusyAsync(false);
     }
+
+    
+     async Task<TableData<RowOfRetailOrderDocumentModelDB>> ServerReload(TableState state, CancellationToken token)
+    {
+        
+        return new TableData<RowOfRetailOrderDocumentModelDB>() {TotalItems = 0, Items = []};
+    }
+     
+
     void PrePaidTypePaymentSetHandle(int? val)
     {
         prePaidTypePayment = val;

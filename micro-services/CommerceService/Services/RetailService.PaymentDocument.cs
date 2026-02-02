@@ -56,15 +56,8 @@ public partial class RetailService : IRetailService
         using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
         PaymentRetailDocumentModelDB docDb = PaymentRetailDocumentModelDB.Build(req.Payload);
 
-        try
-        {
-            await context.PaymentsRetailDocuments.AddAsync(docDb, token);
-            await context.SaveChangesAsync(token);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.ToString());
-        }
+        await context.PaymentsRetailDocuments.AddAsync(docDb, token);
+        await context.SaveChangesAsync(token);
 
         res.Response = docDb.Id;
         res.AddSuccess($"Документ платежа/оплаты создан #{docDb.Id}");

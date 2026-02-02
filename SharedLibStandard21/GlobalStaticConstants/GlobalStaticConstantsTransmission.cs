@@ -853,10 +853,13 @@ public static partial class GlobalStaticConstantsTransmission
         public readonly static string OffersOfDeliveriesReportRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, $"{Routes.OFFERS_CONTROLLER_NAME}-of-{Routes.DELIVERIES_CONTROLLER_NAME}", $"{Routes.GENERATE_ACTION_NAME}-{Routes.REPORT_CONTROLLER_NAME}");
 
         /// <inheritdoc/>
+        public readonly static string SelectRowsRetailDocumentsForMainReportRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, $"{Routes.MAIN_CONTROLLER_NAME}-{Routes.REPORT_CONTROLLER_NAME}", $"{Routes.ORDERS_CONTROLLER_NAME}-{Routes.ROWS_CONTROLLER_NAME}", Routes.SELECT_ACTION_NAME);
+
+        /// <inheritdoc/>
         public readonly static string AboutPeriodRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, $"{Routes.ABOUT_CONTROLLER_NAME}-{Routes.PERIOD_CONTROLLER_NAME}", $"{Routes.GENERATE_ACTION_NAME}-{Routes.REPORT_CONTROLLER_NAME}");
 
         /// <inheritdoc/>
-        public readonly static string GetMainReportRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, $"{Routes.MAIN_CONTROLLER_NAME}-{Routes.REPORT_CONTROLLER_NAME}", Routes.CREATE_ACTION_NAME);
+        public readonly static string GetMainReportRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, $"{Routes.MAIN_CONTROLLER_NAME}-{Routes.REPORT_CONTROLLER_NAME}", Routes.GENERATE_ACTION_NAME);
 
         /// <inheritdoc/>
         public readonly static string CreateConversionDocumentRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, Routes.CONVERSION_CONTROLLER_NAME, Routes.DOCUMENT_CONTROLLER_NAME, Routes.CREATE_ACTION_NAME);

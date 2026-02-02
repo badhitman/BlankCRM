@@ -119,6 +119,9 @@ public interface IRetailService
     public Task<MainReportResponseModel> GetMainReportAsync(MainReportRequestModel req, CancellationToken token = default);
 
     /// <inheritdoc/>
+    public Task<TPaginationResponseStandardModel<RowOfRetailOrderDocumentModelDB>> SelectRowsDocumentsForMainReportRetailAsync(TPaginationRequestStandardModel<MainReportRequestModel> req, CancellationToken token = default);
+
+    /// <inheritdoc/>
     public Task<PeriodBaseModel> AboutPeriodAsync(object? req = default, CancellationToken token = default);
     #endregion
 
