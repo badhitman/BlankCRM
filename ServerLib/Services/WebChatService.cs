@@ -126,6 +126,7 @@ public class WebChatService(IDbContextFactory<MainAppContext> mainDbFactory) : I
             {
                 SessionTicket = readSession.SessionTicketId,
                 DialogId = readSession.Id,
+                DeadlineUTC = readSession.DeadlineUTC
             }
         };
     }

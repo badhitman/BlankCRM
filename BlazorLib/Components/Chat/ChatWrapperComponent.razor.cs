@@ -2,13 +2,13 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using Microsoft.AspNetCore.Components.Web.Virtualization;
 using static SharedLib.GlobalStaticConstantsRoutes;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using MudBlazor;
 using SharedLib;
-using Microsoft.AspNetCore.Components.Web.Virtualization;
 
 namespace BlazorLib.Components.Chat;
 
@@ -123,10 +123,16 @@ public partial class ChatWrapperComponent : BlazorBusyComponentBaseAuthModel
         string? currentSessionTicket = await JsRuntime.InvokeAsync<string?>("methods.ReadCookie", _cn);
         TResponseModel<InitWebChatSessionResponseModel> initSessionTicket = await WebChatRepo.InitWebChatSessionAsync(new() { SessionTicket = currentSessionTicket, UserIdentityId = currentUser?.UserId });
 
-        if (currentSessionTicket != initSessionTicket.Response?.SessionTicket)
-            await JsRuntime.InvokeVoidAsync("methods.CreateCookie", _cn, initSessionTicket.Response?.SessionTicket, GlobalToolsStandard.WebChatTicketSessionDeadlineSeconds, "/");
+        if(initSessionTicket.Response is null)
+        {
+            SnackBarRepo.Error("initSessionTicket.Response is null");
+            return;
+        }
+
+        if (currentSessionTicket != initSessionTicket.Response.SessionTicket)
+            await JsRuntime.InvokeVoidAsync("methods.CreateCookie", _cn, initSessionTicket.Response.SessionTicket, (initSessionTicket.Response.DeadlineUTC - DateTime.UtcNow).TotalSeconds, "/");
         else
-            await JsRuntime.InvokeVoidAsync("methods.UpdateCookie", _cn, initSessionTicket.Response?.SessionTicket, GlobalToolsStandard.WebChatTicketSessionDeadlineSeconds, "/");
+            await JsRuntime.InvokeVoidAsync("methods.UpdateCookie", _cn, initSessionTicket.Response.SessionTicket, (initSessionTicket.Response.DeadlineUTC - DateTime.UtcNow).TotalSeconds, "/");
 
         ticketSession = initSessionTicket.Response;
     }

@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+
 namespace SharedLib;
 
 /// <summary>
@@ -16,4 +17,9 @@ public class InitWebChatSessionResponseModel
 
     /// <inheritdoc/>
     public int DialogId { get; set; }
+
+    /// <summary>
+    /// DeadlineUTC
+    /// </summary>
+    public DateTime DeadlineUTC { get; set; }
 }
