@@ -3,7 +3,6 @@
 ////////////////////////////////////////////////
 
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using SharedLib;
 using DbcLib;
 
@@ -27,7 +26,7 @@ public partial class RetailService(IIdentityTransmission identityRepo,
     /// Движения остатков на складах
     /// </remarks>
     static readonly StatusesDocumentsEnum?[] offOrdersStatuses = [StatusesDocumentsEnum.Canceled, null];
-    static readonly DeliveryStatusesEnum?[] offDeliveriesStatuses = [null, DeliveryStatusesEnum.Canceled];
+    static readonly DeliveryStatusesEnum?[] offDeliveriesStatuses = [null, DeliveryStatusesEnum.Canceled, DeliveryStatusesEnum.Created];
 
     /// <inheritdoc/>
     public async Task<TPaginationResponseStandardModel<OffersRetailReportRowModel>> OffersOfOrdersReportRetailAsync(TPaginationRequestStandardModel<SelectOffersOfOrdersRetailReportRequestModel> req, CancellationToken token = default)

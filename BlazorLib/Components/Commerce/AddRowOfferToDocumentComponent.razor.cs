@@ -58,6 +58,9 @@ public partial class AddRowOfferToDocumentComponent : BlazorRegistersComponent
     /// <summary>
     /// Обработчик выбора Оффера
     /// </summary>
+    /// <remarks>
+    /// До непосредственного добавления "выбранной номенклатуры" в документ
+    /// </remarks>
     [Parameter]
     public Action<OfferModelDB?>? SelectOfferHandler { get; set; }
 
