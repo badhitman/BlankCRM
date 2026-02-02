@@ -289,11 +289,15 @@ else
 
                 </ToolBarContent>
                 <HeaderContent>
+                    <MudTh>Document</MudTh>
                     <MudTh>Rows</MudTh>
                     <MudTh>Conversions</MudTh>
                     <MudTh>Payments</MudTh>
                 </HeaderContent>
                 <RowTemplate>
+                    <MudTd DataLabel="Document">
+                        @context.ToString()
+                    </MudTd>
                     <MudTd DataLabel="Rows">
                         x @context.Rows?.Count() = @context.Rows?.Sum(x => x.Amount)
                         <table class="table table-striped table-hover">
