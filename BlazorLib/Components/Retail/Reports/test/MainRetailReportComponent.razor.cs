@@ -510,14 +510,13 @@ public partial class MainRetailReportComponent : BlazorBusyComponentBaseModel
             throw new ArgumentNullException(nameof(Owner));
         }
 
-        await SetBusyAsync(token: token);
         MainReportRequestModel req = new()
         {
             NumWeekOfYear = Owner.SelectedWeek.Value.NumWeekOfYear,
             SelectedYear = Owner.SelectedYear,
         };
         TPaginationResponseStandardModel<RowOfRetailOrderDocumentModelDB> res = await RetailRepo.SelectRowsDocumentsForMainReportRetailAsync(new() { PageNum = state.Page, PageSize = state.PageSize, Payload = req });
-        await SetBusyAsync(false, token);
+       
         return new TableData<RowOfRetailOrderDocumentModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };
     }
 
