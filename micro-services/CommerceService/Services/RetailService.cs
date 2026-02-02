@@ -163,7 +163,7 @@ public partial class RetailService(IIdentityTransmission identityRepo,
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseStandardModel<RowOfRetailOrderDocumentModelDB>> SelectRowsDocumentsForMainReportRetailAsync(TPaginationRequestStandardModel<MainReportRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<DocumentRetailModelDB>> SelectRowsDocumentsForMainReportRetailAsync(TPaginationRequestStandardModel<MainReportRequestModel> req, CancellationToken token = default)
     {
         if (req.Payload is null)
             return new()
@@ -176,13 +176,14 @@ public partial class RetailService(IIdentityTransmission identityRepo,
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         IQueryable<DocumentRetailModelDB> q = BuildMainQuery(req.Payload, context.OrdersRetail);
 
-        List<RowOfRetailOrderDocumentModelDB> DoneOrdersSumAmount = await context.RowsOrdersRetails
-            .Where(x => q.Any(y => y.Id == x.OrderId))
-            .OrderBy(x => x.Order!.CreatedAtUTC)
+        var DoneOrdersSumAmount = await q
+            .OrderBy(x => x.CreatedAtUTC)
             .Skip(req.PageNum * req.PageSize)
             .Take(req.PageSize)
-            .Include(x => x.Order)
-            .Include(x => x.Offer)
+            .Include(x => x.Rows!)
+            .ThenInclude(x => x.Offer)
+            .Include(x => x.Payments)
+            .Include(x => x.Conversions)
             .ToListAsync(cancellationToken: token);
 
         return new()

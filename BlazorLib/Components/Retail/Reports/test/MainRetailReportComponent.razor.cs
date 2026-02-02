@@ -502,19 +502,19 @@ public partial class MainRetailReportComponent : BlazorBusyComponentBaseModel
     }
 
 
-    async Task<TableData<RowOfRetailOrderDocumentModelDB>> ServerReload(TableState state, CancellationToken token)
+    async Task<TableData<DocumentRetailModelDB>> ServerReload(TableState state, CancellationToken token)
     {
         if (Owner.SelectedWeek is null)
-            return new TableData<RowOfRetailOrderDocumentModelDB>();
+            return new TableData<DocumentRetailModelDB>();
 
         MainReportRequestModel req = new()
         {
             NumWeekOfYear = Owner.SelectedWeek.Value.NumWeekOfYear,
             SelectedYear = Owner.SelectedYear,
         };
-        TPaginationResponseStandardModel<RowOfRetailOrderDocumentModelDB> res = await RetailRepo.SelectRowsDocumentsForMainReportRetailAsync(new() { PageNum = state.Page, PageSize = state.PageSize, Payload = req });
+        TPaginationResponseStandardModel<DocumentRetailModelDB> res = await RetailRepo.SelectRowsDocumentsForMainReportRetailAsync(new() { PageNum = state.Page, PageSize = state.PageSize, Payload = req });
        
-        return new TableData<RowOfRetailOrderDocumentModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };
+        return new TableData<DocumentRetailModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };
     }
 
 

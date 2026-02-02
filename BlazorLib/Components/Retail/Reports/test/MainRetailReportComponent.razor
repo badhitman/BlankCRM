@@ -288,42 +288,40 @@ else
                     <MudSpacer />
 
                 </ToolBarContent>
-                <ColGroup>
-                    <col />
-                    <col />
-                    <col />
-                    <col />
-                    <col />
-                    <col />
-                </ColGroup>
                 <HeaderContent>
-                    <MudTh>Название</MudTh>
-                    <MudTh>Цена</MudTh>
-                    <MudTh>Количество</MudTh>
-                    <MudTh>Вес</MudTh>
-                    <MudTh>Сумма</MudTh>
-                    <MudTh>Документ</MudTh>
+                    <MudTh>Rows</MudTh>
+                    <MudTh>Conversions</MudTh>
+                    <MudTh>Payments</MudTh>
                 </HeaderContent>
                 <RowTemplate>
-                    <MudTd DataLabel="Name">
-                        <MudLink Href="@($"/nomenclature/offer-card/{context.Offer!.Id}")">
-                            @context.Offer.GetName()
-                        </MudLink>
+                    <MudTd DataLabel="Rows">
+                        x @context.Rows?.Count() = @context.Rows?.Sum(x => x.Amount)
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Offer</th>
+                                    <th scope="col">Count</th>
+                                    <th scope="col">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (RowOfRetailOrderDocumentModelDB row in context.Rows!)
+                                {
+                                    <tr>
+                                        <th scope="row">@row.Offer!.GetName()</th>
+                                        <td>@row.Quantity</td>
+                                        <td>@row.Amount</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
                     </MudTd>
-                    <MudTd DataLabel="Цена">
-                        @($"{context.Offer!.Price} р/{context.Offer!.OfferUnit.DescriptionInfo().ToLower()}")
+                    <MudTd DataLabel="Conversions">
+                        x @context.Conversions?.Count() = @context.Conversions?.Sum(x => x.AmountPayment)
                     </MudTd>
-                    <MudTd DataLabel="Количество">
-                        @context.Quantity
-                    </MudTd>
-                    <MudTd DataLabel="Вес">
-                        @context.WeightOffer
-                    </MudTd>
-                    <MudTd DataLabel="Сумма">
-                        @context.Amount
-                    </MudTd>
-                    <MudTd DataLabel="Заказ">
-                        @context.Order
+                    <MudTd DataLabel="Payments">
+                        x @context.Payments?.Count() = @context.Payments?.Sum(x => x.AmountPayment)
                     </MudTd>
                 </RowTemplate>
                 <NoRecordsContent>
@@ -338,5 +336,4 @@ else
             </MudTable>
         </MudTabPanel>
     </MudTabs>
-
 }
