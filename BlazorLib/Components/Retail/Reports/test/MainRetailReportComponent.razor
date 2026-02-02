@@ -300,7 +300,7 @@ else
                             <thead>
                                 <tr>
                                     <th scope="col">Offer</th>
-                                    <th scope="col">Count</th>
+                                    <th scope="col">Count/Price</th>
                                     <th scope="col">Amount</th>
                                 </tr>
                             </thead>
@@ -309,7 +309,7 @@ else
                                 {
                                     <tr>
                                         <th scope="row">@row.Offer!.GetName()</th>
-                                        <td>@row.Quantity</td>
+                                        <td>@row.Quantity / @(Math.Round(row.Amount / row.Quantity, 2).ToString("C"))</td>
                                         <td>@row.Amount</td>
                                     </tr>
                                 }
