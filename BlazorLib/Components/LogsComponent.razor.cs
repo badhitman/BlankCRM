@@ -229,7 +229,7 @@ public partial class LogsComponent : BlazorBusyComponentBaseModel
     /// <inheritdoc/>
     protected async Task ClipboardCopyHandle(int logRowId)
     {
-        string _link = $"{NavRepo.BaseUri}/monitoring-tools?id={logRowId}&tab={GetType().Name}".Replace("//", "/");
+        string _link = $"{NavRepo.BaseUri}monitoring-tools?id={logRowId}&tab={GetType().Name}";
         await JsRuntimeRepo.InvokeVoidAsync("clipboardCopy.copyText", _link);
         SnackBarRepo.Add($"Ссылка `{_link}` скопирована в буфер обмена", Severity.Info, c => c.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
     }
