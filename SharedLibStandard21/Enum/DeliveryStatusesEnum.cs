@@ -12,9 +12,9 @@ namespace SharedLib;
 public enum DeliveryStatusesEnum
 {
     /// <summary>
-    /// Комплектуется
+    /// Created
     /// </summary>
-    [Description("Комплектуется")]
+    [Description("Создан")]
     Created = 10,
 
     /// <summary>

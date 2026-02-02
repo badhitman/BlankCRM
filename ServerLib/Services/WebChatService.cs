@@ -116,9 +116,12 @@ public class WebChatService(IDbContextFactory<MainAppContext> mainDbFactory) : I
             await context.SaveChangesAsync(cancellationToken);
         }
         else
+        {
+
             await context.Dialogs.Where(x => x.Id == readSession.Id)
                 .ExecuteUpdateAsync(set => set
                     .SetProperty(p => p.DeadlineUTC, DateTime.UtcNow.AddMinutes(GlobalToolsStandard.WebChatTicketSessionDeadlineSeconds)), cancellationToken: cancellationToken);
+        }
 
         return new()
         {
