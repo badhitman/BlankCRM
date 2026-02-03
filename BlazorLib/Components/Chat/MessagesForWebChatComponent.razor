@@ -41,7 +41,11 @@
         }
     </ol>
     <div class="d-grid gap-2 mb-3">
-        <button @onclick="() => { loadedFiles.Clear(); _inputFileId = Guid.NewGuid().ToString(); }" class="btn btn-outline-primary" type="button">Отмена</button>
+        <button @onclick="() => { loadedFiles.Clear(); _inputFileId = Guid.NewGuid().ToString(); }"
+                class="btn btn-outline-primary"
+                type="button">
+            Отмена
+        </button>
     </div>
 }
 <MudTable ServerData="ServerReload" Dense Hover @ref="tableRef">
@@ -88,9 +92,8 @@
                         <!-- Then put toasts within -->
                         <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
                             <div class="toast-header">
-                                <img src="..." class="rounded me-2" alt="...">
-                                <strong class="me-auto">Bootstrap</strong>
-                                <small class="text-body-secondary">just now</small>
+                                <strong class="me-auto">@(UsersCache.FirstOrDefault(x => x.UserId == context.SenderUserIdentityId)?.ToString() ?? context.SenderUserIdentityId)</strong>
+                                <small class="text-body-secondary">@context.CreatedAtUTC.GetCustomTime()</small>
                                 @* <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button> *@
                             </div>
                             <div class="toast-body">
