@@ -111,6 +111,8 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
             StateHasChanged();
             AddingDomRef?.StateHasChangedCall();
         }
+        else
+            SnackBarRepo.Warn("Оффер уже в таблице. Установите ему нужное количество");
     }
 
     async Task GetOrdersOffers()

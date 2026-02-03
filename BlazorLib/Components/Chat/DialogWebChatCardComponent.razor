@@ -1,8 +1,32 @@
-﻿@inherits BlazorBusyComponentRubricsCachedModel
+﻿@inherits BlazorBusyComponentUsersCachedModel
 
-<h3>DialogWebChatCardComponent</h3>
-
-@code {
-    [Parameter, EditorRequired]
-    public int DialogId { get; set; }
+@if (CurrentRoom is null)
+{
+    <figure class="text-center">
+        <blockquote class="blockquote">
+            <p>Ошибка.</p>
+        </blockquote>
+        <figcaption class="blockquote-footer">
+            Someone famous in <cite title="Source Title">Source Title</cite>
+        </figcaption>
+    </figure>
+}
+else
+{
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">
+                @CurrentRoom.InitiatorHumanName
+            </h5>
+            <h6 class="card-subtitle mb-2 text-body-secondary">
+                created: @CurrentRoom.CreatedAtUTC.GetCustomTime()
+                deadline: @CurrentRoom.DeadlineUTC.GetCustomTime()
+                online: @CurrentRoom.LastReadAtUTC.GetCustomTime()
+                message: @CurrentRoom.LastMessageAtUTC?.GetCustomTime()
+                </h6>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card’s content.</p>
+            <a href="#" class="card-link">Card link</a>
+            <a href="#" class="card-link">Another link</a>
+        </div>
+    </div>
 }

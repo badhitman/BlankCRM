@@ -28,11 +28,21 @@ public partial class RetailService : IRetailService
             };
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        if (await context.RowsDeliveryDocumentsRetail.AnyAsync(x => x.OfferId == req.Payload.OfferId && x.DocumentId == req.Payload.DocumentId, cancellationToken: token))
+            return new()
+            {
+                Messages = [new()
+                {
+                    TypeMessage = MessagesTypesEnum.Error,
+                    Text = "Номенклатура уже существует в документе.",
+                }]
+            };
+
         DeliveryDocumentRetailModelDB docDb = await context.DeliveryDocumentsRetail
             .FirstAsync(x => x.Id == req.Payload.DocumentId, cancellationToken: token);
 
         DocumentNewVersionResponseModel res = new();
-        using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);        
+        using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
         string msg;
 
         if (!offDeliveriesStatuses.Contains(docDb.DeliveryStatus))
