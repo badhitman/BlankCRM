@@ -16,4 +16,7 @@ public class DialogWebChatModelDB : DialogWebChatViewModel
     /// InitiatorContactsNormalized
     /// </summary>
     public string? InitiatorContactsNormalized { get; set; }
+
+    /// <inheritdoc/>
+    public List<UserJoinDialogWebChatModelDB>? UsersJoins { get; set; }
 }

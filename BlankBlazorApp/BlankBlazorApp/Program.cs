@@ -211,12 +211,12 @@ builder.Services.AddHttpContextAccessor();
 builder.Services
     .AddSingleton<IMailProviderService, MailProviderService>()
     .AddSingleton<IEmailSender<ApplicationUser>, IdentityEmailSender>()
-    .AddSingleton<IWebChatService, WebChatService>()
     ;
 
 // Scoped
 builder.Services.AddScoped<IUsersAuthenticateService, UsersAuthenticateService>()
     .AddScoped<IUsersProfilesService, UsersProfilesService>()
+    .AddScoped<IWebChatService, WebChatService>()
     .AddScoped<ILogsService, LogsService>()
     ;
 

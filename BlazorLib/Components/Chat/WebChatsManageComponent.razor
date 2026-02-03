@@ -1,0 +1,86 @@
+﻿@using MudBlazor
+
+@inherits BlazorBusyComponentUsersCachedModel
+
+<MudTable ServerData="ServerReload" Dense Hover @ref="tableRef">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">
+            WEB чаты
+            @if (IsBusyProgress)
+            {
+                <sup class="spinner-grow spinner-grow-sm ms-2" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </sup>
+            }
+            else
+            {
+                <sup class="bi bi-arrow-clockwise ms-2"
+                     style="cursor:pointer;"
+                     title="Обновить таблицу"
+                     @onclick="async () => { if (tableRef is not null) await tableRef.ReloadServerData(); }"></sup>
+            }
+        </MudText>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Активность</MudTh>
+        <MudTh>Инициатор</MudTh>
+        <MudTh>Участники</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Активность">
+            <MudLink Href="@($"/web-chats/room-{context.Id}")">@context.LastMessageAtUTC.ToString()</MudLink>
+        </MudTd>
+        <MudTd DataLabel="Пользователь">
+            @if (string.IsNullOrWhiteSpace(context.InitiatorIdentityId))
+            {
+                <MudLink Href="@($"/web-chats/room-{context.Id}")">
+                    @context.InitiatorHumanName @context.InitiatorContacts
+                </MudLink>
+            }
+            else
+            {
+                <MudLink Href="@($"/web-chats/room-{context.Id}")">
+                    @(UsersCache.FirstOrDefault(x => x.UserId == context.InitiatorIdentityId)?.ToString() ?? context.InitiatorIdentityId)
+                </MudLink>
+            }
+        </MudTd>
+        <MudTd DataLabel="Участники">
+            @if (context.UsersJoins is not null && context.UsersJoins.Count != 0)
+            {
+                foreach (UserJoinDialogWebChatModelDB usr in context.UsersJoins)
+                {
+                    <span class="badge text-bg-@(usr.OutDateUTC is null ? "primary" : "secondary") me-1" title="@(usr.OutDateUTC is null ? "" : $"{usr.JoinedDateUTC}-{usr.OutDateUTC}")">
+                        @(UsersCache.FirstOrDefault(x => x.UserId == usr.UserIdentityId)?.UserName ?? usr.UserIdentityId)
+                        @if (usr.UserIdentityId == CurrentUserSession?.UserId)
+                        {
+                            <span class="ms-1">(Вы)</span>
+                        }
+                    </span>
+                }
+            }
+            @if (context.UsersJoins is null || context.UsersJoins.Count == 0 || !context.UsersJoins.Any(x => !x.OutDateUTC.HasValue))
+            {
+                <span class="badge text-bg-success me-1"
+                      style="cursor:pointer;"
+                      @onclick="async () => await JoinToChat(context.Id, true)"
+                      title="Вступить в диалог/чат">Взять в работу</span>
+            }
+            else if (context.UsersJoins?.Any(x => !x.OutDateUTC.HasValue && x.UserIdentityId == CurrentUserSession?.UserId) != true)
+            {
+                <span class="badge text-bg-light me-1"
+                      style="cursor:pointer;"
+                      @onclick="async () => await JoinToChat(context.Id)"
+                      title="Вступить в диалог/чат">Присоединиться</span>
+            }
+        </MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>No matching records found</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>

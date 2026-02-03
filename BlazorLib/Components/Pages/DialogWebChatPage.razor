@@ -1,0 +1,13 @@
+﻿@page "/web-chats/room-{DialogId:int}"
+
+@using BlazorLib.Components.Chat
+
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@attribute [Authorize(Roles = $"{GlobalStaticConstantsRoles.Roles.HelpDeskRubricsManage},{GlobalStaticConstantsRoles.Roles.Admin}")]
+
+<DialogWebChatCardComponent DialogId="DialogId" />
+
+@code {
+    [Parameter]
+    public int DialogId { get; set; }
+}

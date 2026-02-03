@@ -14,7 +14,17 @@ namespace ServerLib;
 public partial class WebChatService : IWebChatService
 {
     /// <inheritdoc/>
-    public async Task<TPaginationResponseStandardModel<DialogWebChatViewModel>> SelectDialogsWebChatsAsync(TPaginationRequestStandardModel<SelectDialogsWebChatsRequestModel> req, CancellationToken token = default)
+    public async Task<TResponseModel<List<DialogWebChatModelDB>>> DialogsWebChatsReadAsync(TAuthRequestStandardModel<int[]> req, CancellationToken token = default)
+    {
+        MainAppContext context = await mainDbFactory.CreateDbContextAsync(token);
+        return new()
+        {
+            Response = await context.Dialogs.Where(x => req.Payload.Contains(x.Id)).Include(x => x.UsersJoins).ToListAsync(cancellationToken: token),
+        };
+    }
+
+    /// <inheritdoc/>
+    public async Task<TPaginationResponseStandardModel<DialogWebChatModelDB>> SelectDialogsWebChatsAsync(TPaginationRequestStandardModel<SelectDialogsWebChatsRequestModel> req, CancellationToken token = default)
     {
         MainAppContext context = await mainDbFactory.CreateDbContextAsync(token);
 
@@ -37,19 +47,12 @@ public partial class WebChatService : IWebChatService
             PageNum = req.PageNum,
             SortBy = req.SortBy,
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
-            Response = await q.Skip(req.PageNum * req.PageSize).Take(req.PageSize).Select(x => new DialogWebChatViewModel()
-            {
-                SessionTicketId = x.SessionTicketId,
-                CreatedAtUTC = x.CreatedAtUTC,
-                DeadlineUTC = x.DeadlineUTC,
-                Id = x.Id,
-                InitiatorContacts = x.InitiatorContacts,
-                InitiatorHumanName = x.InitiatorHumanName,
-                InitiatorIdentityId = x.InitiatorIdentityId,
-                IsDisabled = x.IsDisabled,
-                LastMessageAtUTC = x.LastMessageAtUTC,
-                LastReadAtUTC = x.LastReadAtUTC,
-            }).ToListAsync(cancellationToken: token),
+            Response = await q
+                             .OrderBy(x => x.Id)
+                             .Skip(req.PageNum * req.PageSize)
+                             .Take(req.PageSize)
+                             .Include(x => x.UsersJoins)
+                             .ToListAsync(cancellationToken: token),
         };
     }
 

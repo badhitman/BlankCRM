@@ -37,15 +37,37 @@ public partial class WebChatService : IWebChatService
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> CreateUserJoinDialogWebChatAsync(TAuthRequestStandardModel<UserJoinDialogWebChatModelDB> req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> UserInjectDialogWebChatAsync(TAuthRequestStandardModel<UserInjectDialogWebChatRequestModel> req, CancellationToken token = default)
     {
         if (req.Payload is null)
             return ResponseBaseModel.CreateError("req.Payload is null");
 
         MainAppContext context = await mainDbFactory.CreateDbContextAsync(token);
+        if (req.Payload.IsExclusiveJoin && await context.UsersDialogsJoins.AnyAsync(x => x.DialogJoinId == req.Payload.DialogJoinId && x.OutDateUTC == null, cancellationToken: token))
+            return ResponseBaseModel.CreateWarning("Чат уже обслуживается");
 
-        await context.AddAsync(req.Payload, token);
+        if (await context.UsersDialogsJoins.AnyAsync(x => x.UserIdentityId == req.Payload.UserIdentityId && x.DialogJoinId == req.Payload.DialogJoinId && x.OutDateUTC == null, cancellationToken: token))
+            return ResponseBaseModel.CreateSuccess("Пользователь уже участвует в диалоге!");
+
+        TResponseModel<UserInfoModel[]> getUser = await identityRepo.GetUsersOfIdentityAsync([req.Payload.UserIdentityId], token);
+
+        UserJoinDialogWebChatModelDB joinDb = UserJoinDialogWebChatModelDB.Build(req.Payload);
+        joinDb.JoinedDateUTC = DateTime.UtcNow;
+
+        await context.UsersDialogsJoins.AddAsync(joinDb, token);
+        await context.Messages.AddAsync(new()
+        {
+            Text = $"К чату присоединялся `{getUser.Response?.FirstOrDefault(x => x.UserId == req.Payload.UserIdentityId)?.UserName ?? req.Payload.UserIdentityId}`",
+            CreatedAtUTC = DateTime.UtcNow,
+            DialogOwnerId = req.Payload.DialogJoinId,
+            SenderUserIdentityId = GlobalStaticConstantsRoles.Roles.System,
+        }, token);
+
         await context.SaveChangesAsync(token);
+        //await context.Dialogs
+        //    .Where(x => x.Id == joinDb.DialogJoinId)
+        //    .ExecuteUpdateAsync(set => set
+        //        .SetProperty(p => p.LastMessageAtUTC, DateTime.UtcNow), cancellationToken: token);
 
         return ResponseBaseModel.CreateSuccess("Ok");
     }
@@ -56,8 +78,8 @@ public partial class WebChatService : IWebChatService
         MainAppContext context = await mainDbFactory.CreateDbContextAsync(token);
 
         await context.UsersDialogsJoins
-            .Where(x => x.Id == req.Payload)
-            .ExecuteDeleteAsync(cancellationToken: token);
+            .Where(x => x.Id == req.Payload && x.OutDateUTC == null)
+            .ExecuteUpdateAsync(set => set.SetProperty(p => p.OutDateUTC, DateTime.UtcNow), cancellationToken: token);
 
         return ResponseBaseModel.CreateSuccess("Ok");
     }

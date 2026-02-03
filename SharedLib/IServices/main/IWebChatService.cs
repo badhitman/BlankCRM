@@ -11,7 +11,7 @@ public interface IWebChatService : IAsyncDisposable
 {
     #region messages
     /// <inheritdoc/>
-    public Task<TResponseModel<InitWebChatSessionResponseModel>> InitWebChatSessionAsync(InitWebChatSessionRequestModel req, CancellationToken cancellationToken = default);
+    public Task<TResponseModel<DialogWebChatModelDB>> InitWebChatSessionAsync(InitWebChatSessionRequestModel req, CancellationToken cancellationToken = default);
 
     /// <inheritdoc/>
     public Task<TResponseModel<SelectMessagesForWebChatResponseModel>> SelectMessagesWebChatAsync(SelectMessagesForWebChatRequestModel req, CancellationToken token = default);
@@ -26,9 +26,12 @@ public interface IWebChatService : IAsyncDisposable
     public Task<ResponseBaseModel> DeleteToggleMessageWebChatAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default);
     #endregion
 
-    #region messages dialogs    
+    #region dialogs
     /// <inheritdoc/>
-    public Task<TPaginationResponseStandardModel<DialogWebChatViewModel>> SelectDialogsWebChatsAsync(TPaginationRequestStandardModel<SelectDialogsWebChatsRequestModel> req, CancellationToken token = default);
+    public Task<TResponseModel<List<DialogWebChatModelDB>>> DialogsWebChatsReadAsync(TAuthRequestStandardModel<int[]> req, CancellationToken token = default);
+
+    /// <inheritdoc/>
+    public Task<TPaginationResponseStandardModel<DialogWebChatModelDB>> SelectDialogsWebChatsAsync(TPaginationRequestStandardModel<SelectDialogsWebChatsRequestModel> req, CancellationToken token = default);
 
     /// <inheritdoc/>
     public Task<ResponseBaseModel> UpdateDialogWebChatAsync(TAuthRequestStandardModel<DialogWebChatBaseModel> req, CancellationToken token = default);
@@ -42,7 +45,7 @@ public interface IWebChatService : IAsyncDisposable
     public Task<TPaginationResponseStandardModel<UserJoinDialogWebChatModelDB>> SelectUsersJoinsDialogsWebChatsAsync(TPaginationRequestStandardModel<SelectUsersJoinsDialogsWebChatsRequestModel> req, CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<ResponseBaseModel> CreateUserJoinDialogWebChatAsync(TAuthRequestStandardModel<UserJoinDialogWebChatModelDB> req, CancellationToken token = default);
+    public Task<ResponseBaseModel> UserInjectDialogWebChatAsync(TAuthRequestStandardModel<UserInjectDialogWebChatRequestModel> req, CancellationToken token = default);
 
     /// <inheritdoc/>
     public Task<ResponseBaseModel> DeleteUserJoinDialogWebChatAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default);

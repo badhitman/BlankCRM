@@ -1,10 +1,11 @@
 ﻿@using Microsoft.AspNetCore.Components.Web.Virtualization
 @using MudBlazor
+
 @inherits BlazorBusyComponentBaseAuthModel
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 <span @onclick="ShowToggle" style="cursor:pointer;">Чат</span>
-@if (ChatDialogOpen)
+@if (ChatDialogOpen && ticketSessionEdit is not null && ticketSession is not null)
 {
     <div class="offcanvas offcanvas-end show"
          data-bs-scroll="true"
@@ -18,89 +19,103 @@
         </div>
         <div class="offcanvas-body" style="padding-top: unset;">
             <div class="ma-2">
-                <label for="exampleFormControlTextarea1" class="form-label">Отправка сообщения</label>
-                <div class="input-group">
-                    <textarea readonly="@IsBusyProgress"
-                              @onkeydown="OnKeyPresHandler"
-                              @bind:event="oninput"
-                              @bind="_textSendMessage"
-                              class="form-control"
-                              rows="1"
-                              aria-label="With textarea"
-                              id="exampleFormControlTextarea1"></textarea>
-                    <button @onclick="SendMessage"
-                            disabled="@CannotSendMessage"
-                            class="btn btn-outline-@(string.IsNullOrWhiteSpace(_textSendMessage) ? "secondary" : "success") bi bi-send"
-                            type="button"
-                            id="button-addon2"></button>
-                </div>
+                @if (IsBusyProgress)
+                {
+                    <MudProgressLinear Color="Color.Primary" Indeterminate />
+                }
+                @if (string.IsNullOrWhiteSpace(ticketSession.InitiatorHumanName) && string.IsNullOrWhiteSpace(ticketSession.InitiatorIdentityId))
+                {
+                    <label for="exampleFormControlTextarea1" class="form-label">Как к Вам обращаться?</label>
+                    <div class="input-group">
+                        <textarea readonly="@IsBusyProgress"
+                                  @onkeydown="OnKeyPresHandler"
+                                  @bind:event="oninput"
+                                  @bind="ticketSessionEdit.InitiatorHumanName"
+                                  class="form-control"
+                                  rows="1"></textarea>
+                        <button @onclick="SevaDialog"
+                                disabled="@string.IsNullOrWhiteSpace(ticketSessionEdit.InitiatorHumanName)"
+                                class="btn btn-outline-@(string.IsNullOrWhiteSpace(_textSendMessage) ? "secondary" : "success") bi bi-check-circle"
+                                type="button"></button>
+                    </div>
+                }
+                else
+                {
+                    <label for="exampleFormControlTextarea1" class="form-label">Отправка сообщения</label>
+                    <div class="input-group">
+                        <textarea readonly="@IsBusyProgress"
+                                  @onkeydown="OnKeyPresHandler"
+                                  @bind:event="oninput"
+                                  @bind="_textSendMessage"
+                                  class="form-control"
+                                  rows="1"></textarea>
+                        <button @onclick="SendMessage"
+                                disabled="@CannotSendMessage"
+                                class="btn btn-outline-@(string.IsNullOrWhiteSpace(_textSendMessage) ? "secondary" : "success") bi bi-send"
+                                type="button"></button>
+                    </div>
+                    <div class="form-text">
+                        @ticketSession.InitiatorHumanName
+                        @(string.IsNullOrWhiteSpace(ticketSession.InitiatorContacts) ? "" : $" ({ticketSession.InitiatorContacts})")
+                    </div>
+                }
             </div>
             <hr />
-            <Virtualize Context="message"
-                        OverscanCount="@(virtualCacheSize / 2)"
-                        ItemsProvider="LoadMessages"
-                        @ref="virtualizeComponent">
-                <ItemContent>
-                    @{
-                        ChatBubblePosition position = string.IsNullOrWhiteSpace(message.SenderUserIdentityId) || CurrentUserSession?.UserId == message.SenderUserIdentityId
-                        ? ChatBubblePosition.Start
-                        : ChatBubblePosition.End;
-                    }
-                    <MudChat ChatPosition="@position">
-                        <MudAvatar>@(position == ChatBubblePosition.Start ? "Вы" : "US")</MudAvatar>
-                        <MudChatHeader Name="@(position == ChatBubblePosition.Start ? "Вы" : message.SenderUserIdentityId)" Time="@message.CreatedAtUTC.GetCustomTime().ToString()" />
-                        <MudChatBubble OnClick="@((args) => ClickMessage(args, message))"
-                                       OnContextClick="@((args) => RightClickMessage(args, message))">
-                            @message.Text
-                        </MudChatBubble>
-                        @if (message.AttachFileId.HasValue)
-                        {
-                            <MudChatFooter>
-
-                            </MudChatFooter>
+            @if (string.IsNullOrWhiteSpace(ticketSession.InitiatorHumanName) && string.IsNullOrWhiteSpace(ticketSession.InitiatorIdentityId))
+            {
+                <figure class="text-center">
+                    <blockquote class="blockquote">
+                        <p>Представьтесь</p>
+                    </blockquote>
+                    <figcaption class="blockquote-footer">
+                        Укажите ваше имя
+                    </figcaption>
+                </figure>
+            }
+            else
+            {
+                <Virtualize Context="message"
+                            OverscanCount="@(virtualCacheSize / 2)"
+                            ItemsProvider="LoadMessages"
+                            @ref="virtualizeComponent">
+                    <ItemContent>
+                        @{
+                            ChatBubblePosition position = string.IsNullOrWhiteSpace(message.SenderUserIdentityId) || CurrentUserSession?.UserId == message.SenderUserIdentityId || lastUserId == message.SenderUserIdentityId
+                            ? ChatBubblePosition.Start
+                            : ChatBubblePosition.End;
                         }
-                    </MudChat>
-                </ItemContent>
-                <Placeholder>
-                    <p>
-                        <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
-                    </p>
-                </Placeholder>
-                <EmptyContent>
-                    <p>
-                        Сообщений нет
-                    </p>
-                </EmptyContent>
-            </Virtualize>
-
-            @* @{
-                List<IGrouping<string?, MessageWebChatModelDB>> orderedGroups = messages
-                .OrderByDescending(m => m.CreatedAtUTC)
-                .GroupBy(m => m.SenderUserIdentityId)
-                .ToList();
-
-                for (int i = 0; i < orderedGroups.Count; i++)
-                {
-                    IGrouping<string?, MessageWebChatModelDB> group = orderedGroups[i];
-                    ChatBubblePosition position = i == 0 ? ChatBubblePosition.Start : ChatBubblePosition.End;
-
-                    <MudChat ChatPosition="@position">
-                        <MudAvatar>US</MudAvatar>
-                        <MudChatHeader Name="@group.Key" Time="@group.First().CreatedAtUTC.ToString()" />
-                        @foreach (MessageWebChatModelDB message in group.OrderByDescending(m => m.CreatedAtUTC))
-                        {
+                        <MudChat ChatPosition="@position">
+                            <MudAvatar>@(position == ChatBubblePosition.Start ? "Вы" : "US")</MudAvatar>
+                            <MudChatHeader Name="@(position == ChatBubblePosition.Start ? "Вы" : message.SenderUserIdentityId)" Time="@message.CreatedAtUTC.GetCustomTime().ToString()" />
                             <MudChatBubble OnClick="@((args) => ClickMessage(args, message))"
                                            OnContextClick="@((args) => RightClickMessage(args, message))">
                                 @message.Text
                             </MudChatBubble>
-                            <MudChatFooter>
+                            @if (message.AttachFileId.HasValue)
+                            {
+                                <MudChatFooter>
 
-                            </MudChatFooter>
-                        }
-                    </MudChat>
-                }
-            } *@
-
+                                </MudChatFooter>
+                            }
+                        </MudChat>
+                    </ItemContent>
+                    <Placeholder>
+                        <p>
+                            <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+                        </p>
+                    </Placeholder>
+                    <EmptyContent>
+                        <figure class="text-center">
+                            <blockquote class="blockquote">
+                                <p>Сообщений нет</p>
+                            </blockquote>
+                            @* <figcaption class="blockquote-footer">
+                                Someone famous in <cite title="Source Title">Source Title</cite>
+                            </figcaption> *@
+                        </figure>
+                    </EmptyContent>
+                </Virtualize>
+            }
             <MudMenu PositionAtCursor @ref="_contextMenu" id="_contextMenu">
                 <MudMenuItem Icon="@Icons.Material.Filled.Block" OnClick="@BanUser">
                     Ban
@@ -110,5 +125,25 @@
                 </MudMenuItem>
             </MudMenu>
         </div>
+        @if (string.IsNullOrWhiteSpace(ticketSession.InitiatorContacts) && string.IsNullOrWhiteSpace(ticketSession.InitiatorIdentityId))
+        {
+            <div class="pa-2">
+                <hr />
+                <label for="exampleFormControlTextarea1" class="form-label">Контакты</label>
+                <div class="input-group">
+                    <textarea readonly="@IsBusyProgress"
+                              @onkeydown="OnKeyPresHandler"
+                              @bind:event="oninput"
+                              @bind="ticketSessionEdit.InitiatorContacts"
+                              class="form-control"
+                              rows="1"></textarea>
+                    <button @onclick="SevaDialog"
+                            disabled="@string.IsNullOrWhiteSpace(ticketSessionEdit.InitiatorContacts)"
+                            class="btn btn-outline-@(string.IsNullOrWhiteSpace(_textSendMessage) ? "secondary" : "success") bi bi-check-square"
+                            type="button"></button>
+                </div>
+                <div class="form-text">Email или телефон для обратной связи</div>
+            </div>
+        }
     </div>
 }

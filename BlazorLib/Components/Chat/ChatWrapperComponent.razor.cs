@@ -26,7 +26,8 @@ public partial class ChatWrapperComponent : BlazorBusyComponentBaseAuthModel
 
     MessageWebChatModelDB? _selectedMessage;
     MudMenu? _contextMenu;
-    InitWebChatSessionResponseModel? ticketSession;
+    DialogWebChatModelDB? ticketSession, ticketSessionEdit;
+    string? lastUserId;
     Virtualize<MessageWebChatModelDB>? virtualizeComponent;
     string? _textSendMessage;
     bool CannotSendMessage => string.IsNullOrWhiteSpace(_textSendMessage) || IsBusyProgress;
@@ -45,7 +46,7 @@ public partial class ChatWrapperComponent : BlazorBusyComponentBaseAuthModel
 
         SelectMessagesForWebChatRequestModel req = new()
         {
-            SessionTicketId = ticketSession.SessionTicket,
+            SessionTicketId = ticketSession.SessionTicketId,
             StartIndex = request.StartIndex,
             Count = request.Count,
         };
@@ -68,6 +69,25 @@ public partial class ChatWrapperComponent : BlazorBusyComponentBaseAuthModel
         return new ItemsProviderResult<MessageWebChatModelDB>(res.Response.Messages, res.Response.TotalRowsCount);
     }
 
+    async Task SevaDialog(MouseEventArgs args)
+    {
+        if (ticketSessionEdit is null)
+            return;
+
+        await SetBusyAsync();
+        ResponseBaseModel res = await WebChatRepo.UpdateDialogWebChatAsync(new()
+        {
+            SenderActionUserId = CurrentUserSession?.UserId,
+            Payload = ticketSessionEdit
+        });
+        TResponseModel<List<DialogWebChatModelDB>> getChat = await WebChatRepo.DialogsWebChatsReadAsync(new() { SenderActionUserId = CurrentUserSession?.UserId, Payload = [ticketSessionEdit.Id] });
+        SnackBarRepo.ShowMessagesResponse(getChat.Messages);
+
+        ticketSession = getChat.Response?.FirstOrDefault();
+        ticketSessionEdit = GlobalTools.CreateDeepCopy(ticketSession);
+
+        await SetBusyAsync(false);
+    }
 
     async Task SendMessage(MouseEventArgs args)
     {
@@ -78,7 +98,7 @@ public partial class ChatWrapperComponent : BlazorBusyComponentBaseAuthModel
         {
             Text = _textSendMessage.Trim(),
             SenderUserIdentityId = CurrentUserSession?.UserId,
-            DialogOwnerId = ticketSession.DialogId
+            DialogOwnerId = ticketSession.Id
         };
 
         await SetBusyAsync();
@@ -103,7 +123,7 @@ public partial class ChatWrapperComponent : BlazorBusyComponentBaseAuthModel
             {
                 Text = _textSendMessage.Trim(),
                 SenderUserIdentityId = CurrentUserSession?.UserId,
-                DialogOwnerId = ticketSession.DialogId
+                DialogOwnerId = ticketSession.Id
             };
             await SetBusyAsync();
             await WebChatRepo.CreateMessageWebChatAsync(req);
@@ -118,23 +138,36 @@ public partial class ChatWrapperComponent : BlazorBusyComponentBaseAuthModel
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        UserInfoModel? currentUser = CurrentUserSession;
-        string _cn = Path.Combine(Routes.TICKET_CONTROLLER_NAME, Routes.SESSION_CONTROLLER_NAME);
-        string? currentSessionTicket = await JsRuntime.InvokeAsync<string?>("methods.ReadCookie", _cn);
-        TResponseModel<InitWebChatSessionResponseModel> initSessionTicket = await WebChatRepo.InitWebChatSessionAsync(new() { SessionTicket = currentSessionTicket, UserIdentityId = currentUser?.UserId });
+        string
+            _sessionCookieName = Path.Combine(Routes.TICKET_CONTROLLER_NAME, Routes.SESSION_CONTROLLER_NAME).Replace("\\", "/"),
+            _lastUserIdCookieName = Path.Combine(_sessionCookieName, $"{Routes.USER_CONTROLLER_NAME}-{Routes.IDENTITY_CONTROLLER_NAME}").Replace("\\", "/");
 
-        if(initSessionTicket.Response is null)
+        lastUserId = await JsRuntime.InvokeAsync<string?>("methods.ReadCookie", _lastUserIdCookieName);
+        if (!string.IsNullOrWhiteSpace(CurrentUserSession?.UserId))
+        {
+            if (lastUserId != _lastUserIdCookieName)
+                await JsRuntime.InvokeVoidAsync("methods.CreateCookie", _lastUserIdCookieName, CurrentUserSession.UserId, 60 * 60 * 24 * 90, "/");
+        }
+
+        string? currentSessionTicket = await JsRuntime.InvokeAsync<string?>("methods.ReadCookie", _sessionCookieName);
+        TResponseModel<DialogWebChatModelDB> initSessionTicket = await WebChatRepo.InitWebChatSessionAsync(new()
+        {
+            SessionTicket = currentSessionTicket,
+            UserIdentityId = CurrentUserSession?.UserId
+        });
+        ticketSession = initSessionTicket.Response;
+        ticketSessionEdit = GlobalTools.CreateDeepCopy(ticketSession);
+
+        if (initSessionTicket.Response is null)
         {
             SnackBarRepo.Error("initSessionTicket.Response is null");
             return;
         }
 
-        if (currentSessionTicket != initSessionTicket.Response.SessionTicket)
-            await JsRuntime.InvokeVoidAsync("methods.CreateCookie", _cn, initSessionTicket.Response.SessionTicket, (initSessionTicket.Response.DeadlineUTC - DateTime.UtcNow).TotalSeconds, "/");
+        if (currentSessionTicket != initSessionTicket.Response.SessionTicketId)
+            await JsRuntime.InvokeVoidAsync("methods.CreateCookie", _sessionCookieName, initSessionTicket.Response.SessionTicketId, (initSessionTicket.Response.DeadlineUTC - DateTime.UtcNow).TotalSeconds, "/");
         else
-            await JsRuntime.InvokeVoidAsync("methods.UpdateCookie", _cn, initSessionTicket.Response.SessionTicket, (initSessionTicket.Response.DeadlineUTC - DateTime.UtcNow).TotalSeconds, "/");
-
-        ticketSession = initSessionTicket.Response;
+            await JsRuntime.InvokeVoidAsync("methods.UpdateCookie", _sessionCookieName, initSessionTicket.Response.SessionTicketId, (initSessionTicket.Response.DeadlineUTC - DateTime.UtcNow).TotalSeconds, "/");
     }
 
     /// <inheritdoc/>

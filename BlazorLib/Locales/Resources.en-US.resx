@@ -195,4 +195,7 @@
   <data name="Users.LeftMainMenu" xml:space="preserve">
     <value>Users</value>
   </data>
+  <data name="WebChats.LeftMainMenu" xml:space="preserve">
+    <value>Chats (web)</value>
+  </data>
 </root>

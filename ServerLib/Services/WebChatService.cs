@@ -11,7 +11,7 @@ namespace ServerLib;
 /// <summary>
 /// WebChatService
 /// </summary>
-public partial class WebChatService(IDbContextFactory<MainAppContext> mainDbFactory) : IWebChatService
+public partial class WebChatService(IDbContextFactory<MainAppContext> mainDbFactory, IIdentityTransmission identityRepo) : IWebChatService
 {
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> CreateMessageWebChatAsync(MessageWebChatModelDB req, CancellationToken token = default)
@@ -22,6 +22,11 @@ public partial class WebChatService(IDbContextFactory<MainAppContext> mainDbFact
         MainAppContext context = await mainDbFactory.CreateDbContextAsync(token);
         await context.Messages.AddAsync(req, token);
         await context.SaveChangesAsync(token);
+        await context.Dialogs
+            .Where(x => x.Id == req.DialogOwnerId)
+            .ExecuteUpdateAsync(set => set
+                .SetProperty(p => p.LastMessageAtUTC, DateTime.UtcNow), cancellationToken: token);
+
         return new()
         {
             Response = req.Id
@@ -88,17 +93,18 @@ public partial class WebChatService(IDbContextFactory<MainAppContext> mainDbFact
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<InitWebChatSessionResponseModel>> InitWebChatSessionAsync(InitWebChatSessionRequestModel req, CancellationToken cancellationToken = default)
+    public async Task<TResponseModel<DialogWebChatModelDB>> InitWebChatSessionAsync(InitWebChatSessionRequestModel req, CancellationToken cancellationToken = default)
     {
         MainAppContext context = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         DialogWebChatModelDB? readSession = !string.IsNullOrWhiteSpace(req.SessionTicket)
-            ? await context.Dialogs.FirstOrDefaultAsync(x => x.SessionTicketId == req.SessionTicket && !x.IsDisabled && x.DeadlineUTC >= DateTime.UtcNow, cancellationToken: cancellationToken)
+            ? await context.Dialogs.Include(x => x.UsersJoins).FirstOrDefaultAsync(x => x.SessionTicketId == req.SessionTicket && !x.IsDisabled && x.DeadlineUTC >= DateTime.UtcNow, cancellationToken: cancellationToken)
             : new()
             {
                 SessionTicketId = $"{Guid.NewGuid()}/{Guid.NewGuid()}",
                 DeadlineUTC = DateTime.UtcNow.AddSeconds(GlobalToolsStandard.WebChatTicketSessionDeadlineSeconds),
                 CreatedAtUTC = DateTime.UtcNow,
                 LastReadAtUTC = DateTime.UtcNow,
+                InitiatorIdentityId = req.UserIdentityId,
             };
 
         readSession ??= new()
@@ -129,12 +135,7 @@ public partial class WebChatService(IDbContextFactory<MainAppContext> mainDbFact
 
         return new()
         {
-            Response = new()
-            {
-                SessionTicket = readSession.SessionTicketId,
-                DialogId = readSession.Id,
-                DeadlineUTC = readSession.DeadlineUTC
-            }
+            Response = readSession
         };
     }
 
