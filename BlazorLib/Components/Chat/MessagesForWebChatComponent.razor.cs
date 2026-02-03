@@ -81,6 +81,10 @@ public partial class MessagesForWebChatComponent : BlazorBusyComponentUsersCache
                 DialogId = DialogId,
             }
         }, token);
+
+        if (res.Response is not null && res.Response.Count != 0)
+            await CacheUsersUpdate([.. res.Response.Where(x => !string.IsNullOrWhiteSpace(x.SenderUserIdentityId)).Select(x => x.SenderUserIdentityId)!]);
+
         await SetBusyAsync(false, token);
         // Return the data
         return new TableData<MessageWebChatModelDB>()
@@ -94,6 +98,10 @@ public partial class MessagesForWebChatComponent : BlazorBusyComponentUsersCache
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
+
+        if (CurrentUserSession is not null)
+            UsersCache.Add(CurrentUserSession);
+
         if (tableRef is not null)
             await tableRef.ReloadServerData();
     }
