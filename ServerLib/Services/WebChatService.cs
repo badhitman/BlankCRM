@@ -103,7 +103,7 @@ public partial class WebChatService(IDbContextFactory<MainAppContext> mainDbFact
                 SessionTicketId = $"{Guid.NewGuid()}/{Guid.NewGuid()}",
                 DeadlineUTC = DateTime.UtcNow.AddSeconds(GlobalToolsStandard.WebChatTicketSessionDeadlineSeconds),
                 CreatedAtUTC = DateTime.UtcNow,
-                LastReadAtUTC = DateTime.UtcNow,
+                LastOnlineAtUTC = DateTime.UtcNow,
                 InitiatorIdentityId = req.UserIdentityId,
             };
 
@@ -112,7 +112,7 @@ public partial class WebChatService(IDbContextFactory<MainAppContext> mainDbFact
             SessionTicketId = $"{Guid.NewGuid()}/{Guid.NewGuid()}",
             DeadlineUTC = DateTime.UtcNow.AddSeconds(GlobalToolsStandard.WebChatTicketSessionDeadlineSeconds),
             CreatedAtUTC = DateTime.UtcNow,
-            LastReadAtUTC = DateTime.UtcNow,
+            LastOnlineAtUTC = DateTime.UtcNow,
             InitiatorIdentityId = req.UserIdentityId,
         };
 
@@ -125,6 +125,7 @@ public partial class WebChatService(IDbContextFactory<MainAppContext> mainDbFact
         {
             await context.Dialogs.Where(x => x.Id == readSession.Id)
                 .ExecuteUpdateAsync(set => set
+                    .SetProperty(p => p.LastOnlineAtUTC, DateTime.UtcNow)
                     .SetProperty(p => p.DeadlineUTC, DateTime.UtcNow.AddMinutes(GlobalToolsStandard.WebChatTicketSessionDeadlineSeconds)), cancellationToken: cancellationToken);
         }
 

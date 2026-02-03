@@ -7,6 +7,9 @@ using SharedLib;
 
 namespace BlazorLib.Components.Chat;
 
+/// <summary>
+/// DialogWebChatCardComponent
+/// </summary>
 public partial class DialogWebChatCardComponent : BlazorBusyComponentUsersCachedModel
 {
     [Inject]

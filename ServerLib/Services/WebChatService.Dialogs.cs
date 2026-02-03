@@ -19,7 +19,10 @@ public partial class WebChatService : IWebChatService
         MainAppContext context = await mainDbFactory.CreateDbContextAsync(token);
         return new()
         {
-            Response = await context.Dialogs.Where(x => req.Payload.Contains(x.Id)).Include(x => x.UsersJoins).ToListAsync(cancellationToken: token),
+            Response = await context.Dialogs
+                .Where(x => req.Payload.Contains(x.Id))
+                .Include(x => x.UsersJoins)
+                .ToListAsync(cancellationToken: token),
         };
     }
 

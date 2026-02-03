@@ -1,32 +1,45 @@
-﻿@inherits BlazorBusyComponentUsersCachedModel
+﻿@using MudBlazor
+@inherits BlazorBusyComponentUsersCachedModel
 
-@if (CurrentRoom is null)
+@if (IsBusyProgress)
 {
-    <figure class="text-center">
-        <blockquote class="blockquote">
-            <p>Ошибка.</p>
-        </blockquote>
-        <figcaption class="blockquote-footer">
-            Someone famous in <cite title="Source Title">Source Title</cite>
-        </figcaption>
-    </figure>
+    <MudProgressLinear Color="Color.Primary" Indeterminate />
 }
-else
+
+@if (CurrentRoom is not null)
 {
     <div class="card">
         <div class="card-body">
             <h5 class="card-title">
-                @CurrentRoom.InitiatorHumanName
+                Чат:
+                <code>
+                    @if (!string.IsNullOrWhiteSpace(CurrentRoom.InitiatorIdentityId))
+                    {
+                        <text>@(UsersCache.FirstOrDefault(x => x.UserId == CurrentRoom.InitiatorIdentityId)?.ToString() ?? CurrentRoom.InitiatorIdentityId)</text>
+                    }
+                    else
+                    {
+                        <text>@CurrentRoom.InitiatorHumanName</text>
+                        <sup class="ms-2">@CurrentRoom.InitiatorHumanName</sup>
+                    }
+                </code>
             </h5>
-            <h6 class="card-subtitle mb-2 text-body-secondary">
-                created: @CurrentRoom.CreatedAtUTC.GetCustomTime()
-                deadline: @CurrentRoom.DeadlineUTC.GetCustomTime()
-                online: @CurrentRoom.LastReadAtUTC.GetCustomTime()
-                message: @CurrentRoom.LastMessageAtUTC?.GetCustomTime()
+            @if (CurrentRoom.UsersJoins is not null && CurrentRoom.UsersJoins.Count != 0)
+            {
+                <h6 class="card-subtitle mb-2 text-body-secondary">
+                    Сотрудники:
+                    @foreach (UserJoinDialogWebChatModelDB userJ in CurrentRoom.UsersJoins)
+                    {
+                        <span class="badge text-bg-primary">@(UsersCache.FirstOrDefault(x => x.UserId == userJ.UserIdentityId)?.ToString() ?? userJ.UserIdentityId)</span>
+                    }
                 </h6>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card’s content.</p>
-            <a href="#" class="card-link">Card link</a>
-            <a href="#" class="card-link">Another link</a>
+            }
+            <hr />
         </div>
     </div>
+    <small class="text-body-secondary">
+        created: @CurrentRoom.CreatedAtUTC.GetCustomTime() |
+        deadline: @CurrentRoom.DeadlineUTC.GetCustomTime() |
+        online: @CurrentRoom.LastOnlineAtUTC.GetCustomTime()
+    </small>
 }

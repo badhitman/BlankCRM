@@ -10,7 +10,7 @@
     }
 </style>
 
-<MudTable ServerData="ServerReload" Dense="true" Hover="true" @ref="table" Loading="IsBusyProgress">
+<MudTable ServerData="ServerReload" Dense Hover @ref="table" Loading="IsBusyProgress">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Чаты TelegramBot`а</MudText>
         <MudSpacer />
@@ -19,7 +19,7 @@
                       ValueChanged="@(s => OnSearch(s))"
                       Placeholder="Поиск по: Title, Username, FirstName, LastName"
                       Adornment="Adornment.Start"
-                      Immediate="true"
+                      Immediate
                       AdornmentIcon="@Icons.Material.Filled.Search"
                       IconSize="Size.Medium"
                       Class="mt-0"></MudTextField>

@@ -4,12 +4,14 @@
 
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
-using Newtonsoft.Json.Linq;
 using SharedLib;
 
 namespace BlazorLib.Components.Chat;
 
-public partial class WebChatsManageComponent
+/// <summary>
+/// WebChatsManageComponent
+/// </summary>
+public partial class WebChatsManageComponent : BlazorBusyComponentUsersCachedModel
 {
     [Inject]
     IWebChatService WebChatRepo { get; set; } = default!;

@@ -9,7 +9,7 @@ namespace SharedLib;
 /// <summary>
 /// DialogWebChatViewModel
 /// </summary>
-[Index(nameof(LastReadAtUTC)), Index(nameof(DeadlineUTC)), Index(nameof(LastMessageAtUTC))]
+[Index(nameof(LastOnlineAtUTC)), Index(nameof(DeadlineUTC)), Index(nameof(LastMessageAtUTC))]
 [Index(nameof(IsDisabled)), Index(nameof(SessionTicketId), IsUnique = true)]
 public class DialogWebChatViewModel : DialogWebChatBaseModel
 {
@@ -22,7 +22,7 @@ public class DialogWebChatViewModel : DialogWebChatBaseModel
     /// <summary>
     /// Последний раз, когда в диалог кто-то обращался
     /// </summary>
-    public DateTime LastReadAtUTC { get; set; }
+    public DateTime LastOnlineAtUTC { get; set; }
 
     /// <summary>
     /// Срок окончания действия
