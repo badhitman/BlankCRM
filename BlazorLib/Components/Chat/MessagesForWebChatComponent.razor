@@ -85,23 +85,21 @@
             }
             else
             {
-                <div class="d-flex flex-row@(context.IsInsideMessage ? "" : "-reverse")">
-                    <div aria-live="polite"
-                         aria-atomic="true"
-                         class="bg-body-secondary position-relative bd-example-toasts rounded-3">
-                        <!-- Then put toasts within -->
-                        <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
-                            <div class="toast-header">
-                                <strong class="me-auto">@(UsersCache.FirstOrDefault(x => x.UserId == context.SenderUserIdentityId)?.ToString() ?? context.SenderUserIdentityId)</strong>
-                                <small class="text-body-secondary">@context.CreatedAtUTC.GetCustomTime()</small>
-                                @* <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button> *@
-                            </div>
-                            <div class="toast-body">
-                                @context.Text
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                ChatBubblePosition position = context.IsInsideMessage ? ChatBubblePosition.Start : ChatBubblePosition.End;
+                <MudChat ChatPosition="@position">
+                    <MudAvatar>@(position == ChatBubblePosition.Start ? "00" : "US")</MudAvatar>
+                    <MudChatHeader Name="@(position == ChatBubblePosition.Start ? "00" : (UsersCache.FirstOrDefault(x => x.UserId == context.SenderUserIdentityId)?.ToString() ?? context.SenderUserIdentityId))" Time="@context.CreatedAtUTC.GetCustomTime().ToString()" />
+                    <MudChatBubble OnClick="@((args) => ClickMessage(args, context))"
+                                   OnContextClick="@((args) => RightClickMessage(args, context))">
+                        @context.Text
+                    </MudChatBubble>
+                    @if (context.AttachFileId.HasValue)
+                    {
+                        <MudChatFooter>
+
+                        </MudChatFooter>
+                    }
+                </MudChat>
             }
         </MudTd>
     </RowTemplate>
@@ -115,3 +113,11 @@
         <MudTablePager />
     </PagerContent>
 </MudTable>
+<MudMenu PositionAtCursor @ref="_contextMenu" id="_contextMenu">
+    <MudMenuItem Icon="@Icons.Material.Filled.Block" OnClick="@BanUser">
+        Ban
+    </MudMenuItem>
+    <MudMenuItem Icon="@Icons.Material.Filled.Info" OnClick="@ShowHiddenInfo">
+        View Details for
+    </MudMenuItem>
+</MudMenu>

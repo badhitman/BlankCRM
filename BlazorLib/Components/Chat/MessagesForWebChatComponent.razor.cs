@@ -2,8 +2,9 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Components.Web;
 using MudBlazor;
 using SharedLib;
 
@@ -23,11 +24,15 @@ public partial class MessagesForWebChatComponent : BlazorBusyComponentUsersCache
     public int DialogId { get; set; }
 
 
+    MessageWebChatModelDB? _selectedMessage;
     private string _inputFileId = Guid.NewGuid().ToString();
     string? _textSendMessage;
+    MudMenu? _contextMenu;
     MudTable<MessageWebChatModelDB>? tableRef;
+
     private readonly List<IBrowserFile> loadedFiles = [];
     bool CanNotSendMessage => string.IsNullOrWhiteSpace(_textSendMessage) || IsBusyProgress;
+
 
     void SelectFilesChange(InputFileChangeEventArgs e)
     {
@@ -37,6 +42,36 @@ public partial class MessagesForWebChatComponent : BlazorBusyComponentUsersCache
         {
             loadedFiles.Add(file);
         }
+    }
+
+    void BanUser()
+    {
+        if (_selectedMessage is not null)
+        {
+            SnackBarRepo.Add($"`` has been banned!", Severity.Error);
+        }
+    }
+
+    void ShowHiddenInfo()
+    {
+        if (_selectedMessage is not null)
+        {
+            SnackBarRepo.Add($"Hidden information for ``", Severity.Info);
+        }
+    }
+
+    async Task RightClickMessage(MouseEventArgs args, MessageWebChatModelDB message)
+    {
+        _selectedMessage = message;
+        if (_contextMenu != null)
+            await _contextMenu.OpenMenuAsync(args);
+    }
+
+    async Task ClickMessage(MouseEventArgs args, MessageWebChatModelDB message)
+    {
+        _selectedMessage = message;
+        SnackBarRepo.Add("Message clicked: " + message.Text, Severity.Info);
+        await Task.CompletedTask;
     }
 
     async Task SendMessage()
