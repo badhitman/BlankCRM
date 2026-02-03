@@ -2,15 +2,17 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using SharedLib;
-using static MudBlazor.Colors;
 
 namespace BlazorLib.Components.Chat;
 
-public partial class MessagesForWebChatComponent
+/// <summary>
+/// MessagesForWebChatComponent
+/// </summary>
+public partial class MessagesForWebChatComponent : BlazorBusyComponentUsersCachedModel
 {
     [Inject]
     IWebChatService WebChatRepo { get; set; } = default!;
@@ -25,7 +27,7 @@ public partial class MessagesForWebChatComponent
     string? _textSendMessage;
     MudTable<MessageWebChatModelDB>? tableRef;
     private readonly List<IBrowserFile> loadedFiles = [];
-    bool canNotSendMessage => string.IsNullOrWhiteSpace(_textSendMessage) || IsBusyProgress;
+    bool CanNotSendMessage => string.IsNullOrWhiteSpace(_textSendMessage) || IsBusyProgress;
 
     void SelectFilesChange(InputFileChangeEventArgs e)
     {

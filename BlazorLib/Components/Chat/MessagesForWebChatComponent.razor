@@ -16,7 +16,7 @@
                   aria-label="With textarea"
                   id="exampleFormControlTextarea1"></textarea>
         <button @onclick="SendMessage"
-                disabled="@canNotSendMessage"
+                disabled="@CanNotSendMessage"
                 class="btn btn-outline-@(string.IsNullOrWhiteSpace(_textSendMessage) ? "secondary" : "success") bi bi-send"
                 type="button"></button>
     </div>
