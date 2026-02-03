@@ -38,7 +38,7 @@ public partial class TelegramChatWrapComponent : BlazorBusyComponentBaseModel
     MessagesTelegramComponent _messagesTelegramComponent = default!;
 
     bool NavbarToggle = true;
-
+    bool canNotSendMessage => string.IsNullOrWhiteSpace(_textSendMessage) || IsBusyProgress;
     private readonly List<IBrowserFile> loadedFiles = [];
 
     async Task SendMessage()

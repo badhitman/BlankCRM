@@ -51,7 +51,7 @@ public partial class WebChatService : IWebChatService
             SortBy = req.SortBy,
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
             Response = await q
-                             .OrderBy(x => x.Id)
+                             .OrderBy(x => x.LastMessageAtUTC)
                              .Skip(req.PageNum * req.PageSize)
                              .Take(req.PageSize)
                              .Include(x => x.UsersJoins)

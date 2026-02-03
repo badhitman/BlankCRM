@@ -32,6 +32,7 @@
                                   @bind:event="oninput"
                                   @bind="ticketSessionEdit.InitiatorHumanName"
                                   class="form-control"
+                                  id="exampleFormControlTextarea1"
                                   rows="1"></textarea>
                         <button @onclick="SevaDialog"
                                 disabled="@string.IsNullOrWhiteSpace(ticketSessionEdit.InitiatorHumanName)"
@@ -41,13 +42,14 @@
                 }
                 else
                 {
-                    <label for="exampleFormControlTextarea1" class="form-label">Отправка сообщения</label>
+                    <label for="exampleFormControlTextarea1" class="form-label">Отправка сообщения (web-chat)</label>
                     <div class="input-group">
                         <textarea readonly="@IsBusyProgress"
                                   @onkeydown="OnKeyPresHandler"
                                   @bind:event="oninput"
                                   @bind="_textSendMessage"
                                   class="form-control"
+                                  id="exampleFormControlTextarea1"
                                   rows="1"></textarea>
                         <button @onclick="SendMessage"
                                 disabled="@CannotSendMessage"
@@ -80,7 +82,7 @@
                             @ref="virtualizeComponent">
                     <ItemContent>
                         @{
-                            ChatBubblePosition position = string.IsNullOrWhiteSpace(message.SenderUserIdentityId) || CurrentUserSession?.UserId == message.SenderUserIdentityId || lastUserId == message.SenderUserIdentityId
+                            ChatBubblePosition position = message.IsInsideMessage || (string.IsNullOrWhiteSpace(message.SenderUserIdentityId) || CurrentUserSession?.UserId == message.SenderUserIdentityId || lastUserId == message.SenderUserIdentityId)
                             ? ChatBubblePosition.Start
                             : ChatBubblePosition.End;
                         }
@@ -136,6 +138,7 @@
                               @bind:event="oninput"
                               @bind="ticketSessionEdit.InitiatorContacts"
                               class="form-control"
+                              id="exampleFormControlTextarea1"
                               rows="1"></textarea>
                     <button @onclick="SevaDialog"
                             disabled="@string.IsNullOrWhiteSpace(ticketSessionEdit.InitiatorContacts)"

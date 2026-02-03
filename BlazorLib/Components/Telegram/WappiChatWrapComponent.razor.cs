@@ -3,7 +3,6 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
-using BlazorLib;
 using SharedLib;
 
 namespace BlazorLib.Components.Telegram;
@@ -31,7 +30,7 @@ public partial class WappiChatWrapComponent : BlazorBusyComponentBaseModel
 
 
     string? _textSendMessage;
-
+    bool CanNotSendMessage => string.IsNullOrWhiteSpace(_textSendMessage) || IsBusyProgress;
     bool NavbarToggle = true;
 
     async Task SendMessage()

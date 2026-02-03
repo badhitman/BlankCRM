@@ -39,6 +39,11 @@ public class MessageWebChatModelDB
     public DateTime CreatedAtUTC { get; set; }
 
     /// <summary>
+    /// Отправитель - web клиент
+    /// </summary>
+    public bool IsInsideMessage { get; set; }
+
+    /// <summary>
     /// Сообщение удалено?
     /// </summary>
     public bool IsDisabled { get; set; }

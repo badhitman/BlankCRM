@@ -78,6 +78,31 @@ public partial class WebChatService(IDbContextFactory<MainAppContext> mainDbFact
     }
 
     /// <inheritdoc/>
+    public async Task<TPaginationResponseStandardModel<MessageWebChatModelDB>> SelectMessagesForRoomWebChatAsync(TPaginationRequestAuthModel<SelectMessagesForWebChatRoomRequestModel> req, CancellationToken token = default)
+    {
+        MainAppContext context = await mainDbFactory.CreateDbContextAsync(token);
+
+        IQueryable<MessageWebChatModelDB> q = context.Messages
+            .Where(x => x.DialogOwnerId == req.Payload.DialogId)
+            .Where(x => req.Payload.IncludeDeletedMessages == true || !x.IsDisabled)
+            ;
+
+        return new()
+        {
+            PageNum = req.PageNum,
+            PageSize = req.PageSize,
+            SortBy = req.SortBy,
+            SortingDirection = req.SortingDirection,
+            TotalRowsCount = await q.CountAsync(cancellationToken: token),
+            Response = await q
+                    .OrderByDescending(x => x.CreatedAtUTC)
+                    .Skip(req.PageNum * req.PageSize)
+                    .Take(req.PageSize)
+                    .ToListAsync(cancellationToken: token),
+        };
+    }
+
+    /// <inheritdoc/>
     public async Task<ResponseBaseModel> UpdateMessageWebChatAsync(TAuthRequestStandardModel<MessageWebChatModelDB> req, CancellationToken token = default)
     {
         if (req.Payload is null)

@@ -1,0 +1,114 @@
+﻿@using MudBlazor
+
+@inherits BlazorBusyComponentUsersCachedModel
+
+@if (IsBusyProgress)
+{
+    <MudProgressLinear Color="Color.Primary" Indeterminate />
+}
+<div class="my-3">
+    <label for="exampleFormControlTextarea1" class="form-label">Отправка сообщения (TelegramBot)</label>
+    <div class="input-group">
+        <textarea readonly="@IsBusyProgress"
+                  @bind:event="oninput"
+                  @bind="_textSendMessage"
+                  class="form-control"
+                  aria-label="With textarea"
+                  id="exampleFormControlTextarea1"></textarea>
+        <button @onclick="SendMessage"
+                disabled="@canNotSendMessage"
+                class="btn btn-outline-@(string.IsNullOrWhiteSpace(_textSendMessage) ? "secondary" : "success") bi bi-send"
+                type="button"></button>
+    </div>
+</div>
+
+<div class="input-group mb-3">
+    <InputFile @key=@(_inputFileId) class="form-control" OnChange="SelectFilesChange" />
+</div>
+
+@if (loadedFiles.Count != 0)
+{
+    <ol class="list-group list-group-numbered mb-2">
+        @foreach (IBrowserFile file_element in loadedFiles)
+        {
+            <li class="list-group-item d-flex justify-content-between align-items-start">
+                <div class="ms-2 me-auto">
+                    <div class="fw-bold">@file_element.Name</div>
+                    @GlobalToolsStandard.SizeDataAsString(file_element.Size)
+                </div>
+                <span class="badge text-bg-primary rounded-pill">@file_element.LastModified</span>
+            </li>
+        }
+    </ol>
+    <div class="d-grid gap-2 mb-3">
+        <button @onclick="() => { loadedFiles.Clear(); _inputFileId = Guid.NewGuid().ToString(); }" class="btn btn-outline-primary" type="button">Отмена</button>
+    </div>
+}
+<MudTable ServerData="ServerReload" Dense Hover @ref="tableRef">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">
+            Переписка
+            @if (IsBusyProgress)
+            {
+                <sup class="spinner-grow spinner-grow-sm ms-2" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </sup>
+            }
+            else
+            {
+                <sup class="bi bi-arrow-clockwise ms-2"
+                     style="cursor:pointer;"
+                     title="Обновить таблицу"
+                     @onclick="async () => { if (tableRef is not null) await tableRef.ReloadServerData(); }"></sup>
+            }
+        </MudText>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>#</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="#">
+            @if (context.SenderUserIdentityId == GlobalStaticConstantsRoles.Roles.System)
+            {
+                <figure class="text-center">
+                    <blockquote class="blockquote">
+                        @context.Text
+                    </blockquote>
+                    <figcaption class="blockquote-footer">
+                        уведомление <cite title="система оповещения">system</cite>
+                    </figcaption>
+                </figure>
+            }
+            else
+            {
+                <div class="d-flex flex-row@(context.IsInsideMessage ? "" : "-reverse")">
+                    <div aria-live="polite"
+                         aria-atomic="true"
+                         class="bg-body-secondary position-relative bd-example-toasts rounded-3">
+                        <!-- Then put toasts within -->
+                        <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+                            <div class="toast-header">
+                                <img src="..." class="rounded me-2" alt="...">
+                                <strong class="me-auto">Bootstrap</strong>
+                                <small class="text-body-secondary">just now</small>
+                                @* <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button> *@
+                            </div>
+                            <div class="toast-body">
+                                @context.Text
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>Сообщений нет</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>

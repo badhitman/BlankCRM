@@ -17,6 +17,9 @@ public interface IWebChatService : IAsyncDisposable
     public Task<TResponseModel<SelectMessagesForWebChatResponseModel>> SelectMessagesWebChatAsync(SelectMessagesForWebChatRequestModel req, CancellationToken token = default);
 
     /// <inheritdoc/>
+    public Task<TPaginationResponseStandardModel<MessageWebChatModelDB>> SelectMessagesForRoomWebChatAsync(TPaginationRequestAuthModel<SelectMessagesForWebChatRoomRequestModel> req, CancellationToken token = default);
+
+    /// <inheritdoc/>
     public Task<TResponseModel<int>> CreateMessageWebChatAsync(MessageWebChatModelDB req, CancellationToken token = default);
 
     /// <inheritdoc/>

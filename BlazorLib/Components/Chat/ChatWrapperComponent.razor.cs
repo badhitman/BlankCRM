@@ -98,7 +98,8 @@ public partial class ChatWrapperComponent : BlazorBusyComponentBaseAuthModel
         {
             Text = _textSendMessage.Trim(),
             SenderUserIdentityId = CurrentUserSession?.UserId,
-            DialogOwnerId = ticketSession.Id
+            DialogOwnerId = ticketSession.Id,
+            IsInsideMessage = true,
         };
 
         await SetBusyAsync();
@@ -123,7 +124,8 @@ public partial class ChatWrapperComponent : BlazorBusyComponentBaseAuthModel
             {
                 Text = _textSendMessage.Trim(),
                 SenderUserIdentityId = CurrentUserSession?.UserId,
-                DialogOwnerId = ticketSession.Id
+                DialogOwnerId = ticketSession.Id, 
+                IsInsideMessage = true,
             };
             await SetBusyAsync();
             await WebChatRepo.CreateMessageWebChatAsync(req);

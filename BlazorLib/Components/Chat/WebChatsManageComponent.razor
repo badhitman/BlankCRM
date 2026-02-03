@@ -28,7 +28,10 @@
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Активность">
-            <MudLink Href="@($"/web-chats/room-{context.Id}")">@context.LastMessageAtUTC.ToString()</MudLink>
+            <MudLink Href="@($"/web-chats/room-{context.Id}")">
+                @context.LastMessageAtUTC?.GetCustomTime().ToString()
+                <span class="ms-1">@context.LastOnlineAtUTC.GetCustomTime()</span>
+            </MudLink>
         </MudTd>
         <MudTd DataLabel="Пользователь">
             @if (string.IsNullOrWhiteSpace(context.InitiatorIdentityId))

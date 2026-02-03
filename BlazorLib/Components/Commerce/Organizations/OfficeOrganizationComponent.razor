@@ -30,21 +30,34 @@
                                                       RubricInitial="OfficeEdit.ParentId"
                                                       ShowDisabledRubrics="false"
                                                       @ref="rubricSelector_ref"
-                                                      Title="Тип офиса"/>
+                                                      Title="Тип офиса" />
                                 <div class="row mb-3">
                                     <div class="col-md-6">
                                         <label for="nameFormControlInput1" class="form-label">Название</label>
-                                        <input @bind-value:event="oninput" @bind-value="OfficeEdit.Name" type="text" class="form-control" id="nameFormControlInput1" placeholder="Наименование">
+                                        <input @bind-value:event="oninput"
+                                               @bind-value="OfficeEdit.Name"
+                                               type="text"
+                                               class="form-control"
+                                               id="nameFormControlInput1"
+                                               placeholder="Наименование">
                                     </div>
                                     <div class="col-md-6">
                                         <label for="telFormControlInput" class="form-label">Контакты</label>
-                                        <input @bind-value:event="oninput" @bind-value="OfficeEdit.Contacts" type="tel" class="form-control" id="telFormControlInput" placeholder="Номер телефона, email...">
+                                        <input @bind-value:event="oninput"
+                                               @bind-value="OfficeEdit.Contacts"
+                                               type="tel"
+                                               class="form-control"
+                                               id="telFormControlInput"
+                                               placeholder="Номер телефона, email...">
                                     </div>
                                 </div>
                                 <KladrInputComponent @bind-KladrObject="SelectedKladrObject" />
                                 <div class="mb-3">
                                     <label for="exampleFormControlTextarea1" class="form-label">уточнение адреса (если требуется)</label>
-                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" @oninput="HandleOnChange">@OfficeEdit.AddressUserComment</textarea>
+                                    <textarea class="form-control"
+                                              id="exampleFormControlTextarea1"
+                                              rows="3"
+                                              @oninput="HandleOnChange">@OfficeEdit.AddressUserComment</textarea>
                                 </div>
                             </MudStack>
                         </MudCardContent>
