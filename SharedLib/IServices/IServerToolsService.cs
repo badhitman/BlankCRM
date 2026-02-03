@@ -9,7 +9,6 @@ namespace SharedLib;
 /// </summary>
 public interface IServerToolsService
 {
-    #region files (base)
     /// <summary>
     /// ExeCommand
     /// </summary>
@@ -37,5 +36,4 @@ public interface IServerToolsService
     /// UpdateFile
     /// </summary>
     public Task<TResponseModel<bool>> DeleteFileAsync(DeleteRemoteFileRequestModel req, CancellationToken token = default);
-    #endregion
 }
