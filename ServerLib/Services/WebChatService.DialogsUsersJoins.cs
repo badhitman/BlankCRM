@@ -5,6 +5,7 @@
 using Microsoft.EntityFrameworkCore;
 using SharedLib;
 using DbcLib;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace ServerLib;
 
@@ -54,6 +55,7 @@ public partial class WebChatService : IWebChatService
         UserJoinDialogWebChatModelDB joinDb = UserJoinDialogWebChatModelDB.Build(req.Payload);
         joinDb.JoinedDateUTC = DateTime.UtcNow;
 
+        await using IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
         await context.UsersDialogsJoins.AddAsync(joinDb, token);
         await context.Messages.AddAsync(new()
         {
@@ -64,23 +66,33 @@ public partial class WebChatService : IWebChatService
         }, token);
 
         await context.SaveChangesAsync(token);
-        //await context.Dialogs
-        //    .Where(x => x.Id == joinDb.DialogJoinId)
-        //    .ExecuteUpdateAsync(set => set
-        //        .SetProperty(p => p.LastMessageAtUTC, DateTime.UtcNow), cancellationToken: token);
-
+        await transaction.CommitAsync(token);
         return ResponseBaseModel.CreateSuccess("Ok");
     }
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> DeleteUserJoinDialogWebChatAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default)
     {
-        MainAppContext context = await mainDbFactory.CreateDbContextAsync(token);
+        if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
+            return ResponseBaseModel.CreateError($"string.IsNullOrWhiteSpace(req.SenderActionUserId) > {nameof(DeleteUserJoinDialogWebChatAsync)}");
 
+        MainAppContext context = await mainDbFactory.CreateDbContextAsync(token);
+        await using IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
         await context.UsersDialogsJoins
             .Where(x => x.Id == req.Payload && x.OutDateUTC == null)
             .ExecuteUpdateAsync(set => set.SetProperty(p => p.OutDateUTC, DateTime.UtcNow), cancellationToken: token);
 
+        TResponseModel<UserInfoModel[]> getUser = await identityRepo.GetUsersOfIdentityAsync([req.SenderActionUserId], token);
+        await context.Messages.AddAsync(new()
+        {
+            Text = $"К чату присоединялся `{getUser.Response?.FirstOrDefault(x => x.UserId == req.SenderActionUserId)?.UserName ?? req.SenderActionUserId}`",
+            CreatedAtUTC = DateTime.UtcNow,
+            DialogOwnerId = req.Payload,
+            SenderUserIdentityId = GlobalStaticConstantsRoles.Roles.System,
+        }, token);
+
+        await context.SaveChangesAsync(token);
+        await transaction.CommitAsync(token);
         return ResponseBaseModel.CreateSuccess("Ok");
     }
 }
