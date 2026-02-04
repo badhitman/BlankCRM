@@ -57,7 +57,7 @@ window.BoundingClientRect = (() => {
 
             let width = _d.width();
 
-            console.warn(JSON.stringify(width));
+            //console.warn(JSON.stringify(width));
 
             if (isNaN(width)) {
                 return 0;
@@ -72,7 +72,7 @@ window.BoundingClientRect = (() => {
 
             var _p = _d.position();
             let left = _p.left;
-            console.warn(JSON.stringify(left));
+            //console.warn(JSON.stringify(left));
 
             if (isNaN(left)) {
                 return 0;
@@ -87,7 +87,7 @@ window.BoundingClientRect = (() => {
 
             var _p = _d.position();
             let top = _p.top;
-            console.warn(JSON.stringify(top));
+            //console.warn(JSON.stringify(top));
 
             if (isNaN(top)) {
                 return 0;
@@ -117,7 +117,7 @@ window.autoGrowManage = (() => {
 
 window.methods = {
     CreateCookie: function (name, value, seconds, path) {
-        console.warn(`call -> methods.CreateCookie(name:${name}, value:${value}, seconds:${seconds}, path:${path})`);
+        // console.warn(`call -> methods.CreateCookie(name:${name}, value:${value}, seconds:${seconds}, path:${path})`);
         var expires;
         if (seconds) {
             var date = new Date();
@@ -132,11 +132,11 @@ window.methods = {
     },
     UpdateCookie: function (name, seconds, path) {
         let value = window.methods.ReadCookie(name);
-        console.warn(`call -> methods.UpdateCookie(name:${name}, seconds:${seconds}, path:${path}); set:${value}`);
+        //console.warn(`call -> methods.UpdateCookie(name:${name}, seconds:${seconds}, path:${path}); set:${value}`);
         window.methods.CreateCookie(name, value, seconds, path);
     },
     ReadCookie: function (cname) {
-        console.warn(`call -> methods.ReadCookie(cname:${cname})`);
+        // console.warn(`call -> methods.ReadCookie(cname:${cname})`);
         var name = cname + "=";
         var decodedCookie = decodeURIComponent(document.cookie);
         var ca = decodedCookie.split(';');
@@ -153,7 +153,7 @@ window.methods = {
         return resValue;
     },
     DeleteCookie: function (name) {
-        console.warn(`call -> methods.DeleteCookie(name:${name})`);
+        // console.warn(`call -> methods.DeleteCookie(name:${name})`);
         if (window.methods.ReadCookie(name)) {
             document.cookie = name + "=" +
                 //((path) ? ";path=" + path : "") +
@@ -202,11 +202,11 @@ function DOMContentLoaded() {
     if (window.Telegram != undefined && window.Telegram != null) {
         var tg = window.Telegram;
         if (window.Telegram.WebApp.initData == "" || window.Telegram.WebApp.initData == undefined || window.Telegram.WebApp.initData == null) {
-            console.warn(JSON.stringify(tg));
+            //console.warn(JSON.stringify(tg));
             //Blazor.start().then(function () { console.warn("Blazor started!") });
             return;
         }
-        console.warn(JSON.stringify(window.Telegram.WebApp.initData));
+        //console.warn(JSON.stringify(window.Telegram.WebApp.initData));
         $.ajax({
             type: 'GET',
             url: '/authorize/ping',
