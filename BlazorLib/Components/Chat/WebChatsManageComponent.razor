@@ -19,6 +19,7 @@
                      title="Обновить таблицу"
                      @onclick="async () => { if (tableRef is not null) await tableRef.ReloadServerData(); }"></sup>
             }
+            <MudSpacer />
         </MudText>
     </ToolBarContent>
     <HeaderContent>

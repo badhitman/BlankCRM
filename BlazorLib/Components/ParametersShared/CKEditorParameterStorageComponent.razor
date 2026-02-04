@@ -7,7 +7,9 @@
 }
 
 <label class="form-label">@Label</label>
-<InputRichTextComponent @bind-Value="TextValue" @ref="_currentTemplateInputRichText_ref" ReadOnly="IsBusyProgress" />
+<InputRichTextComponent @bind-Value="TextValue"
+                        @ref="_currentTemplateInputRichText_ref"
+                        ReadOnly="IsBusyProgress" />
 @if (!string.IsNullOrWhiteSpace(HelperText))
 {
     <div class="form-text">@HelperText</div>

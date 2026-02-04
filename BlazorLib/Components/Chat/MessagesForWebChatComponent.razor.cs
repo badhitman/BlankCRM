@@ -24,10 +24,10 @@ public partial class MessagesForWebChatComponent : BlazorBusyComponentUsersCache
     [Inject]
     NavigationManager NavRepo { get; set; } = default!;
 
+
     /// <inheritdoc/>
     [Parameter, EditorRequired]
-    public int DialogId { get; set; }
-
+    public required DialogWebChatModelDB DialogWebChat { get; set; }
 
     MessageWebChatModelDB? _selectedMessage;
     private string _inputFileId = Guid.NewGuid().ToString();
@@ -97,7 +97,7 @@ public partial class MessagesForWebChatComponent : BlazorBusyComponentUsersCache
             SenderUserIdentityId = CurrentUserSession.UserId,
             Text = _textSendMessage,
             CreatedAtUTC = DateTime.UtcNow,
-            DialogOwnerId = DialogId,
+            DialogOwnerId = DialogWebChat.Id,
             IsInsideMessage = false,
         };
 
@@ -128,7 +128,7 @@ public partial class MessagesForWebChatComponent : BlazorBusyComponentUsersCache
                         ContentType = fileBrowser.ContentType,
                         OwnerPrimaryKey = res.Response,
                         ApplicationName = Path.Combine($"{GlobalStaticConstantsRoutes.Routes.WEB_CONTROLLER_NAME}-{GlobalStaticConstantsRoutes.Routes.CHAT_CONTROLLER_NAME}"),
-                        PrefixPropertyName = DialogId.ToString(),
+                        PrefixPropertyName = DialogWebChat.Id.ToString(),
                         PropertyName = GlobalStaticConstantsRoutes.Routes.ATTACHMENT_CONTROLLER_NAME,
                         Referrer = NavRepo.Uri,
                         RulesTypes = new() { { FileAccessRulesTypesEnum.Token, [Guid.NewGuid().ToString()] } },
@@ -181,7 +181,7 @@ public partial class MessagesForWebChatComponent : BlazorBusyComponentUsersCache
             SenderActionUserId = CurrentUserSession.UserId,
             Payload = new()
             {
-                DialogId = DialogId,
+                DialogId = DialogWebChat.Id,
             }
         }, token);
 

@@ -24,6 +24,15 @@ public partial class DialogWebChatCardComponent : BlazorBusyComponentUsersCached
     DialogWebChatModelDB? CurrentRoom;
 
 
+    async void SelectUserHandler(UserInfoModel? selected)
+    {
+        if (CurrentRoom is null)
+            return;
+
+        CurrentRoom.InitiatorIdentityId = selected?.UserId;
+        StateHasChanged();
+    }
+
     async Task ReloadRoom()
     {
         if (CurrentUserSession is null)

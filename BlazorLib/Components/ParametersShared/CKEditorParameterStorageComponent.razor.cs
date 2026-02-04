@@ -54,7 +54,7 @@ public partial class CKEditorParameterStorageComponent : BlazorBusyComponentBase
         //
         await StoreRepo.SaveParameterAsync(_textValue, KeyStorage, true);
         //IsBusyProgress = false;
-        //StateHasChanged();
+        StateHasChanged();
     }
 
     /// <inheritdoc/>
@@ -62,9 +62,9 @@ public partial class CKEditorParameterStorageComponent : BlazorBusyComponentBase
     {
         await SetBusyAsync();
         TResponseModel<string?> res = await StoreRepo.ReadParameterAsync<string?>(KeyStorage);
-
-        SnackBarRepo.ShowMessagesResponse(res.Messages);
+        // SnackBarRepo.ShowMessagesResponse(res.Messages);
         _textValue = res.Response;
         await SetBusyAsync(false);
+        _currentTemplateInputRichText_ref?.SetValue(_textValue);
     }
 }
