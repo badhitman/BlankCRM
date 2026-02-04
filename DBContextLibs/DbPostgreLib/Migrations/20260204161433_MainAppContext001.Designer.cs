@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations
 {
     [DbContext(typeof(MainAppContext))]
-    [Migration("20260204151255_MainAppContext001")]
+    [Migration("20260204161433_MainAppContext001")]
     partial class MainAppContext001
     {
         /// <inheritdoc />
@@ -38,6 +38,9 @@ namespace DbPostgreLib.Migrations
 
                     b.Property<string>("FileAttachName")
                         .HasColumnType("text");
+
+                    b.Property<long>("FileLength")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("FileTokenAccess")
                         .HasColumnType("text");

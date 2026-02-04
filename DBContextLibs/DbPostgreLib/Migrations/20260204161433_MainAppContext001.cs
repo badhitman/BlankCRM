@@ -89,6 +89,7 @@ namespace DbPostgreLib.Migrations
                     MessageOwnerId = table.Column<int>(type: "integer", nullable: false),
                     FileAttachId = table.Column<int>(type: "integer", nullable: false),
                     FileAttachName = table.Column<string>(type: "text", nullable: true),
+                    FileLength = table.Column<long>(type: "bigint", nullable: false),
                     FileTokenAccess = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
