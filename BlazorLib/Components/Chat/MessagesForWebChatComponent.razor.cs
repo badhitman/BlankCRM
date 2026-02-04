@@ -137,6 +137,9 @@ public partial class MessagesForWebChatComponent : BlazorBusyComponentUsersCache
         _inputFileId = Guid.NewGuid().ToString();
 
         await SetBusyAsync(false);
+
+        if (tableRef is not null)
+            await tableRef.ReloadServerData();
     }
 
     async Task<TableData<MessageWebChatModelDB>> ServerReload(TableState state, CancellationToken token)
