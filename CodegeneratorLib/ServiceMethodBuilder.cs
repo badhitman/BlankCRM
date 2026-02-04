@@ -61,7 +61,7 @@ public class ServiceMethodBuilder : BaseMethodBuilder
     public override ServiceMethodBuilder AddPaginationPayload(string type_name, string db_set_name)
     {
         AddPayload($"IQueryable<{type_name}>? query = {db_set_name}.AsQueryable();");
-        AddPayload($"TPaginationResponseModel<{type_name}> result = new(pagination_request)");
+        AddPayload($"TPaginationResponseStandardModel<{type_name}> result = new(pagination_request)");
         AddPayload("{");
         AddPayload($"{_tab}TotalRowsCount = await query.CountAsync()");
         AddPayload("};");

@@ -23,20 +23,32 @@ public partial class TelegramBotStandardTransmission(IMQTTClient mqClient) : ITe
         => await mqClient.MqRemoteCallAsync<TResponseModel<MessageComplexIdsModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.SendTextMessageTelegramReceive, req, waitResponse: false, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<List<ChatTelegramViewModel>> ChatsFindForUserTelegramAsync(long[] req, CancellationToken token = default)
-        => await mqClient.MqRemoteCallAsync<List<ChatTelegramViewModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.ChatsFindForUserTelegramReceive, req, token: token) ?? [];
+    public async Task<List<UserTelegramStandardModel>> UsersReadTelegramAsync(int[] req, CancellationToken token = default)
+        => await mqClient.MqRemoteCallAsync<List<UserTelegramStandardModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.UsersReadTelegramReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<List<ChatTelegramViewModel>> ChatsReadTelegramAsync(long[] req, CancellationToken token = default)
-      => await mqClient.MqRemoteCallAsync<List<ChatTelegramViewModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.ChatsReadTelegramReceive, req, token: token) ?? [];
+    public async Task<TPaginationResponseStandardModel<MessageTelegramStandardModel>> MessagesTelegramSelectAsync(TPaginationRequestStandardModel<SearchMessagesChatStandardModel> req, CancellationToken token = default)
+       => await mqClient.MqRemoteCallAsync<TPaginationResponseStandardModel<MessageTelegramStandardModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.MessagesChatsSelectTelegramReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<ChatTelegramViewModel>> ChatsSelectTelegramAsync(TPaginationRequestStandardModel<string?> req, CancellationToken token = default)
-      => await mqClient.MqRemoteCallAsync<TPaginationResponseModel<ChatTelegramViewModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.ChatsSelectTelegramReceive, req, token: token) ?? new();
+    public async Task<List<ChatTelegramStandardModel>> ChatsReadTelegramAsync(long[] req, CancellationToken token = default)
+      => await mqClient.MqRemoteCallAsync<List<ChatTelegramStandardModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.ChatsReadTelegramReceive, req, token: token) ?? [];
 
     /// <inheritdoc/>
-    public async Task<ChatTelegramViewModel> ChatTelegramReadAsync(int chatId, CancellationToken token = default)
-       => await mqClient.MqRemoteCallAsync<ChatTelegramViewModel>(GlobalStaticConstantsTransmission.TransmissionQueues.ChatReadTelegramReceive, chatId, token: token) ?? new();
+    public async Task<ChatTelegramStandardModel> ChatTelegramReadAsync(int chatId, CancellationToken token = default)
+       => await mqClient.MqRemoteCallAsync<ChatTelegramStandardModel>(GlobalStaticConstantsTransmission.TransmissionQueues.ChatReadTelegramReceive, chatId, token: token) ?? new();
+
+    /// <inheritdoc/>
+    public async Task<TPaginationResponseStandardModel<ChatTelegramStandardModel>> ChatsSelectTelegramAsync(TPaginationRequestStandardModel<string?> req, CancellationToken token = default)
+      => await mqClient.MqRemoteCallAsync<TPaginationResponseStandardModel<ChatTelegramStandardModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.ChatsSelectTelegramReceive, req, token: token) ?? new();
+
+    /// <inheritdoc/>
+    public async Task<List<ChatTelegramStandardModel>> ChatsFindForUserTelegramAsync(long[] req, CancellationToken token = default)
+        => await mqClient.MqRemoteCallAsync<List<ChatTelegramStandardModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.ChatsFindForUserTelegramReceive, req, token: token) ?? [];
+
+    /// <inheritdoc/>
+    public async Task<TPaginationResponseStandardModel<ErrorSendingMessageTelegramBotStandardModel>> ErrorsForChatsSelectTelegramAsync(TPaginationRequestStandardModel<long[]> req, CancellationToken token = default)
+       => await mqClient.MqRemoteCallAsync<TPaginationResponseStandardModel<ErrorSendingMessageTelegramBotStandardModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.ErrorsForChatsSelectTelegramReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<TResponseModel<MessageComplexIdsModel>> ForwardMessageTelegramAsync(ForwardMessageTelegramBotModel req, CancellationToken token = default)
@@ -47,14 +59,6 @@ public partial class TelegramBotStandardTransmission(IMQTTClient mqClient) : ITe
        => await mqClient.MqRemoteCallAsync<TResponseModel<byte[]>>(GlobalStaticConstantsTransmission.TransmissionQueues.ReadFileTelegramReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<MessageTelegramViewModel>> MessagesSelectTelegramAsync(TPaginationRequestStandardModel<SearchMessagesChatModel> req, CancellationToken token = default)
-       => await mqClient.MqRemoteCallAsync<TPaginationResponseModel<MessageTelegramViewModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.MessagesChatsSelectTelegramReceive, req, token: token) ?? new();
-
-    /// <inheritdoc/>
     public async Task<ResponseBaseModel> UserTelegramPermissionUpdateAsync(UserTelegramPermissionSetModel req, CancellationToken token = default)
        => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.UserTelegramPermissionUpdateReceive, req, token: token) ?? new();
-
-    /// <inheritdoc/>
-    public async Task<List<UserTelegramViewModel>> UsersReadTelegramAsync(int[] req, CancellationToken token = default)
-      => await mqClient.MqRemoteCallAsync<List<UserTelegramViewModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.UsersReadTelegramReceive, req, token: token) ?? new();
 }

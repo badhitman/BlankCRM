@@ -22,8 +22,8 @@ public partial class ManageStockSharpTransmission(IMQTTClient mqClient) : IManag
         => await mqClient.MqRemoteCallAsync<TResponseModel<FixMessageAdapterModelDB[]>>(GlobalStaticConstantsTransmission.TransmissionQueues.AdaptersGetStockSharpReceive, req, token: cancellationToken) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<FixMessageAdapterModelDB>> AdaptersSelectAsync(TPaginationRequestStandardModel<AdaptersRequestModel> req, CancellationToken cancellationToken = default)
-        => await mqClient.MqRemoteCallAsync<TPaginationResponseModel<FixMessageAdapterModelDB>>(GlobalStaticConstantsTransmission.TransmissionQueues.AdaptersSelectStockSharpReceive, req, token: cancellationToken) ?? new();
+    public async Task<TPaginationResponseStandardModel<FixMessageAdapterModelDB>> AdaptersSelectAsync(TPaginationRequestStandardModel<AdaptersRequestModel> req, CancellationToken cancellationToken = default)
+        => await mqClient.MqRemoteCallAsync<TPaginationResponseStandardModel<FixMessageAdapterModelDB>>(GlobalStaticConstantsTransmission.TransmissionQueues.AdaptersSelectStockSharpReceive, req, token: cancellationToken) ?? new();
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> ClearCashFlowsAsync(int instrumentId, CancellationToken cancellationToken = default)
@@ -38,8 +38,8 @@ public partial class ManageStockSharpTransmission(IMQTTClient mqClient) : IManag
         => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.GenerateRegularCashFlowsStockSharpReceive, req, token: cancellationToken) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<OrderStockSharpViewModel>> OrdersSelectAsync(TPaginationRequestStandardModel<OrdersSelectStockSharpRequestModel> req, CancellationToken cancellationToken = default)
-        => await mqClient.MqRemoteCallAsync<TPaginationResponseModel<OrderStockSharpViewModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.OrdersSelectStockSharpReceive, req, token: cancellationToken) ?? new();
+    public async Task<TPaginationResponseStandardModel<OrderStockSharpViewModel>> OrdersSelectAsync(TPaginationRequestStandardModel<OrdersSelectStockSharpRequestModel> req, CancellationToken cancellationToken = default)
+        => await mqClient.MqRemoteCallAsync<TPaginationResponseStandardModel<OrderStockSharpViewModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.OrdersSelectStockSharpReceive, req, token: cancellationToken) ?? new();
 
     /// <inheritdoc/>
     public async Task<TResponseModel<FixMessageAdapterModelDB>> UpdateOrCreateAdapterAsync(FixMessageAdapterModelDB req, CancellationToken cancellationToken = default)

@@ -24,10 +24,10 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.2" />
-		<PackageReference Include="NLog" Version="6.0.7" />
-		<PackageReference Include="NLog.Extensions.Logging" Version="6.1.0" />
+		<PackageReference Include="NLog" Version="6.1.0" />
+		<PackageReference Include="NLog.Extensions.Logging" Version="6.1.1" />
 		<PackageReference Include="NLog.Database" Version="6.0.3" />
-		<PackageReference Include="NLog.Web.AspNetCore" Version="6.1.0" />
+		<PackageReference Include="NLog.Web.AspNetCore" Version="6.1.1" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -18,12 +18,12 @@ namespace RemoteCallLib;
 public class ParametersStorageTransmission(IMQTTClient rabbitClient) : IParametersStorageTransmission
 {
     #region tag`s
-    /// <inheritdoc/> tags
-    public async Task<TPaginationResponseModel<TagViewModel>> TagsSelectAsync(TPaginationRequestStandardModel<SelectMetadataRequestModel> req, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<TPaginationResponseModel<TagViewModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.TagsSelectReceive, req, token: token) ?? new();
+    /// <inheritdoc/>
+    public async Task<TPaginationResponseStandardModel<TagViewModel>> TagsSelectAsync(TPaginationRequestStandardModel<SelectMetadataRequestModel> req, CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<TPaginationResponseStandardModel<TagViewModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.TagsSelectReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<bool>> TagSetAsync(TagSetModel req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> TagSetAsync(TagSetModel req, CancellationToken token)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<bool>>(GlobalStaticConstantsTransmission.TransmissionQueues.TagSetReceive, req, token: token) ?? new();
     #endregion
 
@@ -108,5 +108,6 @@ public class ParametersStorageTransmission(IMQTTClient rabbitClient) : IParamete
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> DeleteParameterAsync(StorageMetadataModel key, bool waitResponse = true, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(GlobalStaticConstantsTransmission.TransmissionQueues.DeleteCloudParameterReceive, key, waitResponse, token) ?? new();
+
     #endregion
 }

@@ -579,7 +579,7 @@ public class GeneratorCSharpService(CodeGeneratorConfigModel conf, MainProjectVi
             .AddPaginationPayload(doc_obj.Key.TypeName, db_set_name)
             .AddPayload("return result;")
             .Extract<ServiceMethodBuilder>()
-            .WriteSignatureMethod(writer, "SelectAsync", $"TPaginationResponseModel<{doc_obj.Key.TypeName}>"));
+            .WriteSignatureMethod(writer, "SelectAsync", $"TPaginationResponseStandardModel<{doc_obj.Key.TypeName}>"));
         writer.WriteLine();
 
         //builders_history.Add(builder
@@ -644,7 +644,7 @@ public class GeneratorCSharpService(CodeGeneratorConfigModel conf, MainProjectVi
                     .AddPaginationPayload(table_schema.TypeName, db_set_name)
                     .AddPayload("return result;")
                     .Extract<ServiceMethodBuilder>()
-                    .WriteSignatureMethod(writer, $"Select{table_schema.TypeName}Async", $"TPaginationResponseModel<{table_schema.TypeName}>"));
+                    .WriteSignatureMethod(writer, $"Select{table_schema.TypeName}Async", $"TPaginationResponseStandardModel<{table_schema.TypeName}>"));
                 writer.WriteLine();
 
                 builders_history.Add(builder
