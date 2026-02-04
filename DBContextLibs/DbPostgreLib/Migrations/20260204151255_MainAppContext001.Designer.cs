@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations
 {
     [DbContext(typeof(MainAppContext))]
-    [Migration("20260201205953_MainAppContext004")]
-    partial class MainAppContext004
+    [Migration("20260204151255_MainAppContext001")]
+    partial class MainAppContext001
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,33 @@ namespace DbPostgreLib.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("SharedLib.AttachesMessageWebChatModelDB", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("FileAttachId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("FileAttachName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("FileTokenAccess")
+                        .HasColumnType("text");
+
+                    b.Property<int>("MessageOwnerId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MessageOwnerId");
+
+                    b.ToTable("AttachesFilesOfMessages");
+                });
 
             modelBuilder.Entity("SharedLib.DialogWebChatModelDB", b =>
                 {
@@ -42,6 +69,9 @@ namespace DbPostgreLib.Migrations
                     b.Property<string>("InitiatorContacts")
                         .HasColumnType("text");
 
+                    b.Property<string>("InitiatorContactsNormalized")
+                        .HasColumnType("text");
+
                     b.Property<string>("InitiatorHumanName")
                         .HasColumnType("text");
 
@@ -51,10 +81,10 @@ namespace DbPostgreLib.Migrations
                     b.Property<bool>("IsDisabled")
                         .HasColumnType("boolean");
 
-                    b.Property<DateTime>("LastMessageAtUTC")
+                    b.Property<DateTime?>("LastMessageAtUTC")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime>("LastReadAtUTC")
+                    b.Property<DateTime>("LastOnlineAtUTC")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("SessionTicketId")
@@ -67,13 +97,18 @@ namespace DbPostgreLib.Migrations
 
                     b.HasIndex("InitiatorContacts");
 
+                    b.HasIndex("InitiatorContactsNormalized");
+
                     b.HasIndex("InitiatorIdentityId");
 
                     b.HasIndex("IsDisabled");
 
                     b.HasIndex("LastMessageAtUTC");
 
-                    b.HasIndex("LastReadAtUTC");
+                    b.HasIndex("LastOnlineAtUTC");
+
+                    b.HasIndex("SessionTicketId")
+                        .IsUnique();
 
                     b.ToTable("Dialogs");
                 });
@@ -86,9 +121,6 @@ namespace DbPostgreLib.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("AttachFileId")
-                        .HasColumnType("integer");
-
                     b.Property<DateTime>("CreatedAtUTC")
                         .HasColumnType("timestamp with time zone");
 
@@ -96,6 +128,9 @@ namespace DbPostgreLib.Migrations
                         .HasColumnType("integer");
 
                     b.Property<bool>("IsDisabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsInsideMessage")
                         .HasColumnType("boolean");
 
                     b.Property<string>("SenderUserIdentityId")
@@ -129,6 +164,12 @@ namespace DbPostgreLib.Migrations
                     b.Property<int>("DialogJoinId")
                         .HasColumnType("integer");
 
+                    b.Property<DateTime>("JoinedDateUTC")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("OutDateUTC")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("UserIdentityId")
                         .IsRequired()
                         .HasColumnType("text");
@@ -137,10 +178,24 @@ namespace DbPostgreLib.Migrations
 
                     b.HasIndex("DialogJoinId");
 
-                    b.HasIndex("UserIdentityId", "DialogJoinId")
-                        .IsUnique();
+                    b.HasIndex("JoinedDateUTC");
+
+                    b.HasIndex("OutDateUTC");
+
+                    b.HasIndex("UserIdentityId");
 
                     b.ToTable("UsersDialogsJoins");
+                });
+
+            modelBuilder.Entity("SharedLib.AttachesMessageWebChatModelDB", b =>
+                {
+                    b.HasOne("SharedLib.MessageWebChatModelDB", "MessageOwner")
+                        .WithMany("AttachesFiles")
+                        .HasForeignKey("MessageOwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("MessageOwner");
                 });
 
             modelBuilder.Entity("SharedLib.MessageWebChatModelDB", b =>
@@ -157,12 +212,22 @@ namespace DbPostgreLib.Migrations
             modelBuilder.Entity("SharedLib.UserJoinDialogWebChatModelDB", b =>
                 {
                     b.HasOne("SharedLib.DialogWebChatModelDB", "DialogJoin")
-                        .WithMany()
+                        .WithMany("UsersJoins")
                         .HasForeignKey("DialogJoinId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("DialogJoin");
+                });
+
+            modelBuilder.Entity("SharedLib.DialogWebChatModelDB", b =>
+                {
+                    b.Navigation("UsersJoins");
+                });
+
+            modelBuilder.Entity("SharedLib.MessageWebChatModelDB", b =>
+                {
+                    b.Navigation("AttachesFiles");
                 });
 #pragma warning restore 612, 618
         }

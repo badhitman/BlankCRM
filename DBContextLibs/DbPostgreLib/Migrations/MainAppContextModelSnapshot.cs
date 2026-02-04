@@ -36,6 +36,9 @@ namespace DbPostgreLib.Migrations
                     b.Property<string>("FileAttachName")
                         .HasColumnType("text");
 
+                    b.Property<string>("FileTokenAccess")
+                        .HasColumnType("text");
+
                     b.Property<int>("MessageOwnerId")
                         .HasColumnType("integer");
 
