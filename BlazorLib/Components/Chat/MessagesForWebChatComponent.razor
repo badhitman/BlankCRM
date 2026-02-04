@@ -93,10 +93,14 @@
                                    OnContextClick="@((args) => RightClickMessage(args, context))">
                         @context.Text
                     </MudChatBubble>
-                    @if (context.AttachesFiles is not null)
+                    @if (context.AttachesFiles is not null && context.AttachesFiles.Count != 0)
                     {
                         <MudChatFooter>
-
+                            Файлы:
+                            @foreach (AttachesMessageWebChatModelDB _fa in context.AttachesFiles)
+                            {
+                                <code class="mx-1">@_fa.FileAttachId</code>
+                            }
                         </MudChatFooter>
                     }
                 </MudChat>
