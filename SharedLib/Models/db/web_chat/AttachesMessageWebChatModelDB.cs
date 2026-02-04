@@ -22,8 +22,9 @@ public class AttachesMessageWebChatModelDB
     /// <inheritdoc/>
     public int MessageOwnerId { get; set; }
 
-    /// <summary>
-    /// Вложение/файл (опционально)
-    /// </summary>
+    /// <inheritdoc/>
     public required int FileAttachId { get; set; }
+
+    /// <inheritdoc/>
+    public string? FileAttachName { get; set; }
 }

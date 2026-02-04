@@ -103,7 +103,9 @@ public partial class MessagesForWebChatComponent : BlazorBusyComponentUsersCache
 
         TResponseModel<int> res = await WebChatRepo.CreateMessageWebChatAsync(req);
         SnackBarRepo.ShowMessagesResponse(res.Messages);
+        req.Id = res.Response;
 
+        List<StorageFileModelDB> filesUpd = [];
         MemoryStream ms;
         if (loadedFiles.Count != 0 && res.Response > 0)
         {
@@ -129,8 +131,21 @@ public partial class MessagesForWebChatComponent : BlazorBusyComponentUsersCache
                 };
                 TResponseModel<StorageFileModelDB> storeFile = await StorageRepo.SaveFileAsync(reqF);
                 SnackBarRepo.ShowMessagesResponse(storeFile.Messages);
+                if (storeFile.Response is not null)
+                    filesUpd.Add(storeFile.Response);
                 await ms.DisposeAsync();
             }
+        }
+
+        if (filesUpd.Count != 0)
+        {
+            req.AttachesFiles = [.. filesUpd.Select(x => new AttachesMessageWebChatModelDB() { FileAttachId = x.Id, FileAttachName = x.FileName, MessageOwnerId = req.Id })];
+            ResponseBaseModel _updFiles = await WebChatRepo.UpdateMessageWebChatAsync(new()
+            {
+                SenderActionUserId = CurrentUserSession.UserId,
+                Payload = req
+            });
+            SnackBarRepo.ShowMessagesResponse(_updFiles.Messages);
         }
 
         loadedFiles.Clear();

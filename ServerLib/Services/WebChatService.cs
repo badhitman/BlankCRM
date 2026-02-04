@@ -5,6 +5,7 @@
 using Microsoft.EntityFrameworkCore;
 using SharedLib;
 using DbcLib;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace ServerLib;
 
@@ -111,11 +112,30 @@ public partial class WebChatService(IDbContextFactory<MainAppContext> mainDbFact
             return ResponseBaseModel.CreateError("req.Payload is null");
 
         MainAppContext context = await mainDbFactory.CreateDbContextAsync(token);
+
+        MessageWebChatModelDB msgDb = await context.Messages
+            .Where(x => x.Id == req.Payload.Id)
+            .Include(x => x.AttachesFiles)
+            .FirstAsync(cancellationToken: token);
+
+        await using IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
+
         await context.Messages
             .Where(x => x.Id == req.Payload.Id)
             .ExecuteUpdateAsync(set => set
                 .SetProperty(p => p.Text, req.Payload.Text), cancellationToken: token);
 
+        if (req.Payload.AttachesFiles is not null)
+        {
+            List<AttachesMessageWebChatModelDB> newFiles = [.. req.Payload.AttachesFiles.Where(x => msgDb.AttachesFiles?.Any(y => y.FileAttachId == x.FileAttachId) != true)];
+            if (newFiles.Count != 0)
+            {
+                newFiles.ForEach(x => x.MessageOwnerId = msgDb.Id);
+                await context.AttachesFilesOfMessages.AddRangeAsync(newFiles, token);
+                await context.SaveChangesAsync(token);
+            }
+        }
+        await transaction.CommitAsync(token);
         return ResponseBaseModel.CreateSuccess("Ok");
     }
 
