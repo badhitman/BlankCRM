@@ -36,10 +36,10 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
     bool ChatDialogOpen;
     async Task ShowToggle()
     {
-        if (!ChatDialogOpen)
-            await InitSession();
-
         ChatDialogOpen = !ChatDialogOpen;
+
+        if (ChatDialogOpen)
+            await InitSession();
     }
 
     async ValueTask<ItemsProviderResult<MessageWebChatModelDB>> LoadMessages(ItemsProviderRequest request)
