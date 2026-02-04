@@ -50,7 +50,7 @@
         <MudTd DataLabel="Участники">
             @if (context.UsersJoins is not null && context.UsersJoins.Count != 0)
             {
-                foreach (UserJoinDialogWebChatModelDB usr in context.UsersJoins)
+                foreach (UserJoinDialogWebChatModelDB usr in context.UsersJoins.Where(x => !x.OutDateUTC.HasValue))
                 {
                     <span class="badge text-bg-@(usr.OutDateUTC is null ? "primary" : "secondary") me-1" title="@(usr.OutDateUTC is null ? "" : $"{usr.JoinedDateUTC}-{usr.OutDateUTC}")">
                         @(UsersCache.FirstOrDefault(x => x.UserId == usr.UserIdentityId)?.UserName ?? usr.UserIdentityId)
@@ -79,7 +79,7 @@
             {
                 <span class="badge text-bg-light me-1"
                       style="cursor:pointer;"
-                      @onclick="async () => await OutFromChat(context.Id)"
+                      @onclick="async () => await OutFromChat(context.UsersJoins.First(x => !x.OutDateUTC.HasValue && x.UserIdentityId == CurrentUserSession?.UserId).Id)"
                       title="Покинуть диалог/чат">Выйти</span>
             }
         </MudTd>
