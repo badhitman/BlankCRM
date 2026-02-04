@@ -488,6 +488,16 @@ public static partial class GlobalStaticCloudStorageMetadata
     };
 
     /// <summary>
+    /// Примечание к WEB чату
+    /// </summary>
+    public static StorageMetadataModel WebChatCommentary(int webChatId) => new()
+    {
+        ApplicationName = Path.Combine(Routes.WEB_CONTROLLER_NAME, Routes.CHAT_CONTROLLER_NAME),
+        PropertyName = Path.Combine(Routes.COMMENT_CONTROLLER_NAME),
+         OwnerPrimaryKey = webChatId,
+    };
+
+    /// <summary>
     /// Настройки фильтрации в журнале заказов (розница)
     /// </summary>
     public static StorageMetadataModel RetailOrdersJournalByStatusesFilters(string user_id)
