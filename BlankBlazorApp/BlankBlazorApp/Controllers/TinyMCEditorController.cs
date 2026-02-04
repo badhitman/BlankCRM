@@ -66,12 +66,17 @@ public class TinyMCEditorController(IStorageTransmission storeRepo) : Controller
             PropertyName = NameStorage,
             FileName = file_name,
             ContentType = file.ContentType,
+            RulesTypes = new()
+            {
+                { FileAccessRulesTypesEnum.Token, [Guid.NewGuid().ToString()] },
+                { FileAccessRulesTypesEnum.User, ["*"] }
+            }
         };
 
         TResponseModel<StorageFileModelDB> rest = await storeRepo.SaveFileAsync(new() { Payload = req, SenderActionUserId = un });
         if (!rest.Success() || rest.Response is null || rest.Response.Id < 1)
             return StatusCode(500, new { location = "/img/noimage-simple.png" });
 
-        return Ok(new { location = $"/cloud-fs/read/{rest.Response.Id}/{rest.Response.FileName}" });
+        return Ok(new { location = $"/cloud-fs/read/{rest.Response.Id}/{rest.Response.FileName}?{GlobalStaticConstantsRoutes.Routes.TOKEN_CONTROLLER_NAME}={req.RulesTypes.First().Value.First()}" });
     }
 }

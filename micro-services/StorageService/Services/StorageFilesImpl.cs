@@ -6,11 +6,13 @@ using Amazon.Runtime.Internal.Transform;
 using DbcLib;
 using ImageMagick;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.GridFS;
 using SharedLib;
+using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using TextFileScannerLib;
@@ -304,9 +306,9 @@ public class StorageFilesImpl(
         {
             ResponseBaseModel _br = new();
             _br.Messages.InjectException(ex);
-            return new() 
-            { 
-                Messages = _br.Messages 
+            return new()
+            {
+                Messages = _br.Messages
             };
         }
 
@@ -350,6 +352,7 @@ public class StorageFilesImpl(
         using MemoryStream stream = new(req.Payload.Payload);
         ObjectId _uf = await gridFS.UploadFromStreamAsync(_file_name, stream, cancellationToken: token);
         using StorageContext context = await cloudParametersDbFactory.CreateDbContextAsync(token);
+        await using IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
         res.Response = new StorageFileModelDB()
         {
             ApplicationName = req.Payload.ApplicationName,
@@ -366,15 +369,34 @@ public class StorageFilesImpl(
             FileLength = req.Payload.Payload.Length,
         };
 
-        await context.AddAsync(res.Response, token);
+        await context.CloudFiles.AddAsync(res.Response, token);
         await context.SaveChangesAsync(token);
+
+        if (req.Payload.RulesTypes is not null && req.Payload.RulesTypes.Count != 0)
+        {
+            res.Response.AccessRules = [];
+            foreach (KeyValuePair<FileAccessRulesTypesEnum, List<string>> _kvp in req.Payload.RulesTypes)
+            {
+                res.Response.AccessRules.AddRange(_kvp.Value.Select(x => new AccessFileRuleModelDB()
+                {
+                    Option = x,
+                    AccessRuleType = _kvp.Key,
+                    StoreFileId = res.Response.Id
+                }));
+            }
+            if (res.Response.AccessRules.Count != 0)
+            {
+                await context.RulesFilesAccess.AddRangeAsync(res.Response.AccessRules, token);
+                await context.SaveChangesAsync(token);
+            }
+        }
 
         if (GlobalToolsStandard.IsImageFile(_file_name))
         {
             using MagickImage image = new(req.Payload.Payload);
             //
             string _h = $"Height:{image.Height}", _w = $"Width:{image.Width}";
-            await context.AddAsync(new TagModelDB()
+            await context.CloudTags.AddAsync(new TagModelDB()
             {
                 ApplicationName = Routes.FILE_CONTROLLER_NAME,
                 PropertyName = Routes.METADATA_CONTROLLER_NAME,
@@ -384,7 +406,7 @@ public class StorageFilesImpl(
                 OwnerPrimaryKey = res.Response.Id,
                 PrefixPropertyName = Routes.DEFAULT_CONTROLLER_NAME,
             }, token);
-            await context.AddAsync(new TagModelDB()
+            await context.CloudTags.AddAsync(new TagModelDB()
             {
                 ApplicationName = Routes.FILE_CONTROLLER_NAME,
                 PropertyName = Routes.METADATA_CONTROLLER_NAME,
@@ -394,7 +416,7 @@ public class StorageFilesImpl(
                 OwnerPrimaryKey = res.Response.Id,
                 PrefixPropertyName = Routes.DEFAULT_CONTROLLER_NAME,
             }, token);
-            await context.AddAsync(new TagModelDB()
+            await context.CloudTags.AddAsync(new TagModelDB()
             {
                 ApplicationName = Routes.FILE_CONTROLLER_NAME,
                 PropertyName = Routes.METADATA_CONTROLLER_NAME,
@@ -405,6 +427,7 @@ public class StorageFilesImpl(
                 PrefixPropertyName = Routes.DEFAULT_CONTROLLER_NAME,
             }, token);
         }
+        await context.SaveChangesAsync(token);
 
         if (req.Payload.OwnerPrimaryKey.HasValue && req.Payload.OwnerPrimaryKey.Value > 0)
         {
@@ -463,7 +486,8 @@ public class StorageFilesImpl(
                     break;
             }
         }
-
+        await transaction.CommitAsync(token);
+        
         return res;
     }
 }

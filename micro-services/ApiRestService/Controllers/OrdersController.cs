@@ -84,6 +84,7 @@ public class OrdersController(ICommerceTransmission commRepo, IHelpDeskTransmiss
             OwnerPrimaryKey = OrderId,
             Referrer = Request.GetEncodedPathAndQuery(),
             Payload = stream.ToArray(),
+            RulesTypes = new() { { FileAccessRulesTypesEnum.Token, [Guid.NewGuid().ToString()] } },
         };
 
         return await storageRepo.SaveFileAsync(new() { Payload = reqSave, SenderActionUserId = Roles.System });

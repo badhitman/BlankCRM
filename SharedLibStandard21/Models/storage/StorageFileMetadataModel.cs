@@ -2,6 +2,8 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using System.Collections.Generic;
+
 namespace SharedLib;
 
 /// <summary>
@@ -28,4 +30,9 @@ public class StorageFileMetadataModel : StorageMetadataModel
     /// Payload
     /// </summary>
     public byte[]? Payload { get; set; }
+
+    /// <summary>
+    /// Параметры доступа к файлу
+    /// </summary>
+    public Dictionary<FileAccessRulesTypesEnum, List<string>>? RulesTypes { get; set; }
 }

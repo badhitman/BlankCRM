@@ -21,6 +21,8 @@ public partial class MessagesForWebChatComponent : BlazorBusyComponentUsersCache
     [Inject]
     IStorageTransmission StorageRepo { get; set; } = default!;
 
+    [Inject]
+    NavigationManager NavRepo { get; set; } = default!;
 
     /// <inheritdoc/>
     [Parameter, EditorRequired]
@@ -127,6 +129,8 @@ public partial class MessagesForWebChatComponent : BlazorBusyComponentUsersCache
                         ApplicationName = Path.Combine($"{GlobalStaticConstantsRoutes.Routes.WEB_CONTROLLER_NAME}-{GlobalStaticConstantsRoutes.Routes.CHAT_CONTROLLER_NAME}"),
                         PrefixPropertyName = DialogId.ToString(),
                         PropertyName = GlobalStaticConstantsRoutes.Routes.ATTACHMENT_CONTROLLER_NAME,
+                        Referrer = NavRepo.Uri,
+                        RulesTypes = new() { { FileAccessRulesTypesEnum.Token, [Guid.NewGuid().ToString()] } },
                     }
                 };
                 TResponseModel<StorageFileModelDB> storeFile = await StorageRepo.SaveFileAsync(reqF);
@@ -139,7 +143,14 @@ public partial class MessagesForWebChatComponent : BlazorBusyComponentUsersCache
 
         if (filesUpd.Count != 0)
         {
-            req.AttachesFiles = [.. filesUpd.Select(x => new AttachesMessageWebChatModelDB() { FileAttachId = x.Id, FileAttachName = x.FileName, MessageOwnerId = req.Id })];
+            req.AttachesFiles = [.. filesUpd.Select(x => new AttachesMessageWebChatModelDB()
+            {
+                FileAttachId = x.Id,
+                FileAttachName = x.FileName,
+                MessageOwnerId = req.Id,
+                FileTokenAccess = x.AccessRules?.First(x=>x.AccessRuleType == FileAccessRulesTypesEnum.Token).Option,
+            })];
+
             ResponseBaseModel _updFiles = await WebChatRepo.UpdateMessageWebChatAsync(new()
             {
                 SenderActionUserId = CurrentUserSession.UserId,

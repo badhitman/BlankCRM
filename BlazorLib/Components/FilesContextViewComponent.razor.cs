@@ -108,6 +108,10 @@ public partial class FilesContextViewComponent : MetaPropertyBaseComponent
             req.Payload = ms.ToArray();
             req.ContentType = fileBrowser.ContentType;
             req.FileName = fileBrowser.Name;
+            req.RulesTypes = new()
+            {
+                { FileAccessRulesTypesEnum.Token, [Guid.NewGuid().ToString()] },
+            };
 
             await ms.DisposeAsync();
             res = await FilesRepo.SaveFileAsync(new() { Payload = req, SenderActionUserId = CurrentUserSession.UserId });

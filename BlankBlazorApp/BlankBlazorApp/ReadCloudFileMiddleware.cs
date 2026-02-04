@@ -52,7 +52,7 @@ public partial class ReadCloudFileMiddleware(RequestDelegate next)
                 Payload = new()
                 {
                     FileId = fileId,
-                    TokenAccess = http_context.Request.Query.TryGetValue("token", out StringValues FileReadToken)
+                    TokenAccess = http_context.Request.Query.TryGetValue(GlobalStaticConstantsRoutes.Routes.TOKEN_CONTROLLER_NAME, out StringValues FileReadToken)
                         ? FileReadToken.FirstOrDefault()
                         : null
                 }

@@ -27,4 +27,7 @@ public class AttachesMessageWebChatModelDB
 
     /// <inheritdoc/>
     public string? FileAttachName { get; set; }
+
+    /// <inheritdoc/>
+    public string? FileTokenAccess { get; set; }
 }
