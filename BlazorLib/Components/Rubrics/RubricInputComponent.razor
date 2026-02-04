@@ -19,7 +19,7 @@
         ? null
         : _kvp.nestedElements.FirstOrDefault(x => RubricHierarchy.Any(y => y.Id == x.Id));
 
-    <select @onchange="(ce) => HandleSelectionChange(ce, _kvp)" class="form-select" disabled="@IsBusyProgress">
+    <select @onchange="(ce) => HandleSelectionChange(ce, _kvp)" class="form-select" disabled="@DisabledSelector">
         @if (ShowNullElement(_kvp, _currentSelected))
         {
             <option class="text-secondary" value="0" selected="@SelectedNullElement(_kvp, _currentSelected)" disabled="@DisablesNullElement(_kvp, _currentSelected)">
@@ -28,7 +28,8 @@
         }
         @foreach (UniversalBaseModel rubricNode in _kvp.nestedElements)
         {
-            <option class="text-primary-emphasis" disabled="@rubricNode.IsDisabled" value="@rubricNode.Id" selected="@(_currentSelected?.Id == rubricNode.Id)">@rubricNode.Name</option>
+            bool _isSel = _currentSelected?.Id == rubricNode.Id;
+            <option class="text-primary-emphasis" disabled="@rubricNode.IsDisabled" value="@rubricNode.Id" selected="@_isSel">@rubricNode.Name</option>
         }
     </select>
 }

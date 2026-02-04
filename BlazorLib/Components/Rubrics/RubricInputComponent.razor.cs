@@ -18,6 +18,10 @@ public partial class RubricInputComponent : BlazorBusyComponentBaseModel
 
     /// <inheritdoc/>
     [Parameter]
+    public bool DisabledSelect { get; set; }
+
+    /// <inheritdoc/>
+    [Parameter]
     public string Title { get; set; } = "Рубрика/категория";
 
     /// <inheritdoc/>
@@ -55,7 +59,7 @@ public partial class RubricInputComponent : BlazorBusyComponentBaseModel
     /// null - если не выбрано
     /// </remarks>
     int? SelectedRubricId;
-
+    bool DisabledSelector => IsBusyProgress || DisabledSelect;
     bool IsEdited
     {
         get

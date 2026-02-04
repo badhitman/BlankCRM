@@ -22,28 +22,36 @@
             </div>
         </div>
     </div>
-    <AuthorizeView Context="col" Roles="@($"{GlobalStaticConstantsRoles.Roles.Admin}")">
-        <Authorized>
-            <div class="col">
-                <div class="card">
-                    <div class="card-body">
-                        <DecimalParameterStorageComponent Label="Офисные"
-                                                          InitValueIfNotExist=540
-                                                          KeyStorage="GlobalStaticCloudStorageMetadata.BonusAmountStorageMetadata" />
-                    </div>
-                </div>
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <DecimalParameterStorageComponent Label="Офисные"
+                                                  InitValueIfNotExist=540
+                                                  KeyStorage="GlobalStaticCloudStorageMetadata.BonusAmountStorageMetadata" />
             </div>
-            <div class="col">
-                <div class="card">
-                    <div class="card-body" id="pre-paid-order">
+        </div>
+    </div>
+    <div class="col">
+        <div class="card">
+            <div class="card-body" id="pre-paid-order">
+                <AuthorizeView Context="col" Roles="@($"{GlobalStaticConstantsRoles.Roles.Admin}")">
+                    <Authorized>
                         <RubricParameterStorageComponent Label="Предоплаченные"
                                                          SetValueEvent="PrePaidTypePaymentSetHandle"
+                                                         IsDisabledInput
                                                          KeyStorage="GlobalStaticCloudStorageMetadata.RubricPaymentTypeOuter" />
-                    </div>
-                </div>
+                    </Authorized>
+                    <NotAuthorized>
+                        <RubricParameterStorageComponent Label="Предоплаченные"
+                                                         SetValueEvent="PrePaidTypePaymentSetHandle"
+                                                         IsDisabledInput
+                                                         KeyStorage="GlobalStaticCloudStorageMetadata.RubricPaymentTypeOuter" />
+                    </NotAuthorized>
+                </AuthorizeView>
+
             </div>
-        </Authorized>
-    </AuthorizeView>
+        </div>
+    </div>
 </div>
 
 @if (IsBusyProgress || ReportData is null)

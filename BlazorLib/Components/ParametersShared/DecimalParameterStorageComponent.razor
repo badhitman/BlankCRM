@@ -1,4 +1,10 @@
 ﻿@using MudBlazor
 @inherits BlazorBusyComponentBaseModel
 
-<MudNumericField Immediate @bind-Value="DecimalValue" Label="@Label" Variant="Variant.Outlined" HelperText="@HelperText" Format="N2" />
+<MudNumericField Immediate
+                 @bind-Value="DecimalValue"
+                 Label="@Label"
+                 Variant="Variant.Outlined"
+                 HelperText="@HelperText"
+                 ReadOnly="IsDisabledInput"
+                 Format="N2" />

@@ -32,6 +32,10 @@ public partial class DecimalParameterStorageComponent : BlazorBusyComponentBaseM
     [Parameter]
     public string? HelperText { get; set; }
 
+    /// <inheritdoc/>
+    [Parameter]
+    public bool IsDisabledInput { get; set; }
+
 
     decimal _decimalValue;
     decimal DecimalValue

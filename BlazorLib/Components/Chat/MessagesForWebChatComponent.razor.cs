@@ -2,9 +2,9 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using SharedLib;
 
@@ -17,6 +17,9 @@ public partial class MessagesForWebChatComponent : BlazorBusyComponentUsersCache
 {
     [Inject]
     IWebChatService WebChatRepo { get; set; } = default!;
+
+    [Inject]
+    IStorageTransmission StorageRepo { get; set; } = default!;
 
 
     /// <inheritdoc/>
@@ -77,25 +80,59 @@ public partial class MessagesForWebChatComponent : BlazorBusyComponentUsersCache
     async Task SendMessage()
     {
         if (string.IsNullOrWhiteSpace(_textSendMessage))
-            throw new ArgumentNullException(nameof(_textSendMessage));
+        {
+            SnackBarRepo.Error("string.IsNullOrWhiteSpace(_textSendMessage)");
+            return;
+        }
+        if (string.IsNullOrWhiteSpace(CurrentUserSession?.UserId))
+        {
+            SnackBarRepo.Error("string.IsNullOrWhiteSpace(CurrentUserSession?.UserId)");
+            return;
+        }
+
+        MessageWebChatModelDB req = new()
+        {
+            SenderUserIdentityId = CurrentUserSession.UserId,
+            Text = _textSendMessage,
+            CreatedAtUTC = DateTime.UtcNow,
+            DialogOwnerId = DialogId,
+            IsInsideMessage = true,
+        };
 
         await SetBusyAsync();
 
-        //MemoryStream ms;
-        if (loadedFiles.Count != 0)
-        {
-            //req.Files = [];
+        TResponseModel<int> res = await WebChatRepo.CreateMessageWebChatAsync(req);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
 
-            //foreach (var fileBrowser in loadedFiles)
-            //{
-            //    ms = new();
-            //    await fileBrowser.OpenReadStream(maxAllowedSize: 1024 * 18 * 1024).CopyToAsync(ms);
-            //    req.Files.Add(new() { ContentType = fileBrowser.ContentType, Name = fileBrowser.Name, Data = ms.ToArray() });
-            //    await ms.DisposeAsync();
-            //}
+        MemoryStream ms;
+        if (loadedFiles.Count != 0 && res.Response > 0)
+        {
+            req.AttachesFiles = [];
+
+            foreach (var fileBrowser in loadedFiles)
+            {
+                ms = new();
+                await fileBrowser.OpenReadStream(maxAllowedSize: 1024 * 18 * 1024).CopyToAsync(ms);
+                TAuthRequestStandardModel<StorageFileMetadataModel> reqF = new()
+                {
+                    SenderActionUserId = CurrentUserSession.UserId,
+                    Payload = new()
+                    {
+                        Payload = ms.ToArray(),
+                        FileName = fileBrowser.Name,
+                        ContentType = fileBrowser.ContentType,
+                        OwnerPrimaryKey = res.Response,
+                        ApplicationName = Path.Combine($"{GlobalStaticConstantsRoutes.Routes.WEB_CONTROLLER_NAME}-{GlobalStaticConstantsRoutes.Routes.CHAT_CONTROLLER_NAME}"),
+                        PrefixPropertyName = DialogId.ToString(),
+                        PropertyName = GlobalStaticConstantsRoutes.Routes.ATTACHMENT_CONTROLLER_NAME,
+                    }
+                };
+                TResponseModel<StorageFileModelDB> storeFile = await StorageRepo.SaveFileAsync(reqF);
+                SnackBarRepo.ShowMessagesResponse(storeFile.Messages);
+                await ms.DisposeAsync();
+            }
         }
 
-        //SnackBarRepo.ShowMessagesResponse(rest.Messages);
         loadedFiles.Clear();
         _inputFileId = Guid.NewGuid().ToString();
 

@@ -40,6 +40,10 @@ public partial class RubricParameterStorageComponent : BlazorBusyComponentBaseMo
     [Parameter]
     public bool ShowDisabledRubrics { get; set; } = true;
 
+    /// <inheritdoc/>
+    [Parameter]
+    public bool IsDisabledInput { get; set; }
+
 
     int? _rubricSelected;
     void RubricSelectAction(UniversalBaseModel? selectedRubric)

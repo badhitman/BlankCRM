@@ -10,6 +10,7 @@
     {
         <RubricInputComponent SelectRubricsHandle="RubricSelectAction"
                               ModeSelectingRubrics=ModeSelectingRubrics
+                              DisabledSelect=IsDisabledInput
                               RubricInitial="@(_rubricSelected ?? 0)"
                               ContextName="@KeyStorage.ContextName"
                               Title="@Label"
