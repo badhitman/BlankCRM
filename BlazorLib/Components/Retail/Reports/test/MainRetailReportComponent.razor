@@ -25,9 +25,19 @@
     <div class="col">
         <div class="card">
             <div class="card-body">
-                <DecimalParameterStorageComponent Label="Офисные"
-                                                  InitValueIfNotExist=540
-                                                  KeyStorage="GlobalStaticCloudStorageMetadata.BonusAmountStorageMetadata" />
+                <AuthorizeView Context="col" Roles="@($"{GlobalStaticConstantsRoles.Roles.Admin}")">
+                    <Authorized>
+                        <DecimalParameterStorageComponent Label="Офисные"
+                                                          InitValueIfNotExist=540
+                                                          KeyStorage="GlobalStaticCloudStorageMetadata.BonusAmountStorageMetadata" />
+                    </Authorized>
+                    <NotAuthorized>
+                        <DecimalParameterStorageComponent Label="Офисные"
+                                                          InitValueIfNotExist=540
+                                                          IsDisabledInput
+                                                          KeyStorage="GlobalStaticCloudStorageMetadata.BonusAmountStorageMetadata" />
+                    </NotAuthorized>
+                </AuthorizeView>
             </div>
         </div>
     </div>
