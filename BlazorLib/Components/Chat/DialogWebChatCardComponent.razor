@@ -1,4 +1,8 @@
 ﻿@using BlazorLib.Components.ParametersShared
+@using BlazorLib.Components.Retail.Conversions
+@using BlazorLib.Components.Retail.Delivery
+@using BlazorLib.Components.Retail.Orders
+@using BlazorLib.Components.Retail.Payments
 @using MudBlazor
 
 @inherits BlazorBusyComponentUsersCachedModel
@@ -8,34 +12,47 @@
     <MudProgressLinear Color="Color.Primary" Indeterminate />
 }
 
-@if (CurrentRoom is not null)
+@if (CurrentRoom is not null && roomEdit is not null)
 {
     <div class="card">
         <div class="card-body">
             <h5 class="card-title align-start d-flex">
                 Чат:
                 <code>
-                    @if (!string.IsNullOrWhiteSpace(CurrentRoom.InitiatorIdentityId))
+                    @if (!string.IsNullOrWhiteSpace(roomEdit.InitiatorIdentityId))
                     {
-                        <text>@(UsersCache.FirstOrDefault(x => x.UserId == CurrentRoom.InitiatorIdentityId)?.ToString() ?? CurrentRoom.InitiatorIdentityId)</text>
+                        <text>@(UsersCache.FirstOrDefault(x => x.UserId == roomEdit.InitiatorIdentityId)?.ToString() ?? roomEdit.InitiatorIdentityId)</text>
                     }
                     else
                     {
-                        <text>@CurrentRoom.InitiatorHumanName</text>
-                        <sup class="ms-2">@CurrentRoom.InitiatorHumanName</sup>
+                        <text>@roomEdit.InitiatorHumanName</text>
+                        <sup class="ms-2">@roomEdit.InitiatorHumanName</sup>
                     }
                 </code>
                 <MudSpacer />
                 <span>
-                    <button class="btn btn-outline-primary btn-sm" type="button">Button</button>
-                    <button class="btn btn-outline-primary btn-sm" type="button">Button</button>
+                    @if (RoomIsEdit)
+                    {
+                        <button class="btn btn-outline-primary btn-sm"
+                                type="button"
+                                title="Перезагрузить данные с сервера"
+                                @onclick="ReloadRoom">
+                            Отмена
+                        </button>
+                    }
+                    <button class="btn btn-outline-@(RoomIsEdit ? "success" : "secondary") btn-sm"
+                            type="button"
+                            title="Сохранить изменения чата"
+                            @onclick="SaveRoom">
+                        Сохранить
+                    </button>
                 </span>
             </h5>
-            @if (CurrentRoom.UsersJoins is not null && CurrentRoom.UsersJoins.Count != 0)
+            @if (roomEdit.UsersJoins is not null && roomEdit.UsersJoins.Count != 0)
             {
                 <h6 class="card-subtitle mb-2 text-body-secondary">
                     Сотрудники:
-                    @foreach (UserJoinDialogWebChatModelDB userJ in CurrentRoom.UsersJoins)
+                    @foreach (UserJoinDialogWebChatModelDB userJ in roomEdit.UsersJoins)
                     {
                         <span class="badge text-bg-primary">@(UsersCache.FirstOrDefault(x => x.UserId == userJ.UserIdentityId)?.ToString() ?? userJ.UserIdentityId)</span>
                     }
@@ -48,7 +65,7 @@
                        class="form-control"
                        id="exampleInputHumanName1"
                        aria-describedby="humanNameHelp"
-                       @bind-value="CurrentRoom.InitiatorHumanName"
+                       @bind-value="roomEdit.InitiatorHumanName"
                        @bind-value:event="oninput">
                 <div id="humanNameHelp" class="form-text">Имя для обращения.</div>
             </div>
@@ -58,30 +75,46 @@
                        class="form-control"
                        id="exampleInputContacts1"
                        aria-describedby="contactsHelp"
-                       @bind-value="CurrentRoom.InitiatorContacts"
+                       @bind-value="roomEdit.InitiatorContacts"
                        @bind-value:event="oninput">
                 <div id="contactsHelp" class="form-text">Контакты для связи (Email).</div>
             </div>
             <UserSelectInputComponent SelectHandleAction="SelectUserHandler"
-                                      SelectedUserInit="@CurrentRoom.InitiatorIdentityId"
+                                      SelectedUserInit="@roomEdit.InitiatorIdentityId"
                                       IsReadOnly="IsBusyProgress"
                                       Label="Заказчик" />
 
             <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-6">
                 <MudTabPanel Text="Переписка">
-                    <MessagesForWebChatComponent DialogWebChat="CurrentRoom" />
+                    <MessagesForWebChatComponent DialogWebChat="roomEdit" />
                 </MudTabPanel>
                 <MudTabPanel Text="Заметки">
                     <CKEditorParameterStorageComponent Label="Комментарий"
                                                        KeyStorage="@GlobalStaticCloudStorageMetadata.WebChatCommentary(DialogId)" />
                 </MudTabPanel>
+                @if (!string.IsNullOrWhiteSpace(roomEdit.InitiatorIdentityId))
+                {
+                    <CascadingValue Value="roomEdit.InitiatorIdentityId" Name="ClientId">
+                        <MudTabPanel Text="Заказы">
+                            <RetailOrdersListComponent />
+                        </MudTabPanel>
+                        <MudTabPanel Text="Доставка">
+                            <DeliveriesDocumentsManageComponent />
+                        </MudTabPanel>
+                        <MudTabPanel Text="Платежи">
+                            <PaymentsManageComponent />
+                        </MudTabPanel>
+                        <MudTabPanel Text="Переводы">
+                            <ConversionsTableManageComponent />
+                        </MudTabPanel>
+                    </CascadingValue>
+                }
             </MudTabs>
-
         </div>
     </div>
     <small class="text-body-secondary">
-        created: @CurrentRoom.CreatedAtUTC.GetCustomTime() |
-        deadline: @CurrentRoom.DeadlineUTC.GetCustomTime() |
-        online: @CurrentRoom.LastOnlineAtUTC.GetCustomTime()
+        created: @roomEdit.CreatedAtUTC.GetCustomTime() |
+        deadline: @roomEdit.DeadlineUTC.GetCustomTime() |
+        online: @roomEdit.LastOnlineAtUTC.GetCustomTime()
     </small>
 }

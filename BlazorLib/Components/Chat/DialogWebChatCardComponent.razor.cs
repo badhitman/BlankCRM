@@ -21,15 +21,59 @@ public partial class DialogWebChatCardComponent : BlazorBusyComponentUsersCached
     public int DialogId { get; set; }
 
 
-    DialogWebChatModelDB? CurrentRoom;
+    DialogWebChatModelDB? CurrentRoom, roomEdit;
+    bool RoomIsEdit
+    {
+        get
+        {
+            if (CurrentRoom is null || roomEdit is null)
+                return false;
 
+            bool isEq =
+                ((string.IsNullOrWhiteSpace(CurrentRoom.InitiatorContacts) && string.IsNullOrWhiteSpace(roomEdit.InitiatorContacts)) || CurrentRoom.InitiatorContacts == roomEdit.InitiatorContacts) &&
+                ((string.IsNullOrWhiteSpace(CurrentRoom.InitiatorHumanName) && string.IsNullOrWhiteSpace(roomEdit.InitiatorHumanName)) || CurrentRoom.InitiatorHumanName == roomEdit.InitiatorHumanName) &&
+                ((string.IsNullOrWhiteSpace(CurrentRoom.InitiatorIdentityId) && string.IsNullOrWhiteSpace(roomEdit.InitiatorIdentityId)) || CurrentRoom.InitiatorIdentityId == roomEdit.InitiatorIdentityId);
+
+            return !isEq;
+        }
+    }
+
+    async Task SaveRoom()
+    {
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
+        if (roomEdit is null)
+        {
+            SnackBarRepo.Error("roomEdit is null");
+            return;
+        }
+
+        await SetBusyAsync();
+        ResponseBaseModel res = await WebChatRepo.UpdateDialogWebChatAsync(new()
+        {
+            SenderActionUserId = CurrentUserSession.UserId,
+            Payload = new()
+            {
+                Id = roomEdit.Id,
+                InitiatorContacts = roomEdit.InitiatorContacts,
+                InitiatorHumanName = roomEdit.InitiatorHumanName,
+                InitiatorIdentityId = roomEdit.InitiatorIdentityId,
+            }
+        });
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
+        await ReloadRoom();
+        await SetBusyAsync(false);
+    }
 
     async void SelectUserHandler(UserInfoModel? selected)
     {
-        if (CurrentRoom is null)
+        if (roomEdit is null)
             return;
 
-        CurrentRoom.InitiatorIdentityId = selected?.UserId;
+        roomEdit.InitiatorIdentityId = selected?.UserId;
         StateHasChanged();
     }
 
@@ -45,6 +89,7 @@ public partial class DialogWebChatCardComponent : BlazorBusyComponentUsersCached
             Payload = [DialogId]
         });
         CurrentRoom = res.Response?.First();
+        roomEdit = GlobalTools.CreateDeepCopy(CurrentRoom);
 
         if (!string.IsNullOrWhiteSpace(CurrentRoom?.InitiatorIdentityId))
             await CacheUsersUpdate([CurrentRoom.InitiatorIdentityId]);
