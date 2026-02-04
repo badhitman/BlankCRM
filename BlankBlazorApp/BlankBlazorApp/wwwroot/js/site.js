@@ -127,7 +127,7 @@ window.methods = {
         else {
             expires = "";
         }
-        DeleteCookie(name);
+        window.methods.DeleteCookie(name);
         document.cookie = name + "=" + value + expires + `; path=${path}`;
     },
     UpdateCookie: function (name, seconds, path) {
