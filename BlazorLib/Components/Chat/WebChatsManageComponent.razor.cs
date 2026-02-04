@@ -16,7 +16,12 @@ public partial class WebChatsManageComponent : BlazorBusyComponentUsersCachedMod
     [Inject]
     IWebChatService WebChatRepo { get; set; } = default!;
 
+    /// <inheritdoc/>
+    [Parameter]
+    public string? FilterUserIdentityId { get; set; }
+
     MudTable<DialogWebChatModelDB>? tableRef;
+
 
     async Task JoinToChat(int chatId, bool isExclusive = false)
     {
@@ -76,7 +81,7 @@ public partial class WebChatsManageComponent : BlazorBusyComponentUsersCachedMod
             SortingDirection = state.SortDirection.Convert(),
             Payload = new()
             {
-
+                FilterUserIdentityId = FilterUserIdentityId,
             }
         };
         await SetBusyAsync(token: token);
