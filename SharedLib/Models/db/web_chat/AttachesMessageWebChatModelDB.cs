@@ -28,6 +28,14 @@ public class AttachesMessageWebChatModelDB
     /// <inheritdoc/>
     public string? FileAttachName { get; set; }
 
+    /// <summary>
+    /// Размер файла
+    /// </summary>
+    public long FileLength { get; set; }
+
     /// <inheritdoc/>
     public string? FileTokenAccess { get; set; }
+
+    /// <inheritdoc/>
+    public string GetURI => $"/cloud-fs/read/{FileAttachId}/{FileAttachName}?{GlobalStaticConstantsRoutes.Routes.TOKEN_CONTROLLER_NAME}={FileTokenAccess}";
 }

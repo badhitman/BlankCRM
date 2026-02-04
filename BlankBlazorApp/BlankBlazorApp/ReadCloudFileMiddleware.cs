@@ -44,19 +44,18 @@ public partial class ReadCloudFileMiddleware(RequestDelegate next)
             return;
         }
         Claim? userId = user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
-
-        TResponseModel<FileContentModel> rest = await storeRepo
-            .ReadFileAsync(new TAuthRequestStandardModel<RequestFileReadModel>()
+        TAuthRequestStandardModel<RequestFileReadModel> req = new()
+        {
+            SenderActionUserId = userId?.Value ?? "",
+            Payload = new()
             {
-                SenderActionUserId = userId?.Value ?? "",
-                Payload = new()
-                {
-                    FileId = fileId,
-                    TokenAccess = http_context.Request.Query.TryGetValue(GlobalStaticConstantsRoutes.Routes.TOKEN_CONTROLLER_NAME, out StringValues FileReadToken)
+                FileId = fileId,
+                TokenAccess = http_context.Request.Query.TryGetValue(GlobalStaticConstantsRoutes.Routes.TOKEN_CONTROLLER_NAME, out StringValues FileReadToken)
                         ? FileReadToken.FirstOrDefault()
                         : null
-                }
-            });
+            }
+        };
+        TResponseModel<FileContentModel> rest = await storeRepo.ReadFileAsync(req);
 
         if (!rest.Success() || rest.Response is null || rest.Response.Payload.Length == 0)
         {
@@ -64,6 +63,9 @@ public partial class ReadCloudFileMiddleware(RequestDelegate next)
             await http_context.Response.BodyWriter.WriteAsync(Resources.noimage_simple);
             return;
         }
+
+        http_context.Response.Headers.Append($"Content-disposition", $"attachment; filename={System.Net.WebUtility.UrlEncode(rest.Response.FileName)}");
+        http_context.Response.Headers.Append($"Content-type", rest.Response.ContentType);
 
         await http_context.Response.BodyWriter.WriteAsync(rest.Response.Payload);
         await _next.Invoke(_http_context);

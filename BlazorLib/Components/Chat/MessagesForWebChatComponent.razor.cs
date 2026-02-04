@@ -104,6 +104,7 @@ public partial class MessagesForWebChatComponent : BlazorBusyComponentUsersCache
         await SetBusyAsync();
 
         TResponseModel<int> res = await WebChatRepo.CreateMessageWebChatAsync(req);
+        _textSendMessage = null;
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         req.Id = res.Response;
 
@@ -147,6 +148,7 @@ public partial class MessagesForWebChatComponent : BlazorBusyComponentUsersCache
             {
                 FileAttachId = x.Id,
                 FileAttachName = x.FileName,
+                FileLength = x.FileLength,
                 MessageOwnerId = req.Id,
                 FileTokenAccess = x.AccessRules?.First(x=>x.AccessRuleType == FileAccessRulesTypesEnum.Token).Option,
             })];
