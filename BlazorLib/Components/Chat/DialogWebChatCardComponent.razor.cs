@@ -37,6 +37,7 @@ public partial class DialogWebChatCardComponent : BlazorBusyComponentUsersCached
             return !isEq;
         }
     }
+    bool RoomNotEdit => !RoomIsEdit;
 
     async Task SaveRoom()
     {

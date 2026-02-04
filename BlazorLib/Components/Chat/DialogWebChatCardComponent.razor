@@ -42,6 +42,7 @@
                     }
                     <button class="btn btn-outline-@(RoomIsEdit ? "success" : "secondary") btn-sm"
                             type="button"
+                            disabled="@RoomNotEdit"
                             title="Сохранить изменения чата"
                             @onclick="SaveRoom">
                         Сохранить
