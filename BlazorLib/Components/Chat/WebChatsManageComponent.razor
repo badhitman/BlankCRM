@@ -75,6 +75,13 @@
                       @onclick="async () => await JoinToChat(context.Id)"
                       title="Вступить в диалог/чат">Присоединиться</span>
             }
+            else if (context.UsersJoins?.Any(x => !x.OutDateUTC.HasValue && x.UserIdentityId == CurrentUserSession?.UserId) == true)
+            {
+                <span class="badge text-bg-light me-1"
+                      style="cursor:pointer;"
+                      @onclick="async () => await OutFromChat(context.Id)"
+                      title="Покинуть диалог/чат">Выйти</span>
+            }
         </MudTd>
     </RowTemplate>
     <NoRecordsContent>

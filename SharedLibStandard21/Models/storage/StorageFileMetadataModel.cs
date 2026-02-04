@@ -20,7 +20,7 @@ public class StorageFileMetadataModel : StorageMetadataModel
     public string? ContentType { get; set; }
 
     /// <summary>
-    /// Referer
+    /// Адрес страницы, с которой была произведена загрузка
     /// </summary>
     public string? Referrer { get; set; }
 

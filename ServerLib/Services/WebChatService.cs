@@ -72,6 +72,7 @@ public partial class WebChatService(IDbContextFactory<MainAppContext> mainDbFact
                     .OrderByDescending(x => x.CreatedAtUTC)
                     .Skip(req.StartIndex)
                     .Take(req.Count)
+                    .Include(x => x.AttachesFiles)
                     .ToListAsync(cancellationToken: token),
             }
         };
@@ -98,6 +99,7 @@ public partial class WebChatService(IDbContextFactory<MainAppContext> mainDbFact
                     .OrderByDescending(x => x.CreatedAtUTC)
                     .Skip(req.PageNum * req.PageSize)
                     .Take(req.PageSize)
+                    .Include(x => x.AttachesFiles)
                     .ToListAsync(cancellationToken: token),
         };
     }

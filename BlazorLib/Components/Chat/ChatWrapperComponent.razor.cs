@@ -55,17 +55,6 @@ public partial class ChatWrapperComponent : BlazorBusyComponentBaseAuthModel
         if (res.Response is null)
             return new ItemsProviderResult<MessageWebChatModelDB>([], 0);
 
-        //List<KeyValuePair<string?, List<MessageWebChatModelDB>>> chatSrc = [];
-        ////KeyValuePair<string?, List<MessageWebChatModelDB>> _nr = new();
-
-        //foreach(MessageWebChatModelDB _msg in res.Response)
-        //{
-        //    if (chatSrc.Count == 0 || chatSrc.Last().Key != _msg.SenderUserIdentityId)
-        //        chatSrc.Add(new(_msg.SenderUserIdentityId, [_msg]));
-        //    else
-        //        chatSrc.Last().Value.Add(_msg);
-        //}
-
         return new ItemsProviderResult<MessageWebChatModelDB>(res.Response.Messages, res.Response.TotalRowsCount);
     }
 
@@ -80,6 +69,7 @@ public partial class ChatWrapperComponent : BlazorBusyComponentBaseAuthModel
             SenderActionUserId = CurrentUserSession?.UserId,
             Payload = ticketSessionEdit
         });
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
         TResponseModel<List<DialogWebChatModelDB>> getChat = await WebChatRepo.DialogsWebChatsReadAsync(new() { SenderActionUserId = CurrentUserSession?.UserId, Payload = [ticketSessionEdit.Id] });
         SnackBarRepo.ShowMessagesResponse(getChat.Messages);
 
@@ -124,7 +114,7 @@ public partial class ChatWrapperComponent : BlazorBusyComponentBaseAuthModel
             {
                 Text = _textSendMessage.Trim(),
                 SenderUserIdentityId = CurrentUserSession?.UserId,
-                DialogOwnerId = ticketSession.Id, 
+                DialogOwnerId = ticketSession.Id,
                 IsInsideMessage = true,
             };
             await SetBusyAsync();

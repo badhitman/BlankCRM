@@ -44,4 +44,9 @@ public partial class MainAppLayerContext : DbContext
     /// Messages
     /// </summary>
     public DbSet<MessageWebChatModelDB> Messages { get; set; } = default!;
+
+    /// <summary>
+    /// Attaches (files) of messages
+    /// </summary>
+    public DbSet<AttachesMessageWebChatModelDB> AttachesFilesOfMessages { get; set; } = default!;
 }

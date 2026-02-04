@@ -26,7 +26,7 @@ public class StorageFileModelDB : StorageFileMiddleModel
     public string? ContentType { get; set; }
 
     /// <summary>
-    /// Referrer (main/init)
+    /// Адрес страницы, с которой была произведена загрузка
     /// </summary>
     public string? ReferrerMain { get; set; }
 

@@ -38,6 +38,29 @@ public partial class WebChatsManageComponent : BlazorBusyComponentUsersCachedMod
         };
         await SetBusyAsync();
         ResponseBaseModel res = await WebChatRepo.UserInjectDialogWebChatAsync(req);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
+        if (tableRef is not null)
+            await tableRef.ReloadServerData();
+
+        await SetBusyAsync(false);
+    }
+
+    async Task OutFromChat(int chatId)
+    {
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
+
+        TAuthRequestStandardModel<int> req = new()
+        {
+            SenderActionUserId = CurrentUserSession.UserId,
+            Payload = chatId,
+        };
+        await SetBusyAsync();
+        ResponseBaseModel res = await WebChatRepo.DeleteUserJoinDialogWebChatAsync(req);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
         if (tableRef is not null)
             await tableRef.ReloadServerData();
 

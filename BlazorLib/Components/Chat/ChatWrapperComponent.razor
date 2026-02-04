@@ -93,7 +93,7 @@
                                            OnContextClick="@((args) => RightClickMessage(args, message))">
                                 @message.Text
                             </MudChatBubble>
-                            @if (message.AttachFileId.HasValue)
+                            @if (message.AttachesFiles is not null)
                             {
                                 <MudChatFooter>
 

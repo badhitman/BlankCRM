@@ -17,7 +17,6 @@ public class RequestStorageBaseModel
     /// </summary>
     public string? ApplicationName { get; set; }
 
-
     /// <summary>
     /// Имя
     /// </summary>

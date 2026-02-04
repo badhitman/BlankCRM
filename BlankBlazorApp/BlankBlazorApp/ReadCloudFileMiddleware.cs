@@ -7,7 +7,6 @@ using Microsoft.Extensions.Primitives;
 using SharedLib;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
-using System.Web;
 
 /// <summary>
 /// ReadCloudFileMiddleware

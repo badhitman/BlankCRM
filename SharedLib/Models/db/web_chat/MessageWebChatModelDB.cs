@@ -51,5 +51,5 @@ public class MessageWebChatModelDB
     /// <summary>
     /// Вложение/файл (опционально)
     /// </summary>
-    public int? AttachFileId { get; set; }
+    public AttachesMessageWebChatModelDB? AttachesFiles { get; set; }
 }

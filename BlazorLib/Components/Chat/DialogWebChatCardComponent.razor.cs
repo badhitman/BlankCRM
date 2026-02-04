@@ -20,6 +20,7 @@ public partial class DialogWebChatCardComponent : BlazorBusyComponentUsersCached
     [Parameter, EditorRequired]
     public int DialogId { get; set; }
 
+
     DialogWebChatModelDB? CurrentRoom;
 
 
