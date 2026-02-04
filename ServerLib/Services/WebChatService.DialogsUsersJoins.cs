@@ -85,7 +85,7 @@ public partial class WebChatService : IWebChatService
         TResponseModel<UserInfoModel[]> getUser = await identityRepo.GetUsersOfIdentityAsync([req.SenderActionUserId], token);
         await context.Messages.AddAsync(new()
         {
-            Text = $"К чату присоединялся `{getUser.Response?.FirstOrDefault(x => x.UserId == req.SenderActionUserId)?.UserName ?? req.SenderActionUserId}`",
+            Text = $"Из чата вышел `{getUser.Response?.FirstOrDefault(x => x.UserId == req.SenderActionUserId)?.UserName ?? req.SenderActionUserId}`",
             CreatedAtUTC = DateTime.UtcNow,
             DialogOwnerId = req.Payload,
             SenderUserIdentityId = GlobalStaticConstantsRoles.Roles.System,
