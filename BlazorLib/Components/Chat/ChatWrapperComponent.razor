@@ -99,7 +99,11 @@
                             @if (message.AttachesFiles is not null && message.AttachesFiles.Count != 0)
                             {
                                 <MudChatFooter>
-
+                                    Файлы:
+                                    @foreach (AttachesMessageWebChatModelDB _fa in message.AttachesFiles)
+                                    {
+                                        <a href="@($"/cloud-fs/read{_fa.FileAttachId}")" class="mx-1">@_fa.FileAttachName</a>
+                                    }
                                 </MudChatFooter>
                             }
                         </MudChat>

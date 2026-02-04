@@ -99,7 +99,7 @@
                             Файлы:
                             @foreach (AttachesMessageWebChatModelDB _fa in context.AttachesFiles)
                             {
-                                <code class="mx-1">@_fa.FileAttachId</code>
+                                <a class="mx-1" href="@($"/cloud-fs/read{_fa.FileAttachId}")">@_fa.FileAttachName</a>
                             }
                         </MudChatFooter>
                     }
