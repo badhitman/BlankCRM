@@ -1,7 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Components.Web.Virtualization
 @using MudBlazor
 
-@inherits BlazorBusyComponentBaseAuthModel
+@inherits BlazorBusyComponentUsersCachedModel
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 <span @onclick="ShowToggle" style="cursor:pointer;">Чат</span>
@@ -85,10 +85,13 @@
                             ChatBubblePosition position = message.IsInsideMessage
                             ? ChatBubblePosition.Start
                             : ChatBubblePosition.End;
+                            UserInfoModel? senderUser = UsersCache.FirstOrDefault(x => x.UserId == message.SenderUserIdentityId);
+
                         }
                         <MudChat ChatPosition="@position">
                             <MudAvatar>@(position == ChatBubblePosition.Start ? "Вы" : "US")</MudAvatar>
-                            <MudChatHeader Name="@(position == ChatBubblePosition.Start ? "Вы" : message.SenderUserIdentityId)" Time="@message.CreatedAtUTC.GetCustomTime().ToString()" />
+                            <MudChatHeader Name="@(position == ChatBubblePosition.Start ? "Вы" : senderUser?.UserName ?? message.SenderUserIdentityId)"
+                                           Time="@message.CreatedAtUTC.GetCustomTime().ToString()" />
                             <MudChatBubble OnClick="@((args) => ClickMessage(args, message))"
                                            OnContextClick="@((args) => RightClickMessage(args, message))">
                                 @message.Text

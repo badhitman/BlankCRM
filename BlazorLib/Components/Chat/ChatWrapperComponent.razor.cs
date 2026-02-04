@@ -15,7 +15,7 @@ namespace BlazorLib.Components.Chat;
 /// <summary>
 /// ChatWrapperComponent
 /// </summary>
-public partial class ChatWrapperComponent : BlazorBusyComponentBaseAuthModel
+public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
 {
     [Inject]
     IJSRuntime JsRuntime { get; set; } = default!;
@@ -53,10 +53,14 @@ public partial class ChatWrapperComponent : BlazorBusyComponentBaseAuthModel
             StartIndex = request.StartIndex,
             Count = request.Count,
         };
+        await SetBusyAsync(token: request.CancellationToken);
         TResponseModel<SelectMessagesForWebChatResponseModel> res = await WebChatRepo.SelectMessagesWebChatAsync(req, request.CancellationToken);
-
+        await SetBusyAsync(false, token: request.CancellationToken);
         if (res.Response is null)
             return new ItemsProviderResult<MessageWebChatModelDB>([], 0);
+
+        if (res.Response.Count != 0)
+            await CacheUsersUpdate([.. res.Response.Messages.Where(x => !string.IsNullOrWhiteSpace(x.SenderUserIdentityId)).Select(x => x.SenderUserIdentityId)!]);
 
         return new ItemsProviderResult<MessageWebChatModelDB>(res.Response.Messages, res.Response.TotalRowsCount);
     }
