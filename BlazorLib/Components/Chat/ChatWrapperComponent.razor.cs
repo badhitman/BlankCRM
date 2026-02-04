@@ -34,8 +34,11 @@ public partial class ChatWrapperComponent : BlazorBusyComponentBaseAuthModel
     static readonly int virtualCacheSize = 50;
 
     bool ChatDialogOpen;
-    void ShowToggle()
+    async Task ShowToggle()
     {
+        if (!ChatDialogOpen)
+            await InitSession();
+
         ChatDialogOpen = !ChatDialogOpen;
     }
 
@@ -70,11 +73,7 @@ public partial class ChatWrapperComponent : BlazorBusyComponentBaseAuthModel
             Payload = ticketSessionEdit
         });
         SnackBarRepo.ShowMessagesResponse(res.Messages);
-        TResponseModel<List<DialogWebChatModelDB>> getChat = await WebChatRepo.DialogsWebChatsReadAsync(new() { SenderActionUserId = CurrentUserSession?.UserId, Payload = [ticketSessionEdit.Id] });
-        SnackBarRepo.ShowMessagesResponse(getChat.Messages);
-
-        ticketSession = getChat.Response?.FirstOrDefault();
-        ticketSessionEdit = GlobalTools.CreateDeepCopy(ticketSession);
+        await InitSession();
 
         await SetBusyAsync(false);
     }
@@ -126,10 +125,8 @@ public partial class ChatWrapperComponent : BlazorBusyComponentBaseAuthModel
         }
     }
 
-    /// <inheritdoc/>
-    protected override async Task OnInitializedAsync()
+    async Task InitSession()
     {
-        await base.OnInitializedAsync();
         string
             _sessionCookieName = Path.Combine(Routes.TICKET_CONTROLLER_NAME, Routes.SESSION_CONTROLLER_NAME).Replace("\\", "/"),
             _lastUserIdCookieName = Path.Combine(_sessionCookieName, $"{Routes.USER_CONTROLLER_NAME}-{Routes.IDENTITY_CONTROLLER_NAME}").Replace("\\", "/");
@@ -160,6 +157,13 @@ public partial class ChatWrapperComponent : BlazorBusyComponentBaseAuthModel
             await JsRuntime.InvokeVoidAsync("methods.CreateCookie", _sessionCookieName, initSessionTicket.Response.SessionTicketId, (initSessionTicket.Response.DeadlineUTC - DateTime.UtcNow).TotalSeconds, "/");
         else
             await JsRuntime.InvokeVoidAsync("methods.UpdateCookie", _sessionCookieName, initSessionTicket.Response.SessionTicketId, (initSessionTicket.Response.DeadlineUTC - DateTime.UtcNow).TotalSeconds, "/");
+    }
+
+    /// <inheritdoc/>
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await InitSession();
     }
 
     /// <inheritdoc/>
