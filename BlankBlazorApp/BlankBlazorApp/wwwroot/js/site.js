@@ -127,6 +127,7 @@ window.methods = {
         else {
             expires = "";
         }
+        DeleteCookie(name);
         document.cookie = name + "=" + value + expires + `; path=${path}`;
     },
     UpdateCookie: function (name, seconds, path) {
@@ -139,23 +140,23 @@ window.methods = {
         var name = cname + "=";
         var decodedCookie = decodeURIComponent(document.cookie);
         var ca = decodedCookie.split(';');
+        var resValue = "";
         for (var i = 0; i < ca.length; i++) {
             var c = ca[i];
             while (c.charAt(0) == ' ') {
                 c = c.substring(1);
             }
             if (c.indexOf(name) == 0) {
-                return c.substring(name.length, c.length);
+                resValue = c.substring(name.length, c.length);
             }
         }
-        return "";
+        return resValue;
     },
-    DeleteCookie: function (name, path, domain) {
-        console.warn(`call -> methods.DeleteCookie(name:${name}, path:${path}, domain:${domain})`);
+    DeleteCookie: function (name) {
+        console.warn(`call -> methods.DeleteCookie(name:${name})`);
         if (window.methods.ReadCookie(name)) {
             document.cookie = name + "=" +
-                ((path) ? ";path=" + path : "") +
-                ((domain) ? ";domain=" + domain : "") +
+                //((path) ? ";path=" + path : "") +
                 ";expires=Thu, 01 Jan 1970 00:00:01 GMT";
         }
     }
