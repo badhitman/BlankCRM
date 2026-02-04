@@ -37,5 +37,5 @@ public class AttachesMessageWebChatModelDB
     public string? FileTokenAccess { get; set; }
 
     /// <inheritdoc/>
-    public string GetURI => $"/cloud-fs/read/{FileAttachId}/{FileAttachName}?{GlobalStaticConstantsRoutes.Routes.TOKEN_CONTROLLER_NAME}={FileTokenAccess}";
+    public string GetURI() => $"/cloud-fs/read/{FileAttachId}/{FileAttachName}?{GlobalStaticConstantsRoutes.Routes.TOKEN_CONTROLLER_NAME}={FileTokenAccess}";
 }

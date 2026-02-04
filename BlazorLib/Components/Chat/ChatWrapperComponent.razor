@@ -102,7 +102,7 @@
                                     Файлы:
                                     @foreach (AttachesMessageWebChatModelDB _fa in message.AttachesFiles)
                                     {
-                                        <a href="@_fa.GetURI" class="ms-2 link-primary">
+                                        <a href="@_fa.GetURI()" class="ms-2 link-primary">
                                             @_fa.FileAttachName ( @GlobalToolsStandard.SizeDataAsString(_fa.FileLength) )
                                         </a>
                                     }
