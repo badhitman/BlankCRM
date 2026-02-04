@@ -7,8 +7,6 @@ using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using System.Threading;
 using Newtonsoft.Json;
-using MQTTnet.Server;
-using MQTTnet.Client;
 using System.Text;
 using SharedLib;
 using MQTTnet;
@@ -27,7 +25,7 @@ public class EventNotifyReceive<T> : IEventNotifyReceive<T>
     public event IEventNotifyReceive<T>.AccountHandler? Notify;
 
     IMqttClient mqttClient;
-    MqttFactory mqttFactory = new();
+    MqttClientFactory mqttFactory = new();
 
     readonly StockSharpClientConfigModel MQConfigRepo;
     readonly ILogger<EventNotifyReceive<T>> LoggerRepo;
@@ -54,7 +52,7 @@ public class EventNotifyReceive<T> : IEventNotifyReceive<T>
     {
         Task ApplicationMessageReceived(MqttApplicationMessageReceivedEventArgs e)
         {
-            string content = Encoding.UTF8.GetString(e.ApplicationMessage.PayloadSegment).Trim();
+            string content = Encoding.UTF8.GetString(e.ApplicationMessage.Payload).Trim();
             T? sr = default;
             try
             {

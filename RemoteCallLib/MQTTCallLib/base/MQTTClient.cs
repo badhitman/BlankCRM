@@ -14,7 +14,6 @@ using Newtonsoft.Json;
 using System.Text;
 using System;
 using MQTTnet;
-using MQTTnet.Client;
 
 namespace SharedLib;
 
@@ -25,7 +24,7 @@ namespace SharedLib;
 public class MQttClient(StockSharpClientConfigModel mqConf, ILogger<MQttClient> _loggerRepo, string appName) : IMQTTClient
 {
     readonly StockSharpClientConfigModel MQConfigRepo = mqConf;
-    MqttFactory mqttFactory = new();
+    MqttClientFactory mqttFactory = new();
 
     readonly ILogger<MQttClient> loggerRepo = _loggerRepo;
 
@@ -66,7 +65,7 @@ public class MQttClient(StockSharpClientConfigModel mqConf, ILogger<MQttClient> 
         {
             responseClient.ApplicationMessageReceivedAsync -= ResponseClient_ApplicationMessageReceivedAsync;
             string msg;
-            string content = Encoding.UTF8.GetString(eMsg.ApplicationMessage.PayloadSegment);
+            string content = Encoding.UTF8.GetString(eMsg.ApplicationMessage.Payload);
 
             try
             {

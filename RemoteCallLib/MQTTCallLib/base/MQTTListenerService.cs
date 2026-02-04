@@ -12,8 +12,8 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 using Newtonsoft.Json;
 using MQTTnet;
-using MQTTnet.Client;
 using System.Text;
+using MQTTnet.Server;
 
 namespace RemoteCallLib;
 
@@ -33,7 +33,8 @@ public class MQTTListenerService<TQueue, TRequest, TResponse>
     readonly IMQTTReceive<TRequest?, TResponse> receiveService;
 
     IMqttClient mqttClient;
-    MqttFactory mqttFactory = new();
+    MqttClientFactory mqttFactoryCLI = new ();
+    MqttServerFactory mqttFactory = new();
 
     Type? _queueType;
     /// <summary>
@@ -49,7 +50,7 @@ public class MQTTListenerService<TQueue, TRequest, TResponse>
     {
         get
         {
-            _queueName ??= QueueType.GetProperties().First(x => x.Name.Equals(nameof(IBaseReceive.QueueName))).GetValue(null).ToString();
+            _queueName ??= QueueType.GetProperties().First(x => x.Name.Equals(nameof(IBaseReceive.QueueName))).GetValue(null)!.ToString()!;
             return _queueName;
         }
     }
@@ -65,7 +66,7 @@ public class MQTTListenerService<TQueue, TRequest, TResponse>
 
         using IServiceScope scope = servicesProvider.CreateScope();
         receiveService = scope.ServiceProvider.GetServices<IMQTTReceive<TRequest?, TResponse>>().First(o => o.GetType() == QueueType);
-        mqttClient = mqttFactory.CreateMqttClient();
+        mqttClient = mqttFactoryCLI.CreateMqttClient();
         loggerRepo.LogInformation($"Subscriber [{QueueName}] socket ready...");
     }
 
@@ -78,7 +79,7 @@ public class MQTTListenerService<TQueue, TRequest, TResponse>
         mqttClient.ApplicationMessageReceivedAsync += async e =>
         {
             TRequest? sr;
-            string content = Encoding.UTF8.GetString(e.ApplicationMessage.PayloadSegment).Trim();
+            string content = Encoding.UTF8.GetString(e.ApplicationMessage.Payload).Trim();
             try
             {
                 sr = content.Equals("null", StringComparison.OrdinalIgnoreCase)
@@ -98,7 +99,7 @@ public class MQTTListenerService<TQueue, TRequest, TResponse>
             answer.FinalizedServer = DateTime.UtcNow;
             if (!string.IsNullOrWhiteSpace(e.ApplicationMessage.ResponseTopic))
             {
-                using IMqttClient mqttResponseClient = mqttFactory.CreateMqttClient();
+                using IMqttClient mqttResponseClient = mqttFactoryCLI.CreateMqttClient();
                 await mqttResponseClient.ConnectAsync(GetMqttClientOptionsBuilder, stoppingToken);
 
                 MqttApplicationMessage applicationMessage;
