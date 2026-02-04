@@ -82,7 +82,7 @@
                             @ref="virtualizeComponent">
                     <ItemContent>
                         @{
-                            ChatBubblePosition position = message.IsInsideMessage || (string.IsNullOrWhiteSpace(message.SenderUserIdentityId) || CurrentUserSession?.UserId == message.SenderUserIdentityId || lastUserId == message.SenderUserIdentityId)
+                            ChatBubblePosition position = message.IsInsideMessage
                             ? ChatBubblePosition.Start
                             : ChatBubblePosition.End;
                         }

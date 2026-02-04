@@ -96,7 +96,7 @@ public partial class MessagesForWebChatComponent : BlazorBusyComponentUsersCache
             Text = _textSendMessage,
             CreatedAtUTC = DateTime.UtcNow,
             DialogOwnerId = DialogId,
-            IsInsideMessage = true,
+            IsInsideMessage = false,
         };
 
         await SetBusyAsync();
