@@ -74,11 +74,21 @@ public class RabbitClient : IRabbitClient
         using IConnection _connection = await factory.CreateConnectionAsync(tokenOuter);
         using IChannel _channel = await _connection.CreateChannelAsync(cancellationToken: tokenOuter);
 
+        string _msg;
         BasicProperties? properties = new();
         if (waitResponse)
         {
             properties.ReplyTo = response_topic;
-            await _channel.QueueDeclareAsync(queue: response_topic, durable: false, exclusive: false, autoDelete: true, arguments: ResponseQueueArguments!, cancellationToken: tokenOuter);
+            try
+            {
+                await _channel.QueueDeclareAsync(queue: response_topic, durable: false, exclusive: false, autoDelete: true, arguments: ResponseQueueArguments!, cancellationToken: tokenOuter);
+            }
+            catch (TaskCanceledException) { }
+            catch (Exception ex)
+            {
+                _msg = "exception basic ask. error {C8C5AB97-CE68-4A5B-BB7D-FA71C6419A3E}";
+                loggerRepo.LogError(ex, _msg);
+            }
         }
 
         Stopwatch stopwatch = new();
@@ -87,7 +97,6 @@ public class RabbitClient : IRabbitClient
         CancellationTokenSource cts = new();
         CancellationToken token = cts.Token;
         ManualResetEventSlim mres = new(false);
-        string _msg;
         TResponseMQModel<T?>? res_io = null;
         async Task MessageReceivedEvent(object? sender, BasicDeliverEventArgs e)
         {
