@@ -26,6 +26,8 @@ public partial class WebChatService(IDbContextFactory<MainAppContext> mainDbFact
                 CreatedAtUTC = DateTime.UtcNow,
                 LastOnlineAtUTC = DateTime.UtcNow,
                 InitiatorIdentityId = req.UserIdentityId,
+                Language = req.Language,
+                UserAgent = req.UserAgent,
             };
 
         readSession ??= new()
@@ -35,6 +37,8 @@ public partial class WebChatService(IDbContextFactory<MainAppContext> mainDbFact
             CreatedAtUTC = DateTime.UtcNow,
             LastOnlineAtUTC = DateTime.UtcNow,
             InitiatorIdentityId = req.UserIdentityId,
+            Language = req.Language,
+            UserAgent = req.UserAgent,
         };
 
         if (readSession.Id == 0)

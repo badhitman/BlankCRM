@@ -34,11 +34,13 @@
                 <span class="ms-1">@context.LastOnlineAtUTC.GetCustomTime()</span>
             </MudLink>
         </MudTd>
-        <MudTd DataLabel="Пользователь">
+        <MudTd DataLabel="Инициатор">
             @if (string.IsNullOrWhiteSpace(context.InitiatorIdentityId))
             {
                 <MudLink Href="@($"/web-chats/room-{context.Id}")">
                     @context.InitiatorHumanName @context.InitiatorContacts
+                    <code class="mx-2"> @context.UserAgent </code>
+                    @context.Language
                 </MudLink>
             }
             else

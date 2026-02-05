@@ -27,7 +27,9 @@ namespace DbPostgreLib.Migrations
                     LastOnlineAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     DeadlineUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     IsDisabled = table.Column<bool>(type: "boolean", nullable: false),
-                    SessionTicketId = table.Column<string>(type: "text", nullable: false)
+                    SessionTicketId = table.Column<string>(type: "text", nullable: false),
+                    UserAgent = table.Column<string>(type: "text", nullable: true),
+                    Language = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -44,7 +46,7 @@ namespace DbPostgreLib.Migrations
                     DialogOwnerId = table.Column<int>(type: "integer", nullable: false),
                     Text = table.Column<string>(type: "text", nullable: false),
                     CreatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    IsInsideMessage = table.Column<bool>(type: "boolean", nullable: false),
+                    InitiatorMessageSender = table.Column<bool>(type: "boolean", nullable: false),
                     IsDisabled = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>

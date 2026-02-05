@@ -25,6 +25,7 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
 
 
     MessageWebChatModelDB? _selectedMessage;
+    AboutUserAgentModel? UserAgent;
     MudMenu? _contextMenu;
     DialogWebChatModelDB? ticketSession, ticketSessionEdit;
     string? lastUserId;
@@ -131,27 +132,28 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
 
     async Task InitSession()
     {
+        UserAgent = await JsRuntime.InvokeAsync<AboutUserAgentModel?>("methods.AboutUserAgent");
+        if (UserAgent?.CookieEnabled != true)
+            return;
+
         string
             _sessionCookieName = Path.Combine(Routes.TICKET_CONTROLLER_NAME, Routes.SESSION_CONTROLLER_NAME).Replace("\\", "/"),
             _lastUserIdCookieName = Path.Combine(_sessionCookieName, $"{Routes.USER_CONTROLLER_NAME}-{Routes.IDENTITY_CONTROLLER_NAME}").Replace("\\", "/");
 
         lastUserId = await JsRuntime.InvokeAsync<string?>("methods.ReadCookie", _lastUserIdCookieName);
-        //SnackBarRepo.Info($"");
         if (!string.IsNullOrWhiteSpace(CurrentUserSession?.UserId))
         {
             if (lastUserId != _lastUserIdCookieName)
-            {
                 await JsRuntime.InvokeVoidAsync("methods.CreateCookie", _lastUserIdCookieName, CurrentUserSession.UserId, 60 * 60 * 24 * 90, "/");
-                //SnackBarRepo.Info($"");
-            }
         }
 
         string? currentSessionTicket = await JsRuntime.InvokeAsync<string?>("methods.ReadCookie", _sessionCookieName);
-        //SnackBarRepo.Info($"");
         TResponseModel<DialogWebChatModelDB> initSessionTicket = await WebChatRepo.InitWebChatSessionAsync(new()
         {
             SessionTicket = currentSessionTicket,
-            UserIdentityId = CurrentUserSession?.UserId
+            UserIdentityId = CurrentUserSession?.UserId,
+            UserAgent = UserAgent.UserAgent,
+            Language = UserAgent.Language,
         });
         ticketSession = initSessionTicket.Response;
         ticketSessionEdit = GlobalTools.CreateDeepCopy(ticketSession);

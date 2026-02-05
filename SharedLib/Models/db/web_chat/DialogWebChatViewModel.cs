@@ -36,4 +36,10 @@ public class DialogWebChatViewModel : DialogWebChatBaseModel
 
     /// <inheritdoc/>
     public required string SessionTicketId { get; set; }
+
+    /// <inheritdoc/>
+    public required string? UserAgent { get; set; }
+
+    /// <inheritdoc/>
+    public required string? Language { get; set; }
 }

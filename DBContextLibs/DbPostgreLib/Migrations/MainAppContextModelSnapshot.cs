@@ -81,6 +81,9 @@ namespace DbPostgreLib.Migrations
                     b.Property<bool>("IsDisabled")
                         .HasColumnType("boolean");
 
+                    b.Property<string>("Language")
+                        .HasColumnType("text");
+
                     b.Property<DateTime?>("LastMessageAtUTC")
                         .HasColumnType("timestamp with time zone");
 
@@ -89,6 +92,9 @@ namespace DbPostgreLib.Migrations
 
                     b.Property<string>("SessionTicketId")
                         .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserAgent")
                         .HasColumnType("text");
 
                     b.HasKey("Id");

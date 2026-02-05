@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations
 {
     [DbContext(typeof(MainAppContext))]
-    [Migration("20260205063107_MainAppContext002")]
-    partial class MainAppContext002
+    [Migration("20260205074216_MainAppContext001")]
+    partial class MainAppContext001
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -84,6 +84,9 @@ namespace DbPostgreLib.Migrations
                     b.Property<bool>("IsDisabled")
                         .HasColumnType("boolean");
 
+                    b.Property<string>("Language")
+                        .HasColumnType("text");
+
                     b.Property<DateTime?>("LastMessageAtUTC")
                         .HasColumnType("timestamp with time zone");
 
@@ -92,6 +95,9 @@ namespace DbPostgreLib.Migrations
 
                     b.Property<string>("SessionTicketId")
                         .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserAgent")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
