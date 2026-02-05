@@ -53,7 +53,7 @@ public partial class DialogWebChatCardComponent : BlazorBusyComponentUsersCached
         }
 
         await SetBusyAsync();
-        ResponseBaseModel res = await WebChatRepo.UpdateDialogWebChatAsync(new()
+        ResponseBaseModel res = await WebChatRepo.UpdateDialogWebChatAdminAsync(new()
         {
             SenderActionUserId = CurrentUserSession.UserId,
             Payload = new()

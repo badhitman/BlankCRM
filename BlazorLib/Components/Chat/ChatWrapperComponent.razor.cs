@@ -71,7 +71,7 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
             return;
 
         await SetBusyAsync();
-        ResponseBaseModel res = await WebChatRepo.UpdateDialogWebChatAsync(new()
+        ResponseBaseModel res = await WebChatRepo.UpdateDialogWebChatInitiatorAsync(new()
         {
             SenderActionUserId = CurrentUserSession?.UserId,
             Payload = ticketSessionEdit
