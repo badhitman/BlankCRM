@@ -50,9 +50,7 @@
 	<ItemGroup>
 		<None Include="wwwroot\img\**;wwwroot\lib\**;wwwroot\js\**;" CopyToPublishDirectory="Always" />
 		<Content Remove="wwwroot\app.css" />
-		<Content Remove="wwwroot\sounds\oh-oh-icq-sound.mp3" />
 		<None Include="wwwroot\app.css" />
-		<None Include="wwwroot\sounds\oh-oh-icq-sound.mp3" />
 		<Content Update="appsettings*.json;client-config*.json;" CopyToOutputDirectory="Always" />
 	</ItemGroup>
 	<ItemGroup>
