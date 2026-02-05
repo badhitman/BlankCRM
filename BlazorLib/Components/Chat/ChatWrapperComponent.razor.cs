@@ -136,18 +136,18 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
             _lastUserIdCookieName = Path.Combine(_sessionCookieName, $"{Routes.USER_CONTROLLER_NAME}-{Routes.IDENTITY_CONTROLLER_NAME}").Replace("\\", "/");
 
         lastUserId = await JsRuntime.InvokeAsync<string?>("methods.ReadCookie", _lastUserIdCookieName);
-        SnackBarRepo.Info($"");
+        //SnackBarRepo.Info($"");
         if (!string.IsNullOrWhiteSpace(CurrentUserSession?.UserId))
         {
             if (lastUserId != _lastUserIdCookieName)
             {
                 await JsRuntime.InvokeVoidAsync("methods.CreateCookie", _lastUserIdCookieName, CurrentUserSession.UserId, 60 * 60 * 24 * 90, "/");
-                SnackBarRepo.Info($"");
+                //SnackBarRepo.Info($"");
             }
         }
 
         string? currentSessionTicket = await JsRuntime.InvokeAsync<string?>("methods.ReadCookie", _sessionCookieName);
-        SnackBarRepo.Info($"");
+        //SnackBarRepo.Info($"");
         TResponseModel<DialogWebChatModelDB> initSessionTicket = await WebChatRepo.InitWebChatSessionAsync(new()
         {
             SessionTicket = currentSessionTicket,
