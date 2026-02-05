@@ -113,13 +113,25 @@ public partial class WebChatService(IDbContextFactory<MainAppContext> mainDbFact
         if (req.Payload is null)
             return ResponseBaseModel.CreateError("req.Payload is null");
 
+        if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
+            return ResponseBaseModel.CreateError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
+
+        TResponseModel<UserInfoModel[]> getUser = await identityRepo.GetUsersOfIdentityAsync([req.SenderActionUserId], token);
+        UserInfoModel? userData = getUser.Response?.FirstOrDefault(x => x.UserId == req.SenderActionUserId);
+        if (userData is null)
+            return ResponseBaseModel.CreateError("getUser.Response is null");
+
         MainAppContext context = await mainDbFactory.CreateDbContextAsync(token);
         IQueryable<DialogWebChatModelDB> q = context.Dialogs.Where(x => x.Id == req.Payload.Id);
         await q.ExecuteUpdateAsync(set => set
             .SetProperty(p => p.InitiatorContacts, req.Payload.InitiatorContacts)
             .SetProperty(p => p.InitiatorHumanName, req.Payload.InitiatorHumanName)
             .SetProperty(p => p.InitiatorContactsNormalized, req.Payload.InitiatorHumanName?.ToUpper()), cancellationToken: token);
-        //.SetProperty(p => p.InitiatorIdentityId, req.Payload.InitiatorIdentityId)
+
+        if (userData.IsAdmin)
+            await q.ExecuteUpdateAsync(set => set
+            .SetProperty(p => p.InitiatorIdentityId, req.Payload.InitiatorIdentityId), cancellationToken: token);
+
         return ResponseBaseModel.CreateSuccess("Ok");
     }
 
