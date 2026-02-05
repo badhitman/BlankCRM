@@ -12,11 +12,11 @@
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-	  <WarningsAsErrors>$(WarningsAsErrors);NU1605;</WarningsAsErrors>
+		<WarningsAsErrors>$(WarningsAsErrors);NU1605;</WarningsAsErrors>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-	  <WarningsAsErrors>$(WarningsAsErrors);NU1605;</WarningsAsErrors>
+		<WarningsAsErrors>$(WarningsAsErrors);NU1605;</WarningsAsErrors>
 	</PropertyGroup>
 
 	<!--<PropertyGroup>
@@ -49,6 +49,10 @@
 
 	<ItemGroup>
 		<None Include="wwwroot\img\**;wwwroot\lib\**;wwwroot\js\**;" CopyToPublishDirectory="Always" />
+		<Content Remove="wwwroot\app.css" />
+		<Content Remove="wwwroot\sounds\oh-oh-icq-sound.mp3" />
+		<None Include="wwwroot\app.css" />
+		<None Include="wwwroot\sounds\oh-oh-icq-sound.mp3" />
 		<Content Update="appsettings*.json;client-config*.json;" CopyToOutputDirectory="Always" />
 	</ItemGroup>
 	<ItemGroup>

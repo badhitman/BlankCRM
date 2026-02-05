@@ -181,6 +181,7 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
             {
                 await virtualizeComponent.RefreshDataAsync();
                 StateHasChanged();
+                await JsRuntime.InvokeVoidAsync("methods.PlayAudio", "audioPlayerChatWrapperComponent");
             });
     }
 

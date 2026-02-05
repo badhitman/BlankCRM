@@ -165,6 +165,12 @@ window.methods = {
         const Language = navigator.language;
         const CookieEnabled = navigator.cookieEnabled;
         return { UserAgent, Language, CookieEnabled };
+    },
+    PlayAudio: function (domId) {
+        var audio = document.getElementById(`${domId}`);
+        if (audio) {
+            audio.play();
+        }
     }
 }
 

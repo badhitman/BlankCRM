@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using MudBlazor;
 using SharedLib;
 
@@ -14,14 +15,40 @@ namespace BlazorLib.Components.Chat;
 public partial class WebChatsManageComponent : BlazorBusyComponentUsersCachedModel
 {
     [Inject]
+    IJSRuntime JsRuntime { get; set; } = default!;
+
+    [Inject]
     IWebChatService WebChatRepo { get; set; } = default!;
+
+    [Inject]
+    IEventNotifyReceive<NewMessageWebChatEventModel> NewMessageWebChatEventRepo { get; set; } = default!;
+
 
     /// <inheritdoc/>
     [Parameter]
     public string? FilterUserIdentityId { get; set; }
 
+
     MudTable<DialogWebChatModelDB>? tableRef;
 
+
+    /// <inheritdoc/>
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await NewMessageWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.NewMessageWebChatHandleNotifyReceive, "#").Replace("\\", "/"), NewMessageWebChatHandler);
+    }
+
+    void NewMessageWebChatHandler(NewMessageWebChatEventModel model)
+    {
+        if (tableRef is not null)
+            InvokeAsync(async () => 
+            { 
+                await tableRef.ReloadServerData(); 
+                StateHasChanged();
+                await JsRuntime.InvokeVoidAsync("methods.PlayAudio", "WebChatsManageComponent");
+            });
+    }
 
     async Task JoinToChat(int chatId, bool isExclusive = false)
     {
@@ -93,5 +120,11 @@ public partial class WebChatsManageComponent : BlazorBusyComponentUsersCachedMod
         await SetBusyAsync(false, token);
         SnackBarRepo.ShowMessagesResponse(res.Status.Messages);
         return new TableData<DialogWebChatModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };
+    }
+
+    /// <inheritdoc/>
+    public override void Dispose()
+    {
+        NewMessageWebChatEventRepo.UnregisterAction();
     }
 }

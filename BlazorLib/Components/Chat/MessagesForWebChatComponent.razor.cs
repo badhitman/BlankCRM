@@ -2,9 +2,10 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Web;
-using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using MudBlazor;
 using SharedLib;
 
@@ -15,6 +16,10 @@ namespace BlazorLib.Components.Chat;
 /// </summary>
 public partial class MessagesForWebChatComponent : BlazorBusyComponentUsersCachedModel
 {
+
+    [Inject]
+    IJSRuntime JsRuntime { get; set; } = default!;
+
     [Inject]
     IWebChatService WebChatRepo { get; set; } = default!;
 
@@ -219,6 +224,7 @@ public partial class MessagesForWebChatComponent : BlazorBusyComponentUsersCache
             {
                 await tableRef.ReloadServerData();
                 StateHasChanged();
+                await JsRuntime.InvokeVoidAsync("methods.PlayAudio", "audioPlayerMessagesForWebChatComponent");
             });
     }
 
