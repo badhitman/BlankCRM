@@ -48,7 +48,7 @@ public class EventNotifyReceive<T> : IEventNotifyReceive<T>
     }
 
     /// <inheritdoc/>
-    public async Task RegisterAction(string QueueName, Action<T> actNotyfy, CancellationToken stoppingToken = default)
+    public async Task RegisterAction(string QueueName, Action<T> actNotify, CancellationToken stoppingToken = default)
     {
         Task ApplicationMessageReceived(MqttApplicationMessageReceivedEventArgs e)
         {
@@ -71,7 +71,7 @@ public class EventNotifyReceive<T> : IEventNotifyReceive<T>
                 LoggerRepo.LogError($"Ошибка обработки удалённой команды (source is null): {QueueName}");
             else
             {
-                actNotyfy(sr);
+                actNotify(sr);
                 if (Notify is not null)
                     Notify(sr);
             }

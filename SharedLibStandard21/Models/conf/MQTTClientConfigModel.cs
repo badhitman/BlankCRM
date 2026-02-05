@@ -36,17 +36,4 @@ public class MQTTClientConfigModel : HostConfigModel
         Host = other.Host;
         Port = other.Port;
     }
-}
-
-/// <summary>
-/// MQTTClientConfigMainModel
-/// </summary>
-public partial class MQTTClientConfigMainModel : MQTTClientConfigModel
-{
-    /// <inheritdoc/>
-    public new static MQTTClientConfigMainModel BuildEmpty()
-    {
-        return new MQTTClientConfigMainModel() { Scheme = "mqtt", Port = 1883 };
-    }
-}
- 
+} 

@@ -24,6 +24,9 @@ public partial class MessagesForWebChatComponent : BlazorBusyComponentUsersCache
     [Inject]
     NavigationManager NavRepo { get; set; } = default!;
 
+    [Inject]
+    IEventNotifyReceive<NewMessageWebChatEventModel> NewMessageWebChatEventRepo { get; set; } = default!;
+
 
     /// <inheritdoc/>
     [Parameter, EditorRequired]
@@ -165,9 +168,6 @@ public partial class MessagesForWebChatComponent : BlazorBusyComponentUsersCache
         _inputFileId = Guid.NewGuid().ToString();
 
         await SetBusyAsync(false);
-
-        if (tableRef is not null)
-            await tableRef.ReloadServerData();
     }
 
     async Task<TableData<MessageWebChatModelDB>> ServerReload(TableState state, CancellationToken token)
@@ -206,6 +206,26 @@ public partial class MessagesForWebChatComponent : BlazorBusyComponentUsersCache
             UsersCache.Add(CurrentUserSession);
 
         if (tableRef is not null)
+        {
+            await NewMessageWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.NewMessageWebChatHandleNotifyReceive, DialogWebChat.Id.ToString()).Replace("\\", "/"), NewMessageWebChatHandler);
             await tableRef.ReloadServerData();
+        }
+    }
+
+    void NewMessageWebChatHandler(NewMessageWebChatEventModel model)
+    {
+        if (tableRef is not null)
+            InvokeAsync(async () =>
+            {
+                await tableRef.ReloadServerData();
+                StateHasChanged();
+            });
+    }
+
+    /// <inheritdoc/>
+    public override void Dispose()
+    {
+        NewMessageWebChatEventRepo.UnregisterAction();
+        base.Dispose();
     }
 }

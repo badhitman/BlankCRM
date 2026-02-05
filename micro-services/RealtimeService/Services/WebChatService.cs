@@ -11,7 +11,7 @@ namespace RealtimeService;
 /// <summary>
 /// WebChatService
 /// </summary>
-public partial class WebChatService(IDbContextFactory<RealtimeContext> mainDbFactory, IIdentityTransmission identityRepo) : IWebChatService
+public partial class WebChatService(IDbContextFactory<RealtimeContext> mainDbFactory, IIdentityTransmission identityRepo, IEventsWebChatsNotifies notifyWebChatRepo) : IWebChatService
 {
     /// <inheritdoc/>
     public async Task<TResponseModel<DialogWebChatModelDB>> InitWebChatSessionAsync(InitWebChatSessionRequestModel req, CancellationToken cancellationToken = default)

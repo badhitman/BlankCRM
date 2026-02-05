@@ -1327,6 +1327,10 @@ public static partial class GlobalStaticConstantsTransmission
         #endregion
 
         #region web-chat`s
+
+        /// <inheritdoc/>
+        public readonly static string NewMessageWebChatHandleNotifyReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, $"~{Routes.EVENT_CONTROLLER_NAME}-{Routes.NOTIFY_ACTION_NAME}-{Routes.WEB_CONTROLLER_NAME}-{Routes.CHATS_CONTROLLER_NAME}", Routes.MESSAGE_CONTROLLER_NAME, Routes.CREATE_ACTION_NAME);
+
         /// <inheritdoc/>
         public static readonly string DeleteUserJoinDialogWebChatReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, $"{Routes.WEB_CONTROLLER_NAME}-{Routes.CHATS_CONTROLLER_NAME}", $"{Routes.USER_CONTROLLER_NAME}-{Routes.JOIN_ACTION_NAME}-{Routes.DIALOG_CONTROLLER_NAME}", Routes.OUT_CONTROLLER_NAME);
 

@@ -29,6 +29,7 @@ using NLog;
 using System.Reflection;
 #endif
 
+MQTTClientConfigModel _conf = MQTTClientConfigModel.BuildEmpty();
 Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 Console.OutputEncoding = Encoding.UTF8;
 // Early init of NLog to allow startup and exception logging, before host is built
@@ -127,6 +128,9 @@ if (!string.IsNullOrWhiteSpace(_modePrefix))
 
 builder.Configuration.AddEnvironmentVariables();
 builder.Configuration.AddCommandLine(args);
+
+_conf.Reload(builder.Configuration.GetSection("RealtimeConfig").Get<MQTTClientConfigModel>()!);
+builder.Services.AddSingleton(sp => _conf);
 
 builder.Services.AddIdleCircuitHandler(options =>
     options.IdleTimeout = TimeSpan.FromMinutes(5));
@@ -228,6 +232,10 @@ builder.Services.AddSingleton<IRabbitClient>(x =>
     new RabbitClient(x.GetRequiredService<IOptions<RabbitMQConfigModel>>(),
                 x.GetRequiredService<ILogger<RabbitClient>>(),
                 appName));
+
+builder.Services
+          .RegisterEventNotify<NewMessageWebChatEventModel>()
+          ;
 
 builder.Services
     .AddScoped<IBankService, BankTransmission>()

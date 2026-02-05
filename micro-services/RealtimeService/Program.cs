@@ -22,7 +22,7 @@ namespace RealtimeService;
 public class Program
 {
     static Logger logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
-    static MQTTClientConfigMainModel _conf = MQTTClientConfigMainModel.BuildEmpty();
+    static MQTTClientConfigModel _conf = MQTTClientConfigModel.BuildEmpty();
     public static async Task Main(string[] args)
     {
         Console.OutputEncoding = Encoding.UTF8;
@@ -100,7 +100,7 @@ public class Program
         builder.Services
             .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
         ;
-
+        _conf.Reload(builder.Configuration.GetSection("RealtimeConfig").Get<MQTTClientConfigModel>()!);
 
         builder.WebHost.ConfigureKestrel((b, o) =>
         {
@@ -109,7 +109,7 @@ public class Program
 
             // This will allow MQTT connections based on HTTP WebSockets with URI "localhost:5000/mqtt"
             // See code below for URI configuration.
-            o.ListenAnyIP(5000); // Default HTTP pipeline
+            o.ListenAnyIP(3883); // Default HTTP pipeline
         });
         builder.AddServiceDefaults();
 
@@ -152,9 +152,14 @@ public class Program
         string appName = typeof(Program).Assembly.GetName().Name ?? "AssemblyName";
         #region MQ Transmission (remote methods call)
 
+        builder.Services
+            .AddSingleton<IMQTTClient>(x => new MQttClient(x.GetRequiredService<MQTTClientConfigModel>(), x.GetRequiredService<ILogger<MQttClient>>(), appName))
+            ;
+
         builder.Services.AddSingleton<IRabbitClient>(x => new RabbitClient(x.GetRequiredService<IOptions<RabbitMQConfigModel>>(), x.GetRequiredService<ILogger<RabbitClient>>(), appName));
         //
         builder.Services
+            .AddScoped<IEventsWebChatsNotifies, EventsWebChatsNotifiesTransmissionMQTT>()
             .AddScoped<IWebTransmission, WebTransmission>()
             .AddScoped<IIdentityTransmission, IdentityTransmission>()
             .AddScoped<ITelegramTransmission, TelegramTransmission>()
@@ -211,15 +216,25 @@ public class Program
         app.UseMqttServer(
             server =>
             {
-                /*
-                 * Attach event handlers etc. if required.
-                 */
-
                 server.ValidatingConnectionAsync += MqttController.ValidateConnection;
                 server.ClientConnectedAsync += MqttController.OnClientConnected;
+                server.ClientDisconnectedAsync += MqttController.ClientDisconnected;
+                server.ClientSubscribedTopicAsync += MqttController.ClientSubscribedTopic;
+                server.PreparingSessionAsync += MqttController.PreparingSession;
             });
 
-
         app.Run();
+    }
+}
+/// <summary>
+/// EventNotifyExtensions
+/// </summary>
+public static class EventNotifyExtensions
+{
+    /// <inheritdoc/>
+    public static IServiceCollection RegisterEventNotify<T>(this IServiceCollection services)
+    {
+        services.AddTransient<IEventNotifyReceive<T>, EventNotifyReceive<T>>();
+        return services;
     }
 }

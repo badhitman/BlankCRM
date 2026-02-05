@@ -94,7 +94,7 @@ public class MQttClient(MQTTClientConfigModel mqConf, ILogger<MQttClient> _logge
         MqttClientConnectResult res = await mqttClient.ConnectAsync(GetMqttClientOptionsBuilder, tokenOuter);
 
         MqttApplicationMessage applicationMessage = new MqttApplicationMessageBuilder()
-            .WithTopic(queue)
+            .WithTopic(queue.Replace("\\", "/"))
             .WithPayload(request_payload_json)
             .WithResponseTopic(response_topic)
             .Build();

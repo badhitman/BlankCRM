@@ -23,6 +23,9 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
     [Inject]
     IWebChatService WebChatRepo { get; set; } = default!;
 
+    [Inject]
+    IEventNotifyReceive<NewMessageWebChatEventModel> NewMessageWebChatEventRepo { get; set; } = default!;
+
 
     MessageWebChatModelDB? _selectedMessage;
     AboutUserAgentModel? UserAgent;
@@ -101,9 +104,6 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
         await WebChatRepo.CreateMessageWebChatAsync(req);
         _textSendMessage = null;
 
-        if (virtualizeComponent is not null)
-            await virtualizeComponent.RefreshDataAsync();
-
         await SetBusyAsync(false);
     }
 
@@ -124,8 +124,6 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
             await SetBusyAsync();
             await WebChatRepo.CreateMessageWebChatAsync(req);
             _textSendMessage = null;
-            if (virtualizeComponent is not null)
-                await virtualizeComponent.RefreshDataAsync();
             await SetBusyAsync(false);
         }
     }
@@ -172,12 +170,24 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
     {
         await base.OnInitializedAsync();
         await InitSession();
+        if (ticketSession is not null)
+            await NewMessageWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.NewMessageWebChatHandleNotifyReceive, ticketSession.Id.ToString()).Replace("\\", "/"), NewMessageWebChatHandler);
+    }
+
+    void NewMessageWebChatHandler(NewMessageWebChatEventModel model)
+    {
+        if (virtualizeComponent is not null)
+            InvokeAsync(async () =>
+            {
+                await virtualizeComponent.RefreshDataAsync();
+                StateHasChanged();
+            });
     }
 
     /// <inheritdoc/>
     public override void Dispose()
     {
-
+        NewMessageWebChatEventRepo.UnregisterAction();
     }
 
     void ShowHiddenInfo()

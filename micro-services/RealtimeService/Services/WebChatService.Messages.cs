@@ -28,6 +28,8 @@ public partial class WebChatService : IWebChatService
             .ExecuteUpdateAsync(set => set
                 .SetProperty(p => p.LastMessageAtUTC, DateTime.UtcNow), cancellationToken: token);
 
+        await notifyWebChatRepo.NewMessageWebChatHandle(new() { DialogId = req.DialogOwnerId }, token);
+
         return new()
         {
             Response = req.Id
@@ -41,10 +43,16 @@ public partial class WebChatService : IWebChatService
             return ResponseBaseModel.CreateError("req.Payload < 1");
 
         RealtimeContext context = await mainDbFactory.CreateDbContextAsync(token);
-        await context.Messages
-            .Where(x => x.Id == req.Payload)
-            .ExecuteUpdateAsync(set => set
+        IQueryable<MessageWebChatModelDB> q = context.Messages
+            .Where(x => x.Id == req.Payload);
+
+        await q.ExecuteUpdateAsync(set => set
                 .SetProperty(p => p.IsDisabled, r => !r.IsDisabled), cancellationToken: token);
+
+        await notifyWebChatRepo.NewMessageWebChatHandle(new()
+        {
+            DialogId = await q.Select(x => x.DialogOwnerId).FirstAsync(cancellationToken: token)
+        }, token);
 
         return ResponseBaseModel.CreateSuccess("Ok");
     }
@@ -119,10 +127,8 @@ public partial class WebChatService : IWebChatService
             .FirstAsync(cancellationToken: token);
 
         await using IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
-
-        await context.Messages
-            .Where(x => x.Id == req.Payload.Id)
-            .ExecuteUpdateAsync(set => set
+        IQueryable<MessageWebChatModelDB> q = context.Messages.Where(x => x.Id == req.Payload.Id);
+        await q.ExecuteUpdateAsync(set => set
                 .SetProperty(p => p.Text, req.Payload.Text), cancellationToken: token);
 
         if (req.Payload.AttachesFiles is not null)
@@ -136,7 +142,12 @@ public partial class WebChatService : IWebChatService
             }
         }
         await transaction.CommitAsync(token);
+
+        await notifyWebChatRepo.NewMessageWebChatHandle(new()
+        {
+            DialogId = await q.Select(x => x.DialogOwnerId).FirstAsync(cancellationToken: token)
+        }, token);
+
         return ResponseBaseModel.CreateSuccess("Ok");
     }
-
 }
