@@ -65,22 +65,21 @@ public partial class UserSelectInputComponent : LazySelectorComponent<UserInfoMo
     }
 
     /// <inheritdoc/>
-    protected override async Task OnInitializedAsync()
+    public async Task SetSelectedUser(string? userId)
     {
-        if (string.IsNullOrWhiteSpace(SelectedUserInit))
+        await SetBusyAsync();
+        if (string.IsNullOrWhiteSpace(userId))
         {
             SelectedObject = UserInfoModel.BuildEmpty();
-            //SelectHandleAction(SelectedObject);
+            await SetBusyAsync(false);
             return;
         }
-
-        await SetBusyAsync();
-        TResponseModel<UserInfoModel[]> rest = await IdentityRepo.GetUsersOfIdentityAsync([SelectedUserInit]);
+        TResponseModel<UserInfoModel[]> rest = await IdentityRepo.GetUsersOfIdentityAsync([userId]);
 
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (rest.Response is null || rest.Response.Length == 0)
         {
-            SnackBarRepo.Error($"Не найден запрашиваемый пользователь #{SelectedUserInit}");
+            SnackBarRepo.Error($"Не найден запрашиваемый пользователь #{userId}");
             await SetBusyAsync(false);
             return;
         }
@@ -89,5 +88,17 @@ public partial class UserSelectInputComponent : LazySelectorComponent<UserInfoMo
         SelectHandleAction(SelectedObject);
 
         await SetBusyAsync(false);
+    }
+
+    /// <inheritdoc/>
+    protected override async Task OnInitializedAsync()
+    {
+        if (string.IsNullOrWhiteSpace(SelectedUserInit))
+        {
+            SelectedObject = UserInfoModel.BuildEmpty();
+            return;
+        }
+
+        await SetSelectedUser(SelectedUserInit);
     }
 }

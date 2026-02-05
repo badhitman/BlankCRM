@@ -20,7 +20,7 @@ public partial class DialogWebChatCardComponent : BlazorBusyComponentUsersCached
     [Parameter, EditorRequired]
     public int DialogId { get; set; }
 
-
+    UserSelectInputComponent? userSelectorRef;
     DialogWebChatModelDB? CurrentRoom, roomEdit;
     bool RoomIsEdit
     {
@@ -94,6 +94,9 @@ public partial class DialogWebChatCardComponent : BlazorBusyComponentUsersCached
 
         if (!string.IsNullOrWhiteSpace(CurrentRoom?.InitiatorIdentityId))
             await CacheUsersUpdate([CurrentRoom.InitiatorIdentityId]);
+
+        if (userSelectorRef is not null)
+            await userSelectorRef.SetSelectedUser(roomEdit?.InitiatorIdentityId);
 
         await SetBusyAsync(false);
     }
