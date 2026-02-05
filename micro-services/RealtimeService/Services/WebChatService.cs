@@ -6,17 +6,17 @@ using Microsoft.EntityFrameworkCore;
 using SharedLib;
 using DbcLib;
 
-namespace ServerLib;
+namespace RealtimeService;
 
 /// <summary>
 /// WebChatService
 /// </summary>
-public partial class WebChatService(IDbContextFactory<MainAppContext> mainDbFactory, IIdentityTransmission identityRepo) : IWebChatService
+public partial class WebChatService(IDbContextFactory<RealtimeContext> mainDbFactory, IIdentityTransmission identityRepo) : IWebChatService
 {
     /// <inheritdoc/>
     public async Task<TResponseModel<DialogWebChatModelDB>> InitWebChatSessionAsync(InitWebChatSessionRequestModel req, CancellationToken cancellationToken = default)
     {
-        MainAppContext context = await mainDbFactory.CreateDbContextAsync(cancellationToken);
+        RealtimeContext context = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         DialogWebChatModelDB? readSession = !string.IsNullOrWhiteSpace(req.SessionTicket)
             ? await context.Dialogs.Include(x => x.UsersJoins).FirstOrDefaultAsync(x => x.SessionTicketId == req.SessionTicket && !x.IsDisabled && x.DeadlineUTC >= DateTime.UtcNow, cancellationToken: cancellationToken)
             : new()
@@ -68,7 +68,7 @@ public partial class WebChatService(IDbContextFactory<MainAppContext> mainDbFact
     /// <inheritdoc/>
     public async Task<TResponseModel<List<DialogWebChatModelDB>>> DialogsWebChatsReadAsync(TAuthRequestStandardModel<int[]> req, CancellationToken token = default)
     {
-        MainAppContext context = await mainDbFactory.CreateDbContextAsync(token);
+        RealtimeContext context = await mainDbFactory.CreateDbContextAsync(token);
         return new()
         {
             Response = await context.Dialogs
@@ -81,7 +81,7 @@ public partial class WebChatService(IDbContextFactory<MainAppContext> mainDbFact
     /// <inheritdoc/>
     public async Task<TPaginationResponseStandardModel<DialogWebChatModelDB>> SelectDialogsWebChatsAsync(TPaginationRequestStandardModel<SelectDialogsWebChatsRequestModel> req, CancellationToken token = default)
     {
-        MainAppContext context = await mainDbFactory.CreateDbContextAsync(token);
+        RealtimeContext context = await mainDbFactory.CreateDbContextAsync(token);
 
         if (req.PageSize < 10)
             req.PageSize = 10;
@@ -117,7 +117,7 @@ public partial class WebChatService(IDbContextFactory<MainAppContext> mainDbFact
         if (req.Payload is null)
             return ResponseBaseModel.CreateError("req.Payload is null");
 
-        MainAppContext context = await mainDbFactory.CreateDbContextAsync(token);
+        RealtimeContext context = await mainDbFactory.CreateDbContextAsync(token);
         IQueryable<DialogWebChatModelDB> q = context.Dialogs.Where(x => x.Id == req.Payload.Id);
         await q.ExecuteUpdateAsync(set => set
             .SetProperty(p => p.InitiatorContacts, req.Payload.InitiatorContacts)
@@ -136,12 +136,12 @@ public partial class WebChatService(IDbContextFactory<MainAppContext> mainDbFact
         if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
             return ResponseBaseModel.CreateError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
 
-        MainAppContext context = await mainDbFactory.CreateDbContextAsync(token);
+        RealtimeContext context = await mainDbFactory.CreateDbContextAsync(token);
         IQueryable<DialogWebChatModelDB> q = context.Dialogs.Where(x => x.Id == req.Payload.Id);
         await q.ExecuteUpdateAsync(set => set
             .SetProperty(p => p.InitiatorContacts, req.Payload.InitiatorContacts)
             .SetProperty(p => p.InitiatorHumanName, req.Payload.InitiatorHumanName)
-.SetProperty(p => p.InitiatorIdentityId, req.Payload.InitiatorIdentityId)
+            .SetProperty(p => p.InitiatorIdentityId, req.Payload.InitiatorIdentityId)
             .SetProperty(p => p.InitiatorContactsNormalized, req.Payload.InitiatorHumanName?.ToUpper()), cancellationToken: token);
 
         return ResponseBaseModel.CreateSuccess("Ok");
@@ -150,7 +150,7 @@ public partial class WebChatService(IDbContextFactory<MainAppContext> mainDbFact
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> DeleteToggleDialogWebChatAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default)
     {
-        MainAppContext context = await mainDbFactory.CreateDbContextAsync(token);
+        RealtimeContext context = await mainDbFactory.CreateDbContextAsync(token);
         IQueryable<DialogWebChatModelDB> q = context.Dialogs.Where(x => x.Id == req.Payload).AsQueryable();
 
         await q.ExecuteUpdateAsync(set => set

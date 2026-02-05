@@ -163,6 +163,12 @@ public class Program
             ;
 #endif
 
+        IResourceBuilder<ProjectResource> realtimeService = builder.AddProject<Projects.RealtimeService>("realtimeservice")
+            .WithEnvironment(act => rabbitConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
+            .WithEnvironment(act => mongoConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
+            .WithReference(builder.AddConnectionString($"RealtimeConnection{_modePrefix}"))
+            ;
+
         IResourceBuilder<ProjectResource> filesIndexingService = builder.AddProject<Projects.FilesIndexingService>("filesindexingservice")
             .WithEnvironment(act => rabbitConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
             .WithEnvironment(act => mongoConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
@@ -216,8 +222,11 @@ public class Program
             .WithEnvironment($"{BotConfiguration.Configuration}:{nameof(BotConfiguration.BotToken)}", builder.Configuration[$"{BotConfiguration.Configuration}:{nameof(BotConfiguration.BotToken)}"])
             .WithReference(builder.AddConnectionString($"TelegramBotConnection{_modePrefix}"))
             ;
-
+        //
         builder.AddProject<Projects.BlankBlazorApp>("blankblazorapp")
+            .WithReference(realtimeService)
+            .WaitFor(realtimeService)
+
             .WithReference(filesIndexingService)
             .WaitFor(filesIndexingService)
 

@@ -1326,6 +1326,50 @@ public static partial class GlobalStaticConstantsTransmission
         public readonly static string OwnTradeReceivedStockSharpNotifyReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, $"~{Routes.EVENT_CONTROLLER_NAME}-{Routes.NOTIFY_ACTION_NAME}", Routes.STOCKSHARP_CONTROLLER_NAME, $"{Routes.OWNTRADE_CONTROLLER_NAME}-{Routes.RECEIVED_ACTION_NAME}");
         #endregion
 
+        #region web-chat`s
+        /// <inheritdoc/>
+        public static readonly string DeleteUserJoinDialogWebChatReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, $"{Routes.WEB_CONTROLLER_NAME}-{Routes.CHATS_CONTROLLER_NAME}", $"{Routes.USER_CONTROLLER_NAME}-{Routes.JOIN_ACTION_NAME}-{Routes.DIALOG_CONTROLLER_NAME}", Routes.OUT_CONTROLLER_NAME);
+
+        /// <inheritdoc/>
+        public static readonly string DialogsWebChatsReadReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, $"{Routes.WEB_CONTROLLER_NAME}-{Routes.CHATS_CONTROLLER_NAME}", Routes.DIALOGS_CONTROLLER_NAME, Routes.READ_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public static readonly string InitWebChatSessionReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, $"{Routes.WEB_CONTROLLER_NAME}-{Routes.CHATS_CONTROLLER_NAME}", $"{Routes.SESSION_CONTROLLER_NAME}-{Routes.DIALOG_CONTROLLER_NAME}", Routes.INIT_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public static readonly string SelectDialogsWebChatsReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, $"{Routes.WEB_CONTROLLER_NAME}-{Routes.CHATS_CONTROLLER_NAME}", Routes.DIALOGS_CONTROLLER_NAME, Routes.SELECT_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public static readonly string SelectMessagesForRoomWebChatReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, $"{Routes.WEB_CONTROLLER_NAME}-{Routes.CHATS_CONTROLLER_NAME}", $"{Routes.MESSAGES_CONTROLLER_NAME}-{Routes.ROOM_CONTROLLER_NAME}", Routes.SELECT_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public static readonly string SelectMessagesWebChatReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, $"{Routes.WEB_CONTROLLER_NAME}-{Routes.CHATS_CONTROLLER_NAME}", Routes.MESSAGES_CONTROLLER_NAME, Routes.SELECT_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public static readonly string SelectUsersJoinsDialogsWebChatsReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, $"{Routes.WEB_CONTROLLER_NAME}-{Routes.CHATS_CONTROLLER_NAME}", $"{Routes.USERS_CONTROLLER_NAME}-{Routes.JOIN_ACTION_NAME}-{Routes.DIALOGS_CONTROLLER_NAME}", Routes.SELECT_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public static readonly string UpdateDialogWebChatAdminReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, $"{Routes.WEB_CONTROLLER_NAME}-{Routes.CHATS_CONTROLLER_NAME}", Routes.DIALOG_CONTROLLER_NAME, $"{Routes.ADMIN_CONTROLLER_NAME}-{Routes.UPDATE_ACTION_NAME}");
+
+        /// <inheritdoc/>
+        public static readonly string UpdateDialogWebChatInitiatorReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, $"{Routes.WEB_CONTROLLER_NAME}-{Routes.CHATS_CONTROLLER_NAME}", Routes.DIALOG_CONTROLLER_NAME, $"{Routes.INITIATOR_CONTROLLER_NAME}-{Routes.UPDATE_ACTION_NAME}");
+
+        /// <inheritdoc/>
+        public static readonly string UpdateMessageWebChatReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, $"{Routes.WEB_CONTROLLER_NAME}-{Routes.CHATS_CONTROLLER_NAME}", Routes.MESSAGE_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public static readonly string UserInjectDialogWebChatReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, $"{Routes.WEB_CONTROLLER_NAME}-{Routes.CHATS_CONTROLLER_NAME}", $"{Routes.USER_CONTROLLER_NAME}-{Routes.DIALOG_CONTROLLER_NAME}", Routes.INJECT_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public static readonly string CreateMessageWebChatReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, $"{Routes.WEB_CONTROLLER_NAME}-{Routes.CHATS_CONTROLLER_NAME}", Routes.MESSAGE_CONTROLLER_NAME, Routes.CREATE_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public static readonly string DeleteToggleDialogWebChatReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, $"{Routes.WEB_CONTROLLER_NAME}-{Routes.CHATS_CONTROLLER_NAME}", Routes.DIALOG_CONTROLLER_NAME, Routes.DELETE_ACTION_NAME, Routes.TOGGLE_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public static readonly string DeleteToggleMessageWebChatReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, $"{Routes.WEB_CONTROLLER_NAME}-{Routes.CHATS_CONTROLLER_NAME}", Routes.MESSAGE_CONTROLLER_NAME, Routes.DELETE_ACTION_NAME, Routes.TOGGLE_ACTION_NAME);
+        #endregion
+
         #region stock-sharp
         /// <inheritdoc/>
         public readonly static string TradeInstrumentStrategyStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, $"{Routes.TRADE_CONTROLLER_NAME}-{Routes.INSTRUMENT_CONTROLLER_NAME}-{Routes.STRATEGY_CONTROLLER_NAME}");

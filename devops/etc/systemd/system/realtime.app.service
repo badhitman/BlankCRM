@@ -1,0 +1,16 @@
+[Unit]
+Description=realtime.app.service
+
+[Service]
+WorkingDirectory=/srv/services/RealtimeService
+ExecStart=/usr/bin/dotnet /srv/services/RealtimeService/RealtimeService.dll
+Restart=always
+RestartSec=10
+KillSignal=SIGINT
+SyslogIdentifier=dotnet-realtime-app
+User=www-data
+Environment=DOTNET_ENVIRONMENT=Production
+Environment=DOTNET_PRINT_TELEMETRY_MESSAGE=false
+
+[Install]
+WantedBy=multi-user.target

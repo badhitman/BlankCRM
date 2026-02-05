@@ -19,5 +19,5 @@ public class FileIndexingTransmission(IRabbitClient rabbitClient) : IFilesIndexi
 
     /// <inheritdoc/>
     public async Task<TResponseModel<WordprocessingDocumentIndexingFileResponseModel>> WordprocessingDocumentGetIndexAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default)
-     => await rabbitClient.MqRemoteCallAsync<TResponseModel<WordprocessingDocumentIndexingFileResponseModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.WordprocessingDocumentGetIndexFileReceive, req, token: token) ?? new();
+        => await rabbitClient.MqRemoteCallAsync<TResponseModel<WordprocessingDocumentIndexingFileResponseModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.WordprocessingDocumentGetIndexFileReceive, req, token: token) ?? new();
 }

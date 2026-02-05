@@ -144,6 +144,7 @@ libman restore
 dotnet publish -c Debug --output /srv/git/builds/ApiRestService /srv/git/BlankCRM/micro-services/ApiRestService/ApiRestService.csproj
 dotnet publish -c Debug --output /srv/git/builds/StorageService /srv/git/BlankCRM/micro-services/StorageService/StorageService.csproj
 dotnet publish -c Debug --output /srv/git/builds/FilesIndexingService /srv/git/BlankCRM/micro-services/FilesIndexingService/FilesIndexingService.csproj
+dotnet publish -c Debug --output /srv/git/builds/RealtimeService /srv/git/BlankCRM/micro-services/RealtimeService/RealtimeService.csproj
 dotnet publish -c Debug --output /srv/git/builds/CommerceService /srv/git/BlankCRM/micro-services/CommerceService/CommerceService.csproj
 dotnet publish -c Debug --output /srv/git/builds/TinkofClientApi /srv/git/BlankCRM/micro-services/TinkofClientApi/TinkofClientApi.csproj
 dotnet publish -c Debug --output /srv/git/builds/BankService /srv/git/BlankCRM/micro-services/BankService/BankService.csproj
@@ -171,7 +172,7 @@ chmod -R 755 /srv/stage-builds.update.sh
 #### Systemd
 ```
 cd /srv/git/BlankCRM/devops/etc/systemd/system/
-cp docker-compose-app.service api.app.stage.service bus.app.stage.service comm.app.stage.service bank.app.stage.service constructor.app.stage.service hd.app.stage.service identity.app.stage.service kladr.app.stage.service ldap.app.stage.service tg.app.stage.service web.app.stage.service filesindexing.app.stage.service /etc/systemd/system/
+cp docker-compose-app.service api.app.stage.service bus.app.stage.service comm.app.stage.service bank.app.stage.service constructor.app.stage.service hd.app.stage.service identity.app.stage.service kladr.app.stage.service ldap.app.stage.service tg.app.stage.service web.app.stage.service filesindexing.app.stage.service realtime.app.stage.service /etc/systemd/system/
 
 systemctl daemon-reload
 
@@ -189,7 +190,8 @@ systemctl enable identity.app.stage.service
 systemctl enable hd.app.stage.service
 systemctl enable ldap.app.stage.service
 systemctl enable kladr.app.stage.service
-systemctl start filesindexing.app.service
+systemctl enable filesindexing.app.service
+systemctl enable realtime.app.service
 
 systemctl start api.app.stage.service
 systemctl start bus.app.stage.service
@@ -203,6 +205,7 @@ systemctl start ldap.app.stage.service
 systemctl start tg.app.stage.service
 systemctl start web.app.stage.service
 systemctl start filesindexing.app.stage.service
+systemctl start realtime.app.stage.service
 ```
 
 `journalctl -f -u api.app.stage.service`
@@ -212,9 +215,10 @@ systemctl start filesindexing.app.stage.service
 cd /srv/git/BlankCRM/devops/etc/nginx/
 cp mongo.express /etc/nginx/sites-available
 cd /srv/git/BlankCRM/devops/etc/nginx/stage/
-cp api.staging.app web.staging.app /etc/nginx/sites-available
+cp realtime.staging.app api.staging.app web.staging.app /etc/nginx/sites-available
 ln -s /etc/nginx/sites-available/web.staging.app /etc/nginx/sites-enabled/
 ln -s /etc/nginx/sites-available/api.staging.app /etc/nginx/sites-enabled/
+ln -s /etc/nginx/sites-available/realtime.staging.app /etc/nginx/sites-enabled/
 ln -s /etc/nginx/sites-available/mongo.express /etc/nginx/sites-enabled/
 systemctl reload nginx
 ```

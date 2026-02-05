@@ -106,6 +106,10 @@ public class Program
         builder.Services.AddDbContextFactory<FilesIndexingContext>(opt =>
             opt.UseNpgsql(connectionStorage));
 
+        string connectionNlogsString = builder.Configuration.GetConnectionString($"NLogsConnection{_modePrefix}") ?? throw new InvalidOperationException($"Connection string 'NLogsConnection{_modePrefix}' not found.");
+        builder.Services.AddDbContextFactory<NLogsContext>(opt =>
+            opt.UseNpgsql(connectionNlogsString));
+
         string appName = typeof(Program).Assembly.GetName().Name ?? "AssemblyName";
         #region MQ Transmission (remote methods call)
         builder.Services

@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// IWebChatService
 /// </summary>
-public interface IWebChatService : IAsyncDisposable
+public interface IWebChatService
 {
     #region dialogs
     /// <inheritdoc/>

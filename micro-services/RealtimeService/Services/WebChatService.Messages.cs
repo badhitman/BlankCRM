@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using SharedLib;
 using DbcLib;
 
-namespace ServerLib;
+namespace RealtimeService;
 
 /// <summary>
 /// WebChatService
@@ -20,7 +20,7 @@ public partial class WebChatService : IWebChatService
         req.CreatedAtUTC = DateTime.UtcNow;
         req.Text = req.Text.Trim();
 
-        MainAppContext context = await mainDbFactory.CreateDbContextAsync(token);
+        RealtimeContext context = await mainDbFactory.CreateDbContextAsync(token);
         await context.Messages.AddAsync(req, token);
         await context.SaveChangesAsync(token);
         await context.Dialogs
@@ -40,7 +40,7 @@ public partial class WebChatService : IWebChatService
         if (req.Payload < 1)
             return ResponseBaseModel.CreateError("req.Payload < 1");
 
-        MainAppContext context = await mainDbFactory.CreateDbContextAsync(token);
+        RealtimeContext context = await mainDbFactory.CreateDbContextAsync(token);
         await context.Messages
             .Where(x => x.Id == req.Payload)
             .ExecuteUpdateAsync(set => set
@@ -52,7 +52,7 @@ public partial class WebChatService : IWebChatService
     /// <inheritdoc/>
     public async Task<TResponseModel<SelectMessagesForWebChatResponseModel>> SelectMessagesWebChatAsync(SelectMessagesForWebChatRequestModel req, CancellationToken token = default)
     {
-        MainAppContext context = await mainDbFactory.CreateDbContextAsync(token);
+        RealtimeContext context = await mainDbFactory.CreateDbContextAsync(token);
 
         IQueryable<MessageWebChatModelDB> q = context.Messages
             .Where(x => x.DialogOwner!.SessionTicketId == req.SessionTicketId)
@@ -82,7 +82,7 @@ public partial class WebChatService : IWebChatService
     /// <inheritdoc/>
     public async Task<TPaginationResponseStandardModel<MessageWebChatModelDB>> SelectMessagesForRoomWebChatAsync(TPaginationRequestAuthModel<SelectMessagesForWebChatRoomRequestModel> req, CancellationToken token = default)
     {
-        MainAppContext context = await mainDbFactory.CreateDbContextAsync(token);
+        RealtimeContext context = await mainDbFactory.CreateDbContextAsync(token);
 
         IQueryable<MessageWebChatModelDB> q = context.Messages
             .Where(x => x.DialogOwnerId == req.Payload.DialogId)
@@ -111,7 +111,7 @@ public partial class WebChatService : IWebChatService
         if (req.Payload is null)
             return ResponseBaseModel.CreateError("req.Payload is null");
 
-        MainAppContext context = await mainDbFactory.CreateDbContextAsync(token);
+        RealtimeContext context = await mainDbFactory.CreateDbContextAsync(token);
 
         MessageWebChatModelDB msgDb = await context.Messages
             .Where(x => x.Id == req.Payload.Id)

@@ -133,6 +133,7 @@ string appName = typeof(Program).Assembly.GetName().Name ?? "AssemblyName";
 builder.Services.AddSingleton<IRabbitClient>(x => new RabbitClient(x.GetRequiredService<IOptions<RabbitMQConfigModel>>(), x.GetRequiredService<ILogger<RabbitClient>>(), appName));
 //
 builder.Services
+    .AddScoped<IWebChatService, WebChatTransmission>()
     .AddScoped<IWebTransmission, WebTransmission>()
     .AddScoped<ITelegramTransmission, TelegramTransmission>()
     .AddScoped<IHelpDeskTransmission, HelpDeskTransmission>()
@@ -170,6 +171,7 @@ otel.WithTracing(tracing =>
     tracing.AddHttpClientInstrumentation();
     tracing.AddSource($"OTel.{appName}");
 });
+
 builder.Services.AddScoped<IServerToolsService, ToolsSystemService>();
 
 builder.Services

@@ -1344,6 +1344,26 @@ public static partial class GlobalStaticConstantsRoutes
         public const string CHATS_CONTROLLER_NAME = "chats";
 
         /// <summary>
+        /// Dialog
+        /// </summary>
+        public const string DIALOG_CONTROLLER_NAME = "dialog";
+
+        /// <summary>
+        /// Dialogs
+        /// </summary>
+        public const string DIALOGS_CONTROLLER_NAME = "dialogs";
+
+        /// <summary>
+        /// Dialog
+        /// </summary>
+        public const string ROOM_CONTROLLER_NAME = "room";
+
+        /// <summary>
+        /// Dialogs
+        /// </summary>
+        public const string ROOMS_CONTROLLER_NAME = "rooms";
+
+        /// <summary>
         /// Errors
         /// </summary>
         public const string ERRORS_CONTROLLER_NAME = "errors";
@@ -1357,6 +1377,16 @@ public static partial class GlobalStaticConstantsRoutes
         /// Messages
         /// </summary>
         public const string MESSAGES_CONTROLLER_NAME = "messages";
+
+        /// <summary>
+        /// Admin
+        /// </summary>
+        public const string ADMIN_CONTROLLER_NAME = "admin";
+
+        /// <summary>
+        /// Initiator
+        /// </summary>
+        public const string INITIATOR_CONTROLLER_NAME = "initiator";
 
         /// <summary>
         /// Attachment

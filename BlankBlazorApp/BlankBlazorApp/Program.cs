@@ -219,7 +219,6 @@ builder.Services
 // Scoped
 builder.Services.AddScoped<IUsersAuthenticateService, UsersAuthenticateService>()
     .AddScoped<IUsersProfilesService, UsersProfilesService>()
-    .AddScoped<IWebChatService, WebChatService>()
     .AddScoped<ILogsService, LogsService>()
     ;
 
@@ -232,6 +231,7 @@ builder.Services.AddSingleton<IRabbitClient>(x =>
 
 builder.Services
     .AddScoped<IBankService, BankTransmission>()
+    .AddScoped<IWebChatService, WebChatTransmission>()
     .AddScoped<ICommerceTransmission, CommerceTransmission>()
     .AddScoped<ITelegramTransmission, TelegramTransmission>()
     .AddScoped<IHelpDeskTransmission, HelpDeskTransmission>()

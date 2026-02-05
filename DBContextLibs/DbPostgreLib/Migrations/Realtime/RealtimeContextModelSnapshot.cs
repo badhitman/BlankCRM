@@ -3,20 +3,17 @@ using System;
 using DbcLib;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace DbPostgreLib.Migrations
+namespace DbPostgreLib.Migrations.Realtime
 {
-    [DbContext(typeof(MainAppContext))]
-    [Migration("20260205074216_MainAppContext001")]
-    partial class MainAppContext001
+    [DbContext(typeof(RealtimeContext))]
+    partial class RealtimeContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

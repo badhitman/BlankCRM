@@ -2,7 +2,7 @@
 Description=filesindexing.app.service
 
 [Service]
-WorkingDirectory=/srv/services/FilesIndexing
+WorkingDirectory=/srv/services/FilesIndexingService
 ExecStart=/usr/bin/dotnet /srv/services/FilesIndexingService/FilesIndexingService.dll
 Restart=always
 RestartSec=10

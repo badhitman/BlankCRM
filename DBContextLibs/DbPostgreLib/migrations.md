@@ -4,6 +4,11 @@ Update-Database -Context MainAppContext -Project DbPostgreLib -StartupProject Bl
 ```
 
 ```
+Add-Migration RealtimeContext001 -Context RealtimeContext -Project DbPostgreLib -StartupProject RealtimeService
+Update-Database -Context RealtimeContext -Project DbPostgreLib -StartupProject RealtimeService
+```
+
+```
 Add-Migration CommerceContext001 -Context CommerceContext -Project DbPostgreLib -StartupProject CommerceService
 Update-Database -Context CommerceContext -Project DbPostgreLib -StartupProject CommerceService
 ```

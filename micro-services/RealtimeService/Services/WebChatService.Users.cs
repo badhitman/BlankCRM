@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using SharedLib;
 using DbcLib;
 
-namespace ServerLib;
+namespace RealtimeService;
 
 /// <summary>
 /// WebChatService
@@ -17,7 +17,7 @@ public partial class WebChatService : IWebChatService
     /// <inheritdoc/>
     public async Task<TPaginationResponseStandardModel<UserJoinDialogWebChatModelDB>> SelectUsersJoinsDialogsWebChatsAsync(TPaginationRequestStandardModel<SelectUsersJoinsDialogsWebChatsRequestModel> req, CancellationToken token = default)
     {
-        MainAppContext context = await mainDbFactory.CreateDbContextAsync(token);
+        RealtimeContext context = await mainDbFactory.CreateDbContextAsync(token);
 
         if (req.PageSize < 10)
             req.PageSize = 10;
@@ -43,7 +43,7 @@ public partial class WebChatService : IWebChatService
         if (req.Payload is null)
             return ResponseBaseModel.CreateError("req.Payload is null");
 
-        MainAppContext context = await mainDbFactory.CreateDbContextAsync(token);
+        RealtimeContext context = await mainDbFactory.CreateDbContextAsync(token);
         if (req.Payload.IsExclusiveJoin && await context.UsersDialogsJoins.AnyAsync(x => x.DialogJoinId == req.Payload.DialogJoinId && x.OutDateUTC == null, cancellationToken: token))
             return ResponseBaseModel.CreateWarning("Чат уже обслуживается");
 
@@ -76,7 +76,7 @@ public partial class WebChatService : IWebChatService
         if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
             return ResponseBaseModel.CreateError($"string.IsNullOrWhiteSpace(req.SenderActionUserId) > {nameof(DeleteUserJoinDialogWebChatAsync)}");
 
-        MainAppContext context = await mainDbFactory.CreateDbContextAsync(token);
+        RealtimeContext context = await mainDbFactory.CreateDbContextAsync(token);
         await using IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
         await context.UsersDialogsJoins
             .Where(x => x.Id == req.Payload && x.OutDateUTC == null)

@@ -42,6 +42,7 @@
     <Project Path="micro-services/IdentityService/IdentityService.csproj" />
     <Project Path="micro-services/KladrService/KladrService.csproj" />
     <Project Path="micro-services/LdapService/LdapService.csproj" />
+    <Project Path="micro-services/RealtimeService/RealtimeService.csproj" />
     <Project Path="micro-services/StorageService/StorageService.csproj" />
     <Project Path="micro-services/TelegramBotService/TelegramBotService.csproj" />
   </Folder>
@@ -70,10 +71,12 @@
   </Folder>
   <Folder Name="/Solution Items/devops/etc/nginx/prod/">
     <File Path="devops/etc/nginx/api.app" />
+    <File Path="devops/etc/nginx/realtime.app" />
     <File Path="devops/etc/nginx/web.app" />
   </Folder>
   <Folder Name="/Solution Items/devops/etc/nginx/stage/">
     <File Path="devops/etc/nginx/stage/api.staging.app" />
+    <File Path="devops/etc/nginx/stage/realtime.staging.app" />
     <File Path="devops/etc/nginx/stage/web.staging.app" />
   </Folder>
   <Folder Name="/Solution Items/devops/etc/systemd/">
@@ -90,6 +93,7 @@
     <File Path="devops/etc/systemd/system/identity.app.service" />
     <File Path="devops/etc/systemd/system/kladr.app.service" />
     <File Path="devops/etc/systemd/system/ldap.app.service" />
+    <File Path="devops/etc/systemd/system/realtime.app.service" />
     <File Path="devops/etc/systemd/system/tg.app.service" />
     <File Path="devops/etc/systemd/system/web.app.service" />
   </Folder>
@@ -104,6 +108,7 @@
     <File Path="devops/etc/systemd/system/identity.app.stage.service" />
     <File Path="devops/etc/systemd/system/kladr.app.stage.service" />
     <File Path="devops/etc/systemd/system/ldap.app.stage.service" />
+    <File Path="devops/etc/systemd/system/realtime.app.stage.service" />
     <File Path="devops/etc/systemd/system/tg.app.stage.service" />
     <File Path="devops/etc/systemd/system/web.app.stage.service" />
   </Folder>
