@@ -117,9 +117,6 @@ public partial class WebChatService(IDbContextFactory<MainAppContext> mainDbFact
         if (req.Payload is null)
             return ResponseBaseModel.CreateError("req.Payload is null");
 
-        if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
-            return ResponseBaseModel.CreateError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
-
         MainAppContext context = await mainDbFactory.CreateDbContextAsync(token);
         IQueryable<DialogWebChatModelDB> q = context.Dialogs.Where(x => x.Id == req.Payload.Id);
         await q.ExecuteUpdateAsync(set => set
