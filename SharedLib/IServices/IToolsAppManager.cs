@@ -50,12 +50,3 @@ public interface IToolsAppManager
     /// <inheritdoc/>
     public Task<ResponseBaseModel> DeleteExeCommandAsync(int exeCommandId, CancellationToken token = default);
 }
-
-/// <summary>
-/// IEventsWebChatsNotifies
-/// </summary>
-public interface IEventsWebChatsNotifies
-{
-    /// <inheritdoc/>
-    public Task<ResponseBaseModel> NewMessageWebChatHandle(NewMessageWebChatEventModel req, CancellationToken cancellationToken = default);
-}
