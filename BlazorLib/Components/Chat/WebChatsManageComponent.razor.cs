@@ -30,7 +30,7 @@ public partial class WebChatsManageComponent : BlazorBusyComponentUsersCachedMod
 
 
     MudTable<DialogWebChatModelDB>? tableRef;
-
+    bool muteSound;
 
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
@@ -46,6 +46,7 @@ public partial class WebChatsManageComponent : BlazorBusyComponentUsersCachedMod
             { 
                 await tableRef.ReloadServerData(); 
                 StateHasChanged();
+                if(!muteSound)
                 await JsRuntime.InvokeVoidAsync("methods.PlayAudio", "WebChatsManageComponent");
             });
     }
@@ -75,6 +76,7 @@ public partial class WebChatsManageComponent : BlazorBusyComponentUsersCachedMod
             await tableRef.ReloadServerData();
 
         await SetBusyAsync(false);
+        muteSound = false;
     }
 
     async Task OutFromChat(int chatId)

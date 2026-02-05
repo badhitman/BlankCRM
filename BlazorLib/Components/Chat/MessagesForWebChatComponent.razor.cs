@@ -37,11 +37,13 @@ public partial class MessagesForWebChatComponent : BlazorBusyComponentUsersCache
     [Parameter, EditorRequired]
     public required DialogWebChatModelDB DialogWebChat { get; set; }
 
+
     MessageWebChatModelDB? _selectedMessage;
     private string _inputFileId = Guid.NewGuid().ToString();
     string? _textSendMessage;
     MudMenu? _contextMenu;
     MudTable<MessageWebChatModelDB>? tableRef;
+    bool muteSound;
 
     private readonly List<IBrowserFile> loadedFiles = [];
     bool CanNotSendMessage => string.IsNullOrWhiteSpace(_textSendMessage) || IsBusyProgress;
@@ -108,14 +110,14 @@ public partial class MessagesForWebChatComponent : BlazorBusyComponentUsersCache
             DialogOwnerId = DialogWebChat.Id,
             InitiatorMessageSender = false,
         };
-
+        muteSound = false;
         await SetBusyAsync();
 
         TResponseModel<int> res = await WebChatRepo.CreateMessageWebChatAsync(req);
         _textSendMessage = null;
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         req.Id = res.Response;
-
+        
         List<StorageFileModelDB> filesUpd = [];
         MemoryStream ms;
         if (loadedFiles.Count != 0 && res.Response > 0)
@@ -173,6 +175,7 @@ public partial class MessagesForWebChatComponent : BlazorBusyComponentUsersCache
         _inputFileId = Guid.NewGuid().ToString();
 
         await SetBusyAsync(false);
+        muteSound = false;
     }
 
     async Task<TableData<MessageWebChatModelDB>> ServerReload(TableState state, CancellationToken token)
@@ -224,6 +227,7 @@ public partial class MessagesForWebChatComponent : BlazorBusyComponentUsersCache
             {
                 await tableRef.ReloadServerData();
                 StateHasChanged();
+                if(!muteSound)
                 await JsRuntime.InvokeVoidAsync("methods.PlayAudio", "audioPlayerMessagesForWebChatComponent");
             });
     }

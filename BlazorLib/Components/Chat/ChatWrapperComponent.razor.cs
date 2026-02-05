@@ -27,6 +27,7 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
     IEventNotifyReceive<NewMessageWebChatEventModel> NewMessageWebChatEventRepo { get; set; } = default!;
 
 
+    bool muteSound;
     MessageWebChatModelDB? _selectedMessage;
     AboutUserAgentModel? UserAgent;
     MudMenu? _contextMenu;
@@ -99,12 +100,13 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
             InitiatorMessageSender = true,
         };
 
+        muteSound = true;
         await SetBusyAsync();
-
         await WebChatRepo.CreateMessageWebChatAsync(req);
         _textSendMessage = null;
 
         await SetBusyAsync(false);
+        muteSound = false;
     }
 
     async Task OnKeyPresHandler(KeyboardEventArgs args)
@@ -121,10 +123,12 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
                 DialogOwnerId = ticketSession.Id,
                 InitiatorMessageSender = true,
             };
+            muteSound = true;
             await SetBusyAsync();
             await WebChatRepo.CreateMessageWebChatAsync(req);
             _textSendMessage = null;
             await SetBusyAsync(false);
+            muteSound = false;
         }
     }
 
@@ -181,7 +185,8 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
             {
                 await virtualizeComponent.RefreshDataAsync();
                 StateHasChanged();
-                await JsRuntime.InvokeVoidAsync("methods.PlayAudio", "audioPlayerChatWrapperComponent");
+                if (!muteSound)
+                    await JsRuntime.InvokeVoidAsync("methods.PlayAudio", "audioPlayerChatWrapperComponent");
             });
     }
 
