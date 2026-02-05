@@ -66,6 +66,12 @@ public partial class WebChatService : IWebChatService
         }, token);
 
         await context.SaveChangesAsync(token);
+
+        await context.Dialogs
+            .Where(x => x.Id == req.Payload.DialogJoinId)
+            .ExecuteUpdateAsync(set => set
+                .SetProperty(p => p.LastMessageAtUTC, DateTime.UtcNow), cancellationToken: token);
+
         await transaction.CommitAsync(token);
 
         await notifyWebChatRepo.NewMessageWebChatHandle(new() { DialogId = req.Payload.DialogJoinId }, token);
@@ -94,6 +100,12 @@ public partial class WebChatService : IWebChatService
         }, token);
 
         await context.SaveChangesAsync(token);
+
+        await context.Dialogs
+            .Where(x => x.Id == req.Payload)
+            .ExecuteUpdateAsync(set => set
+                .SetProperty(p => p.LastMessageAtUTC, DateTime.UtcNow), cancellationToken: token);
+
         await transaction.CommitAsync(token);
         await notifyWebChatRepo.NewMessageWebChatHandle(new() { DialogId = req.Payload }, token);
         return ResponseBaseModel.CreateSuccess("Ok");
