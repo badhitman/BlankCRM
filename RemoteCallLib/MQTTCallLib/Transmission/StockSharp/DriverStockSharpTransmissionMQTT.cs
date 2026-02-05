@@ -12,7 +12,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// DriverStockSharpTransmission
 /// </summary>
-public partial class DriverStockSharpTransmission(IMQTTClient mqClient) : IDriverStockSharpService
+public partial class DriverStockSharpTransmissionMQTT(IMQTTClient mqClient) : IDriverStockSharpService
 {
     /// <inheritdoc/>
     public async Task<AboutConnectResponseModel> AboutConnection(AboutConnectionRequestModel? req = default, CancellationToken cancellationToken = default)

@@ -12,7 +12,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// TelegramBotStandardTransmission
 /// </summary>
-public partial class TelegramBotStandardTransmission(IMQTTClient mqClient) : ITelegramBotStandardTransmission
+public partial class TelegramBotStandardTransmissionMQTT(IMQTTClient mqClient) : ITelegramBotStandardTransmission
 {
     /// <inheritdoc/>
     public async Task<TResponseModel<UserTelegramBaseModel>> AboutBotAsync(CancellationToken token = default)

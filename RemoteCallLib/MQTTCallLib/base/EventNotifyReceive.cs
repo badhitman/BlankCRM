@@ -27,14 +27,14 @@ public class EventNotifyReceive<T> : IEventNotifyReceive<T>
     IMqttClient mqttClient;
     MqttClientFactory mqttFactory = new();
 
-    readonly StockSharpClientConfigModel MQConfigRepo;
+    readonly MQTTClientConfigModel MQConfigRepo;
     readonly ILogger<EventNotifyReceive<T>> LoggerRepo;
 
     /// <summary>
     /// EventNotifyReceive
     /// </summary>
     public EventNotifyReceive(
-        StockSharpClientConfigModel rabbitConf,
+        MQTTClientConfigModel rabbitConf,
         IServiceProvider servicesProvider,
         ILogger<EventNotifyReceive<T>> loggerRepo)
     {

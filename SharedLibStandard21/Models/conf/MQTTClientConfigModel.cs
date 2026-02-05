@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// StockSharpClientConfig
 /// </summary>
-public class StockSharpClientConfigModel : HostConfigModel
+public class MQTTClientConfigModel : HostConfigModel
 {
     /// <summary>
     /// Таймаут ожидания ответа на удалённый вызов
@@ -21,13 +21,13 @@ public class StockSharpClientConfigModel : HostConfigModel
 
 
     /// <inheritdoc/>
-    public static StockSharpClientConfigModel BuildEmpty()
+    public static MQTTClientConfigModel BuildEmpty()
     {
-        return new StockSharpClientConfigModel() { Scheme = "mqtt", Port = 1883 };
+        return new MQTTClientConfigModel() { Scheme = "mqtt", Port = 1883 };
     }
 
     /// <inheritdoc/>
-    public void Reload(StockSharpClientConfigModel other)
+    public void Reload(MQTTClientConfigModel other)
     {
         Port = other.Port;
         QueueMqNamePrefixForResponse = other.QueueMqNamePrefixForResponse;
@@ -37,3 +37,16 @@ public class StockSharpClientConfigModel : HostConfigModel
         Port = other.Port;
     }
 }
+
+/// <summary>
+/// MQTTClientConfigMainModel
+/// </summary>
+public partial class MQTTClientConfigMainModel : MQTTClientConfigModel
+{
+    /// <inheritdoc/>
+    public new static MQTTClientConfigMainModel BuildEmpty()
+    {
+        return new MQTTClientConfigMainModel() { Scheme = "mqtt", Port = 1883 };
+    }
+}
+ 

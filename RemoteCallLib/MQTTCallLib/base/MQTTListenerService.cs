@@ -2,17 +2,17 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using SharedLib;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Threading.Tasks;
 using System.Threading;
-using Microsoft.Extensions.DependencyInjection;
-using System.Linq;
 using Newtonsoft.Json;
-using MQTTnet;
+using System.Linq;
 using System.Text;
+using SharedLib;
+using MQTTnet;
+using System;
 
 namespace RemoteCallLib;
 
@@ -27,12 +27,12 @@ public class MQTTListenerService<TQueue, TRequest, TResponse>
     where TQueue : IMQTTReceive<TRequest?, TResponse>
     where TResponse : new()
 {
-    readonly StockSharpClientConfigModel MQConfigRepo;
+    readonly MQTTClientConfigModel MQConfigRepo;
     readonly ILogger<MQTTListenerService<TQueue, TRequest, TResponse>> LoggerRepo;
     readonly IMQTTReceive<TRequest?, TResponse> receiveService;
 
     IMqttClient mqttClient;
-    MqttClientFactory mqttFactoryCLI = new ();
+    MqttClientFactory mqttFactoryCLI = new();
 
     Type? _queueType;
     /// <summary>
@@ -55,7 +55,7 @@ public class MQTTListenerService<TQueue, TRequest, TResponse>
 
     /// <inheritdoc/>
     public MQTTListenerService(
-        StockSharpClientConfigModel rabbitConf,
+        MQTTClientConfigModel rabbitConf,
         IServiceProvider servicesProvider,
         ILogger<MQTTListenerService<TQueue, TRequest, TResponse>> loggerRepo)
     {
@@ -93,7 +93,7 @@ public class MQTTListenerService<TQueue, TRequest, TResponse>
                 e.ReasonCode = MqttApplicationMessageReceivedReasonCode.UnspecifiedError;
                 e.ResponseReasonString = ex.Message;
             }
-            
+
             answer.FinalizedServer = DateTime.UtcNow;
             if (!string.IsNullOrWhiteSpace(e.ApplicationMessage.ResponseTopic))
             {
@@ -113,7 +113,7 @@ public class MQTTListenerService<TQueue, TRequest, TResponse>
                     answer.Response = default;
                     LoggerRepo.LogError(ex, $"Ошибка `{ex.GetType().Name}` отправки ответа для топика {QueueName}");
                     answer.Messages.InjectException(ex);
-                   
+
                     applicationMessage = new MqttApplicationMessageBuilder()
                         .WithTopic(e.ApplicationMessage.ResponseTopic)
                         .WithPayload(JsonConvert.SerializeObject(answer, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings))

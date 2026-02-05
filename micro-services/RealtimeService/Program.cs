@@ -2,27 +2,27 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using DbcLib;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using MQTTnet.AspNetCore;
-using NLog;
+using System.Diagnostics.Metrics;
 using NLog.Extensions.Logging;
-using NLog.Web;
-using OpenTelemetry;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
+using MQTTnet.AspNetCore;
+using OpenTelemetry;
 using RemoteCallLib;
-using SharedLib;
-using System.Diagnostics.Metrics;
 using System.Text;
+using SharedLib;
+using NLog.Web;
+using DbcLib;
+using NLog;
 
 namespace RealtimeService;
 
 public class Program
 {
     static Logger logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
-
+    static MQTTClientConfigMainModel _conf = MQTTClientConfigMainModel.BuildEmpty();
     public static async Task Main(string[] args)
     {
         Console.OutputEncoding = Encoding.UTF8;
@@ -130,6 +130,8 @@ public class Program
         })
         .AddSingleton<IManualCustomCacheService, ManualCustomCacheService>();
 
+        builder.Services.AddSingleton(sp => _conf);
+
         builder.Services.AddHttpContextAccessor();
 
         builder.Services.AddHostedMqttServer(
@@ -149,6 +151,7 @@ public class Program
 
         string appName = typeof(Program).Assembly.GetName().Name ?? "AssemblyName";
         #region MQ Transmission (remote methods call)
+
         builder.Services.AddSingleton<IRabbitClient>(x => new RabbitClient(x.GetRequiredService<IOptions<RabbitMQConfigModel>>(), x.GetRequiredService<ILogger<RabbitClient>>(), appName));
         //
         builder.Services

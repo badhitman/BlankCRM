@@ -21,9 +21,9 @@ namespace SharedLib;
 /// Удалённый вызов команд (RabbitMq client)
 /// </summary>
 /// <inheritdoc/>
-public class MQttClient(StockSharpClientConfigModel mqConf, ILogger<MQttClient> _loggerRepo, string appName) : IMQTTClient
+public class MQttClient(MQTTClientConfigModel mqConf, ILogger<MQttClient> _loggerRepo, string appName) : IMQTTClient
 {
-    readonly StockSharpClientConfigModel MQConfigRepo = mqConf;
+    readonly MQTTClientConfigModel MQConfigRepo = mqConf;
     MqttClientFactory mqttFactory = new();
 
     readonly ILogger<MQttClient> loggerRepo = _loggerRepo;
