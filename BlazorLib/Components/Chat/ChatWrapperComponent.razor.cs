@@ -106,7 +106,6 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
         _textSendMessage = null;
 
         await SetBusyAsync(false);
-        muteSound = false;
     }
 
     async Task OnKeyPresHandler(KeyboardEventArgs args)
@@ -128,7 +127,6 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
             await WebChatRepo.CreateMessageWebChatAsync(req);
             _textSendMessage = null;
             await SetBusyAsync(false);
-            muteSound = false;
         }
     }
 
@@ -187,6 +185,8 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
                 StateHasChanged();
                 if (!muteSound)
                     await JsRuntime.InvokeVoidAsync("methods.PlayAudio", "audioPlayerChatWrapperComponent");
+                else
+                    muteSound = false;
             });
     }
 

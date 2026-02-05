@@ -42,12 +42,14 @@ public partial class WebChatsManageComponent : BlazorBusyComponentUsersCachedMod
     void NewMessageWebChatHandler(NewMessageWebChatEventModel model)
     {
         if (tableRef is not null)
-            InvokeAsync(async () => 
-            { 
-                await tableRef.ReloadServerData(); 
+            InvokeAsync(async () =>
+            {
+                await tableRef.ReloadServerData();
                 StateHasChanged();
-                if(!muteSound)
-                await JsRuntime.InvokeVoidAsync("methods.PlayAudio", "WebChatsManageComponent");
+                if (!muteSound)
+                    await JsRuntime.InvokeVoidAsync("methods.PlayAudio", "WebChatsManageComponent");
+                else
+                    muteSound = false;
             });
     }
 
@@ -76,7 +78,6 @@ public partial class WebChatsManageComponent : BlazorBusyComponentUsersCachedMod
             await tableRef.ReloadServerData();
 
         await SetBusyAsync(false);
-        muteSound = false;
     }
 
     async Task OutFromChat(int chatId)
