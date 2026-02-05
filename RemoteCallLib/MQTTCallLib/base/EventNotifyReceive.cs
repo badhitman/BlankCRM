@@ -84,6 +84,7 @@ public class EventNotifyReceive<T> : IEventNotifyReceive<T>
         {
             await mqttClient.ConnectAsync(GetMqttClientOptionsBuilder, stoppingToken);
             await mqttClient.SubscribeAsync(QueueName, cancellationToken: stoppingToken);
+            LoggerRepo.LogTrace($"QueueName:{QueueName}");
         }
         catch (Exception ex)
         {
