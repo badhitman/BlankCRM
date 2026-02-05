@@ -39,8 +39,6 @@
             {
                 <MudLink Href="@($"/web-chats/room-{context.Id}")">
                     @context.InitiatorHumanName @context.InitiatorContacts
-                    <code class="mx-2"> @context.UserAgent </code>
-                    @context.Language
                 </MudLink>
             }
             else
@@ -49,6 +47,8 @@
                     @(UsersCache.FirstOrDefault(x => x.UserId == context.InitiatorIdentityId)?.ToString() ?? context.InitiatorIdentityId)
                 </MudLink>
             }
+            <code class="mx-2"> @context.UserAgent </code>
+            @context.Language
         </MudTd>
         <MudTd DataLabel="Участники">
             @if (context.UsersJoins is not null && context.UsersJoins.Count != 0)
