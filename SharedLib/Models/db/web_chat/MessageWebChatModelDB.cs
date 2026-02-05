@@ -41,7 +41,7 @@ public class MessageWebChatModelDB
     /// <summary>
     /// Отправитель - web клиент
     /// </summary>
-    public bool IsInsideMessage { get; set; }
+    public bool InitiatorMessageSender { get; set; }
 
     /// <summary>
     /// Сообщение удалено?

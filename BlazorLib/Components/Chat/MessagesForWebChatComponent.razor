@@ -86,7 +86,7 @@
             }
             else
             {
-                ChatBubblePosition position = context.IsInsideMessage ? ChatBubblePosition.Start : ChatBubblePosition.End;
+                ChatBubblePosition position = context.InitiatorMessageSender ? ChatBubblePosition.Start : ChatBubblePosition.End;
                 <MudChat ChatPosition="@position">
                     <MudAvatar>@(position == ChatBubblePosition.Start ? "" : "US")</MudAvatar>
                     <MudChatHeader Name="@(position == ChatBubblePosition.Start ? "00" : (UsersCache.FirstOrDefault(x => x.UserId == context.SenderUserIdentityId)?.ToString() ?? context.SenderUserIdentityId))" Time="@context.CreatedAtUTC.GetCustomTime().ToString()" />

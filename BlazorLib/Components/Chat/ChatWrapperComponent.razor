@@ -82,7 +82,7 @@
                             @ref="virtualizeComponent">
                     <ItemContent>
                         @{
-                            ChatBubblePosition position = message.IsInsideMessage
+                            ChatBubblePosition position = message.InitiatorMessageSender
                             ? ChatBubblePosition.Start
                             : ChatBubblePosition.End;
                             UserInfoModel? senderUser = UsersCache.FirstOrDefault(x => x.UserId == message.SenderUserIdentityId);

@@ -5,7 +5,6 @@
 using Microsoft.EntityFrameworkCore;
 using SharedLib;
 using DbcLib;
-using Microsoft.EntityFrameworkCore.Storage;
 
 namespace ServerLib;
 
@@ -14,131 +13,6 @@ namespace ServerLib;
 /// </summary>
 public partial class WebChatService(IDbContextFactory<MainAppContext> mainDbFactory, IIdentityTransmission identityRepo) : IWebChatService
 {
-    /// <inheritdoc/>
-    public async Task<TResponseModel<int>> CreateMessageWebChatAsync(MessageWebChatModelDB req, CancellationToken token = default)
-    {
-        req.CreatedAtUTC = DateTime.UtcNow;
-        req.Text = req.Text.Trim();
-
-        MainAppContext context = await mainDbFactory.CreateDbContextAsync(token);
-        await context.Messages.AddAsync(req, token);
-        await context.SaveChangesAsync(token);
-        await context.Dialogs
-            .Where(x => x.Id == req.DialogOwnerId)
-            .ExecuteUpdateAsync(set => set
-                .SetProperty(p => p.LastMessageAtUTC, DateTime.UtcNow), cancellationToken: token);
-
-        return new()
-        {
-            Response = req.Id
-        };
-    }
-
-    /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DeleteToggleMessageWebChatAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default)
-    {
-        if (req.Payload < 1)
-            return ResponseBaseModel.CreateError("req.Payload < 1");
-
-        MainAppContext context = await mainDbFactory.CreateDbContextAsync(token);
-        await context.Messages
-            .Where(x => x.Id == req.Payload)
-            .ExecuteUpdateAsync(set => set
-                .SetProperty(p => p.IsDisabled, r => !r.IsDisabled), cancellationToken: token);
-
-        return ResponseBaseModel.CreateSuccess("Ok");
-    }
-
-    /// <inheritdoc/>
-    public async Task<TResponseModel<SelectMessagesForWebChatResponseModel>> SelectMessagesWebChatAsync(SelectMessagesForWebChatRequestModel req, CancellationToken token = default)
-    {
-        MainAppContext context = await mainDbFactory.CreateDbContextAsync(token);
-
-        IQueryable<MessageWebChatModelDB> q = context.Messages
-            .Where(x => x.DialogOwner!.SessionTicketId == req.SessionTicketId)
-            .Where(x => req.IncludeDeletedMessages || !x.IsDisabled)
-            ;
-
-        return new()
-        {
-            Response = new()
-            {
-                SessionTicketId = req.SessionTicketId,
-                Count = req.Count,
-                StartIndex = req.StartIndex,
-                IncludeDeletedMessages = req.IncludeDeletedMessages,
-                SessionTicket = req.SessionTicket,
-                TotalRowsCount = await q.CountAsync(cancellationToken: token),
-                Messages = await q
-                    .OrderByDescending(x => x.CreatedAtUTC)
-                    .Skip(req.StartIndex)
-                    .Take(req.Count)
-                    .Include(x => x.AttachesFiles)
-                    .ToListAsync(cancellationToken: token),
-            }
-        };
-    }
-
-    /// <inheritdoc/>
-    public async Task<TPaginationResponseStandardModel<MessageWebChatModelDB>> SelectMessagesForRoomWebChatAsync(TPaginationRequestAuthModel<SelectMessagesForWebChatRoomRequestModel> req, CancellationToken token = default)
-    {
-        MainAppContext context = await mainDbFactory.CreateDbContextAsync(token);
-
-        IQueryable<MessageWebChatModelDB> q = context.Messages
-            .Where(x => x.DialogOwnerId == req.Payload.DialogId)
-            .Where(x => req.Payload.IncludeDeletedMessages == true || !x.IsDisabled)
-            ;
-
-        return new()
-        {
-            PageNum = req.PageNum,
-            PageSize = req.PageSize,
-            SortBy = req.SortBy,
-            SortingDirection = req.SortingDirection,
-            TotalRowsCount = await q.CountAsync(cancellationToken: token),
-            Response = await q
-                    .OrderByDescending(x => x.CreatedAtUTC)
-                    .Skip(req.PageNum * req.PageSize)
-                    .Take(req.PageSize)
-                    .Include(x => x.AttachesFiles)
-                    .ToListAsync(cancellationToken: token),
-        };
-    }
-
-    /// <inheritdoc/>
-    public async Task<ResponseBaseModel> UpdateMessageWebChatAsync(TAuthRequestStandardModel<MessageWebChatModelDB> req, CancellationToken token = default)
-    {
-        if (req.Payload is null)
-            return ResponseBaseModel.CreateError("req.Payload is null");
-
-        MainAppContext context = await mainDbFactory.CreateDbContextAsync(token);
-
-        MessageWebChatModelDB msgDb = await context.Messages
-            .Where(x => x.Id == req.Payload.Id)
-            .Include(x => x.AttachesFiles)
-            .FirstAsync(cancellationToken: token);
-
-        await using IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
-
-        await context.Messages
-            .Where(x => x.Id == req.Payload.Id)
-            .ExecuteUpdateAsync(set => set
-                .SetProperty(p => p.Text, req.Payload.Text), cancellationToken: token);
-
-        if (req.Payload.AttachesFiles is not null)
-        {
-            List<AttachesMessageWebChatModelDB> newFiles = [.. req.Payload.AttachesFiles.Where(x => msgDb.AttachesFiles?.Any(y => y.FileAttachId == x.FileAttachId) != true)];
-            if (newFiles.Count != 0)
-            {
-                newFiles.ForEach(x => x.MessageOwnerId = msgDb.Id);
-                await context.AttachesFilesOfMessages.AddRangeAsync(newFiles, token);
-                await context.SaveChangesAsync(token);
-            }
-        }
-        await transaction.CommitAsync(token);
-        return ResponseBaseModel.CreateSuccess("Ok");
-    }
-
     /// <inheritdoc/>
     public async Task<TResponseModel<DialogWebChatModelDB>> InitWebChatSessionAsync(InitWebChatSessionRequestModel req, CancellationToken cancellationToken = default)
     {
@@ -185,6 +59,80 @@ public partial class WebChatService(IDbContextFactory<MainAppContext> mainDbFact
         {
             Response = readSession
         };
+    }
+
+    /// <inheritdoc/>
+    public async Task<TResponseModel<List<DialogWebChatModelDB>>> DialogsWebChatsReadAsync(TAuthRequestStandardModel<int[]> req, CancellationToken token = default)
+    {
+        MainAppContext context = await mainDbFactory.CreateDbContextAsync(token);
+        return new()
+        {
+            Response = await context.Dialogs
+                .Where(x => req.Payload.Contains(x.Id))
+                .Include(x => x.UsersJoins)
+                .ToListAsync(cancellationToken: token),
+        };
+    }
+
+    /// <inheritdoc/>
+    public async Task<TPaginationResponseStandardModel<DialogWebChatModelDB>> SelectDialogsWebChatsAsync(TPaginationRequestStandardModel<SelectDialogsWebChatsRequestModel> req, CancellationToken token = default)
+    {
+        MainAppContext context = await mainDbFactory.CreateDbContextAsync(token);
+
+        if (req.PageSize < 10)
+            req.PageSize = 10;
+
+        IQueryable<DialogWebChatModelDB> q = context.Dialogs.AsQueryable();
+        if (!string.IsNullOrWhiteSpace(req.FindQuery))
+            q = q.Where(x => x.InitiatorContactsNormalized != null && x.InitiatorContactsNormalized.Contains(req.FindQuery.ToUpper()));
+
+        if (req.Payload?.IsDisabledFiltered is not null)
+            q = q.Where(x => x.IsDisabled == req.Payload.IsDisabledFiltered);
+
+        if (!string.IsNullOrWhiteSpace(req.Payload?.FilterUserIdentityId))
+            q = q.Where(x => x.InitiatorIdentityId == req.Payload.FilterUserIdentityId);
+
+        return new()
+        {
+            PageSize = req.PageSize,
+            PageNum = req.PageNum,
+            SortBy = req.SortBy,
+            TotalRowsCount = await q.CountAsync(cancellationToken: token),
+            Response = await q
+                             .OrderBy(x => x.LastMessageAtUTC)
+                             .Skip(req.PageNum * req.PageSize)
+                             .Take(req.PageSize)
+                             .Include(x => x.UsersJoins)
+                             .ToListAsync(cancellationToken: token),
+        };
+    }
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> UpdateDialogWebChatAsync(TAuthRequestStandardModel<DialogWebChatBaseModel> req, CancellationToken token = default)
+    {
+        if (req.Payload is null)
+            return ResponseBaseModel.CreateError("req.Payload is null");
+
+        MainAppContext context = await mainDbFactory.CreateDbContextAsync(token);
+        IQueryable<DialogWebChatModelDB> q = context.Dialogs.Where(x => x.Id == req.Payload.Id);
+        await q.ExecuteUpdateAsync(set => set
+            .SetProperty(p => p.InitiatorContacts, req.Payload.InitiatorContacts)
+            .SetProperty(p => p.InitiatorHumanName, req.Payload.InitiatorHumanName)
+            .SetProperty(p => p.InitiatorContactsNormalized, req.Payload.InitiatorHumanName?.ToUpper()), cancellationToken: token);
+        //.SetProperty(p => p.InitiatorIdentityId, req.Payload.InitiatorIdentityId)
+        return ResponseBaseModel.CreateSuccess("Ok");
+    }
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> DeleteToggleDialogWebChatAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default)
+    {
+        MainAppContext context = await mainDbFactory.CreateDbContextAsync(token);
+        IQueryable<DialogWebChatModelDB> q = context.Dialogs.Where(x => x.Id == req.Payload).AsQueryable();
+
+        await q.ExecuteUpdateAsync(set => set
+           .SetProperty(p => p.IsDisabled, r => !r.IsDisabled), cancellationToken: token);
+
+        return ResponseBaseModel.CreateSuccess("Ok");
     }
 
     /// <inheritdoc/>

@@ -9,10 +9,24 @@ namespace SharedLib;
 /// </summary>
 public interface IWebChatService : IAsyncDisposable
 {
-    #region messages
+    #region dialogs
     /// <inheritdoc/>
     public Task<TResponseModel<DialogWebChatModelDB>> InitWebChatSessionAsync(InitWebChatSessionRequestModel req, CancellationToken cancellationToken = default);
 
+    /// <inheritdoc/>
+    public Task<ResponseBaseModel> UpdateDialogWebChatAsync(TAuthRequestStandardModel<DialogWebChatBaseModel> req, CancellationToken token = default);
+
+    /// <inheritdoc/>
+    public Task<TResponseModel<List<DialogWebChatModelDB>>> DialogsWebChatsReadAsync(TAuthRequestStandardModel<int[]> req, CancellationToken token = default);
+
+    /// <inheritdoc/>
+    public Task<TPaginationResponseStandardModel<DialogWebChatModelDB>> SelectDialogsWebChatsAsync(TPaginationRequestStandardModel<SelectDialogsWebChatsRequestModel> req, CancellationToken token = default);
+
+    /// <inheritdoc/>
+    public Task<ResponseBaseModel> DeleteToggleDialogWebChatAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default);
+    #endregion
+
+    #region messages
     /// <inheritdoc/>
     public Task<TResponseModel<SelectMessagesForWebChatResponseModel>> SelectMessagesWebChatAsync(SelectMessagesForWebChatRequestModel req, CancellationToken token = default);
 
@@ -27,20 +41,6 @@ public interface IWebChatService : IAsyncDisposable
 
     /// <inheritdoc/>
     public Task<ResponseBaseModel> DeleteToggleMessageWebChatAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default);
-    #endregion
-
-    #region dialogs
-    /// <inheritdoc/>
-    public Task<TResponseModel<List<DialogWebChatModelDB>>> DialogsWebChatsReadAsync(TAuthRequestStandardModel<int[]> req, CancellationToken token = default);
-
-    /// <inheritdoc/>
-    public Task<TPaginationResponseStandardModel<DialogWebChatModelDB>> SelectDialogsWebChatsAsync(TPaginationRequestStandardModel<SelectDialogsWebChatsRequestModel> req, CancellationToken token = default);
-
-    /// <inheritdoc/>
-    public Task<ResponseBaseModel> UpdateDialogWebChatAsync(TAuthRequestStandardModel<DialogWebChatBaseModel> req, CancellationToken token = default);
-
-    /// <inheritdoc/>
-    public Task<ResponseBaseModel> DeleteToggleDialogWebChatAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default);
     #endregion
 
     #region users-joins-dialogs
