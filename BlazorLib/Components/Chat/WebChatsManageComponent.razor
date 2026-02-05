@@ -47,7 +47,7 @@
                     @(UsersCache.FirstOrDefault(x => x.UserId == context.InitiatorIdentityId)?.ToString() ?? context.InitiatorIdentityId)
                 </MudLink>
             }
-            <code class="mx-2"> @context.UserAgent </code>
+            <code class="mx-2">@context.UserAgent</code>
             <sup>@context.Language</sup>
         </MudTd>
         <MudTd DataLabel="Участники">
