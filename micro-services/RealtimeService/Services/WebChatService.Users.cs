@@ -86,8 +86,10 @@ public partial class WebChatService : IWebChatService
 
         RealtimeContext context = await mainDbFactory.CreateDbContextAsync(token);
         await using IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
-        await context.UsersDialogsJoins
-            .Where(x => x.Id == req.Payload && x.OutDateUTC == null)
+        IQueryable<UserJoinDialogWebChatModelDB> q = context.UsersDialogsJoins
+            .Where(x => x.Id == req.Payload);
+        await q
+            .Where(x => x.OutDateUTC == null)
             .ExecuteUpdateAsync(set => set.SetProperty(p => p.OutDateUTC, DateTime.UtcNow), cancellationToken: token);
 
         TResponseModel<UserInfoModel[]> getUser = await identityRepo.GetUsersOfIdentityAsync([req.SenderActionUserId], token);
@@ -95,7 +97,7 @@ public partial class WebChatService : IWebChatService
         {
             Text = $"Из чата вышел `{getUser.Response?.FirstOrDefault(x => x.UserId == req.SenderActionUserId)?.UserName ?? req.SenderActionUserId}`",
             CreatedAtUTC = DateTime.UtcNow,
-            DialogOwnerId = req.Payload,
+            DialogOwnerId = await q.Select(x => x.DialogJoinId).FirstAsync(cancellationToken: token),
             SenderUserIdentityId = GlobalStaticConstantsRoles.Roles.System,
         }, token);
 
