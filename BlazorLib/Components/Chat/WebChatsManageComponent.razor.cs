@@ -71,6 +71,7 @@ public partial class WebChatsManageComponent : BlazorBusyComponentUsersCachedMod
                 IsExclusiveJoin = isExclusive,
             }
         };
+        muteSound = true;
         await SetBusyAsync();
         ResponseBaseModel res = await WebChatRepo.UserInjectDialogWebChatAsync(req);
         SnackBarRepo.ShowMessagesResponse(res.Messages);
@@ -93,6 +94,7 @@ public partial class WebChatsManageComponent : BlazorBusyComponentUsersCachedMod
             SenderActionUserId = CurrentUserSession.UserId,
             Payload = chatId,
         };
+        muteSound = true;
         await SetBusyAsync();
         ResponseBaseModel res = await WebChatRepo.DeleteUserJoinDialogWebChatAsync(req);
         SnackBarRepo.ShowMessagesResponse(res.Messages);
