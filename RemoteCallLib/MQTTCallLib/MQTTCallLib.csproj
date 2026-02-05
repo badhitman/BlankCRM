@@ -13,7 +13,6 @@
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.2" />
 		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.2" />
 		<PackageReference Include="MQTTnet.Extensions.ManagedClient" Version="4.3.7.1207" />
-		<PackageReference Include="MQTTnet.Server" Version="5.1.0.1559" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
 		<PackageReference Include="MQTTnet" Version="5.1.0.1559" />
 	</ItemGroup>

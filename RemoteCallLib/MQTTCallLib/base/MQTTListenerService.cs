@@ -13,7 +13,6 @@ using System.Linq;
 using Newtonsoft.Json;
 using MQTTnet;
 using System.Text;
-using MQTTnet.Server;
 
 namespace RemoteCallLib;
 
@@ -34,7 +33,6 @@ public class MQTTListenerService<TQueue, TRequest, TResponse>
 
     IMqttClient mqttClient;
     MqttClientFactory mqttFactoryCLI = new ();
-    MqttServerFactory mqttFactory = new();
 
     Type? _queueType;
     /// <summary>
