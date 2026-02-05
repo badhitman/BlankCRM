@@ -208,7 +208,7 @@ systemctl start filesindexing.app.stage.service
 systemctl start realtime.app.stage.service
 ```
 
-`journalctl -f -u api.app.stage.service`
+`journalctl -f -u realtime.app.stage.service`
 
 #### Nginx
 ```
