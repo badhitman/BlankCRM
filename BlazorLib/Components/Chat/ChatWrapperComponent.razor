@@ -25,19 +25,21 @@
                 }
                 @if (string.IsNullOrWhiteSpace(ticketSession.InitiatorHumanName) && string.IsNullOrWhiteSpace(ticketSession.InitiatorIdentityId))
                 {
-                    <label for="exampleFormControlTextarea1" class="form-label">Как к Вам обращаться?</label>
-                    <div class="input-group">
-                        <input type="text"
-                               readonly="@IsBusyProgress"
-                               @onkeydown="OnKeyPresHandler"
-                               @bind:event="oninput"
-                               @bind="ticketSessionEdit.InitiatorHumanName"
-                               class="form-control"
-                               id="exampleFormControlTextarea1"></input>
-                        <button @onclick="SevaDialog"
-                                disabled="@string.IsNullOrWhiteSpace(ticketSessionEdit.InitiatorHumanName)"
-                                class="btn btn-outline-@(string.IsNullOrWhiteSpace(_textSendMessage) ? "secondary" : "success") bi bi-check-circle"
-                                type="button"></button>
+                    <div class="alert alert-warning" role="alert">
+                        <label for="exampleFormControlTextarea1" class="form-label">Как к Вам обращаться?</label>
+                        <div class="input-group">
+                            <input type="text"
+                                   readonly="@IsBusyProgress"
+                                   @onkeydown="OnKeyPresHandler"
+                                   @bind:event="oninput"
+                                   @bind="ticketSessionEdit.InitiatorHumanName"
+                                   class="form-control"
+                                   id="exampleFormControlTextarea1"></input>
+                            <button @onclick="SevaDialog"
+                                    disabled="@string.IsNullOrWhiteSpace(ticketSessionEdit.InitiatorHumanName)"
+                                    class="btn btn-outline-@(string.IsNullOrWhiteSpace(_textSendMessage) ? "secondary" : "success") bi bi-check-circle"
+                                    type="button"></button>
+                        </div>
                     </div>
                 }
                 else
