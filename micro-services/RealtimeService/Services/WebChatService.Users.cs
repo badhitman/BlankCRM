@@ -93,11 +93,12 @@ public partial class WebChatService : IWebChatService
             .ExecuteUpdateAsync(set => set.SetProperty(p => p.OutDateUTC, DateTime.UtcNow), cancellationToken: token);
 
         TResponseModel<UserInfoModel[]> getUser = await identityRepo.GetUsersOfIdentityAsync([req.SenderActionUserId], token);
+        int dialogId = await q.Select(x => x.DialogJoinId).FirstAsync(cancellationToken: token);
         await context.Messages.AddAsync(new()
         {
             Text = $"Из чата вышел `{getUser.Response?.FirstOrDefault(x => x.UserId == req.SenderActionUserId)?.UserName ?? req.SenderActionUserId}`",
             CreatedAtUTC = DateTime.UtcNow,
-            DialogOwnerId = await q.Select(x => x.DialogJoinId).FirstAsync(cancellationToken: token),
+            DialogOwnerId = dialogId,
             SenderUserIdentityId = GlobalStaticConstantsRoles.Roles.System,
         }, token);
 
@@ -109,7 +110,7 @@ public partial class WebChatService : IWebChatService
                 .SetProperty(p => p.LastMessageAtUTC, DateTime.UtcNow), cancellationToken: token);
 
         await transaction.CommitAsync(token);
-        await notifyWebChatRepo.NewMessageWebChatHandle(new() { DialogId = req.Payload }, token);
+        await notifyWebChatRepo.NewMessageWebChatHandle(new() { DialogId = dialogId }, token);
         return ResponseBaseModel.CreateSuccess("Ok");
     }
 }
