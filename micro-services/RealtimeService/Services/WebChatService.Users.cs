@@ -95,6 +95,7 @@ public partial class WebChatService : IWebChatService
 
         await context.SaveChangesAsync(token);
         await transaction.CommitAsync(token);
+        await notifyWebChatRepo.NewMessageWebChatHandle(new() { DialogId = req.Payload }, token);
         return ResponseBaseModel.CreateSuccess("Ok");
     }
 }
