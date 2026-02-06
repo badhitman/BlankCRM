@@ -4,7 +4,7 @@
 @inherits BlazorBusyComponentUsersCachedModel
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 
-<span @onclick="ShowToggle" style="cursor:pointer;">Чат</span>
+<span @onclick="ShowToggle" class="nav-link" style="cursor:pointer;">Чат</span>
 @if (ChatDialogOpen && ticketSessionEdit is not null && ticketSession is not null)
 {
     <div class="offcanvas offcanvas-end show"

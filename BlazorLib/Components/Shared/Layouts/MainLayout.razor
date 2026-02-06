@@ -13,23 +13,33 @@
     </div>
 
     <main>
-        <div class="top-row px-4">
-            @if (WebConfig.Value.WebChatEnable)
-            {
-                <BlazorLib.Components.Chat.ChatWrapperComponent />
-            }
-            @if (!WebConfig.Value.HideLanguageSelector)
-            {
-                <CultureSelector />
-            }
-            @if (NavMainMenu.TopNavMenuItems?.Any() == true)
-            {
-                foreach (NavItemModel nav_item in NavMainMenu.TopNavMenuItems)
+        <div class="navbar d-flex flex-row-reverse px-4">
+            <ul class="nav">
+                @if (!WebConfig.Value.HideLanguageSelector)
                 {
-                    <a href="@nav_item.HrefNav" target="_blank" class="@nav_item.CssClass px-1" title="@nav_item.Tooltip">@nav_item.Title</a>
+                    <li class="nav-item">
+                        <CultureSelector />
+                    </li>
                 }
-            }
-            <a href="@GetRootDomain()" title="Документация" target="_blank" class="@(user?.IsAdmin == true ? "" : "visually-hidden")">API</a>
+                @if (NavMainMenu.TopNavMenuItems?.Any() == true)
+                {
+                    foreach (NavItemModel nav_item in NavMainMenu.TopNavMenuItems)
+                    {
+                        <li class="nav-item">
+                            <a href="@nav_item.HrefNav" target="_blank" class="nav-link @nav_item.CssClass" title="@nav_item.Tooltip">@nav_item.Title</a>
+                        </li>
+                    }
+                }
+                @if (WebConfig.Value.WebChatEnable)
+                {
+                    <li class="nav-item">
+                        <BlazorLib.Components.Chat.ChatWrapperComponent />
+                    </li>
+                }
+                <li class="nav-item">
+                    <a href="@GetRootDomain()" title="Документация" target="_blank" class="nav-link @(user?.IsAdmin == true ? "" : "visually-hidden")">API</a>
+                </li>
+            </ul>
         </div>
         <article class="content px-2">
             @Body

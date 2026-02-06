@@ -112,7 +112,9 @@
     <File Path="devops/etc/systemd/system/tg.app.stage.service" />
     <File Path="devops/etc/systemd/system/web.app.stage.service" />
   </Folder>
-  <Folder Name="/Solution Items/secrets/" />
+  <Folder Name="/Solution Items/secrets/">
+    <File Path="../secrets/web-conf.json" />
+  </Folder>
   <Folder Name="/Solution Items/secrets/AppHost/">
     <File Path="../secrets-BlankCRM.AppHost/api-access.json" />
     <File Path="../secrets-BlankCRM.AppHost/connections-strings.Development.json" />
