@@ -180,31 +180,26 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
             await NewMessageWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.NewMessageWebChatHandleNotifyReceive, ticketSession.Id.ToString()).Replace("\\", "/"), NewMessageWebChatHandler);
     }
 
-    void NewMessageWebChatHandler(NewMessageWebChatEventModel model)
+    async void NewMessageWebChatHandler(NewMessageWebChatEventModel model)
     {
+        List<Task> tasks = [];
         if (virtualizeComponent is not null)
-            InvokeAsync(async () =>
-            {
-                List<Task> tasks = [
-                    Task.Run(async () => {
-                        await virtualizeComponent.RefreshDataAsync();
+            tasks.Add(virtualizeComponent.RefreshDataAsync());
 
-                        if(!ChatDialogOpen)
-                            missingMessages++;
+        if (!ChatDialogOpen)
+            missingMessages++;
+        else
+            missingMessages = 0;
 
-                        StateHasChanged();}),
-                    Task.Run(async () => {
-                        if (!muteSound)
-                            await JsRuntime.InvokeVoidAsync("methods.PlayAudio", "audioPlayerChatWrapperComponent");
-                        else
-                            muteSound = false;
-                    })];
+        if (!ChatDialogOpen)
+            tasks.Add(Task.Run(async () => await JsRuntime.InvokeVoidAsync("effects.JQuery", "shake", "missingMessagesBadge")));
 
-                if (!ChatDialogOpen)
-                    tasks.Add(Task.Run(async () => { await JsRuntime.InvokeVoidAsync("effects.JQuery", "shake", "missingMessagesBadge"); }));
+        if (!muteSound)
+            tasks.Add(Task.Run(async () => await JsRuntime.InvokeVoidAsync("methods.PlayAudio", "audioPlayerChatWrapperComponent")));
+        muteSound = false;
 
-                await Task.WhenAll(tasks);
-            });
+        await Task.WhenAll(tasks);
+        await InvokeAsync(StateHasChanged);
     }
 
     /// <inheritdoc/>

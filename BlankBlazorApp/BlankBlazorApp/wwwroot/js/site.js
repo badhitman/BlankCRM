@@ -186,7 +186,7 @@ window.effects = {
         }
 
         // Run the effect
-        $(`#${domId}`).effect(selectedEffect, options, 500, callback);
+        $(`#${domId}`).effect(selectedEffect, options, 500);
     }
 }
 
