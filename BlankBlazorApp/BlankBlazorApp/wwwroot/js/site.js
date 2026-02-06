@@ -43,7 +43,6 @@ window.BoundingClientRect = (() => {
                 return 0;
 
             let height = _d.height();
-            // console.warn(JSON.stringify(height));
             if (isNaN(height)) {
                 return 0;
             }
@@ -56,9 +55,6 @@ window.BoundingClientRect = (() => {
                 return 0;
 
             let width = _d.width();
-
-            //console.warn(JSON.stringify(width));
-
             if (isNaN(width)) {
                 return 0;
             }
@@ -72,8 +68,6 @@ window.BoundingClientRect = (() => {
 
             var _p = _d.position();
             let left = _p.left;
-            //console.warn(JSON.stringify(left));
-
             if (isNaN(left)) {
                 return 0;
             }
@@ -87,7 +81,6 @@ window.BoundingClientRect = (() => {
 
             var _p = _d.position();
             let top = _p.top;
-            //console.warn(JSON.stringify(top));
 
             if (isNaN(top)) {
                 return 0;
