@@ -35,6 +35,7 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
     string? lastUserId;
     Virtualize<MessageWebChatModelDB>? virtualizeComponent;
     string? _textSendMessage;
+    byte missingMessages;
     bool CannotSendMessage => string.IsNullOrWhiteSpace(_textSendMessage) || IsBusyProgress;
     static readonly int virtualCacheSize = 50;
 
@@ -44,7 +45,10 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
         ChatDialogOpen = !ChatDialogOpen;
 
         if (ChatDialogOpen)
+        {
+            missingMessages = 0;
             await InitSession();
+        }
     }
 
     async ValueTask<ItemsProviderResult<MessageWebChatModelDB>> LoadMessages(ItemsProviderRequest request)
@@ -181,12 +185,25 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
         if (virtualizeComponent is not null)
             InvokeAsync(async () =>
             {
-                await virtualizeComponent.RefreshDataAsync();
-                StateHasChanged();
-                if (!muteSound)
-                    await JsRuntime.InvokeVoidAsync("methods.PlayAudio", "audioPlayerChatWrapperComponent");
-                else
-                    muteSound = false;
+                List<Task> tasks = [
+                    Task.Run(async () => {
+                        await virtualizeComponent.RefreshDataAsync();
+
+                        if(!ChatDialogOpen)
+                            missingMessages++;
+
+                        StateHasChanged();}),
+                    Task.Run(async () => {
+                        if (!muteSound)
+                            await JsRuntime.InvokeVoidAsync("methods.PlayAudio", "audioPlayerChatWrapperComponent");
+                        else
+                            muteSound = false;
+                    })];
+
+                if (!ChatDialogOpen)
+                    tasks.Add(Task.Run(async () => { await JsRuntime.InvokeVoidAsync("effects.JQuery", "shake", "missingMessagesBadge"); }));
+
+                await Task.WhenAll(tasks);
             });
     }
 

@@ -4,7 +4,16 @@
 @inherits BlazorBusyComponentUsersCachedModel
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 
-<span @onclick="ShowToggle" class="nav-link" style="cursor:pointer;">Чат</span>
+<span @onclick="ShowToggle" class="nav-link position-relative" style="cursor:pointer;">
+    Чат
+    @if (missingMessages > 0)
+    {
+        <span id="missingMessagesBadge" title="У вас есть не прочтённые сообщения" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+            @(missingMessages > 99 ? "99+" : missingMessages.ToString())
+            <span class="visually-hidden">unread messages</span>
+        </span>
+    }
+</span>
 @if (ChatDialogOpen && ticketSessionEdit is not null && ticketSession is not null)
 {
     <div class="offcanvas offcanvas-end show"
