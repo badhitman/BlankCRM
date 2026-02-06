@@ -147,7 +147,7 @@ public class Program
            .AddScoped<IWebChatService, WebChatService>()
            ;
 
-        builder.Services.AddSingleton<MqttController>();
+        builder.Services.AddTransient<MqttController>();
 
         string appName = typeof(Program).Assembly.GetName().Name ?? "AssemblyName";
         #region MQ Transmission (remote methods call)
@@ -216,11 +216,36 @@ public class Program
         app.UseMqttServer(
             server =>
             {
-                server.ValidatingConnectionAsync += MqttController.ValidateConnection;
-                server.ClientConnectedAsync += MqttController.OnClientConnected;
-                server.ClientDisconnectedAsync += MqttController.ClientDisconnected;
-                server.ClientSubscribedTopicAsync += MqttController.ClientSubscribedTopic;
-                server.PreparingSessionAsync += MqttController.PreparingSession;
+                server.ValidatingConnectionAsync += async (e) =>
+                {
+                    using IServiceScope ss = app.Services.CreateScope();
+                    MqttController mq_cli = ss.ServiceProvider.GetRequiredService<MqttController>();
+                    await mq_cli.ValidateConnection(e);
+                };
+                server.ClientConnectedAsync += async (e) =>
+                {
+                    using IServiceScope ss = app.Services.CreateScope();
+                    MqttController mq_cli = ss.ServiceProvider.GetRequiredService<MqttController>();
+                    await mq_cli.OnClientConnected(e);
+                };
+                server.ClientDisconnectedAsync += async (e) =>
+                {
+                    using IServiceScope ss = app.Services.CreateScope();
+                    MqttController mq_cli = ss.ServiceProvider.GetRequiredService<MqttController>();
+                    await mq_cli.ClientDisconnected(e);
+                };
+                server.ClientSubscribedTopicAsync += async (e) =>
+                {
+                    using IServiceScope ss = app.Services.CreateScope();
+                    MqttController mq_cli = ss.ServiceProvider.GetRequiredService<MqttController>();
+                    await mq_cli.ClientSubscribedTopic(e);
+                };
+                server.PreparingSessionAsync += async (e) =>
+                {
+                    using var ss = app.Services.CreateScope();
+                    MqttController mq_cli = ss.ServiceProvider.GetRequiredService<MqttController>();
+                    await mq_cli.PreparingSession(e);
+                };
             });
 
         app.Run();

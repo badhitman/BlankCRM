@@ -224,6 +224,7 @@ builder.Services
 builder.Services.AddScoped<IUsersAuthenticateService, UsersAuthenticateService>()
     .AddScoped<IUsersProfilesService, UsersProfilesService>()
     .AddScoped<ILogsService, LogsService>()
+    .AddScoped<IEventsWebChatsNotifies, EventsWebChatsNotifiesTransmissionMQTT>()
     ;
 
 #region MQ Transmission (remote methods call)
@@ -235,6 +236,11 @@ builder.Services.AddSingleton<IRabbitClient>(x =>
 
 builder.Services
           .RegisterEventNotify<NewMessageWebChatEventModel>()
+          .RegisterEventNotify<InitWebChatEventModel>()
+          .RegisterEventNotify<ConnectOpenWebChatEventModel>()
+          .RegisterEventNotify<ConnectCloseWebChatEventModel>()
+          .RegisterEventNotify<PingClientsWebChatEventModel>()
+          .RegisterEventNotify<PongClientsWebChatEventModel>()
           ;
 
 builder.Services

@@ -807,6 +807,11 @@ public static partial class GlobalStaticConstantsRoutes
         public const string CLIENT_CONTROLLER_NAME = "client";
 
         /// <summary>
+        /// Clients
+        /// </summary>
+        public const string CLIENTS_CONTROLLER_NAME = "clients";
+
+        /// <summary>
         /// Criteria
         /// </summary>
         public const string CRITERIA_CONTROLLER_NAME = "criteria";
@@ -1570,6 +1575,11 @@ public static partial class GlobalStaticConstantsRoutes
         /// Ping
         /// </summary>
         public const string PING_ACTION_NAME = "ping";
+
+        /// <summary>
+        /// Pong
+        /// </summary>
+        public const string PONG_ACTION_NAME = "pong";
 
         /// <summary>
         /// Notify
