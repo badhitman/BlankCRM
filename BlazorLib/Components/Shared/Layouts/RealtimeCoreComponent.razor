@@ -1,0 +1,35 @@
+@using BlazorLib.Components.Chat
+@using Microsoft.Extensions.Options
+
+@inherits BlazorBusyComponentUsersCachedModel
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+<ul class="nav">
+    @if (!WebConfig.Value.HideLanguageSelector)
+    {
+        <li class="nav-item">
+            <CultureSelector />
+        </li>
+    }
+    @if (NavMainMenu.TopNavMenuItems?.Any() == true)
+    {
+        foreach (NavItemModel nav_item in NavMainMenu.TopNavMenuItems)
+        {
+            <li class="nav-item">
+                <a href="@nav_item.HrefNav" target="_blank" class="nav-link @nav_item.CssClass" title="@nav_item.Tooltip">@nav_item.Title</a>
+            </li>
+        }
+    }
+    @if (WebConfig.Value.WebChatEnable)
+    {
+        <li class="nav-item">
+            <ChatWrapperComponent RealtimeCore="this" @ref="chatWrapperRef" />
+        </li>
+    }
+    <li class="nav-item">
+        <a href="@GetRootDomain()" title="Документация" target="_blank" class="nav-link @(CurrentUserSession?.IsAdmin == true ? "" : "visually-hidden")">API</a>
+    </li>
+</ul>
+<span class="navbar-text">
+    @LayoutContainerId
+</span>

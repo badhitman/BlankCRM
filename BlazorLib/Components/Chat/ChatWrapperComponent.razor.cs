@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using MudBlazor;
 using SharedLib;
+using BlazorLib.Components.Shared.Layouts;
 
 namespace BlazorLib.Components.Chat;
 
@@ -26,6 +27,10 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
     [Inject]
     IEventNotifyReceive<NewMessageWebChatEventModel> NewMessageWebChatEventRepo { get; set; } = default!;
 
+    /// <inheritdoc/>
+    [Parameter,EditorRequired]
+    public required RealtimeCoreComponent RealtimeCore { get; set; }
+
 
     bool muteSound;
     MessageWebChatModelDB? _selectedMessage;
@@ -38,6 +43,8 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
     byte missingMessages;
     bool CannotSendMessage => string.IsNullOrWhiteSpace(_textSendMessage) || IsBusyProgress;
     static readonly int virtualCacheSize = 50;
+    List<PongClientsWebChatEventModel> UsersSessions = [];
+    string LayoutContainerId = Guid.NewGuid().ToString();
 
     bool ChatDialogOpen;
     async Task ShowToggle()
@@ -48,6 +55,7 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
         {
             missingMessages = 0;
             await InitSession();
+            await RealtimeCore.PingAllUsers();
         }
     }
 
@@ -177,7 +185,7 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
         await base.OnInitializedAsync();
         await InitSession();
         if (ticketSession is not null)
-            await NewMessageWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.NewMessageWebChatHandleNotifyReceive, ticketSession.Id.ToString()).Replace("\\", "/"), NewMessageWebChatHandler);
+            await NewMessageWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.NewMessageWebChatHandleNotifyReceive, ticketSession.Id.ToString()).Replace("\\", "/"), NewMessageWebChatHandler, CurrentUserSessionBytes(LayoutContainerId));
     }
 
     async void NewMessageWebChatHandler(NewMessageWebChatEventModel model)
@@ -236,5 +244,16 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
         _selectedMessage = message;
         SnackBarRepo.Add("Message clicked: " + message.Text, Severity.Info);
         await Task.CompletedTask;
+    }
+
+    /// <inheritdoc/>
+    public void UsersEcho(List<PongClientsWebChatEventModel> usersEcho)
+    {
+        lock(UsersSessions)
+        {
+            UsersSessions.Clear();
+            UsersSessions.AddRange(usersEcho);
+        }
+        InvokeAsync(StateHasChangedCall);
     }
 }

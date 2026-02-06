@@ -5,14 +5,15 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System.Threading.Tasks;
-using System.Threading;
+using MQTTnet;
 using Newtonsoft.Json;
+using SharedLib;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using SharedLib;
-using MQTTnet;
-using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace RemoteCallLib;
 
@@ -48,7 +49,7 @@ public class MQTTListenerService<TQueue, TRequest, TResponse>
     {
         get
         {
-            _queueName ??= QueueType.GetProperties().First(x => x.Name.Equals(nameof(IBaseReceive.QueueName))).GetValue(null)!.ToString()!;
+            _queueName ??= QueueType.GetProperties().First(x => x.Name.Equals(nameof(IBaseReceive.QueueName))).GetValue(null)!.ToString()!.Replace("\\", "/");
             return _queueName;
         }
     }
@@ -98,7 +99,7 @@ public class MQTTListenerService<TQueue, TRequest, TResponse>
             if (!string.IsNullOrWhiteSpace(e.ApplicationMessage.ResponseTopic))
             {
                 using IMqttClient mqttResponseClient = mqttFactoryCLI.CreateMqttClient();
-                await mqttResponseClient.ConnectAsync(GetMqttClientOptionsBuilder, stoppingToken);
+                await mqttResponseClient.ConnectAsync(GetMqttClientOptionsBuilder(new(GlobalStaticConstantsRoutes.Routes.MUTE_CONTROLLER_NAME, [1])), stoppingToken);
 
                 MqttApplicationMessage applicationMessage;
                 try
@@ -123,22 +124,24 @@ public class MQTTListenerService<TQueue, TRequest, TResponse>
             }
         };
 
-        await mqttClient.ConnectAsync(GetMqttClientOptionsBuilder, stoppingToken);
+        await mqttClient.ConnectAsync(GetMqttClientOptionsBuilder(new(GlobalStaticConstantsRoutes.Routes.MUTE_CONTROLLER_NAME, [1])), stoppingToken);
         await mqttClient.SubscribeAsync(QueueName, cancellationToken: stoppingToken);
     }
-    MqttClientOptions GetMqttClientOptionsBuilder
+    MqttClientOptions GetMqttClientOptionsBuilder(KeyValuePair<string, byte[]>? propertyValue)
     {
-        get
-        {
-            return new MqttClientOptionsBuilder()
+        MqttClientOptionsBuilder res = new MqttClientOptionsBuilder()
                .WithTcpServer(MQConfigRepo.Host, MQConfigRepo.Port)
-               .WithProtocolVersion(MQTTnet.Formatter.MqttProtocolVersion.V500)
-               .Build();
-        }
+               .WithProtocolVersion(MQTTnet.Formatter.MqttProtocolVersion.V500);
+
+        if (propertyValue is not null)
+            res.WithUserProperty(propertyValue.Value.Key, propertyValue.Value.Value);
+
+        return res.Build();
     }
     /// <inheritdoc/>
     public override void Dispose()
     {
+        mqttClient.DisconnectAsync(new() { UserProperties = [new(GlobalStaticConstantsRoutes.Routes.MUTE_CONTROLLER_NAME, new ReadOnlyMemory<byte>([1]))] });
         base.Dispose();
         GC.SuppressFinalize(this);
     }

@@ -34,8 +34,9 @@ public class MQttClient(MQTTClientConfigModel mqConf, ILogger<MQttClient> _logge
     public static readonly JsonSerializerOptions SerializerOptions = new() { ReferenceHandler = ReferenceHandler.IgnoreCycles, WriteIndented = true };
 
     /// <inheritdoc/>
-    public async Task<T?> MqRemoteCallAsync<T>(string queue, object? request = null, bool waitResponse = true, CancellationToken tokenOuter = default) where T : class
+    public async Task<T?> MqRemoteCallAsync<T>(string queue, object? request = null, bool waitResponse = true, KeyValuePair<string, byte[]>? propertyValue = null, CancellationToken tokenOuter = default) where T : class
     {
+        queue = queue.Replace("\\", "/");
         using IMqttClient mqttClient = mqttFactory.CreateMqttClient();
         using IMqttClient responseClient = mqttFactory.CreateMqttClient();
         string _sc = MQConfigRepo.ToString();
@@ -91,20 +92,28 @@ public class MQttClient(MQTTClientConfigModel mqConf, ILogger<MQttClient> _logge
         }
         responseClient.ApplicationMessageReceivedAsync += ResponseClient_ApplicationMessageReceivedAsync;
         loggerRepo.LogTrace($"Sending message into queue [{queue}]", request_payload_json);
-        MqttClientConnectResult res = await mqttClient.ConnectAsync(GetMqttClientOptionsBuilder, tokenOuter);
+
+        MqttClientConnectResult res = await mqttClient.ConnectAsync(GetMqttClientOptionsBuilder(propertyValue), tokenOuter);
 
         MqttApplicationMessage applicationMessage = new MqttApplicationMessageBuilder()
-            .WithTopic(queue.Replace("\\", "/"))
+            .WithTopic(queue)
             .WithPayload(request_payload_json)
             .WithResponseTopic(response_topic)
             .Build();
+
+        MqttClientDisconnectOptions dq = new();
+        if (propertyValue is not null)
+        {
+            dq.UserProperties ??= [];
+            dq.UserProperties.Add(new(propertyValue.Value.Key, propertyValue.Value.Value));
+        }
 
         if (waitResponse)
         {
             stopwatch.Start();
             try
             {
-                await responseClient.ConnectAsync(GetMqttClientOptionsBuilder, tokenOuter);
+                await responseClient.ConnectAsync(GetMqttClientOptionsBuilder(propertyValue), tokenOuter);
                 await responseClient.SubscribeAsync(response_topic, cancellationToken: tokenOuter);
                 await mqttClient.PublishAsync(applicationMessage, tokenOuter);
             }
@@ -113,12 +122,14 @@ public class MQttClient(MQTTClientConfigModel mqConf, ILogger<MQttClient> _logge
                 stopwatch.Stop();
                 _msg = $"Request MQ/IO error [{queue}]";
                 loggerRepo.LogError(ex, _msg);
+
+                await responseClient.DisconnectAsync(dq, tokenOuter);
                 return default;
             }
 
             List<Task> tasks = [
                 Task.Run(async () => { await Task.Delay(MQConfigRepo.RemoteCallTimeoutMs); cts.Cancel(); }, tokenOuter),
-                Task.Run( () => {
+                Task.Run(() => {
                     try
                     {
                         mres.Wait(token);
@@ -133,7 +144,7 @@ public class MQttClient(MQTTClientConfigModel mqConf, ILogger<MQttClient> _logge
                         loggerRepo.LogError(ex, _msg);
                         stopwatch.Stop();
                     }
-                })
+                }, tokenOuter)
                 ];
 
             await Task.WhenAny(tasks);
@@ -150,6 +161,8 @@ public class MQttClient(MQTTClientConfigModel mqConf, ILogger<MQttClient> _logge
         else
         {
             await mqttClient.PublishAsync(applicationMessage, tokenOuter);
+            await mqttClient.DisconnectAsync(dq, tokenOuter);
+            await responseClient.DisconnectAsync(dq, tokenOuter);
             return default;
         }
 
@@ -157,22 +170,32 @@ public class MQttClient(MQTTClientConfigModel mqConf, ILogger<MQttClient> _logge
         {
             _msg = $"Response MQ/IO is null [{queue}]: {stopwatch.Elapsed} > {TimeSpan.FromMilliseconds(MQConfigRepo.RemoteCallTimeoutMs)}";
             loggerRepo.LogError(_msg);
+            await mqttClient.DisconnectAsync(dq, tokenOuter);
+            await responseClient.DisconnectAsync(dq, tokenOuter);
             return default;
         }
         else if (res_io is null)
-            return default;
+        {
 
+            await mqttClient.DisconnectAsync(dq, tokenOuter);
+            await responseClient.DisconnectAsync(dq, tokenOuter);
+            return default;
+        }
+
+        await mqttClient.DisconnectAsync(dq, tokenOuter);
+        await responseClient.DisconnectAsync(dq, tokenOuter);
         return res_io.Response;
     }
 
-    MqttClientOptions GetMqttClientOptionsBuilder
+    MqttClientOptions GetMqttClientOptionsBuilder(KeyValuePair<string, byte[]>? propertyValue)
     {
-        get
-        {
-            return new MqttClientOptionsBuilder()
+        MqttClientOptionsBuilder res = new MqttClientOptionsBuilder()
                .WithTcpServer(MQConfigRepo.Host, MQConfigRepo.Port)
-               .WithProtocolVersion(MQTTnet.Formatter.MqttProtocolVersion.V500)
-               .Build();
-        }
+               .WithProtocolVersion(MQTTnet.Formatter.MqttProtocolVersion.V500);
+
+        if (propertyValue is not null)
+            res.WithUserProperty(propertyValue.Value.Key, propertyValue.Value.Value);
+
+        return res.Build();
     }
 }

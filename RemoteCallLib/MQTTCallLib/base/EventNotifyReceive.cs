@@ -11,6 +11,8 @@ using System.Text;
 using SharedLib;
 using MQTTnet;
 using System;
+using System.Security.Cryptography;
+using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace RemoteCallLib;
 
@@ -29,6 +31,7 @@ public class EventNotifyReceive<T> : IEventNotifyReceive<T>
 
     readonly MQTTClientConfigModel MQConfigRepo;
     readonly ILogger<EventNotifyReceive<T>> LoggerRepo;
+    byte[]? _userInfoBytes;
 
     /// <summary>
     /// EventNotifyReceive
@@ -44,12 +47,14 @@ public class EventNotifyReceive<T> : IEventNotifyReceive<T>
         using IServiceScope scope = servicesProvider.CreateScope();
 
         mqttClient = mqttFactory.CreateMqttClient();
+
         //loggerRepo.LogInformation($"Subscriber [{QueueName}] socket ready...");
     }
 
     /// <inheritdoc/>
-    public async Task RegisterAction(string QueueName, Action<T> actNotify, CancellationToken stoppingToken = default)
+    public async Task RegisterAction(string QueueName, Action<T> actNotify, byte[]? userInfoBytes, bool isMute = false, CancellationToken stoppingToken = default)
     {
+        _userInfoBytes = userInfoBytes;
         Task ApplicationMessageReceived(MqttApplicationMessageReceivedEventArgs e)
         {
             string content = Encoding.UTF8.GetString(e.ApplicationMessage.Payload).Trim();
@@ -82,7 +87,7 @@ public class EventNotifyReceive<T> : IEventNotifyReceive<T>
 
         try
         {
-            await mqttClient.ConnectAsync(GetMqttClientOptionsBuilder, stoppingToken);
+            await mqttClient.ConnectAsync(GetMqttClientOptionsBuilder(isMute), stoppingToken);
             await mqttClient.SubscribeAsync(QueueName, cancellationToken: stoppingToken);
             LoggerRepo.LogTrace($"QueueName:{QueueName}");
         }
@@ -95,21 +100,29 @@ public class EventNotifyReceive<T> : IEventNotifyReceive<T>
     }
 
     /// <inheritdoc/>
-    public Task UnregisterAction(CancellationToken stoppingToken = default)
+    public async Task UnregisterAction(bool isMute = false, CancellationToken stoppingToken = default)
     {
+        if (mqttClient.IsConnected)
+        {
+            if (!isMute)
+                await mqttClient.DisconnectAsync(new() { UserProperties = [new(Routes.USER_CONTROLLER_NAME, _userInfoBytes ?? Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(null)))] }, stoppingToken);
+            else
+                await mqttClient.DisconnectAsync(new() { UserProperties = [new(Routes.MUTE_CONTROLLER_NAME, new ReadOnlyMemory<byte>([1]))] }, stoppingToken);
+        }
         mqttClient.Dispose();
         Notify = null;
-        return Task.CompletedTask;
     }
 
-    MqttClientOptions GetMqttClientOptionsBuilder
+    MqttClientOptions GetMqttClientOptionsBuilder(bool isMute)
     {
-        get
-        {
-            return new MqttClientOptionsBuilder()
+        MqttClientOptionsBuilder builder = new MqttClientOptionsBuilder()
                .WithTcpServer(MQConfigRepo.Host, MQConfigRepo.Port)
                .WithProtocolVersion(MQTTnet.Formatter.MqttProtocolVersion.V500)
-               .Build();
-        }
+               .WithUserProperty(Routes.USER_CONTROLLER_NAME, _userInfoBytes ?? Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(null)));
+
+        if (isMute)
+            builder.WithUserProperty(Routes.MUTE_CONTROLLER_NAME, new ReadOnlyMemory<byte>([1]));
+
+        return builder.Build();
     }
 }

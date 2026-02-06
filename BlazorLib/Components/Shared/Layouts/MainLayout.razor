@@ -14,32 +14,7 @@
 
     <main>
         <div class="navbar d-flex flex-row-reverse px-4">
-            <ul class="nav">
-                @if (!WebConfig.Value.HideLanguageSelector)
-                {
-                    <li class="nav-item">
-                        <CultureSelector />
-                    </li>
-                }
-                @if (NavMainMenu.TopNavMenuItems?.Any() == true)
-                {
-                    foreach (NavItemModel nav_item in NavMainMenu.TopNavMenuItems)
-                    {
-                        <li class="nav-item">
-                            <a href="@nav_item.HrefNav" target="_blank" class="nav-link @nav_item.CssClass" title="@nav_item.Tooltip">@nav_item.Title</a>
-                        </li>
-                    }
-                }
-                @if (WebConfig.Value.WebChatEnable)
-                {
-                    <li class="nav-item">
-                        <BlazorLib.Components.Chat.ChatWrapperComponent />
-                    </li>
-                }
-                <li class="nav-item">
-                    <a href="@GetRootDomain()" title="Документация" target="_blank" class="nav-link @(user?.IsAdmin == true ? "" : "visually-hidden")">API</a>
-                </li>
-            </ul>
+            <RealtimeCoreComponent />
         </div>
         <article class="content px-2">
             @Body
@@ -76,18 +51,5 @@
     public required NavMainMenuModel NavMainMenu { get; set; }
 
 
-    UserInfoMainModel? user = default!;
     private bool _isDarkMode = true;
-
-    protected override async Task OnInitializedAsync()
-    {
-        AuthenticationState state = await authRepo.GetAuthenticationStateAsync();
-        user = state.User.ReadCurrentUserInfo();
-    }
-
-    string GetRootDomain()
-    {
-        Uri _uri = new(NavRepo.BaseUri);
-        return $"{_uri.Scheme}://api.{_uri.Authority}/swagger/";
-    }
 }

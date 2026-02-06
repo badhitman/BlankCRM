@@ -2,7 +2,6 @@
 @using MudBlazor
 
 @inherits BlazorBusyComponentUsersCachedModel
-@rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 <span @onclick="ShowToggle" class="nav-link position-relative" style="cursor:pointer;">
     Чат
@@ -167,6 +166,19 @@
                 </div>
                 <div class="form-text">Email или телефон для обратной связи</div>
             </div>
+        }
+        @lock (UsersSessions)
+        {
+            if (UsersSessions.Count != 0)
+            {
+                <p class="pa-2">
+                    Операторы:
+                    @foreach (PongClientsWebChatEventModel _userClient in UsersSessions.Where(x => !string.IsNullOrWhiteSpace(x.CurrentUserSession?.UserName)).DistinctBy(x => x.CurrentUserSession!.UserName))
+                    {
+                        <span class="badge text-bg-light">@_userClient.CurrentUserSession!.UserName</span>
+                    }
+                </p>
+            }
         }
     </div>
 }

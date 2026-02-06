@@ -31,12 +31,13 @@ public partial class WebChatsManageComponent : BlazorBusyComponentUsersCachedMod
 
     MudTable<DialogWebChatModelDB>? tableRef;
     bool muteSound;
+    readonly string LayoutContainerId = Guid.NewGuid().ToString();
 
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        await NewMessageWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.NewMessageWebChatHandleNotifyReceive, "#").Replace("\\", "/"), NewMessageWebChatHandler);
+        await NewMessageWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.NewMessageWebChatHandleNotifyReceive, "#").Replace("\\", "/"), NewMessageWebChatHandler, CurrentUserSessionBytes(LayoutContainerId));
     }
 
     void NewMessageWebChatHandler(NewMessageWebChatEventModel model)

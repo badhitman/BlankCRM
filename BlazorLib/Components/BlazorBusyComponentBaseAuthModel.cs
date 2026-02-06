@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components;
 using SharedLib;
 using Newtonsoft.Json;
+using System.Text.Unicode;
+using System.Text;
 
 namespace BlazorLib;
 
@@ -27,6 +29,11 @@ public abstract class BlazorBusyComponentBaseAuthModel : BlazorBusyComponentBase
     /// </summary>
     public UserInfoModel? CurrentUserSession { get; private set; }
 
+
+    /// <inheritdoc/>
+    public byte[]? CurrentUserSessionBytes(string layoutContainerId) => CurrentUserSession is null
+        ? null
+        : Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(new KeyValuePair<string, UserInfoModel?>(layoutContainerId, CurrentUserSession), GlobalStaticConstants.JsonSerializerSettings));
 
     /// <inheritdoc/>
     public async Task ReadCurrentUser()

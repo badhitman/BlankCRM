@@ -26,10 +26,10 @@ public interface IEventNotifyReceive<T>
     /// <summary>
     /// RegisterAction
     /// </summary>
-    public Task RegisterAction(string QueueName, Action<T> payload, CancellationToken stoppingToken = default);
+    public Task RegisterAction(string QueueName, Action<T> payload, byte[]? userInfoBytes, bool isMute = false, CancellationToken stoppingToken = default);
 
     /// <summary>
     /// UnregisterAction
     /// </summary>
-    public Task UnregisterAction(CancellationToken stoppingToken = default);
+    public Task UnregisterAction(bool isMute = false, CancellationToken stoppingToken = default);
 }

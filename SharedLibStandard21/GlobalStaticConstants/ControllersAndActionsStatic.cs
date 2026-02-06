@@ -552,6 +552,11 @@ public static partial class GlobalStaticConstantsRoutes
         public const string MULTIPLICITY_CONTROLLER_NAME = "multiplicity";
 
         /// <summary>
+        /// Mute
+        /// </summary>
+        public const string MUTE_CONTROLLER_NAME = "mute";
+
+        /// <summary>
         /// Organization
         /// </summary>
         public const string ORGANIZATION_CONTROLLER_NAME = "organization";

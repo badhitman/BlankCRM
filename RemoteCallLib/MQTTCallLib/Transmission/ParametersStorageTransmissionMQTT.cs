@@ -102,12 +102,12 @@ public class ParametersStorageTransmissionMQTT(IMQTTClient rabbitClient) : IPara
             PrefixPropertyName = store.PrefixPropertyName,
         };
 
-        return await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(GlobalStaticConstantsTransmission.TransmissionQueues.SaveCloudParameterReceive, set_req, waitResponse, token) ?? new();
+        return await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(GlobalStaticConstantsTransmission.TransmissionQueues.SaveCloudParameterReceive, set_req, waitResponse, token: token) ?? new();
     }
 
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> DeleteParameterAsync(StorageMetadataModel key, bool waitResponse = true, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(GlobalStaticConstantsTransmission.TransmissionQueues.DeleteCloudParameterReceive, key, waitResponse, token) ?? new();
+        => await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(GlobalStaticConstantsTransmission.TransmissionQueues.DeleteCloudParameterReceive, key, waitResponse, token: token) ?? new();
 
     #endregion
 }

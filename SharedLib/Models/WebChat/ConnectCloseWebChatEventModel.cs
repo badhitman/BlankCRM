@@ -9,5 +9,6 @@ namespace SharedLib;
 /// </summary>
 public class ConnectCloseWebChatEventModel
 {
-
+    /// <inheritdoc/>
+    public UserInfoModel? UserInfoBaseModel { get; set; }
 }

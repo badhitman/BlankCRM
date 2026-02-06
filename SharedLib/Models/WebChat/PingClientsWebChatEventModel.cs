@@ -14,5 +14,5 @@ namespace SharedLib;
 public class PingClientsWebChatEventModel
 {
     /// <inheritdoc/>
-    public required string ResponseSessionId { get; set; }
+    public required string LayoutContainerId { get; set; }
 }

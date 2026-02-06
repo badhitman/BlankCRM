@@ -44,6 +44,7 @@ public partial class MessagesForWebChatComponent : BlazorBusyComponentUsersCache
     MudMenu? _contextMenu;
     MudTable<MessageWebChatModelDB>? tableRef;
     bool muteSound;
+    readonly string LayoutContainerId = Guid.NewGuid().ToString();
 
     private readonly List<IBrowserFile> loadedFiles = [];
     bool CanNotSendMessage => string.IsNullOrWhiteSpace(_textSendMessage) || IsBusyProgress;
@@ -214,7 +215,7 @@ public partial class MessagesForWebChatComponent : BlazorBusyComponentUsersCache
 
         if (tableRef is not null)
         {
-            await NewMessageWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.NewMessageWebChatHandleNotifyReceive, DialogWebChat.Id.ToString()).Replace("\\", "/"), NewMessageWebChatHandler);
+            await NewMessageWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.NewMessageWebChatHandleNotifyReceive, DialogWebChat.Id.ToString()).Replace("\\", "/"), NewMessageWebChatHandler, CurrentUserSessionBytes(LayoutContainerId));
             await tableRef.ReloadServerData();
         }
     }

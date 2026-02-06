@@ -16,10 +16,10 @@ public interface IEventsWebChatsNotifies
     public Task<ResponseBaseModel> PingClientsWebChatHandle(PingClientsWebChatEventModel req, CancellationToken cancellationToken = default);
 
     /// <inheritdoc/>
-    public Task<ResponseBaseModel> ConnectionCloseWebChatHandle(ConnectCloseWebChatEventModel req, CancellationToken cancellationToken = default);
+    public Task<ResponseBaseModel> ClientDisconnectedWebChatHandle(ConnectCloseWebChatEventModel req, CancellationToken cancellationToken = default);
 
     /// <inheritdoc/>
-    public Task<ResponseBaseModel> ConnectionOpenWebChatHandle(ConnectOpenWebChatEventModel req, CancellationToken cancellationToken = default);
+    public Task<ResponseBaseModel> OnClientConnectedWebChatHandle(ConnectOpenWebChatEventModel req, CancellationToken cancellationToken = default);
 
     /// <inheritdoc/>
     public Task<ResponseBaseModel> PongClientWebChatHandle(PongClientsWebChatEventModel req, CancellationToken cancellationToken = default);

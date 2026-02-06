@@ -233,6 +233,9 @@ builder.Services.AddSingleton<IRabbitClient>(x =>
     new RabbitClient(x.GetRequiredService<IOptions<RabbitMQConfigModel>>(),
                 x.GetRequiredService<ILogger<RabbitClient>>(),
                 appName));
+builder.Services
+            .AddSingleton<IMQTTClient>(x => new MQttClient(x.GetRequiredService<MQTTClientConfigModel>(), x.GetRequiredService<ILogger<MQttClient>>(), appName))
+            ;
 
 builder.Services
           .RegisterEventNotify<NewMessageWebChatEventModel>()
