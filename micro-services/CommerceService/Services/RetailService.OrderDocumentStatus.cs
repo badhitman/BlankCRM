@@ -282,17 +282,14 @@ public partial class RetailService : IRetailService
                 .SetProperty(p => p.Version, res.DocumentNewVersion)
                 .SetProperty(p => p.StatusDocument, context.OrdersStatusesRetails.Where(y => y.OrderDocumentId == orderDb.Id).OrderByDescending(z => z.DateOperation).ThenByDescending(os => os.Id).Select(s => s.StatusDocument).FirstOrDefault()), cancellationToken: token);
 
-        StatusesDocumentsEnum _newStatus = await context.OrdersStatusesRetails
+        StatusesDocumentsEnum? _newStatus = await context.OrdersStatusesRetails
             .Where(y => y.OrderDocumentId == orderDb.Id)
-            .OrderByDescending(z => z.DateOperation)
-            .ThenByDescending(os => os.Id)
             .Select(s => s.StatusDocument)
-            .FirstAsync(cancellationToken: token);
+            .FirstOrDefaultAsync(cancellationToken: token);
 
         if ((offOrdersStatuses.Contains(_newStatus) && offOrdersStatuses.Contains(_oldStatus)) || (!offOrdersStatuses.Contains(_newStatus) && !offOrdersStatuses.Contains(_oldStatus)))
         {
             await transaction.CommitAsync(token);
-
             res.AddSuccess("Ok");
             return res;
         }
