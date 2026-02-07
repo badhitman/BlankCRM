@@ -56,15 +56,11 @@ public partial class RealtimeCoreComponent
     /// <inheritdoc/>
     public async Task PingAllUsers()
     {
-        //await PongClientsWebChatEventRepo.UnregisterAction(isMute: true);
-        //LayoutContainerId = Guid.NewGuid().ToString();
-
         lock (UsersEcho)
         {
             UsersEcho.Clear();
         }
         chatWrapperRef?.UsersEcho(UsersEcho);
-        //await PongClientsWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.PongClientWebChatHandleNotifyReceive, LayoutContainerId.ToString()).Replace("\\", "/"), PongClientsWebChatHandler, CurrentUserSessionBytes(LayoutContainerId), isMute: true);
         await NotifyWebChatRepo.PingClientsWebChatHandle(new() { LayoutContainerId = LayoutContainerId });
     }
 
@@ -98,7 +94,6 @@ public partial class RealtimeCoreComponent
         await ConnectionCloseWebChatRepo.RegisterAction(GlobalStaticConstantsTransmission.TransmissionQueues.ConnectionCloseWebChatHandleNotifyReceive.Replace("\\", "/"), ConnectionCloseWebChatHandler, CurrentUserSessionBytes(LayoutContainerId), isMute: true);
         await PingClientsWebChatEventRepo.RegisterAction(GlobalStaticConstantsTransmission.TransmissionQueues.PingClientsWebChatHandleNotifyReceive.Replace("\\", "/"), PingClientsWebChatHandler, CurrentUserSessionBytes(LayoutContainerId), isMute: true);
         await ConnectionOpenWebChatRepo.RegisterAction(GlobalStaticConstantsTransmission.TransmissionQueues.ConnectionOpenWebChatHandleNotifyReceive.Replace("\\", "/"), ConnectionOpenWebChatHandler, CurrentUserSessionBytes(LayoutContainerId));
-        //await PingAllUsers();
     }
 
     async void ConnectionCloseWebChatHandler(ConnectCloseWebChatEventModel model)

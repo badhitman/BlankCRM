@@ -31,12 +31,22 @@
                 </code>
                 <MudSpacer />
                 <span class="btn-group" role="group" aria-label="Basic example">
+                    <button type="button"
+                            class="btn btn-outline-info btn-sm"
+                            title="Проверить состояние области чата">
+                        Статус
+                    </button>
+                    <button type="button"
+                            class="btn btn-outline-info btn-sm"
+                            title="Открыть диалог чата клиенту" disabled>
+                        Отобразить
+                    </button>
                     @if (RoomIsEdit)
                     {
                         <button class="btn btn-outline-primary btn-sm"
                                 type="button"
                                 title="Перезагрузить данные с сервера"
-                                @onclick="ReloadRoom">
+                                @onclick="ReloadRoom" disabled>
                             Отмена
                         </button>
                     }

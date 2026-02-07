@@ -26,4 +26,13 @@ public interface IEventsWebChatsNotifies
 
     /// <inheritdoc/>
     public Task<ResponseBaseModel> InitWebChatHandle(InitWebChatEventModel req, CancellationToken cancellationToken = default);
+
+    /// <inheritdoc/>
+    public Task<ResponseBaseModel> GetStateWebChatHandle(GetStateWebChatEventModel req, CancellationToken cancellationToken = default);
+
+    /// <inheritdoc/>
+    public Task<ResponseBaseModel> SetStateWebChatHandle(SetStateWebChatEventModel req, CancellationToken cancellationToken = default);
+
+    /// <inheritdoc/>
+    public Task<ResponseBaseModel> ShowToastHandle(ShowToastEventModel req, CancellationToken cancellationToken = default);
 }
