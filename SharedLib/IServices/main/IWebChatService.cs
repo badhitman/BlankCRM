@@ -9,6 +9,11 @@ namespace SharedLib;
 /// </summary>
 public interface IWebChatService
 {
+    #region engine
+    /// <inheritdoc/>
+    public Task<TResponseModel<List<MqttClientModel>>> GetClientsConnectionsAsync(GetClientsRequestModel req, CancellationToken cancellationToken = default);
+    #endregion
+
     #region dialogs
     /// <inheritdoc/>
     public Task<TResponseModel<DialogWebChatModelDB>> InitWebChatSessionAsync(InitWebChatSessionRequestModel req, CancellationToken cancellationToken = default);

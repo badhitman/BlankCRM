@@ -2,17 +2,45 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Microsoft.EntityFrameworkCore;
-using SharedLib;
 using DbcLib;
+using Microsoft.EntityFrameworkCore;
+using MQTTnet.Server;
+using SharedLib;
 
 namespace RealtimeService;
 
 /// <summary>
 /// WebChatService
 /// </summary>
-public partial class WebChatService(IDbContextFactory<RealtimeContext> mainDbFactory, IIdentityTransmission identityRepo, IEventsWebChatsNotifies notifyWebChatRepo) : IWebChatService
+public partial class WebChatService(IDbContextFactory<RealtimeContext> mainDbFactory, IIdentityTransmission identityRepo, IEventsWebChatsNotifies notifyWebChatRepo, MqttServer mqttServerRepo)
+    : IWebChatService
 {
+    /// <inheritdoc/>
+    public async Task<TResponseModel<List<MqttClientModel>>> GetClientsConnectionsAsync(GetClientsRequestModel req, CancellationToken cancellationToken = default)
+    {
+        IList<MqttSessionStatus> res = await mqttServerRepo.GetSessionsAsync();
+
+        return new()
+        {
+            Response = [..(await mqttServerRepo.GetClientsAsync()).Select(x=> new MqttClientModel()
+            {
+                Id = x.Id,
+                BytesSent = x.BytesSent,
+                BytesReceived = x.BytesReceived,
+                ConnectedTimestamp = x.ConnectedTimestamp,
+                LastNonKeepAlivePacketReceivedTimestamp = x.LastNonKeepAlivePacketReceivedTimestamp,
+                LastPacketReceivedTimestamp = x.LastPacketReceivedTimestamp,
+                LastPacketSentTimestamp = x.LastPacketSentTimestamp,
+                ProtocolVersion = x.ProtocolVersion.ToString(),
+                ReceivedApplicationMessagesCount = x.ReceivedApplicationMessagesCount,
+                ReceivedPacketsCount = x.ReceivedPacketsCount,
+                RemoteEndPoint = x.RemoteEndPoint.ToString(),
+                SentApplicationMessagesCount = x.SentApplicationMessagesCount,
+                SentPacketsCount = x.SentPacketsCount,
+            })]
+        };
+    }
+
     /// <inheritdoc/>
     public async Task<TResponseModel<DialogWebChatModelDB>> InitWebChatSessionAsync(InitWebChatSessionRequestModel req, CancellationToken cancellationToken = default)
     {

@@ -1350,6 +1350,9 @@ public static partial class GlobalStaticConstantsTransmission
         public static readonly string DialogsWebChatsReadReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, $"{Routes.WEB_CONTROLLER_NAME}-{Routes.CHATS_CONTROLLER_NAME}", Routes.DIALOGS_CONTROLLER_NAME, Routes.READ_ACTION_NAME);
 
         /// <inheritdoc/>
+        public static readonly string GetClientsConnectionsReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, $"{Routes.MQTT_CONTROLLER_NAME}-{Routes.SYSTEM_CONTROLLER_NAME}", Routes.CLIENTS_CONTROLLER_NAME, Routes.LIST_ACTION_NAME);
+
+        /// <inheritdoc/>
         public static readonly string InitWebChatSessionReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, $"{Routes.WEB_CONTROLLER_NAME}-{Routes.CHATS_CONTROLLER_NAME}", $"{Routes.SESSION_CONTROLLER_NAME}-{Routes.DIALOG_CONTROLLER_NAME}", Routes.INIT_ACTION_NAME);
 
         /// <inheritdoc/>

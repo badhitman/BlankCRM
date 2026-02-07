@@ -4,6 +4,7 @@
 @using BlazorLib.Components.Storage
 @using BlazorLib.Components.TraceHistoryView
 @using BlazorLib.Components.HelpDesk
+@using BlazorLib.Components.mqtt
 @using Microsoft.Extensions.Options
 @using MudBlazor
 
@@ -16,6 +17,9 @@
     </MudTabPanel>
     <MudTabPanel Text="История" ID="@typeof(HistoryMainWrapperComponent).Name">
         <HistoryMainWrapperComponent />
+    </MudTabPanel>
+    <MudTabPanel ToolTip="Realtime" Text="MQTT">
+        <ClientsListMqttComponent />
     </MudTabPanel>
     <MudTabPanel Text="SnackBar stack" ID="@typeof(SnackBarHistoryComponent).Name">
         <SnackBarHistoryComponent />

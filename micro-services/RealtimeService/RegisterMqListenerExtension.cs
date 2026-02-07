@@ -32,6 +32,7 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<InitWebChatSessionReceive, InitWebChatSessionRequestModel, TResponseModel<DialogWebChatModelDB>>()
             .RegisterMqListener<SelectMessagesForRoomWebChatReceive, TPaginationRequestAuthModel<SelectMessagesForWebChatRoomRequestModel>, TPaginationResponseStandardModel<MessageWebChatModelDB>>()
             .RegisterMqListener<SelectDialogsWebChatsReceive, TPaginationRequestStandardModel<SelectDialogsWebChatsRequestModel>, TPaginationResponseStandardModel<DialogWebChatModelDB>>()
+            .RegisterMqListener<GetClientsConnectionsReceive, GetClientsRequestModel, TResponseModel<List<MqttClientModel>>>()
             ;
     }
 }

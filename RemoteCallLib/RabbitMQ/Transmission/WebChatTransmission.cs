@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using Newtonsoft.Json.Linq;
 using SharedLib;
 
 namespace RemoteCallLib;
@@ -30,6 +31,10 @@ public class WebChatTransmission(IRabbitClient rabbitClient) : IWebChatService
     /// <inheritdoc/>
     public async Task<TResponseModel<List<DialogWebChatModelDB>>> DialogsWebChatsReadAsync(TAuthRequestStandardModel<int[]> req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<List<DialogWebChatModelDB>>>(GlobalStaticConstantsTransmission.TransmissionQueues.DialogsWebChatsReadReceive, req, token: token) ?? new();
+
+    /// <inheritdoc/>
+    public async Task<TResponseModel<List<MqttClientModel>>> GetClientsConnectionsAsync(GetClientsRequestModel req, CancellationToken cancellationToken = default)
+        => await rabbitClient.MqRemoteCallAsync<TResponseModel<List<MqttClientModel>>>(GlobalStaticConstantsTransmission.TransmissionQueues.GetClientsConnectionsReceive, req, token: cancellationToken) ?? new();
 
     /// <inheritdoc/>
     public async Task<TResponseModel<DialogWebChatModelDB>> InitWebChatSessionAsync(InitWebChatSessionRequestModel req, CancellationToken token = default)

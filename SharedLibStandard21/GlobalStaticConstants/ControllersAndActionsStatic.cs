@@ -1064,6 +1064,11 @@ public static partial class GlobalStaticConstantsRoutes
         public const string WEB_CONTROLLER_NAME = "web";
 
         /// <summary>
+        /// MQTT
+        /// </summary>
+        public const string MQTT_CONTROLLER_NAME = "mqtt";
+
+        /// <summary>
         /// App
         /// </summary>
         public const string APP_CONTROLLER_NAME = "app";

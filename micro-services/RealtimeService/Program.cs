@@ -2,20 +2,21 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using DbcLib;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using System.Diagnostics.Metrics;
+using MQTTnet.AspNetCore;
+using MQTTnet.Server;
+using NLog;
 using NLog.Extensions.Logging;
+using NLog.Web;
+using OpenTelemetry;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
-using MQTTnet.AspNetCore;
-using OpenTelemetry;
 using RemoteCallLib;
-using System.Text;
 using SharedLib;
-using NLog.Web;
-using DbcLib;
-using NLog;
+using System.Diagnostics.Metrics;
+using System.Text;
 
 namespace RealtimeService;
 
@@ -134,11 +135,13 @@ public class Program
 
         builder.Services.AddHttpContextAccessor();
 
+        builder.Services.AddSingleton<MqttHostedServer>();
         builder.Services.AddHostedMqttServer(
         optionsBuilder =>
         {
             optionsBuilder.WithDefaultEndpoint();
         });
+        builder.Services.AddSingleton<MqttServer>(s => s.GetRequiredService<MqttHostedServer>());
 
         builder.Services.AddMqttConnectionHandler();
         builder.Services.AddConnections();
