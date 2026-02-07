@@ -7,6 +7,9 @@ using SharedLib;
 
 namespace BlazorLib.Components.mqtt;
 
+/// <summary>
+/// ClientsListMqttComponent
+/// </summary>
 public partial class ClientsListMqttComponent : BlazorBusyComponentBaseAuthModel
 {
     [Inject]
