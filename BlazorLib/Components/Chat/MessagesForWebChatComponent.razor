@@ -9,16 +9,16 @@
 <div class="my-3">
     <label for="exampleFormControlTextarea1" class="form-label">Отправка сообщения (web-chat)</label>
     <div class="input-group">
+        <button @onclick="SendMessage"
+                disabled="@CanNotSendMessage"
+                class="btn btn-outline-@(string.IsNullOrWhiteSpace(_textSendMessage) ? "secondary" : "success") bi bi-send"
+                type="button"></button>
         <textarea readonly="@IsBusyProgress"
                   @bind:event="oninput"
                   @bind="_textSendMessage"
                   class="form-control"
                   aria-label="With textarea"
                   id="exampleFormControlTextarea1"></textarea>
-        <button @onclick="SendMessage"
-                disabled="@CanNotSendMessage"
-                class="btn btn-outline-@(string.IsNullOrWhiteSpace(_textSendMessage) ? "secondary" : "success") bi bi-send"
-                type="button"></button>
     </div>
 </div>
 

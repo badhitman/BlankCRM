@@ -27,8 +27,15 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
     [Inject]
     IEventNotifyReceive<NewMessageWebChatEventModel> NewMessageWebChatEventRepo { get; set; } = default!;
 
+    [Inject]
+    IEventNotifyReceive<GetStateWebChatEventModel> GetStateWebChatEventRepo { get; set; } = default!;
+
+    [Inject]
+    IEventNotifyReceive<SetStateWebChatEventModel> SetStateWebChatEventRepo { get; set; } = default!;
+
+
     /// <inheritdoc/>
-    [Parameter,EditorRequired]
+    [Parameter, EditorRequired]
     public required RealtimeCoreComponent RealtimeCore { get; set; }
 
 
@@ -43,8 +50,8 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
     byte missingMessages;
     bool CannotSendMessage => string.IsNullOrWhiteSpace(_textSendMessage) || IsBusyProgress;
     static readonly int virtualCacheSize = 50;
-    List<PongClientsWebChatEventModel> UsersSessions = [];
-    string LayoutContainerId = Guid.NewGuid().ToString();
+    readonly List<PongClientsWebChatEventModel> UsersSessions = [];
+    readonly string LayoutContainerId = Guid.NewGuid().ToString();
 
     bool ChatDialogOpen;
     async Task ShowToggle()
@@ -185,7 +192,21 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
         await base.OnInitializedAsync();
         await InitSession();
         if (ticketSession is not null)
+        {
             await NewMessageWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.NewMessageWebChatHandleNotifyReceive, ticketSession.Id.ToString()).Replace("\\", "/"), NewMessageWebChatHandler, CurrentUserSessionBytes(LayoutContainerId));
+            await GetStateWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.GetStateWebChatHandleNotifyReceive, ticketSession.Id.ToString()).Replace("\\", "/"), GetStateWebChatWebChatHandler, CurrentUserSessionBytes(LayoutContainerId));
+            await SetStateWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.SetStateWebChatHandleNotifyReceive, ticketSession.Id.ToString()).Replace("\\", "/"), SetStateWebChatHandler, CurrentUserSessionBytes(LayoutContainerId));
+        }
+    }
+
+    private void SetStateWebChatHandler(SetStateWebChatEventModel model)
+    {
+        throw new NotImplementedException();
+    }
+
+    private void GetStateWebChatWebChatHandler(GetStateWebChatEventModel model)
+    {
+        throw new NotImplementedException();
     }
 
     async void NewMessageWebChatHandler(NewMessageWebChatEventModel model)
@@ -214,6 +235,9 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
     public override void Dispose()
     {
         NewMessageWebChatEventRepo.UnregisterAction();
+        NewMessageWebChatEventRepo.UnregisterAction();
+        GetStateWebChatEventRepo.UnregisterAction();
+        SetStateWebChatEventRepo.UnregisterAction();
     }
 
     void ShowHiddenInfo()
@@ -249,7 +273,7 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
     /// <inheritdoc/>
     public void UsersEcho(List<PongClientsWebChatEventModel> usersEcho)
     {
-        lock(UsersSessions)
+        lock (UsersSessions)
         {
             UsersSessions.Clear();
             UsersSessions.AddRange(usersEcho);
