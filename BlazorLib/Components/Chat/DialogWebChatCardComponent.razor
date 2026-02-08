@@ -33,13 +33,15 @@
                 <span class="btn-group" role="group" aria-label="Basic example">
                     <button type="button"
                             class="btn btn-outline-info btn-sm"
+                            @onclick="StateChatRequest"
                             title="Проверить состояние области чата">
-                        Статус
+                        Статус чата
                     </button>
                     <button type="button"
                             class="btn btn-outline-info btn-sm"
+                            @onclick="SetStateChatRequest"
                             title="Открыть диалог чата клиенту" disabled>
-                        Отобразить
+                        Отобразить чат
                     </button>
                     @if (RoomIsEdit)
                     {

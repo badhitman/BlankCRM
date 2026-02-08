@@ -20,16 +20,16 @@ public partial class EventsWebChatsNotifiesTransmissionMQTT(IMQTTClient mqClient
         => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.NewMessageWebChatNotifyReceive, req.DialogId.ToString()), req, waitResponse: false, propertyValue: new(GlobalStaticConstantsRoutes.Routes.MUTE_CONTROLLER_NAME, [1]), token: cancellationToken) ?? new();
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> ClientDisconnectedWebChatAsync(ConnectCloseWebChatEventModel req, CancellationToken cancellationToken = default)
-        => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.ConnectionCloseWebChatNotifyReceive, req, waitResponse: false, propertyValue: new(GlobalStaticConstantsRoutes.Routes.MUTE_CONTROLLER_NAME, [1]), token: cancellationToken) ?? new();
+    public async Task<ResponseBaseModel> OnClientConnectedWebChatAsync(ConnectionOpenWebChatEventModel req, CancellationToken cancellationToken = default)
+        => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.ConnectionOpenWebChatNotifyReceive, req.DialogId.ToString()), req, waitResponse: false, propertyValue: new(GlobalStaticConstantsRoutes.Routes.MUTE_CONTROLLER_NAME, [1]), token: cancellationToken) ?? new();
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> OnClientConnectedWebChatAsync(ConnectOpenWebChatEventModel req, CancellationToken cancellationToken = default)
-        => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.ConnectionOpenWebChatNotifyReceive, req, waitResponse: false, propertyValue: new(GlobalStaticConstantsRoutes.Routes.MUTE_CONTROLLER_NAME, [1]), token: cancellationToken) ?? new();
+    public async Task<ResponseBaseModel> ClientDisconnectedWebChatAsync(ConnectionCloseWebChatEventModel req, CancellationToken cancellationToken = default)
+        => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.ConnectionCloseWebChatNotifyReceive, req.DialogId.ToString()), req, waitResponse: false, propertyValue: new(GlobalStaticConstantsRoutes.Routes.MUTE_CONTROLLER_NAME, [1]), token: cancellationToken) ?? new();
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> InitWebChatAsync(InitWebChatEventModel req, CancellationToken cancellationToken = default)
-        => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.InitWebChatNotifyReceive, req, waitResponse: false, propertyValue: new(GlobalStaticConstantsRoutes.Routes.MUTE_CONTROLLER_NAME, [1]), token: cancellationToken) ?? new();
+        => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.InitWebChatNotifyReceive, req.DialogId.ToString()), req, waitResponse: false, propertyValue: new(GlobalStaticConstantsRoutes.Routes.MUTE_CONTROLLER_NAME, [1]), token: cancellationToken) ?? new();
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> PingClientsWebChatAsync(PingClientsWebChatEventModel req, CancellationToken cancellationToken = default)

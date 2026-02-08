@@ -4,6 +4,7 @@
 
 using Microsoft.AspNetCore.Components;
 using SharedLib;
+using static MudBlazor.Colors;
 
 namespace BlazorLib.Components.Chat;
 
@@ -15,11 +16,25 @@ public partial class DialogWebChatCardComponent : BlazorBusyComponentUsersCached
     [Inject]
     IWebChatService WebChatRepo { get; set; } = default!;
 
+    [Inject]
+    IEventNotifyReceive<StateWebChatModel> StateEchoWebChatEventRepo { get; set; } = default!;
+
+    [Inject]
+    IEventNotifyReceive<ConnectionCloseWebChatEventModel> ConnectionCloseWebChatEventRepo { get; set; } = default!;
+
+    [Inject]
+    IEventNotifyReceive<ConnectionOpenWebChatEventModel> ConnectionOpenWebChatEventRepo { get; set; } = default!;
+
+    [Inject]
+    IEventsWebChatsNotifies EventsWebChatsHandleRepo { get; set; } = default!;
+
 
     /// <inheritdoc/>
     [Parameter, EditorRequired]
     public int DialogId { get; set; }
 
+    StateWebChatModel? stateWebChat;
+    KeyValuePair<string, UserInfoModel?>? UserInfoBase;
     UserSelectInputComponent? userSelectorRef;
     DialogWebChatModelDB? CurrentRoom, roomEdit;
     bool RoomIsEdit
@@ -38,6 +53,28 @@ public partial class DialogWebChatCardComponent : BlazorBusyComponentUsersCached
         }
     }
     bool RoomNotEdit => !RoomIsEdit;
+
+
+    async void ConnectionCloseWebChatEventHandle(ConnectionCloseWebChatEventModel req)
+    {
+        UserInfoBase = null;
+        await InvokeAsync(StateHasChanged);
+    }
+    async void ConnectionOpenWebChatEventHandle(ConnectionOpenWebChatEventModel req)
+    {
+        UserInfoBase = req.UserInfoBaseModel;
+        await InvokeAsync(StateHasChanged);
+    }
+    async void StateEchoWebChatEventHandle(StateWebChatModel req)
+    {
+        stateWebChat = req;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    async Task SetStateChatRequest(Microsoft.AspNetCore.Components.Web.MouseEventArgs args)
+        => await EventsWebChatsHandleRepo.StateSetWebChatAsync(new StateWebChatModel() { DialogId = DialogId, StateDialog = true });
+    async Task StateChatRequest(Microsoft.AspNetCore.Components.Web.MouseEventArgs args)
+        => await EventsWebChatsHandleRepo.StateGetWebChatAsync(new GetStateWebChatEventModel() { DialogId = DialogId });
 
     async Task SaveRoom()
     {
@@ -113,5 +150,18 @@ public partial class DialogWebChatCardComponent : BlazorBusyComponentUsersCached
 
         UsersCache.Add(CurrentUserSession);
         await ReloadRoom();
+
+        await StateEchoWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.StateEchoWebChatNotifyReceive, DialogId.ToString()), StateEchoWebChatEventHandle, null, isMute: true);
+        await ConnectionCloseWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.ConnectionOpenWebChatNotifyReceive, DialogId.ToString()), ConnectionCloseWebChatEventHandle, null, isMute: true);
+        await ConnectionOpenWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.ConnectionCloseWebChatNotifyReceive, DialogId.ToString()), ConnectionOpenWebChatEventHandle, null, isMute: true);
+    }
+
+    /// <inheritdoc/>
+    public override void Dispose()
+    {
+        StateEchoWebChatEventRepo.UnregisterAction(isMute: true);
+        ConnectionCloseWebChatEventRepo.UnregisterAction(isMute: true);
+        ConnectionOpenWebChatEventRepo.UnregisterAction(isMute: true);
+        base.Dispose();
     }
 }

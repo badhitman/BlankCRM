@@ -5,10 +5,13 @@
 namespace SharedLib;
 
 /// <summary>
-/// ConnectCloseWebChatEventModel
+/// ConnectionCloseWebChatEventModel
 /// </summary>
-public class ConnectCloseWebChatEventModel
+public class ConnectionCloseWebChatEventModel
 {
     /// <inheritdoc/>
     public UserInfoModel? UserInfoBaseModel { get; set; }
+
+    /// <inheritdoc/>
+    public required int DialogId { get; set; }
 }

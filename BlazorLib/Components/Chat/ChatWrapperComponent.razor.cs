@@ -2,14 +2,15 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Microsoft.AspNetCore.Components.Web.Virtualization;
-using static SharedLib.GlobalStaticConstantsRoutes;
-using Microsoft.AspNetCore.Components.Web;
 using BlazorLib.Components.Shared.Layouts;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Components.Web.Virtualization;
 using Microsoft.JSInterop;
 using MudBlazor;
 using SharedLib;
+using static MudBlazor.Colors;
+using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace BlazorLib.Components.Chat;
 
@@ -33,6 +34,9 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
     [Inject]
     IEventNotifyReceive<StateWebChatModel> StateSetWebChatEventRepo { get; set; } = default!;
 
+    [Inject]
+    IEventsWebChatsNotifies EventsWebChatsHandleRepo { get; set; } = default!;
+
 
     /// <inheritdoc/>
     [Parameter, EditorRequired]
@@ -43,7 +47,7 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
     MessageWebChatModelDB? _selectedMessage;
     AboutUserAgentModel? UserAgent;
     MudMenu? _contextMenu;
-    DialogWebChatModelDB? ticketSession, ticketSessionEdit;
+    DialogWebChatModelDB? dialogSession, dialogSessionEdit;
     string? lastUserId;
     Virtualize<MessageWebChatModelDB>? virtualizeComponent;
     string? _textSendMessage;
@@ -65,17 +69,20 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
             missingMessages = 0;
             await InitSession();
             await RealtimeCore.PingAllUsers();
+
+            if (dialogSession is not null)
+                await EventsWebChatsHandleRepo.StateEchoWebChatAsync(new StateWebChatModel() { StateDialog = ChatDialogOpen, DialogId = dialogSession.Id });
         }
     }
 
     async ValueTask<ItemsProviderResult<MessageWebChatModelDB>> LoadMessages(ItemsProviderRequest request)
     {
-        if (ticketSession is null)
+        if (dialogSession is null)
             return new ItemsProviderResult<MessageWebChatModelDB>([], 0);
 
         SelectMessagesForWebChatRequestModel req = new()
         {
-            SessionTicketId = ticketSession.SessionTicketId,
+            SessionTicketId = dialogSession.SessionTicketId,
             StartIndex = request.StartIndex,
             Count = request.Count,
         };
@@ -93,14 +100,14 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
 
     async Task SevaDialog(MouseEventArgs args)
     {
-        if (ticketSessionEdit is null)
+        if (dialogSessionEdit is null)
             return;
 
         await SetBusyAsync();
         ResponseBaseModel res = await WebChatRepo.UpdateDialogWebChatInitiatorAsync(new()
         {
             SenderActionUserId = CurrentUserSession?.UserId,
-            Payload = ticketSessionEdit
+            Payload = dialogSessionEdit
         });
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         await InitSession();
@@ -110,14 +117,14 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
 
     async Task SendMessage(MouseEventArgs args)
     {
-        if (string.IsNullOrWhiteSpace(_textSendMessage) || ticketSession is null)
+        if (string.IsNullOrWhiteSpace(_textSendMessage) || dialogSession is null)
             return;
 
         MessageWebChatModelDB req = new()
         {
             Text = _textSendMessage.Trim(),
             SenderUserIdentityId = CurrentUserSession?.UserId,
-            DialogOwnerId = ticketSession.Id,
+            DialogOwnerId = dialogSession.Id,
             InitiatorMessageSender = true,
         };
 
@@ -131,7 +138,7 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
 
     async Task OnKeyPresHandler(KeyboardEventArgs args)
     {
-        if (string.IsNullOrWhiteSpace(_textSendMessage) || ticketSession is null)
+        if (string.IsNullOrWhiteSpace(_textSendMessage) || dialogSession is null)
             return;
 
         if (args.Key == "Enter" && !args.ShiftKey)
@@ -140,7 +147,7 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
             {
                 Text = _textSendMessage.Trim(),
                 SenderUserIdentityId = CurrentUserSession?.UserId,
-                DialogOwnerId = ticketSession.Id,
+                DialogOwnerId = dialogSession.Id,
                 InitiatorMessageSender = true,
             };
             muteSound = true;
@@ -176,8 +183,8 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
             UserAgent = UserAgent.UserAgent,
             Language = UserAgent.Language,
         });
-        ticketSession = initSessionTicket.Response;
-        ticketSessionEdit = GlobalTools.CreateDeepCopy(ticketSession);
+        dialogSession = initSessionTicket.Response;
+        dialogSessionEdit = GlobalTools.CreateDeepCopy(dialogSession);
 
         if (initSessionTicket.Response is null)
         {
@@ -193,25 +200,26 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
     {
         await base.OnInitializedAsync();
         await InitSession();
-        if (ticketSession is not null)
+        if (dialogSession is not null)
         {
-            await NewMessageWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.NewMessageWebChatNotifyReceive, ticketSession.Id.ToString()).Replace("\\", "/"), NewMessageWebChatHandler, CurrentUserSessionBytes(LayoutContainerId));
-            await StateGetWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.StateGetWebChatNotifyReceive, ticketSession.Id.ToString()).Replace("\\", "/"), GetStateWebChatWebChatHandler, CurrentUserSessionBytes(LayoutContainerId));
-            await StateSetWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.StateSetWebChatNotifyReceive, ticketSession.Id.ToString()).Replace("\\", "/"), SetStateWebChatHandler, CurrentUserSessionBytes(LayoutContainerId));
+            await NewMessageWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.NewMessageWebChatNotifyReceive, dialogSession.Id.ToString()), NewMessageWebChatHandler, CurrentUserSessionBytes(LayoutContainerId));
+            await StateGetWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.StateGetWebChatNotifyReceive, dialogSession.Id.ToString()), GetStateWebChatWebChatHandler, CurrentUserSessionBytes(LayoutContainerId), isMute: true);
+            await StateSetWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.StateSetWebChatNotifyReceive, dialogSession.Id.ToString()), SetStateWebChatHandler, CurrentUserSessionBytes(LayoutContainerId), isMute: true);
         }
     }
 
-    private void SetStateWebChatHandler(StateWebChatModel model)
+    async void SetStateWebChatHandler(StateWebChatModel req)
     {
-        throw new NotImplementedException();
+        ChatDialogOpen = req.StateDialog;
+        await InvokeAsync(StateHasChanged);
     }
 
-    private void GetStateWebChatWebChatHandler(GetStateWebChatEventModel model)
+    async void GetStateWebChatWebChatHandler(GetStateWebChatEventModel req)
     {
-        throw new NotImplementedException();
+        await EventsWebChatsHandleRepo.StateEchoWebChatAsync(new StateWebChatModel() { StateDialog = ChatDialogOpen, DialogId = req.DialogId });
     }
 
-    async void NewMessageWebChatHandler(NewMessageWebChatEventModel model)
+    async void NewMessageWebChatHandler(NewMessageWebChatEventModel req)
     {
         List<Task> tasks = [];
         if (virtualizeComponent is not null)
@@ -237,9 +245,8 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
     public override void Dispose()
     {
         NewMessageWebChatEventRepo.UnregisterAction();
-        NewMessageWebChatEventRepo.UnregisterAction();
-        StateGetWebChatEventRepo.UnregisterAction();
-        StateSetWebChatEventRepo.UnregisterAction();
+        StateGetWebChatEventRepo.UnregisterAction(isMute: true);
+        StateSetWebChatEventRepo.UnregisterAction(isMute: true);
     }
 
     void ShowHiddenInfo()

@@ -229,7 +229,7 @@ public class Program
                 {
                     using IServiceScope ss = app.Services.CreateScope();
                     MqttController mq_cli = ss.ServiceProvider.GetRequiredService<MqttController>();
-                    await mq_cli.OnClientConnected(e);
+                    await mq_cli.ClientConnected(e);
                 };
                 server.ClientDisconnectedAsync += async (e) =>
                 {

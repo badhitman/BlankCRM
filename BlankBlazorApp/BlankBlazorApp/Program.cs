@@ -240,8 +240,8 @@ builder.Services
 builder.Services
           .RegisterEventNotify<NewMessageWebChatEventModel>()
           .RegisterEventNotify<InitWebChatEventModel>()
-          .RegisterEventNotify<ConnectOpenWebChatEventModel>()
-          .RegisterEventNotify<ConnectCloseWebChatEventModel>()
+          .RegisterEventNotify<ConnectionOpenWebChatEventModel>()
+          .RegisterEventNotify<ConnectionCloseWebChatEventModel>()
           .RegisterEventNotify<PingClientsWebChatEventModel>()
           .RegisterEventNotify<PongClientsWebChatEventModel>()
           .RegisterEventNotify<GetStateWebChatEventModel>()

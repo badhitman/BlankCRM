@@ -13,7 +13,7 @@
         </span>
     }
 </span>
-@if (ChatDialogOpen && ticketSessionEdit is not null && ticketSession is not null)
+@if (ChatDialogOpen && dialogSessionEdit is not null && dialogSession is not null)
 {
     <div class="offcanvas offcanvas-end show"
          data-bs-scroll="true"
@@ -31,7 +31,7 @@
                 {
                     <MudProgressLinear Color="Color.Primary" Indeterminate />
                 }
-                @if (string.IsNullOrWhiteSpace(ticketSession.InitiatorHumanName) && string.IsNullOrWhiteSpace(ticketSession.InitiatorIdentityId))
+                @if (string.IsNullOrWhiteSpace(dialogSession.InitiatorHumanName) && string.IsNullOrWhiteSpace(dialogSession.InitiatorIdentityId))
                 {
                     <div class="alert alert-warning" role="alert">
                         <label for="exampleFormControlTextarea1" class="form-label">Как к Вам обращаться?</label>
@@ -40,11 +40,11 @@
                                    readonly="@IsBusyProgress"
                                    @onkeydown="OnKeyPresHandler"
                                    @bind:event="oninput"
-                                   @bind="ticketSessionEdit.InitiatorHumanName"
+                                   @bind="dialogSession.InitiatorHumanName"
                                    class="form-control"
                                    id="exampleFormControlTextarea1"></input>
                             <button @onclick="SevaDialog"
-                                    disabled="@string.IsNullOrWhiteSpace(ticketSessionEdit.InitiatorHumanName)"
+                                    disabled="@string.IsNullOrWhiteSpace(dialogSessionEdit.InitiatorHumanName)"
                                     class="btn btn-outline-@(string.IsNullOrWhiteSpace(_textSendMessage) ? "secondary" : "success") bi bi-check-circle"
                                     type="button"></button>
                         </div>
@@ -67,13 +67,13 @@
                                 type="button"></button>
                     </div>
                     <div class="form-text">
-                        @ticketSession.InitiatorHumanName
-                        @(string.IsNullOrWhiteSpace(ticketSession.InitiatorContacts) ? "" : $" ({ticketSession.InitiatorContacts})")
+                        @dialogSession.InitiatorHumanName
+                        @(string.IsNullOrWhiteSpace(dialogSession.InitiatorContacts) ? "" : $" ({dialogSession.InitiatorContacts})")
                     </div>
                 }
             </div>
             <hr />
-            @if (string.IsNullOrWhiteSpace(ticketSession.InitiatorHumanName) && string.IsNullOrWhiteSpace(ticketSession.InitiatorIdentityId))
+            @if (string.IsNullOrWhiteSpace(dialogSession.InitiatorHumanName) && string.IsNullOrWhiteSpace(dialogSession.InitiatorIdentityId))
             {
                 <figure class="text-center">
                     <blockquote class="blockquote">
@@ -146,7 +146,7 @@
                 </MudMenuItem>
             </MudMenu>
         </div>
-        @if (string.IsNullOrWhiteSpace(ticketSession.InitiatorContacts) && string.IsNullOrWhiteSpace(ticketSession.InitiatorIdentityId))
+        @if (string.IsNullOrWhiteSpace(dialogSession.InitiatorContacts) && string.IsNullOrWhiteSpace(dialogSession.InitiatorIdentityId))
         {
             <div class="pa-2">
                 <hr />
@@ -155,12 +155,12 @@
                     <textarea readonly="@IsBusyProgress"
                               @onkeydown="OnKeyPresHandler"
                               @bind:event="oninput"
-                              @bind="ticketSessionEdit.InitiatorContacts"
+                              @bind="dialogSessionEdit.InitiatorContacts"
                               class="form-control"
                               id="exampleFormControlTextarea1"
                               rows="1"></textarea>
                     <button @onclick="SevaDialog"
-                            disabled="@string.IsNullOrWhiteSpace(ticketSessionEdit.InitiatorContacts)"
+                            disabled="@string.IsNullOrWhiteSpace(dialogSessionEdit.InitiatorContacts)"
                             class="btn btn-outline-@(string.IsNullOrWhiteSpace(_textSendMessage) ? "secondary" : "success") bi bi-check-square"
                             type="button"></button>
                 </div>
