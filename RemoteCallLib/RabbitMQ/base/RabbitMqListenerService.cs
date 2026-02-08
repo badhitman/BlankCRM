@@ -47,7 +47,7 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
     /// <summary>
     /// Имя очереди MQ
     /// </summary>
-    public string QueueName { get { _queueName ??= TQueue.QueueName; return _queueName; } }
+    public string QueueName { get { _queueName ??= TQueue.QueueName.Replace("\\", "/"); return _queueName; } }
 
     /// <inheritdoc/>
     public RabbitMqListenerService(IOptions<RabbitMQConfigModel> rabbitConf, IServiceProvider servicesProvider, ILogger<RabbitMqListenerService<TQueue, TRequest, TResponse>> loggerRepo)

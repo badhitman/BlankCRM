@@ -1737,6 +1737,11 @@ public static partial class GlobalStaticConstantsRoutes
         public const string SET_ACTION_NAME = "set";
 
         /// <summary>
+        /// Echo
+        /// </summary>
+        public const string ECHO_ACTION_NAME = "echo";
+
+        /// <summary>
         /// Done
         /// </summary>
         public const string DONE_ACTION_NAME = "done";

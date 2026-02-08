@@ -74,7 +74,7 @@ public partial class WebChatService : IWebChatService
 
         await transaction.CommitAsync(token);
 
-        await notifyWebChatRepo.NewMessageWebChatHandle(new() { DialogId = req.Payload.DialogJoinId }, token);
+        await notifyWebChatRepo.NewMessageWebChatAsync(new() { DialogId = req.Payload.DialogJoinId }, token);
         return ResponseBaseModel.CreateSuccess("Ok");
     }
 
@@ -110,7 +110,7 @@ public partial class WebChatService : IWebChatService
                 .SetProperty(p => p.LastMessageAtUTC, DateTime.UtcNow), cancellationToken: token);
 
         await transaction.CommitAsync(token);
-        await notifyWebChatRepo.NewMessageWebChatHandle(new() { DialogId = dialogId }, token);
+        await notifyWebChatRepo.NewMessageWebChatAsync(new() { DialogId = dialogId }, token);
         return ResponseBaseModel.CreateSuccess("Ok");
     }
 }

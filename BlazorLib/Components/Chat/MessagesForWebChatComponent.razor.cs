@@ -215,7 +215,7 @@ public partial class MessagesForWebChatComponent : BlazorBusyComponentUsersCache
 
         if (tableRef is not null)
         {
-            await NewMessageWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.NewMessageWebChatHandleNotifyReceive, DialogWebChat.Id.ToString()).Replace("\\", "/"), NewMessageWebChatHandler, CurrentUserSessionBytes(LayoutContainerId));
+            await NewMessageWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.NewMessageWebChatNotifyReceive, DialogWebChat.Id.ToString()).Replace("\\", "/"), NewMessageWebChatHandler, CurrentUserSessionBytes(LayoutContainerId));
             await tableRef.ReloadServerData();
         }
     }

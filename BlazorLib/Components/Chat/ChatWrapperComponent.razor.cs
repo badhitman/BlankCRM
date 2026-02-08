@@ -31,7 +31,7 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
     IEventNotifyReceive<GetStateWebChatEventModel> GetStateWebChatEventRepo { get; set; } = default!;
 
     [Inject]
-    IEventNotifyReceive<SetStateWebChatEventModel> SetStateWebChatEventRepo { get; set; } = default!;
+    IEventNotifyReceive<StateWebChatModel> SetStateWebChatEventRepo { get; set; } = default!;
 
 
     /// <inheritdoc/>
@@ -193,13 +193,13 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
         await InitSession();
         if (ticketSession is not null)
         {
-            await NewMessageWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.NewMessageWebChatHandleNotifyReceive, ticketSession.Id.ToString()).Replace("\\", "/"), NewMessageWebChatHandler, CurrentUserSessionBytes(LayoutContainerId));
-            await GetStateWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.GetStateWebChatHandleNotifyReceive, ticketSession.Id.ToString()).Replace("\\", "/"), GetStateWebChatWebChatHandler, CurrentUserSessionBytes(LayoutContainerId));
-            await SetStateWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.SetStateWebChatHandleNotifyReceive, ticketSession.Id.ToString()).Replace("\\", "/"), SetStateWebChatHandler, CurrentUserSessionBytes(LayoutContainerId));
+            await NewMessageWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.NewMessageWebChatNotifyReceive, ticketSession.Id.ToString()).Replace("\\", "/"), NewMessageWebChatHandler, CurrentUserSessionBytes(LayoutContainerId));
+            await GetStateWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.GetStateWebChatNotifyReceive, ticketSession.Id.ToString()).Replace("\\", "/"), GetStateWebChatWebChatHandler, CurrentUserSessionBytes(LayoutContainerId));
+            await SetStateWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.SetStateWebChatNotifyReceive, ticketSession.Id.ToString()).Replace("\\", "/"), SetStateWebChatHandler, CurrentUserSessionBytes(LayoutContainerId));
         }
     }
 
-    private void SetStateWebChatHandler(SetStateWebChatEventModel model)
+    private void SetStateWebChatHandler(StateWebChatModel model)
     {
         throw new NotImplementedException();
     }

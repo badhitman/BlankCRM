@@ -29,7 +29,7 @@ public class MqttController(IEventsWebChatsNotifies NotifyWebChatRepo)
 
         //Console.WriteLine($"Client '{eventArgs.ClientId}' connected.");
         if (eventArgs.UserProperties?.Any(x => x.Name.Equals(Routes.MUTE_CONTROLLER_NAME)) != true && eventArgs.UserProperties?.Any(x => x.Name.Equals(Routes.USER_CONTROLLER_NAME)) == true)
-            await NotifyWebChatRepo.OnClientConnectedWebChatHandle(new() { UserInfoBaseModel = _ui });
+            await NotifyWebChatRepo.OnClientConnectedWebChatAsync(new() { UserInfoBaseModel = _ui });
     }
 
     public async Task ClientDisconnected(ClientDisconnectedEventArgs eventArgs)
@@ -42,7 +42,7 @@ public class MqttController(IEventsWebChatsNotifies NotifyWebChatRepo)
 
         //Console.WriteLine($"Client '{eventArgs.ClientId}' wants to {nameof(ClientDisconnected)}. Accepting!");
         if (eventArgs.UserProperties?.Any(x => x.Name.Equals(Routes.MUTE_CONTROLLER_NAME)) != true && eventArgs.UserProperties?.Any(x => x.Name.Equals(Routes.USER_CONTROLLER_NAME)) == true)
-            await NotifyWebChatRepo.ClientDisconnectedWebChatHandle(new() { UserInfoBaseModel = _ui });
+            await NotifyWebChatRepo.ClientDisconnectedWebChatAsync(new() { UserInfoBaseModel = _ui });
     }
 
     public Task ClientSubscribedTopic(ClientSubscribedTopicEventArgs eventArgs)

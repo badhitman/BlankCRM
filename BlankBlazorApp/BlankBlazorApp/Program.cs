@@ -245,7 +245,7 @@ builder.Services
           .RegisterEventNotify<PingClientsWebChatEventModel>()
           .RegisterEventNotify<PongClientsWebChatEventModel>()
           .RegisterEventNotify<GetStateWebChatEventModel>()
-          .RegisterEventNotify<SetStateWebChatEventModel>()
+          .RegisterEventNotify<StateWebChatModel>()
           .RegisterEventNotify<ShowToastEventModel>()
           ;
 

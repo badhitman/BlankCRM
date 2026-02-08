@@ -28,7 +28,7 @@ public partial class WebChatService : IWebChatService
             .ExecuteUpdateAsync(set => set
                 .SetProperty(p => p.LastMessageAtUTC, DateTime.UtcNow), cancellationToken: token);
 
-        await notifyWebChatRepo.NewMessageWebChatHandle(new() { DialogId = req.DialogOwnerId }, token);
+        await notifyWebChatRepo.NewMessageWebChatAsync(new() { DialogId = req.DialogOwnerId }, token);
 
         return new()
         {
@@ -49,7 +49,7 @@ public partial class WebChatService : IWebChatService
         await q.ExecuteUpdateAsync(set => set
                 .SetProperty(p => p.IsDisabled, r => !r.IsDisabled), cancellationToken: token);
 
-        await notifyWebChatRepo.NewMessageWebChatHandle(new()
+        await notifyWebChatRepo.NewMessageWebChatAsync(new()
         {
             DialogId = await q.Select(x => x.DialogOwnerId).FirstAsync(cancellationToken: token)
         }, token);
@@ -143,7 +143,7 @@ public partial class WebChatService : IWebChatService
         }
         await transaction.CommitAsync(token);
 
-        await notifyWebChatRepo.NewMessageWebChatHandle(new()
+        await notifyWebChatRepo.NewMessageWebChatAsync(new()
         {
             DialogId = await q.Select(x => x.DialogOwnerId).FirstAsync(cancellationToken: token)
         }, token);

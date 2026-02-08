@@ -5,13 +5,13 @@
 namespace SharedLib;
 
 /// <summary>
-/// SetStateWebChatEventModel
+/// StateWebChatModel
 /// </summary>
-public class SetStateWebChatEventModel
+public class StateWebChatModel
 {
     /// <inheritdoc/>
     public int DialogId { get; set; }
 
     /// <inheritdoc/>
-    public bool StateSet { get; set; }
+    public bool StateDialog { get; set; }
 }

@@ -58,6 +58,7 @@ public class RabbitClient : IRabbitClient
     /// <inheritdoc/>
     public async Task<T?> MqRemoteCallAsync<T>(string queue, object? request = null, bool waitResponse = true, CancellationToken tokenOuter = default)
     {
+        queue = queue.Replace("\\", "/");
         // Custom ActivitySource for the application
         ActivitySource greeterActivitySource = new($"OTel.{AppName}");
         // Create a new Activity scoped to the method
@@ -68,7 +69,7 @@ public class RabbitClient : IRabbitClient
 
         activity?.Start();
 
-        string response_topic = waitResponse ? $"{RabbitConfigRepo.QueueMqNamePrefixForResponse}{queue}_{Guid.NewGuid()}" : "";
+        string response_topic = waitResponse ? $"{RabbitConfigRepo.QueueMqNamePrefixForResponse.Replace("\\", "/")}{queue}_{Guid.NewGuid()}" : "";
         activity?.SetTag(nameof(response_topic), response_topic);
 
         using IConnection _connection = await factory.CreateConnectionAsync(tokenOuter);

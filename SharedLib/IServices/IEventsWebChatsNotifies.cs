@@ -10,29 +10,32 @@ namespace SharedLib;
 public interface IEventsWebChatsNotifies
 {
     /// <inheritdoc/>
-    public Task<ResponseBaseModel> NewMessageWebChatHandle(NewMessageWebChatEventModel req, CancellationToken cancellationToken = default);
+    public Task<ResponseBaseModel> NewMessageWebChatAsync(NewMessageWebChatEventModel req, CancellationToken cancellationToken = default);
 
     /// <inheritdoc/>
-    public Task<ResponseBaseModel> PingClientsWebChatHandle(PingClientsWebChatEventModel req, CancellationToken cancellationToken = default);
+    public Task<ResponseBaseModel> PingClientsWebChatAsync(PingClientsWebChatEventModel req, CancellationToken cancellationToken = default);
 
     /// <inheritdoc/>
-    public Task<ResponseBaseModel> ClientDisconnectedWebChatHandle(ConnectCloseWebChatEventModel req, CancellationToken cancellationToken = default);
+    public Task<ResponseBaseModel> ClientDisconnectedWebChatAsync(ConnectCloseWebChatEventModel req, CancellationToken cancellationToken = default);
 
     /// <inheritdoc/>
-    public Task<ResponseBaseModel> OnClientConnectedWebChatHandle(ConnectOpenWebChatEventModel req, CancellationToken cancellationToken = default);
+    public Task<ResponseBaseModel> OnClientConnectedWebChatAsync(ConnectOpenWebChatEventModel req, CancellationToken cancellationToken = default);
 
     /// <inheritdoc/>
-    public Task<ResponseBaseModel> PongClientWebChatHandle(PongClientsWebChatEventModel req, CancellationToken cancellationToken = default);
+    public Task<ResponseBaseModel> PongClientWebChatAsync(PongClientsWebChatEventModel req, CancellationToken cancellationToken = default);
 
     /// <inheritdoc/>
-    public Task<ResponseBaseModel> InitWebChatHandle(InitWebChatEventModel req, CancellationToken cancellationToken = default);
+    public Task<ResponseBaseModel> InitWebChatAsync(InitWebChatEventModel req, CancellationToken cancellationToken = default);
 
     /// <inheritdoc/>
-    public Task<ResponseBaseModel> GetStateWebChatHandle(GetStateWebChatEventModel req, CancellationToken cancellationToken = default);
+    public Task<ResponseBaseModel> GetStateWebChatAsync(GetStateWebChatEventModel req, CancellationToken cancellationToken = default);
 
     /// <inheritdoc/>
-    public Task<ResponseBaseModel> SetStateWebChatHandle(SetStateWebChatEventModel req, CancellationToken cancellationToken = default);
+    public Task<ResponseBaseModel> StateWebChatSetAsync(StateWebChatModel req, CancellationToken cancellationToken = default);
 
     /// <inheritdoc/>
-    public Task<ResponseBaseModel> ShowToastHandle(ShowToastEventModel req, CancellationToken cancellationToken = default);
+    public Task<ResponseBaseModel> StateWebChatEchoAsync(StateWebChatModel req, CancellationToken cancellationToken = default);
+
+    /// <inheritdoc/>
+    public Task<ResponseBaseModel> ShowToastAsync(ShowToastEventModel req, CancellationToken cancellationToken = default);
 }
