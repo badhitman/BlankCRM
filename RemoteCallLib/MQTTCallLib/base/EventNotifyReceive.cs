@@ -95,7 +95,7 @@ public class EventNotifyReceive<T> : IEventNotifyReceive<T>, IAsyncDisposable
 
         try
         {
-            await mqttClient.ConnectAsync(GetMqttClientOptionsBuilder(isMute), stoppingToken);
+            await mqttClient.ConnectAsync(GetMqttClientOptionsBuilder(QueueName, isMute), stoppingToken);
             await mqttClient.SubscribeAsync(QueueName, cancellationToken: stoppingToken);
             LoggerRepo.LogTrace($"QueueName:{QueueName}");
         }
@@ -131,11 +131,12 @@ public class EventNotifyReceive<T> : IEventNotifyReceive<T>, IAsyncDisposable
         Notify = null;
     }
 
-    MqttClientOptions GetMqttClientOptionsBuilder(bool isMute)
+    MqttClientOptions GetMqttClientOptionsBuilder(string queueName, bool isMute)
     {
         MqttClientOptionsBuilder builder = new MqttClientOptionsBuilder()
                .WithTcpServer(MQConfigRepo.Host, MQConfigRepo.Port)
                .WithProtocolVersion(MQTTnet.Formatter.MqttProtocolVersion.V500)
+               .WithClientId($"{queueName} [{nameof(EventNotifyReceive<>)}.{typeof(T).Name}] {Guid.NewGuid()}")
                .WithUserProperty(Routes.USER_CONTROLLER_NAME, _userInfoBytes ?? Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(null)));
 
         if (isMute)

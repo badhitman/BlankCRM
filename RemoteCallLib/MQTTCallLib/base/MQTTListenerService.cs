@@ -131,7 +131,8 @@ public class MQTTListenerService<TQueue, TRequest, TResponse>
     {
         MqttClientOptionsBuilder res = new MqttClientOptionsBuilder()
                .WithTcpServer(MQConfigRepo.Host, MQConfigRepo.Port)
-               .WithProtocolVersion(MQTTnet.Formatter.MqttProtocolVersion.V500);
+               .WithProtocolVersion(MQTTnet.Formatter.MqttProtocolVersion.V500)
+               .WithClientId($"{QueueName} [{nameof(MQTTListenerService<,,>)}.{typeof(TRequest).Name}] {Guid.NewGuid()}");
 
         if (propertyValue is not null)
             res.WithUserProperty(propertyValue.Value.Key, propertyValue.Value.Value);

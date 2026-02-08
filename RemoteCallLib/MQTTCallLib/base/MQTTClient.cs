@@ -2,18 +2,19 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
-using System.Diagnostics.Metrics;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Diagnostics;
-using System.Text.Json;
-using System.Threading;
-using Newtonsoft.Json;
-using System.Text;
-using System;
 using MQTTnet;
+using Newtonsoft.Json;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Diagnostics.Metrics;
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SharedLib;
 
@@ -93,7 +94,7 @@ public class MQttClient(MQTTClientConfigModel mqConf, ILogger<MQttClient> _logge
         responseClient.ApplicationMessageReceivedAsync += ResponseClient_ApplicationMessageReceivedAsync;
         loggerRepo.LogTrace($"Sending message into queue [{queue}]", request_payload_json);
 
-        MqttClientConnectResult res = await mqttClient.ConnectAsync(GetMqttClientOptionsBuilder(propertyValue), tokenOuter);
+        MqttClientConnectResult res = await mqttClient.ConnectAsync(GetMqttClientOptionsBuilder(queue, propertyValue), tokenOuter);
 
         MqttApplicationMessage applicationMessage = new MqttApplicationMessageBuilder()
             .WithTopic(queue)
@@ -113,7 +114,7 @@ public class MQttClient(MQTTClientConfigModel mqConf, ILogger<MQttClient> _logge
             stopwatch.Start();
             try
             {
-                await responseClient.ConnectAsync(GetMqttClientOptionsBuilder(propertyValue), tokenOuter);
+                await responseClient.ConnectAsync(GetMqttClientOptionsBuilder(queue, propertyValue), tokenOuter);
                 await responseClient.SubscribeAsync(response_topic, cancellationToken: tokenOuter);
                 await mqttClient.PublishAsync(applicationMessage, tokenOuter);
             }
@@ -187,11 +188,12 @@ public class MQttClient(MQTTClientConfigModel mqConf, ILogger<MQttClient> _logge
         return res_io.Response;
     }
 
-    MqttClientOptions GetMqttClientOptionsBuilder(KeyValuePair<string, byte[]>? propertyValue)
+    MqttClientOptions GetMqttClientOptionsBuilder(string queue, KeyValuePair<string, byte[]>? propertyValue)
     {
         MqttClientOptionsBuilder res = new MqttClientOptionsBuilder()
                .WithTcpServer(MQConfigRepo.Host, MQConfigRepo.Port)
-               .WithProtocolVersion(MQTTnet.Formatter.MqttProtocolVersion.V500);
+               .WithProtocolVersion(MQTTnet.Formatter.MqttProtocolVersion.V500)
+               .WithClientId($"{queue} [{GetType().Name}] {Guid.NewGuid()}");
 
         if (propertyValue is not null)
             res.WithUserProperty(propertyValue.Value.Key, propertyValue.Value.Value);

@@ -18,6 +18,8 @@ public partial class WebChatService(IDbContextFactory<RealtimeContext> mainDbFac
     /// <inheritdoc/>
     public async Task<TResponseModel<List<MqttClientModel>>> GetClientsConnectionsAsync(GetClientsRequestModel req, CancellationToken cancellationToken = default)
     {
+        IList<MqttSessionStatus> v = await mqttServerRepo.GetSessionsAsync();
+        
         return new()
         {
             Response = [..(await mqttServerRepo.GetClientsAsync()).Select(x=> new MqttClientModel()

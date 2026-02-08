@@ -66,6 +66,7 @@ public abstract class BlazorBusyComponentBaseModel : ComponentBase, IDisposable
         {
             await Task.Delay(1, token);
         }
+        catch (TaskCanceledException) { }
         finally
         {
             await InvokeAsync(StateHasChanged);
