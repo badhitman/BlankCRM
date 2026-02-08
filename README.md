@@ -142,6 +142,10 @@ dotnet run --project BlankCRM.AppHost/BlankCRM.AppHost.csproj --publisher manife
 - В Frontend добавлен базовый функционал для работы с Пользователями, Ролями, Claims и Telegram[^4]
 - Служба равно как и другие службы использует RabbitMQ для обслуживания входящих команд, на которые она зарегистрировала свои обработчики[^1]
 
+#### [RealtimeService](https://github.com/badhitman/BlankCRM/tree/main/micro-services/RealtimeService)
+- MQTT сервер для организации функциональность "реального времени". Фронт-клиент подключён к MQTT, а бэк может взаимодействовать с клиентами напрямую по собственной инициативе.
+- WebChat: чат между посетителями сайта и сотрудниками компании (служба поддержки).
+
 #### [IdentityService](https://github.com/badhitman/BlankCRM/tree/main/micro-services/IdentityService)
 - Управление пользователями: регистрация, авторизация и т.д.
 - Управление ролями (правами) пользователей
@@ -157,10 +161,6 @@ dotnet run --project BlankCRM.AppHost/BlankCRM.AppHost.csproj --publisher manife
 - Смена статуса документу. Исполнитель. SLA. Базовый набор работы с документами.
 - Готовый инструмент обработки обращений в формате HelpDesk\ServiceDesk.
 - используется сервисом `CommerceService` для 'ведения заказа'.
-
-#### [RealtimeService](https://github.com/badhitman/BlankCRM/tree/main/micro-services/RealtimeService)
-- MQTT сервер для организации функциональность "реального времени". Фронт-клиент подключён к MQTT, а бэк может взаимодействовать с клиентами напрямую по собственной инициативе.
-- WebChat: чат между посетителями сайта и сотрудниками компании (служба поддержки).
 
 #### [StorageService](https://github.com/badhitman/BlankCRM/tree/main/micro-services/StorageService)
 - Общее пространство хранения параметров со своим контекстом: `StorageContext`. Позволяет разным службам обращаться к параметрам друг друга. Например в Web интерфейсе HelpDesk можно изменить режим работы TelegramBot (бот читает этот параметр при каждом входящем сообщении).
