@@ -54,7 +54,7 @@ public partial class DialogWebChatCardComponent : BlazorBusyComponentUsersCached
     bool RoomNotEdit => !RoomIsEdit;
 
 
-    
+
     async Task SaveRoom()
     {
         if (CurrentUserSession is null)
@@ -115,6 +115,7 @@ public partial class DialogWebChatCardComponent : BlazorBusyComponentUsersCached
             await userSelectorRef.SetSelectedUser(roomEdit?.InitiatorIdentityId);
 
         await SetBusyAsync(false);
+        OnLoadHandler();
     }
 
     /// <inheritdoc/>
@@ -129,5 +130,9 @@ public partial class DialogWebChatCardComponent : BlazorBusyComponentUsersCached
 
         UsersCache.Add(CurrentUserSession);
         await ReloadRoom();
+    }
+    async void OnLoadStatusAction()
+    {
+        await InvokeAsync(StateHasChanged);
     }
 }

@@ -73,7 +73,7 @@
                         <span class="badge text-bg-primary">@(UsersCache.FirstOrDefault(x => x.UserId == userJ.UserIdentityId)?.ToString() ?? userJ.UserIdentityId)</span>
                     }
                 }
-                <span><ChatStatusComponent DialogId="DialogId" @ref="chatStatusRef" /></span>
+                <span><ChatStatusComponent DialogId="DialogId" @ref="chatStatusRef" OnLoadHandler="OnLoadStatusAction" /></span>
             </h6>
             <hr />
             <div class="mb-3">
