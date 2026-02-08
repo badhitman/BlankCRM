@@ -37,18 +37,22 @@
                             title="Проверить состояние области чата">
                         Статус чата
                     </button>
-                    <button type="button"
-                            class="btn btn-outline-info btn-sm"
-                            @onclick="SetStateChatRequest"
-                            title="Открыть диалог чата клиенту" disabled>
-                        Отобразить чат
-                    </button>
+                    @if (stateWebChat is not null && !stateWebChat.StateDialog)
+                    {
+                        <button type="button"
+                                class="btn btn-outline-info btn-sm"
+                                @onclick="SetStateChatRequest"
+                                title="Открыть диалог чата клиенту">
+                            Отобразить чат
+                        </button>
+                    }
+
                     @if (RoomIsEdit)
                     {
                         <button class="btn btn-outline-primary btn-sm"
                                 type="button"
                                 title="Перезагрузить данные с сервера"
-                                @onclick="ReloadRoom" disabled>
+                                @onclick="ReloadRoom">
                             Отмена
                         </button>
                     }
@@ -70,12 +74,18 @@
                         <span class="badge text-bg-primary">@(UsersCache.FirstOrDefault(x => x.UserId == userJ.UserIdentityId)?.ToString() ?? userJ.UserIdentityId)</span>
                     }
                 }
-                @if (IsConnected)
+                @if (IsConnected || stateWebChat is not null)
                 {
                     if (stateWebChat is not null)
                     {
                         <span class="badge text-bg-@(stateWebChat.StateDialog ? "success" : "info")">
                             @(stateWebChat.StateDialog ? "Активный" : "Не активно")
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge text-bg-primary" title="Состояние чата не определено">
+                            Online
                         </span>
                     }
                 }

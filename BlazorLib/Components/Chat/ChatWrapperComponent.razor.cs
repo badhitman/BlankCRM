@@ -69,10 +69,10 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
             missingMessages = 0;
             await InitSession();
             await RealtimeCore.PingAllUsers();
-
-            if (dialogSession is not null)
-                await EventsWebChatsHandleRepo.StateEchoWebChatAsync(new StateWebChatModel() { StateDialog = ChatDialogOpen, DialogId = dialogSession.Id });
         }
+
+        if (dialogSession is not null)
+            await EventsWebChatsHandleRepo.StateEchoWebChatAsync(new StateWebChatModel() { StateDialog = ChatDialogOpen, DialogId = dialogSession.Id });
     }
 
     async ValueTask<ItemsProviderResult<MessageWebChatModelDB>> LoadMessages(ItemsProviderRequest request)
@@ -202,15 +202,17 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
         await InitSession();
         if (dialogSession is not null)
         {
-            await NewMessageWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.NewMessageWebChatNotifyReceive, dialogSession.Id.ToString()), NewMessageWebChatHandler,LayoutContainerId, CurrentUserSessionBytes, propertiesValues: [new(Routes.DIALOG_CONTROLLER_NAME, BitConverter.GetBytes(dialogSession.Id))]);
-            await StateGetWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.StateGetWebChatNotifyReceive, dialogSession.Id.ToString()), GetStateWebChatWebChatHandler,LayoutContainerId, CurrentUserSessionBytes, isMute: true);
-            await StateSetWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.StateSetWebChatNotifyReceive, dialogSession.Id.ToString()), SetStateWebChatHandler,LayoutContainerId, CurrentUserSessionBytes, isMute: true);
+            await NewMessageWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.NewMessageWebChatNotifyReceive, dialogSession.Id.ToString()), NewMessageWebChatHandler, LayoutContainerId, CurrentUserSessionBytes, propertiesValues: [new(Routes.DIALOG_CONTROLLER_NAME, BitConverter.GetBytes(dialogSession.Id))]);
+            await StateGetWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.StateGetWebChatNotifyReceive, dialogSession.Id.ToString()), GetStateWebChatWebChatHandler, LayoutContainerId, CurrentUserSessionBytes, isMute: true);
+            await StateSetWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.StateSetWebChatNotifyReceive, dialogSession.Id.ToString()), SetStateWebChatHandler, LayoutContainerId, CurrentUserSessionBytes, isMute: true);
         }
     }
 
     async void SetStateWebChatHandler(StateWebChatModel req)
     {
         ChatDialogOpen = req.StateDialog;
+        if (dialogSession is not null)
+            await EventsWebChatsHandleRepo.StateEchoWebChatAsync(new() { StateDialog = ChatDialogOpen, DialogId = dialogSession.Id });
         await InvokeAsync(StateHasChanged);
     }
 
