@@ -202,7 +202,7 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
         await InitSession();
         if (dialogSession is not null)
         {
-            await NewMessageWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.NewMessageWebChatNotifyReceive, dialogSession.Id.ToString()), NewMessageWebChatHandler, CurrentUserSessionBytes(LayoutContainerId));
+            await NewMessageWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.NewMessageWebChatNotifyReceive, dialogSession.Id.ToString()), NewMessageWebChatHandler, CurrentUserSessionBytes(LayoutContainerId), propertiesValues: [new(Routes.DIALOG_CONTROLLER_NAME, BitConverter.GetBytes(dialogSession.Id))]);
             await StateGetWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.StateGetWebChatNotifyReceive, dialogSession.Id.ToString()), GetStateWebChatWebChatHandler, CurrentUserSessionBytes(LayoutContainerId), isMute: true);
             await StateSetWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.StateSetWebChatNotifyReceive, dialogSession.Id.ToString()), SetStateWebChatHandler, CurrentUserSessionBytes(LayoutContainerId), isMute: true);
         }

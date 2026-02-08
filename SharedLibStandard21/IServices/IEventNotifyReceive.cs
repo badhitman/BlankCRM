@@ -2,9 +2,10 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using System.Threading.Tasks;
-using System.Threading;
 using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SharedLib;
 
@@ -26,7 +27,7 @@ public interface IEventNotifyReceive<T>
     /// <summary>
     /// RegisterAction
     /// </summary>
-    public Task RegisterAction(string QueueName, Action<T> payload, byte[]? userInfoBytes, bool isMute = false, CancellationToken stoppingToken = default);
+    public Task RegisterAction(string QueueName, Action<T> payload, byte[]? userInfoBytes, bool isMute = false, List<KeyValuePair<string, byte[]>>? propertiesValues = null, CancellationToken stoppingToken = default);
 
     /// <summary>
     /// UnregisterAction

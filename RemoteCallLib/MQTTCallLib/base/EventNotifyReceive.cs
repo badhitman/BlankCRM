@@ -4,14 +4,17 @@
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System.Threading.Tasks;
-using System.Threading;
-using Newtonsoft.Json;
-using System.Text;
-using SharedLib;
 using MQTTnet;
+using MQTTnet.Packets;
+using Newtonsoft.Json;
+using SharedLib;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace RemoteCallLib;
@@ -32,6 +35,7 @@ public class EventNotifyReceive<T> : IEventNotifyReceive<T>
     readonly MQTTClientConfigModel MQConfigRepo;
     readonly ILogger<EventNotifyReceive<T>> LoggerRepo;
     byte[]? _userInfoBytes;
+    List<KeyValuePair<string, byte[]>>? _propertiesValues;
 
     /// <summary>
     /// EventNotifyReceive
@@ -52,9 +56,10 @@ public class EventNotifyReceive<T> : IEventNotifyReceive<T>
     }
 
     /// <inheritdoc/>
-    public async Task RegisterAction(string QueueName, Action<T> actNotify, byte[]? userInfoBytes, bool isMute = false, CancellationToken stoppingToken = default)
+    public async Task RegisterAction(string QueueName, Action<T> actNotify, byte[]? userInfoBytes, bool isMute = false, List<KeyValuePair<string, byte[]>>? propertiesValues = null, CancellationToken stoppingToken = default)
     {
         QueueName = QueueName.Replace("\\", "/");
+        _propertiesValues = propertiesValues;
         _userInfoBytes = userInfoBytes;
         Task ApplicationMessageReceived(MqttApplicationMessageReceivedEventArgs e)
         {
@@ -103,12 +108,22 @@ public class EventNotifyReceive<T> : IEventNotifyReceive<T>
     /// <inheritdoc/>
     public async Task UnregisterAction(bool isMute = false, CancellationToken stoppingToken = default)
     {
+        List<MqttUserProperty> usrProps = [];
+        if (_propertiesValues is not null)
+            usrProps.AddRange(_propertiesValues.Select(x => new MqttUserProperty(x.Key, x.Value)));
+
         if (mqttClient.IsConnected)
         {
             if (!isMute)
-                await mqttClient.DisconnectAsync(new() { UserProperties = [new(Routes.USER_CONTROLLER_NAME, _userInfoBytes ?? Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(null)))] }, stoppingToken);
+            {
+                usrProps.Add(new(Routes.USER_CONTROLLER_NAME, _userInfoBytes ?? Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(null))));
+                await mqttClient.DisconnectAsync(new() { UserProperties = usrProps }, stoppingToken);
+            }
             else
-                await mqttClient.DisconnectAsync(new() { UserProperties = [new(Routes.MUTE_CONTROLLER_NAME, new ReadOnlyMemory<byte>([1]))] }, stoppingToken);
+            {
+                usrProps.Add(new(Routes.MUTE_CONTROLLER_NAME, new ReadOnlyMemory<byte>([1])));
+                await mqttClient.DisconnectAsync(new() { UserProperties = usrProps }, stoppingToken);
+            }
         }
         mqttClient.Dispose();
         Notify = null;
@@ -123,6 +138,10 @@ public class EventNotifyReceive<T> : IEventNotifyReceive<T>
 
         if (isMute)
             builder.WithUserProperty(Routes.MUTE_CONTROLLER_NAME, new ReadOnlyMemory<byte>([1]));
+
+        if (_propertiesValues is not null)
+            foreach (var userProp in _propertiesValues)
+                builder.WithUserProperty(userProp.Key, new ReadOnlyMemory<byte>(userProp.Value));
 
         return builder.Build();
     }

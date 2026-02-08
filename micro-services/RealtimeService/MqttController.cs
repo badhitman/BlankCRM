@@ -33,7 +33,7 @@ public class MqttController(IEventsWebChatsNotifies NotifyWebChatRepo)
             dialogId = BitConverter.ToInt32(prop.ValueBuffer.ToArray());
 
         //Console.WriteLine($"Client '{eventArgs.ClientId}' connected.");
-        if (eventArgs.UserProperties?.Any(x => x.Name.Equals(Routes.MUTE_CONTROLLER_NAME)) != true && eventArgs.UserProperties?.Any(x => x.Name.Equals(Routes.USER_CONTROLLER_NAME)) == true && dialogId > 0)
+        if (eventArgs.UserProperties?.Any(x => x.Name.Equals(Routes.MUTE_CONTROLLER_NAME)) != true && eventArgs.UserProperties?.Any(x => x.Name.Equals(Routes.USER_CONTROLLER_NAME)) == true)
             await NotifyWebChatRepo.OnClientConnectedWebChatAsync(new() { UserInfoBaseModel = _ui, DialogId = dialogId });
     }
 

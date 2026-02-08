@@ -152,8 +152,8 @@ public partial class DialogWebChatCardComponent : BlazorBusyComponentUsersCached
         await ReloadRoom();
 
         await StateEchoWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.StateEchoWebChatNotifyReceive, DialogId.ToString()), StateEchoWebChatEventHandle, null, isMute: true);
-        await ConnectionCloseWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.ConnectionOpenWebChatNotifyReceive, DialogId.ToString()), ConnectionCloseWebChatEventHandle, null, isMute: true);
-        await ConnectionOpenWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.ConnectionCloseWebChatNotifyReceive, DialogId.ToString()), ConnectionOpenWebChatEventHandle, null, isMute: true);
+        await ConnectionOpenWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.ConnectionOpenWebChatNotifyReceive, DialogId.ToString()), ConnectionOpenWebChatEventHandle, null, isMute: true);
+        await ConnectionCloseWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.ConnectionCloseWebChatNotifyReceive, DialogId.ToString()), ConnectionCloseWebChatEventHandle, null, isMute: true);
     }
 
     /// <inheritdoc/>
