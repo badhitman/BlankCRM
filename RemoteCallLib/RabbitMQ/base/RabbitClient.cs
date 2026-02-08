@@ -120,6 +120,7 @@ public class RabbitClient : IRabbitClient
 
                 countGreetings.Add(res_io.Duration().Milliseconds);
             }
+            catch (TaskCanceledException) { }
             catch (Exception ex)
             {
                 msg = $"error deserialisation: {content}.\n\nerror ";
@@ -150,13 +151,18 @@ public class RabbitClient : IRabbitClient
             {
                 await _channel.BasicConsumeAsync(response_topic, false, consumer, cancellationToken: tokenOuter);
             }
+            catch (TaskCanceledException) { }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
             }
         }
 
-        await _channel!.QueueDeclareAsync(queue: queue, durable: true, exclusive: false, autoDelete: false, arguments: null, cancellationToken: tokenOuter);
+        try
+        {
+            await _channel!.QueueDeclareAsync(queue: queue, durable: true, exclusive: false, autoDelete: false, arguments: null, cancellationToken: tokenOuter);
+        }
+        catch (TaskCanceledException) { }
 
 #if DEBUG
         string request_payload_json = "";
@@ -164,6 +170,7 @@ public class RabbitClient : IRabbitClient
         {
             request_payload_json = JsonConvert.SerializeObject(request, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings);
         }
+        catch (TaskCanceledException) { }
         catch (Exception ex)
         {
             loggerRepo.LogError(ex, $"Ошибка сериализации объекта [{request?.GetType().Name}]: {request}");

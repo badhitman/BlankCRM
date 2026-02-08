@@ -34,14 +34,14 @@
                 @if (string.IsNullOrWhiteSpace(dialogSession.InitiatorHumanName) && string.IsNullOrWhiteSpace(dialogSession.InitiatorIdentityId))
                 {
                     <div class="alert alert-warning" role="alert">
-                        <label for="exampleFormControlTextarea1" class="form-label">Как к Вам обращаться?</label>
+                        <label for="exampleFormControlText1" class="form-label">Как к Вам обращаться?</label>
                         <div class="input-group">
                             <input type="text"
                                    readonly="@IsBusyProgress"
                                    @bind:event="oninput"
-                                   @bind="dialogSession.InitiatorHumanName"
+                                   @bind="dialogSessionEdit.InitiatorHumanName"
                                    class="form-control"
-                                   id="exampleFormControlTextarea1"></input>
+                                   id="exampleFormControlText1"></input>
                             <button @onclick="SevaDialog"
                                     disabled="@string.IsNullOrWhiteSpace(dialogSessionEdit.InitiatorHumanName)"
                                     class="btn btn-outline-@(string.IsNullOrWhiteSpace(_textSendMessage) ? "secondary" : "success") bi bi-check-circle"
@@ -83,8 +83,7 @@
                     </figcaption>
                 </figure>
             }
-            else
-            {
+            
                 <Virtualize Context="message"
                             OverscanCount="@(virtualCacheSize / 2)"
                             ItemsProvider="LoadMessages"
@@ -135,7 +134,6 @@
                         </figure>
                     </EmptyContent>
                 </Virtualize>
-            }
             <MudMenu PositionAtCursor @ref="_contextMenu" id="_contextMenu">
                 <MudMenuItem Icon="@Icons.Material.Filled.Block" OnClick="@BanUser">
                     Ban
@@ -149,14 +147,13 @@
         {
             <div class="pa-2">
                 <hr />
-                <label for="exampleFormControlTextarea1" class="form-label">Контакты</label>
+                <label for="exampleFormControlTextarea2" class="form-label">Контакты</label>
                 <div class="input-group">
                     <textarea readonly="@IsBusyProgress"
-                              @onkeydown="OnKeyPresHandler"
                               @bind:event="oninput"
                               @bind="dialogSessionEdit.InitiatorContacts"
                               class="form-control"
-                              id="exampleFormControlTextarea1"
+                              id="exampleFormControlTextarea2"
                               rows="1"></textarea>
                     <button @onclick="SevaDialog"
                             disabled="@string.IsNullOrWhiteSpace(dialogSessionEdit.InitiatorContacts)"
