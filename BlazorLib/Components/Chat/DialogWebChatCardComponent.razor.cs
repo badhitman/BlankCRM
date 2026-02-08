@@ -115,7 +115,6 @@ public partial class DialogWebChatCardComponent : BlazorBusyComponentUsersCached
             await userSelectorRef.SetSelectedUser(roomEdit?.InitiatorIdentityId);
 
         await SetBusyAsync(false);
-        OnLoadHandler();
     }
 
     /// <inheritdoc/>
