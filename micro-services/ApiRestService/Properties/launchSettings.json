@@ -4,7 +4,7 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:25962",
+      "applicationUrl": "http://api.dev.localhost:25962",
       "sslPort": 0
     }
   },
@@ -14,7 +14,7 @@
       "dotnetRunMessages": true,
       "launchBrowser": true,
       "launchUrl": "swagger",
-      "applicationUrl": "http://localhost:5049",
+      "applicationUrl": "https://api.dev.localhost:5059;http://api.dev.localhost:5049",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "TransmissionQueueNamePrefix": ""

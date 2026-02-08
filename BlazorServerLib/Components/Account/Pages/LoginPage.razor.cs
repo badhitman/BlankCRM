@@ -3,15 +3,14 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.Extensions.Localization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
+using BlazorLib.Locales;
 using SharedLib;
 using BlazorLib;
-using Microsoft.Extensions.Localization;
-using BlazorLib.Locales;
-
 
 namespace BlazorWebLib.Components.Account.Pages;
 
@@ -27,7 +26,7 @@ public partial class LoginPage(IUsersAuthenticateService UserAuthManage, Navigat
     ILogger<LoginPage> Logger { get; set; } = default!;
 
     [Inject]
-    IStringLocalizer<Resources> localizer { get; set; } = default!;
+    IStringLocalizer<Resources> Localizer { get; set; } = default!;
 
 
     [CascadingParameter]
@@ -45,10 +44,10 @@ public partial class LoginPage(IUsersAuthenticateService UserAuthManage, Navigat
     [SupplyParameterFromForm]
     // #if DEMO
     //     private UserAuthorizationModel Input { get; set; } = new() { Password = "Qwerty123!" };
-    //     bool IsDebug = true;
+    //     const bool IsDebug = true;
     // #else
     UserAuthorizationModel? Input { get; set; }
-    bool IsDebug = false;
+    const bool IsDebug = false;
     //#endif
 
 

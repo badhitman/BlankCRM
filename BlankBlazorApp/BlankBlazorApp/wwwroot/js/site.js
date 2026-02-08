@@ -164,6 +164,9 @@ window.methods = {
         if (audio) {
             audio.play();
         }
+    },
+    GotoURI: function (uri) {
+        location.href = uri;
     }
 }
 

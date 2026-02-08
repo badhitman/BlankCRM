@@ -4,9 +4,9 @@
 @using Microsoft.AspNetCore.Identity
 @using BlazorLib.Components.Shared
 
-<PageTitle>@localizer["SignIn"]</PageTitle>
+<PageTitle>@Localizer["SignIn"]</PageTitle>
 
-<h2>@localizer["SignIn"]</h2>
+<h2>@Localizer["SignIn"]</h2>
 <StatusMessage Messages="@Messages" />
 <div class="row">
     <div class="col-md-4">
@@ -35,28 +35,28 @@
                     <div class="checkbox mb-3">
                         <label class="form-label">
                             <InputCheckbox @bind-Value="Input.RememberMe" class="darker-border-checkbox form-check-input" />
-                            @localizer["Remember me"]
+                            @Localizer["Remember me"]
                         </label>
                     </div>
                     <div>
                         <button type="submit" class="w-100 btn btn-lg btn-primary">
-                            @localizer["Login"]
+                            @Localizer["Login"]
                         </button>
                     </div>
                     <div class="mt-4">
                         <p>
                             <a href="Account/ForgotPassword">
-                                @localizer["Forgot your password?"]
+                                @Localizer["Forgot your password?"]
                             </a>
                         </p>
                         <p>
                             <a href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">
-                                @localizer["Register as a new user"]
+                                @Localizer["Register as a new user"]
                             </a>
                         </p>
                         <p>
                             <a href="Account/ResendEmailConfirmation">
-                                @localizer["Resend confirmation email"]
+                                @Localizer["Resend confirmation email"]
                             </a>
                         </p>
                     </div>

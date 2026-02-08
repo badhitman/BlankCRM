@@ -5,7 +5,7 @@
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
-      "applicationUrl": "http://mqttservice.dev.localhost:5046",
+      "applicationUrl": "http://realtime.dev.localhost:5046",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
@@ -14,7 +14,7 @@
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
-      "applicationUrl": "https://mqttservice.dev.localhost:7106;http://mqttservice.dev.localhost:5046",
+      "applicationUrl": "https://realtime.dev.localhost:7106;http://realtime.dev.localhost:5046",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

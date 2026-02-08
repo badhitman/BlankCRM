@@ -4,7 +4,6 @@
 
 using Microsoft.AspNetCore.Components;
 using SharedLib;
-using static MudBlazor.Colors;
 
 namespace BlazorLib.Components.Chat;
 
@@ -159,6 +158,7 @@ public partial class DialogWebChatCardComponent : BlazorBusyComponentUsersCached
         await StateEchoWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.StateEchoWebChatNotifyReceive, DialogId.ToString()), StateEchoWebChatEventHandle, LayoutContainerId, null, isMute: true);
         await ConnectionOpenWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.ConnectionOpenWebChatNotifyReceive, DialogId.ToString()), ConnectionOpenWebChatEventHandle, LayoutContainerId, null, isMute: true);
         await ConnectionCloseWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.ConnectionCloseWebChatNotifyReceive, DialogId.ToString()), ConnectionCloseWebChatEventHandle, LayoutContainerId, null, isMute: true);
+        await EventsWebChatsHandleRepo.StateGetWebChatAsync(new() { DialogId = DialogId });
     }
 
     /// <inheritdoc/>

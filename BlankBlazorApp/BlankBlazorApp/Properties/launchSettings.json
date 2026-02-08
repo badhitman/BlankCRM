@@ -14,7 +14,7 @@
       "dotnetRunMessages": true,
       "launchBrowser": true,
       "inspectUri": "{wsProtocol}://{url.hostname}:{url.port}/_framework/debug/ws-proxy?browser={browserInspectUri}",
-      "applicationUrl": "http://localhost:5014",
+      "applicationUrl": "http://web.dev.localhost:5014",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "TransmissionQueueNamePrefix": ""
@@ -25,7 +25,7 @@
       "dotnetRunMessages": true,
       "launchBrowser": true,
       "inspectUri": "{wsProtocol}://{url.hostname}:{url.port}/_framework/debug/ws-proxy?browser={browserInspectUri}",
-      "applicationUrl": "https://localhost:7009;http://localhost:5014",
+      "applicationUrl": "https://web.dev.localhost:7009;http://blankblazorapp.dev.localhost:5014",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
