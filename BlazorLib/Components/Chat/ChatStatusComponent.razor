@@ -1,0 +1,22 @@
+﻿@inherits BlazorBusyComponentBaseAuthModel
+
+@if (IsConnected || StateWebChat is not null)
+{
+    if (StateWebChat is not null)
+    {
+        <span class="badge text-bg-@(StateWebChat.StateDialog ? "success" : "info")"
+              title="@(StateWebChat.StateDialog ? "Клиент открыл окно чата" : "Окно чата не открыто")">
+            @(StateWebChat.StateDialog ? "Активный" : "На сайте")
+        </span>
+    }
+    else
+    {
+        <span class="badge text-bg-primary" title="Состояние чата не определено">
+            Online
+        </span>
+    }
+}
+else
+{
+    <span class="badge text-bg-secondary">Offline</span>
+}

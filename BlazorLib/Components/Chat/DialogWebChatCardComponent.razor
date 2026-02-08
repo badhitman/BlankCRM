@@ -37,7 +37,7 @@
                             title="Проверить состояние области чата">
                         Статус чата
                     </button>
-                    @if (stateWebChat is not null && !stateWebChat.StateDialog)
+                    @if (chatStatusRef?.StateWebChat is not null && !chatStatusRef.StateWebChat.StateDialog)
                     {
                         <button type="button"
                                 class="btn btn-outline-info btn-sm"
@@ -73,25 +73,7 @@
                         <span class="badge text-bg-primary">@(UsersCache.FirstOrDefault(x => x.UserId == userJ.UserIdentityId)?.ToString() ?? userJ.UserIdentityId)</span>
                     }
                 }
-                @if (IsConnected || stateWebChat is not null)
-                {
-                    if (stateWebChat is not null)
-                    {
-                        <span class="badge text-bg-@(stateWebChat.StateDialog ? "success" : "info")">
-                            @(stateWebChat.StateDialog ? "Активный" : "Не активно")
-                        </span>
-                    }
-                    else
-                    {
-                        <span class="badge text-bg-primary" title="Состояние чата не определено">
-                            Online
-                        </span>
-                    }
-                }
-                else
-                {
-                    <span class="badge text-bg-secondary">Offline</span>
-                }
+                <span><ChatStatusComponent DialogId="DialogId" @ref="chatStatusRef" /></span>
             </h6>
             <hr />
             <div class="mb-3">
