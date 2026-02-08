@@ -14,6 +14,9 @@ namespace SharedLib;
 public class PongClientsWebChatEventModel
 {
     /// <inheritdoc/>
+    public required bool StateDialog { get; set; }
+
+    /// <inheritdoc/>
     public required UserInfoModel? CurrentUserSession { get; set; }
 
     /// <inheritdoc/>

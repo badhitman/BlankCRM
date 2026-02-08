@@ -53,7 +53,9 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
     readonly List<PongClientsWebChatEventModel> UsersSessions = [];
     readonly string LayoutContainerId = Guid.NewGuid().ToString();
 
-    bool ChatDialogOpen;
+    /// <inheritdoc/>
+    public bool ChatDialogOpen { get; private set; }
+
     async Task ShowToggle()
     {
         ChatDialogOpen = !ChatDialogOpen;

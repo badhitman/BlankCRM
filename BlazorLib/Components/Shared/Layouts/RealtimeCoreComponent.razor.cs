@@ -74,6 +74,7 @@ public partial class RealtimeCoreComponent
             CurrentUserSession = CurrentUserSession,
             ResponseContainerGUID = req.LayoutContainerId,
             SenderContainerGUID = LayoutContainerId,
+            StateDialog = chatWrapperRef?.ChatDialogOpen == true
         });
     }
 
