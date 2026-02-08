@@ -22,7 +22,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// EventNotifyReceive
 /// </summary>
-public class EventNotifyReceive<T> : IEventNotifyReceive<T>
+public class EventNotifyReceive<T> : IEventNotifyReceive<T>, IAsyncDisposable
 {
     /// <summary>
     /// Notify
@@ -146,5 +146,11 @@ public class EventNotifyReceive<T> : IEventNotifyReceive<T>
                 builder.WithUserProperty(userProp.Key, new ReadOnlyMemory<byte>(userProp.Value));
 
         return builder.Build();
+    }
+
+    /// <inheritdoc/>
+    public async ValueTask DisposeAsync()
+    {
+        await UnregisterAction();
     }
 }

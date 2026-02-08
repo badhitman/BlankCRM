@@ -60,6 +60,7 @@ public partial class DialogWebChatCardComponent : BlazorBusyComponentUsersCached
     async void ConnectionCloseWebChatEventHandle(ConnectionCloseWebChatEventModel req)
     {
         UserInfo = null;
+        stateWebChat = null;
         IsConnected = false;
         await InvokeAsync(StateHasChanged);
     }
@@ -78,7 +79,10 @@ public partial class DialogWebChatCardComponent : BlazorBusyComponentUsersCached
     async Task SetStateChatRequest(Microsoft.AspNetCore.Components.Web.MouseEventArgs args)
         => await EventsWebChatsHandleRepo.StateSetWebChatAsync(new StateWebChatModel() { DialogId = DialogId, StateDialog = true });
     async Task StateChatRequest(Microsoft.AspNetCore.Components.Web.MouseEventArgs args)
-        => await EventsWebChatsHandleRepo.StateGetWebChatAsync(new GetStateWebChatEventModel() { DialogId = DialogId });
+    {
+        stateWebChat = null;
+        await EventsWebChatsHandleRepo.StateGetWebChatAsync(new GetStateWebChatEventModel() { DialogId = DialogId });
+    }
 
     async Task SaveRoom()
     {
@@ -154,6 +158,8 @@ public partial class DialogWebChatCardComponent : BlazorBusyComponentUsersCached
 
         UsersCache.Add(CurrentUserSession);
         await ReloadRoom();
+
+        /* ConnectionCloseWebChatEventModel req // Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.ConnectionCloseWebChatNotifyReceive, req.DialogId.ToString()) */
 
         await StateEchoWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.StateEchoWebChatNotifyReceive, DialogId.ToString()), StateEchoWebChatEventHandle, LayoutContainerId, null, isMute: true);
         await ConnectionOpenWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.ConnectionOpenWebChatNotifyReceive, DialogId.ToString()), ConnectionOpenWebChatEventHandle, LayoutContainerId, null, isMute: true);

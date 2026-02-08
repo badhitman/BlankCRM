@@ -22,7 +22,7 @@ public partial class EventsWebChatsNotifiesTransmissionMQTT(IMQTTClient mqClient
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> OnClientConnectedWebChatAsync(ConnectionOpenWebChatEventModel req, CancellationToken cancellationToken = default)
         => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.ConnectionOpenWebChatNotifyReceive, req.DialogId.ToString()), req, waitResponse: false, propertyValue: new(GlobalStaticConstantsRoutes.Routes.MUTE_CONTROLLER_NAME, [1]), token: cancellationToken) ?? new();
-
+    
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> ClientDisconnectedWebChatAsync(ConnectionCloseWebChatEventModel req, CancellationToken cancellationToken = default)
         => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.ConnectionCloseWebChatNotifyReceive, req.DialogId.ToString()), req, waitResponse: false, propertyValue: new(GlobalStaticConstantsRoutes.Routes.MUTE_CONTROLLER_NAME, [1]), token: cancellationToken) ?? new();
