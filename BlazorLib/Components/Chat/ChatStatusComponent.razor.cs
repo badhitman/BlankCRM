@@ -30,8 +30,8 @@ public partial class ChatStatusComponent : BlazorBusyComponentBaseAuthModel
     public int DialogId { get; set; }
 
     /// <inheritdoc/>
-    [Parameter, EditorRequired]
-    public required Action OnLoadHandler { get; set; }
+    [Parameter]
+    public required Action? OnLoadHandler { get; set; }
 
 
     readonly string LayoutContainerId = Guid.NewGuid().ToString();
@@ -50,20 +50,23 @@ public partial class ChatStatusComponent : BlazorBusyComponentBaseAuthModel
         StateWebChat = null;
         IsConnected = false;
         await InvokeAsync(StateHasChanged);
-        OnLoadHandler();
+        if (OnLoadHandler is not null)
+            OnLoadHandler();
     }
     async void ConnectionOpenWebChatEventHandle(ConnectionOpenWebChatEventModel req)
     {
         UserInfo = req.UserInfo;
         IsConnected = true;
         await InvokeAsync(StateHasChanged);
-        OnLoadHandler();
+        if (OnLoadHandler is not null)
+            OnLoadHandler();
     }
     async void StateEchoWebChatEventHandle(StateWebChatModel req)
     {
         StateWebChat = req;
         await InvokeAsync(StateHasChanged);
-        OnLoadHandler();
+        if (OnLoadHandler is not null)
+            OnLoadHandler();
     }
 
     /// <inheritdoc/>
