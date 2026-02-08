@@ -54,6 +54,7 @@ public class EventNotifyReceive<T> : IEventNotifyReceive<T>
     /// <inheritdoc/>
     public async Task RegisterAction(string QueueName, Action<T> actNotify, byte[]? userInfoBytes, bool isMute = false, CancellationToken stoppingToken = default)
     {
+        QueueName = QueueName.Replace("\\", "/");
         _userInfoBytes = userInfoBytes;
         Task ApplicationMessageReceived(MqttApplicationMessageReceivedEventArgs e)
         {
