@@ -27,7 +27,7 @@ public interface IEventNotifyReceive<T>
     /// <summary>
     /// RegisterAction
     /// </summary>
-    public Task RegisterAction(string QueueName, Action<T> payload, byte[]? userInfoBytes, bool isMute = false, List<KeyValuePair<string, byte[]>>? propertiesValues = null, CancellationToken stoppingToken = default);
+    public Task RegisterAction(string QueueName, Action<T> payload, string layoutContainerId, byte[]? userInfoBytes, bool isMute = false, List<KeyValuePair<string, byte[]>>? propertiesValues = null, CancellationToken stoppingToken = default);
 
     /// <summary>
     /// UnregisterAction

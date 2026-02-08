@@ -30,9 +30,9 @@ public abstract class BlazorBusyComponentBaseAuthModel : BlazorBusyComponentBase
 
 
     /// <inheritdoc/>
-    public byte[]? CurrentUserSessionBytes(string layoutContainerId) => CurrentUserSession is null
+    public byte[]? CurrentUserSessionBytes => CurrentUserSession is null
         ? null
-        : Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(new KeyValuePair<string, UserInfoModel?>(layoutContainerId, CurrentUserSession), GlobalStaticConstants.JsonSerializerSettings));
+        : Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(CurrentUserSession, GlobalStaticConstants.JsonSerializerSettings));
 
     /// <inheritdoc/>
     public async Task ReadCurrentUser()

@@ -37,7 +37,7 @@ public partial class WebChatsManageComponent : BlazorBusyComponentUsersCachedMod
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        await NewMessageWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.NewMessageWebChatNotifyReceive, "#"), NewMessageWebChatHandler, CurrentUserSessionBytes(LayoutContainerId));
+        await NewMessageWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.NewMessageWebChatNotifyReceive, "#"), NewMessageWebChatHandler, LayoutContainerId, CurrentUserSessionBytes);
     }
 
     void NewMessageWebChatHandler(NewMessageWebChatEventModel model)

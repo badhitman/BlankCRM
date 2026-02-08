@@ -61,16 +61,29 @@
                     </button>
                 </span>
             </h5>
-            @if (roomEdit.UsersJoins is not null && roomEdit.UsersJoins.Count != 0)
-            {
-                <h6 class="card-subtitle mb-2 text-body-secondary">
-                    Сотрудники:
+            <h6 class="card-subtitle mb-2 text-body-secondary">
+                @if (roomEdit.UsersJoins is not null && roomEdit.UsersJoins.Count != 0)
+                {
+                    <text>Сотрудники:</text>
                     @foreach (UserJoinDialogWebChatModelDB userJ in roomEdit.UsersJoins)
                     {
                         <span class="badge text-bg-primary">@(UsersCache.FirstOrDefault(x => x.UserId == userJ.UserIdentityId)?.ToString() ?? userJ.UserIdentityId)</span>
                     }
-                </h6>
-            }
+                }
+                @if (IsConnected)
+                {
+                    if (stateWebChat is not null)
+                    {
+                        <span class="badge text-bg-@(stateWebChat.StateDialog ? "success" : "info")">
+                            @(stateWebChat.StateDialog ? "Активный" : "Не активно")
+                        </span>
+                    }
+                }
+                else
+                {
+                    <span class="badge text-bg-secondary">Offline</span>
+                }
+            </h6>
             <hr />
             <div class="mb-3">
                 <label for="exampleInputHumanName1" class="form-label">HumanName</label>

@@ -10,7 +10,7 @@ namespace SharedLib;
 public class ConnectionOpenWebChatEventModel
 {
     /// <inheritdoc/>
-    public KeyValuePair<string, UserInfoModel?>? UserInfoBaseModel { get; set; }
+    public UserInfoModel? UserInfo { get; set; }
 
     /// <inheritdoc/>
     public required int DialogId { get; set; }

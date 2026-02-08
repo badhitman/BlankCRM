@@ -33,8 +33,11 @@ public partial class DialogWebChatCardComponent : BlazorBusyComponentUsersCached
     [Parameter, EditorRequired]
     public int DialogId { get; set; }
 
+
+    readonly string LayoutContainerId = Guid.NewGuid().ToString();
     StateWebChatModel? stateWebChat;
-    KeyValuePair<string, UserInfoModel?>? UserInfoBase;
+    UserInfoModel? UserInfo;
+    bool IsConnected;
     UserSelectInputComponent? userSelectorRef;
     DialogWebChatModelDB? CurrentRoom, roomEdit;
     bool RoomIsEdit
@@ -57,12 +60,14 @@ public partial class DialogWebChatCardComponent : BlazorBusyComponentUsersCached
 
     async void ConnectionCloseWebChatEventHandle(ConnectionCloseWebChatEventModel req)
     {
-        UserInfoBase = null;
+        UserInfo = null;
+        IsConnected = false;
         await InvokeAsync(StateHasChanged);
     }
     async void ConnectionOpenWebChatEventHandle(ConnectionOpenWebChatEventModel req)
     {
-        UserInfoBase = req.UserInfoBaseModel;
+        UserInfo = req.UserInfo;
+        IsConnected = true;
         await InvokeAsync(StateHasChanged);
     }
     async void StateEchoWebChatEventHandle(StateWebChatModel req)
@@ -151,9 +156,9 @@ public partial class DialogWebChatCardComponent : BlazorBusyComponentUsersCached
         UsersCache.Add(CurrentUserSession);
         await ReloadRoom();
 
-        await StateEchoWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.StateEchoWebChatNotifyReceive, DialogId.ToString()), StateEchoWebChatEventHandle, null, isMute: true);
-        await ConnectionOpenWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.ConnectionOpenWebChatNotifyReceive, DialogId.ToString()), ConnectionOpenWebChatEventHandle, null, isMute: true);
-        await ConnectionCloseWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.ConnectionCloseWebChatNotifyReceive, DialogId.ToString()), ConnectionCloseWebChatEventHandle, null, isMute: true);
+        await StateEchoWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.StateEchoWebChatNotifyReceive, DialogId.ToString()), StateEchoWebChatEventHandle, LayoutContainerId, null, isMute: true);
+        await ConnectionOpenWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.ConnectionOpenWebChatNotifyReceive, DialogId.ToString()), ConnectionOpenWebChatEventHandle, LayoutContainerId, null, isMute: true);
+        await ConnectionCloseWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.ConnectionCloseWebChatNotifyReceive, DialogId.ToString()), ConnectionCloseWebChatEventHandle, LayoutContainerId, null, isMute: true);
     }
 
     /// <inheritdoc/>

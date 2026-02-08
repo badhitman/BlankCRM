@@ -35,6 +35,7 @@ public class EventNotifyReceive<T> : IEventNotifyReceive<T>
     readonly MQTTClientConfigModel MQConfigRepo;
     readonly ILogger<EventNotifyReceive<T>> LoggerRepo;
     byte[]? _userInfoBytes;
+    string? LayoutContainerId;
     List<KeyValuePair<string, byte[]>>? _propertiesValues;
 
     /// <summary>
@@ -56,11 +57,12 @@ public class EventNotifyReceive<T> : IEventNotifyReceive<T>
     }
 
     /// <inheritdoc/>
-    public async Task RegisterAction(string QueueName, Action<T> actNotify, byte[]? userInfoBytes, bool isMute = false, List<KeyValuePair<string, byte[]>>? propertiesValues = null, CancellationToken stoppingToken = default)
+    public async Task RegisterAction(string QueueName, Action<T> actNotify, string layoutContainerId, byte[]? userInfoBytes, bool isMute = false, List<KeyValuePair<string, byte[]>>? propertiesValues = null, CancellationToken stoppingToken = default)
     {
         QueueName = QueueName.Replace("\\", "/");
         _propertiesValues = propertiesValues;
         _userInfoBytes = userInfoBytes;
+        LayoutContainerId = layoutContainerId;
         Task ApplicationMessageReceived(MqttApplicationMessageReceivedEventArgs e)
         {
             string content = Encoding.UTF8.GetString(e.ApplicationMessage.Payload).Trim();
