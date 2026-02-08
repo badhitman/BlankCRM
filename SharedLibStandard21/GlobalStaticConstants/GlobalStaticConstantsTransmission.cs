@@ -1342,13 +1342,13 @@ public static partial class GlobalStaticConstantsTransmission
         /// <inheritdoc/>
         public static readonly string PongClientWebChatNotifyReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, $"~{Routes.EVENT_CONTROLLER_NAME}-{Routes.NOTIFY_ACTION_NAME}-{Routes.WEB_CONTROLLER_NAME}-{Routes.CHATS_CONTROLLER_NAME}", Routes.PONG_ACTION_NAME, Routes.CLIENT_CONTROLLER_NAME);
         /// <inheritdoc/>
-        public static readonly string GetStateWebChatNotifyReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, $"~{Routes.EVENT_CONTROLLER_NAME}-{Routes.NOTIFY_ACTION_NAME}-{Routes.WEB_CONTROLLER_NAME}", Routes.CHAT_CONTROLLER_NAME, Routes.STATE_CONTROLLER_NAME, Routes.GET_ACTION_NAME);
+        public static readonly string StateGetWebChatNotifyReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, $"~{Routes.EVENT_CONTROLLER_NAME}-{Routes.NOTIFY_ACTION_NAME}-{Routes.WEB_CONTROLLER_NAME}", Routes.CHAT_CONTROLLER_NAME, Routes.STATE_CONTROLLER_NAME, Routes.GET_ACTION_NAME);
         /// <inheritdoc/>
-        public static readonly string SetStateWebChatNotifyReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, $"~{Routes.EVENT_CONTROLLER_NAME}-{Routes.NOTIFY_ACTION_NAME}-{Routes.WEB_CONTROLLER_NAME}", Routes.CHAT_CONTROLLER_NAME, Routes.STATE_CONTROLLER_NAME, Routes.SET_ACTION_NAME);
+        public static readonly string StateSetWebChatNotifyReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, $"~{Routes.EVENT_CONTROLLER_NAME}-{Routes.NOTIFY_ACTION_NAME}-{Routes.WEB_CONTROLLER_NAME}", Routes.CHAT_CONTROLLER_NAME, Routes.STATE_CONTROLLER_NAME, Routes.SET_ACTION_NAME);
         /// <inheritdoc/>
-        public static readonly string ShowToastNotifyReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, $"~{Routes.EVENT_CONTROLLER_NAME}-{Routes.NOTIFY_ACTION_NAME}-{Routes.WEB_CONTROLLER_NAME}", Routes.TOAST_CONTROLLER_NAME, Routes.SHOW_ACTION_NAME);
+        public static readonly string StateEchoWebChatNotifyReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, $"~{Routes.EVENT_CONTROLLER_NAME}-{Routes.NOTIFY_ACTION_NAME}-{Routes.WEB_CONTROLLER_NAME}", Routes.CHAT_CONTROLLER_NAME, Routes.STATE_CONTROLLER_NAME, Routes.ECHO_ACTION_NAME);
         /// <inheritdoc/>
-        public static readonly string StateWebChatEchoNotifyReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, $"~{Routes.EVENT_CONTROLLER_NAME}-{Routes.NOTIFY_ACTION_NAME}-{Routes.WEB_CONTROLLER_NAME}", Routes.CHAT_CONTROLLER_NAME, Routes.STATE_CONTROLLER_NAME, Routes.ECHO_ACTION_NAME);
+        public static readonly string ToastShowNotifyReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, $"~{Routes.EVENT_CONTROLLER_NAME}-{Routes.NOTIFY_ACTION_NAME}-{Routes.WEB_CONTROLLER_NAME}", Routes.TOAST_CONTROLLER_NAME, Routes.SHOW_ACTION_NAME);
         #endregion
 
         /// <inheritdoc/>

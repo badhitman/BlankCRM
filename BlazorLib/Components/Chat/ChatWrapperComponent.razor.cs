@@ -5,11 +5,11 @@
 using Microsoft.AspNetCore.Components.Web.Virtualization;
 using static SharedLib.GlobalStaticConstantsRoutes;
 using Microsoft.AspNetCore.Components.Web;
+using BlazorLib.Components.Shared.Layouts;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using MudBlazor;
 using SharedLib;
-using BlazorLib.Components.Shared.Layouts;
 
 namespace BlazorLib.Components.Chat;
 
@@ -28,10 +28,10 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
     IEventNotifyReceive<NewMessageWebChatEventModel> NewMessageWebChatEventRepo { get; set; } = default!;
 
     [Inject]
-    IEventNotifyReceive<GetStateWebChatEventModel> GetStateWebChatEventRepo { get; set; } = default!;
+    IEventNotifyReceive<GetStateWebChatEventModel> StateGetWebChatEventRepo { get; set; } = default!;
 
     [Inject]
-    IEventNotifyReceive<StateWebChatModel> SetStateWebChatEventRepo { get; set; } = default!;
+    IEventNotifyReceive<StateWebChatModel> StateSetWebChatEventRepo { get; set; } = default!;
 
 
     /// <inheritdoc/>
@@ -196,8 +196,8 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
         if (ticketSession is not null)
         {
             await NewMessageWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.NewMessageWebChatNotifyReceive, ticketSession.Id.ToString()).Replace("\\", "/"), NewMessageWebChatHandler, CurrentUserSessionBytes(LayoutContainerId));
-            await GetStateWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.GetStateWebChatNotifyReceive, ticketSession.Id.ToString()).Replace("\\", "/"), GetStateWebChatWebChatHandler, CurrentUserSessionBytes(LayoutContainerId));
-            await SetStateWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.SetStateWebChatNotifyReceive, ticketSession.Id.ToString()).Replace("\\", "/"), SetStateWebChatHandler, CurrentUserSessionBytes(LayoutContainerId));
+            await StateGetWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.StateGetWebChatNotifyReceive, ticketSession.Id.ToString()).Replace("\\", "/"), GetStateWebChatWebChatHandler, CurrentUserSessionBytes(LayoutContainerId));
+            await StateSetWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.StateSetWebChatNotifyReceive, ticketSession.Id.ToString()).Replace("\\", "/"), SetStateWebChatHandler, CurrentUserSessionBytes(LayoutContainerId));
         }
     }
 
@@ -238,8 +238,8 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
     {
         NewMessageWebChatEventRepo.UnregisterAction();
         NewMessageWebChatEventRepo.UnregisterAction();
-        GetStateWebChatEventRepo.UnregisterAction();
-        SetStateWebChatEventRepo.UnregisterAction();
+        StateGetWebChatEventRepo.UnregisterAction();
+        StateSetWebChatEventRepo.UnregisterAction();
     }
 
     void ShowHiddenInfo()

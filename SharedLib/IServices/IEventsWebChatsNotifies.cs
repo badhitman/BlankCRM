@@ -28,14 +28,14 @@ public interface IEventsWebChatsNotifies
     public Task<ResponseBaseModel> InitWebChatAsync(InitWebChatEventModel req, CancellationToken cancellationToken = default);
 
     /// <inheritdoc/>
-    public Task<ResponseBaseModel> GetStateWebChatAsync(GetStateWebChatEventModel req, CancellationToken cancellationToken = default);
+    public Task<ResponseBaseModel> StateGetWebChatAsync(GetStateWebChatEventModel req, CancellationToken cancellationToken = default);
 
     /// <inheritdoc/>
-    public Task<ResponseBaseModel> StateWebChatSetAsync(StateWebChatModel req, CancellationToken cancellationToken = default);
+    public Task<ResponseBaseModel> StateSetWebChatAsync(StateWebChatModel req, CancellationToken cancellationToken = default);
 
     /// <inheritdoc/>
-    public Task<ResponseBaseModel> StateWebChatEchoAsync(StateWebChatModel req, CancellationToken cancellationToken = default);
+    public Task<ResponseBaseModel> StateEchoWebChatAsync(StateWebChatModel req, CancellationToken cancellationToken = default);
 
     /// <inheritdoc/>
-    public Task<ResponseBaseModel> ShowToastAsync(ShowToastEventModel req, CancellationToken cancellationToken = default);
+    public Task<ResponseBaseModel> ToastShowAsync(ShowToastEventModel req, CancellationToken cancellationToken = default);
 }
