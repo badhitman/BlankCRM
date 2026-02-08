@@ -159,8 +159,8 @@ dotnet run --project BlankCRM.AppHost/BlankCRM.AppHost.csproj --publisher manife
 - используется сервисом `CommerceService` для 'ведения заказа'.
 
 #### [RealtimeService](https://github.com/badhitman/BlankCRM/tree/main/micro-services/RealtimeService)
-- MQTT сервер для организации функциональность "реального времени"
-- WebChat: чат между посетителями сайта (в т.ч. анонимные) и сотрудниками компании (служба поддержки)
+- MQTT сервер для организации функциональность "реального времени". Фронт-клиент подключён к MQTT, а бэк может взаимодействовать с клиентами напрямую по собственной инициативе.
+- WebChat: чат между посетителями сайта и сотрудниками компании (служба поддержки).
 
 #### [StorageService](https://github.com/badhitman/BlankCRM/tree/main/micro-services/StorageService)
 - Общее пространство хранения параметров со своим контекстом: `StorageContext`. Позволяет разным службам обращаться к параметрам друг друга. Например в Web интерфейсе HelpDesk можно изменить режим работы TelegramBot (бот читает этот параметр при каждом входящем сообщении).
