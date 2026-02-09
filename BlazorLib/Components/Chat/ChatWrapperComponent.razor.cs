@@ -25,6 +25,9 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
     IWebChatService WebChatRepo { get; set; } = default!;
 
     [Inject]
+    IEventsWebChatsNotifies EventsWebChatsHandleRepo { get; set; } = default!;
+
+    [Inject]
     IEventNotifyReceive<NewMessageWebChatEventModel> NewMessageWebChatEventRepo { get; set; } = default!;
 
     [Inject]
@@ -32,9 +35,12 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
 
     [Inject]
     IEventNotifyReceive<StateWebChatModel> StateSetWebChatEventRepo { get; set; } = default!;
+    
+    //[Inject]
+    //IEventNotifyReceive<ConnectionCloseWebChatEventModel> ConnectionCloseWebChatEventRepo { get; set; } = default!;
 
-    [Inject]
-    IEventsWebChatsNotifies EventsWebChatsHandleRepo { get; set; } = default!;
+    //[Inject]
+    //IEventNotifyReceive<ConnectionOpenWebChatEventModel> ConnectionOpenWebChatEventRepo { get; set; } = default!;
 
 
     /// <inheritdoc/>

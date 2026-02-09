@@ -91,10 +91,10 @@ public partial class RealtimeCoreComponent
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        await PongClientsWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.PongClientWebChatNotifyReceive, LayoutContainerId.ToString()), PongClientsWebChatHandler, LayoutContainerId, CurrentUserSessionBytes, isMute: true);
-        await ConnectionCloseWebChatRepo.RegisterAction(GlobalStaticConstantsTransmission.TransmissionQueues.ConnectionCloseWebChatNotifyReceive, ConnectionCloseWebChatHandler, LayoutContainerId, CurrentUserSessionBytes, isMute: true);
         await PingClientsWebChatEventRepo.RegisterAction(GlobalStaticConstantsTransmission.TransmissionQueues.PingClientsWebChatNotifyReceive, PingClientsWebChatHandler, LayoutContainerId, CurrentUserSessionBytes, isMute: true);
-        await ConnectionOpenWebChatRepo.RegisterAction(GlobalStaticConstantsTransmission.TransmissionQueues.ConnectionOpenWebChatNotifyReceive, ConnectionOpenWebChatHandler, LayoutContainerId, CurrentUserSessionBytes, isMute: WebConfig.Value.WebChatEnable);
+        await PongClientsWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.PongClientWebChatNotifyReceive, LayoutContainerId.ToString()), PongClientsWebChatHandler, LayoutContainerId, CurrentUserSessionBytes, isMute: true);
+        await ConnectionCloseWebChatRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.ConnectionCloseWebChatNotifyReceive, "#"), ConnectionCloseWebChatHandler, LayoutContainerId, CurrentUserSessionBytes, isMute: true);
+        await ConnectionOpenWebChatRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.ConnectionOpenWebChatNotifyReceive, "#"), ConnectionOpenWebChatHandler, LayoutContainerId, CurrentUserSessionBytes, isMute: WebConfig.Value.WebChatEnable);
     }
 
     async void ConnectionCloseWebChatHandler(ConnectionCloseWebChatEventModel model)
