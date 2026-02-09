@@ -1,127 +1,18 @@
 ## Blank CRM (набор микро-сервисов): NET.10, Blazor, Telegram Bot. + LDAP/ActiveDirectory
-- **Blazor NET.10**[^4] + **TelegramBot**[^5]: поддержка [автоматической авторизации](#автоматическая-авторизация-в-telegram-webapp) в Telegram WebApp.
-- СЭД (ServiceDesk/HelpDesk) подсистема оказания консультаций, обратной связи или сопровождение заказов. Управление документами: изменение статусов заявок, журналирование/протоколирование событий и другая универсальная функциональность.
-- Подсистема электронной коммерции: на базе СЭД функционирует простой учёт заказов в т.ч. остатки на складах и предоставление услуг с настраиваемым графиком/расписанием.
-- WEB-Конструктор схем данных (формы, документы).
-- Интерфейс rest API (swagger) для внешних информационных систем (пример: план обмена для [commerce](https://github.com/badhitman/BlankCRM/blob/main/micro-services/CommerceService/INTEGRATION.md)).
-- ui пакеты: [MudBlazor 8](https://github.com/MudBlazor/MudBlazor/) и два WYSIWYG: [CKEditor](https://ckeditor.com/) + [TinyMCE](https://www.tiny.cloud). Важно: **CKEditor** не поддерживает вставку картинок, а **TinyMCE** имеет такую поддержу.
+- **Blazor NET.10**[^4] + **TelegramBot**[^5]: поддержка [автоматической авторизации](#автоматическая-авторизация-в-telegram-webapp) в Telegram WebApp
+- СЭД (ServiceDesk/HelpDesk) подсистема оказания консультаций, обратной связи или сопровождение заказов. Управление документами: изменение статусов заявок, журналирование/протоколирование событий и другая универсальная функциональность
+- MQTTNet сервер для организации функциональности двусторонней связи "реального времени"
+- WEB чат для организации технической поддержки
+- Подсистема электронной коммерции: на базе СЭД функционирует простой учёт заказов в т.ч. остатки на складах и предоставление услуг с настраиваемым графиком/расписанием
+- WEB-Конструктор схем данных (формы, документы)
+- Интерфейс rest API (swagger) для внешних информационных систем (пример: план обмена для [commerce](https://github.com/badhitman/BlankCRM/blob/main/micro-services/CommerceService/INTEGRATION.md))
+- ui пакеты: [MudBlazor 8](https://github.com/MudBlazor/MudBlazor/) и два WYSIWYG: [CKEditor](https://ckeditor.com/) + [TinyMCE](https://www.tiny.cloud). Важно: **CKEditor** не поддерживает вставку картинок, а **TinyMCE** имеет такую поддержу
 - Кроссплатформенный .NET MAUI (Win, Android и т.д.) [клиент доступа к Rest/Api](https://github.com/badhitman/BlankCRM?tab=readme-ov-file#tools-maui-app)
-- Связь между службами через RabbitMQ[^1] в режиме `запрос-ответ`: при отправке сообщения в очередь, отправитель дожидается ответ (в границах таймаута) и возвращает результат вызывающему. При использовании вызова такой команды удалённого сервиса проходит так, как если бы это был обычный `await` запрос к базе данных или rest/api. Вместе с тем есть возможность отправить команду в режиме "отправил и забыл".
+- Связь между службами через RabbitMQ[^1] в режиме `запрос-ответ`: при отправке сообщения в очередь, отправитель дожидается ответ (в границах таймаута) и возвращает результат вызывающему. При использовании вызова такой команды удалённого сервиса проходит так, как если бы это был обычный `await` запрос к базе данных или rest/api. Вместе с тем есть возможность отправить команду в режиме "отправил и забыл"
 - .NET Aspire: [набор инструментов для оркестрации](https://github.com/badhitman/BlankCRM/tree/main/BlankCRM.AppHost): мониторинг сервисов (телеметрия, трассировка). ![aspire main](img/aspire-main.png)
 - T-Bank
 - LDAP (ActiveDirectory) коннектор. предварительная версия
 - Внешние [источники данных](https://github.com/badhitman/BlankCRM/blob/main/micro-services/outer/README.md): Rusklimat (Русклимат), DaichiBusiness, HaierProff, Breez.ru
-
-Зависимости решения между проектами (в формате [Mermaid](https://mermaid.js.org)):
-
-```mermaid
----
-title: Структура (зависимости) проектов в решении
----
-classDiagram
-note for DbPostgreLib "Если используется другая СУБД, тогда указатели  от [ServerLib] [TelegramBotService], [HelpDeskService] и [RemoteCallLib] должны ссылаться на соответсвующую библиотеку: [DbPostgreLib] или [DbMySQLLib]"
-    SharedLib <|-- CodegeneratorLib
-    SharedLib <|-- IdentityLib
-    SharedLib <|-- DbLayerLib
-    BlazorLib <|-- ToolsMauiApp
-    SharedLib : Общие модели
-    IdentityLib <|-- ServerLib
-    DbPostgreLib <|-- ServerLib
-    RemoteCallLib <|-- ServerLib
-    RemoteCallLib <|-- CommerceService
-    RemoteCallLib <|-- ApiRestService
-    CodegeneratorLib <|-- BlazorLib
-    HtmlGenerator <|-- CodegeneratorLib
-    DbLayerLib <|-- DbPostgreLib
-    DbLayerLib <|-- DbSqliteLib
-    DbLayerLib <|-- DbMySQLLib
-	DbPostgreLib <|-- RemoteCallLib
-    BlankBlazorApp_Client  <|-- BlankBlazorApp
-	BlazorWebLib  <|-- BlankBlazorApp
-	ServerLib  <|-- BlankBlazorApp
-	IdentityService  <|-- BlankBlazorApp
-    RemoteCallLib <|-- TelegramBotService
-	DbPostgreLib <|-- TelegramBotService
-    RemoteCallLib <|-- StorageService
-    RemoteCallLib <|-- KladrService
-    RemoteCallLib <|-- ConstructorService
-    RemoteCallLib <|-- HelpDeskService
-	DbPostgreLib <|-- HelpDeskService
-    BlazorLib <|-- BlazorWebLib
-    BlazorLib <|-- BlankBlazorApp_Client
-    	
-    class CodegeneratorLib{
-        Генератор исходников для Web конструктора
-    }
-    class IdentityLib{
-        Контекст пакета Identity (авторизация)
-    }
-    class DbLayerLib{
-        Абстракция над Мульти-СУБД
-    }
-    class ServerLib{
-        Backend для BlankBlazorApp
-    }
-    class BlazorLib{
-        Blazor UI Компоненты
-    }
-    class DbSqliteLib{
-        Sqlite
-    }
-    class DbPostgreLib{
-        PostgreSQL
-    }
-    class DbMySQLLib{
-        MySQL
-    }
-    class RemoteCallLib{
-        Трансмиссия
-    }
-    class BlankBlazorApp_Client["BlankBlazorApp.Client"]{
-        CSR Blazor WebAssembly
-    }
-    class BlazorWebLib{
-        SSR Blazor Server
-    }
-
-    class BlankBlazorApp{
-        @Микросервис - Вебсервер/ServerSideRender
-    }
-    class IdentityService{
-        @Микросервис - Пользователи/Регистрация/Авторизация
-    }
-    class StorageService{
-        @Микросервис - Файлы/Тэги/CMS
-    }
-    class KladrService{
-        @Микросервис - КЛАДР 4.0
-    }
-    class LdapService{
-        @Микросервис - LDAP over Novell driver
-    }
-    class ConstructorService{
-        @Микросервис - ВебКонструктор/ВебФормы
-    }
-    class TelegramBotService["TelegramBotService"]{
-        @Микросервис - TelegramBot/Wappi
-    }
-    class HelpDeskService{
-        @Микросервис - Хелпдеск/Сервисдеск/Таскменеджер
-    }
-    class CommerceService{
-        @Микросервис - Склад/Продажи/Расписания
-    }
-    class ApiRestService{
-        @Микросервис - Api/Rest
-    }
-    class ToolsMauiApp{
-      @Клиент - Win/Android
-    }
-
-    class HtmlGenerator{
-        Внешний репозиторий
-    }
-```
 
 #### Startup
 readme for startup - https://github.com/badhitman/BlankCRM/blob/main/devops
