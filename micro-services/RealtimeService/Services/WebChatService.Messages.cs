@@ -60,7 +60,7 @@ public partial class WebChatService : IWebChatService
                         SendTextMessageTelegramBotModel tgMsgSend = new()
                         {
                             From = "Уведомление",
-                            Message = $"Сообщение в [наблюдаемом] чате: {_baseUri}web-chats/room-{req.DialogOwnerId}\n`{req.Text}`",
+                            Message = $"Сообщение в [наблюдаемом] чате: {_baseUri}web-chats/room-{req.DialogOwnerId}\n`{req.Text.Replace("<", " ").Replace(">", " ")}`",
                             UserTelegramId = usr.TelegramId!.Value,
                         };
                         await tgRepo.SendTextMessageTelegramAsync(tgMsgSend, waitResponse: false, token: token);
