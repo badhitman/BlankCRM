@@ -81,9 +81,9 @@ public partial class DialogWebChatCardComponent : BlazorBusyComponentUsersCached
             await SetBusyAsync();
             ResponseBaseModel res = await WebChatRepo.UserInjectDialogWebChatAsync(req);
             SnackBarRepo.ShowMessagesResponse(res.Messages);
-            await ReloadDialog();
-            await SetBusyAsync(false);
         }
+        await ReloadDialog();
+        await SetBusyAsync(false);
     }
 
     async Task SaveRoom()
