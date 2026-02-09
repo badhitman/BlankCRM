@@ -37,54 +37,8 @@
                                              OnLoadHandler="OnLoadStatusAction" />
                     </sup>
                 }
-                <MudSpacer />
-                <span class="btn-group" role="group" aria-label="Basic example">
-                    @if (q?.Any() != true)
-                    {
-                        <button type="button"
-                                class="btn btn-outline-info bi bi-key-fill"
-                                @onclick="async () => await JoinToChat(true)"
-                                title="Взять в работу">
-                        </button>
-                    }
-                    @if (CurrentUserSession is not null && q?.Any(x => x.UserIdentityId == CurrentUserSession.UserId) != true)
-                    {
-                        <button type="button"
-                                class="btn btn-outline-info bi bi-box-arrow-up-right"
-                                @onclick="async () => await JoinToChat(false)"
-                                title="Вступить в чат">
-                        </button>
-                    }
-                    <button type="button"
-                            class="btn btn-outline-info bi bi-arrow-clockwise"
-                            @onclick="StateChatRequest"
-                            title="Проверить состояние области чата">
-                    </button>
-                    @if (chatStatusRef?.StateWebChat is not null && !chatStatusRef.StateWebChat.StateDialog)
-                    {
-                        <button type="button"
-                                class="btn btn-outline-info bi bi-chat-text"
-                                @onclick="SetStateChatRequest"
-                                title="Открыть диалог чата клиенту">
-                        </button>
-                    }
-                    @if (RoomIsEdit)
-                    {
-                        <button class="btn btn-outline-primary bi bi-escape"
-                                type="button"
-                                title="Перезагрузить данные с сервера"
-                                @onclick="ReloadDialog">
-                            Отмена
-                        </button>
-                    }
-                    <button class="btn btn-outline-@(RoomIsEdit ? "success" : "secondary") bi bi-floppy-fill"
-                            type="button"
-                            disabled="@RoomNotEdit"
-                            title="Сохранить изменения чата"
-                            @onclick="SaveRoom">
-                    </button>
-                </span>
             </h5>
+            <MudSpacer />
             <h6 class="card-subtitle mb-2 text-body-sDialogdary">
                 @if (q is not null && q.Any())
                 {
@@ -126,6 +80,53 @@
                                       IsReadOnly="IsBusyProgress"
                                       @ref="userSelectorRef"
                                       Label="Заказчик" />
+
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                @if (q?.Any() != true)
+                {
+                    <button type="button"
+                            class="btn btn-outline-info bi bi-key-fill"
+                            @onclick="async () => await JoinToChat(true)"
+                            title="Взять в работу">
+                    </button>
+                }
+                @if (CurrentUserSession is not null && q?.Any(x => x.UserIdentityId == CurrentUserSession.UserId) != true)
+                {
+                    <button type="button"
+                            class="btn btn-outline-info bi bi-box-arrow-up-right"
+                            @onclick="async () => await JoinToChat(false)"
+                            title="Вступить в чат">
+                    </button>
+                }
+                <button type="button"
+                        class="btn btn-outline-info bi bi-arrow-clockwise"
+                        @onclick="StateChatRequest"
+                        title="Проверить состояние области чата">
+                </button>
+                @if (chatStatusRef?.StateWebChat is not null && !chatStatusRef.StateWebChat.StateDialog)
+                {
+                    <button type="button"
+                            class="btn btn-outline-info bi bi-chat-text"
+                            @onclick="SetStateChatRequest"
+                            title="Открыть диалог чата клиенту">
+                    </button>
+                }
+                @if (RoomIsEdit)
+                {
+                    <button class="btn btn-outline-primary bi bi-escape"
+                            type="button"
+                            title="Перезагрузить данные с сервера"
+                            @onclick="ReloadDialog">
+                        Отмена
+                    </button>
+                }
+                <button class="btn btn-outline-@(RoomIsEdit ? "success" : "secondary") bi bi-floppy-fill"
+                        type="button"
+                        disabled="@RoomNotEdit"
+                        title="Сохранить изменения чата"
+                        @onclick="SaveRoom">
+                </button>
+            </div>
 
             <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-6">
                 <MudTabPanel Text="Переписка">
