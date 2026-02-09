@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Components;
 
 namespace BlazorLib.Components.mqtt;
 
+/// <summary>
+/// ClientIdViewMqttComponent
+/// </summary>
 public partial class ClientIdViewMqttComponent
 {
     /// <inheritdoc/>
