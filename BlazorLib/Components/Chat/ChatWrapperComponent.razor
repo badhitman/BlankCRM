@@ -83,57 +83,57 @@
                     </figcaption>
                 </figure>
             }
-            
-                <Virtualize Context="message"
-                            OverscanCount="@(virtualCacheSize / 2)"
-                            ItemsProvider="LoadMessages"
-                            @ref="virtualizeComponent">
-                    <ItemContent>
-                        @{
-                            ChatBubblePosition position = message.InitiatorMessageSender
-                            ? ChatBubblePosition.Start
-                            : ChatBubblePosition.End;
-                            UserInfoModel? senderUser = UsersCache.FirstOrDefault(x => x.UserId == message.SenderUserIdentityId);
 
+            <Virtualize Context="message"
+                        OverscanCount="@(virtualCacheSize / 2)"
+                        ItemsProvider="LoadMessages"
+                        @ref="virtualizeComponent">
+                <ItemContent>
+                    @{
+                        ChatBubblePosition position = message.InitiatorMessageSender
+                        ? ChatBubblePosition.Start
+                        : ChatBubblePosition.End;
+                        UserInfoModel? senderUser = UsersCache.FirstOrDefault(x => x.UserId == message.SenderUserIdentityId);
+
+                    }
+                    <MudChat ChatPosition="@position">
+                        <MudAvatar>@(position == ChatBubblePosition.Start ? "Вы" : "US")</MudAvatar>
+                        <MudChatHeader Name="@(position == ChatBubblePosition.Start ? "Вы" : senderUser?.UserName ?? message.SenderUserIdentityId)"
+                                       Time="@message.CreatedAtUTC.GetCustomTime().ToString()" />
+                        <MudChatBubble OnClick="@((args) => ClickMessage(args, message))"
+                                       OnContextClick="@((args) => RightClickMessage(args, message))">
+                            @message.Text
+                        </MudChatBubble>
+                        @if (message.AttachesFiles is not null && message.AttachesFiles.Count != 0)
+                        {
+                            <MudChatFooter>
+                                Файлы:
+                                @foreach (AttachesMessageWebChatModelDB _fa in message.AttachesFiles)
+                                {
+                                    <a href="@_fa.GetURI()" class="ms-2 link-primary">
+                                        @_fa.FileAttachName ( @GlobalToolsStandard.SizeDataAsString(_fa.FileLength) )
+                                    </a>
+                                }
+                            </MudChatFooter>
                         }
-                        <MudChat ChatPosition="@position">
-                            <MudAvatar>@(position == ChatBubblePosition.Start ? "Вы" : "US")</MudAvatar>
-                            <MudChatHeader Name="@(position == ChatBubblePosition.Start ? "Вы" : senderUser?.UserName ?? message.SenderUserIdentityId)"
-                                           Time="@message.CreatedAtUTC.GetCustomTime().ToString()" />
-                            <MudChatBubble OnClick="@((args) => ClickMessage(args, message))"
-                                           OnContextClick="@((args) => RightClickMessage(args, message))">
-                                @message.Text
-                            </MudChatBubble>
-                            @if (message.AttachesFiles is not null && message.AttachesFiles.Count != 0)
-                            {
-                                <MudChatFooter>
-                                    Файлы:
-                                    @foreach (AttachesMessageWebChatModelDB _fa in message.AttachesFiles)
-                                    {
-                                        <a href="@_fa.GetURI()" class="ms-2 link-primary">
-                                            @_fa.FileAttachName ( @GlobalToolsStandard.SizeDataAsString(_fa.FileLength) )
-                                        </a>
-                                    }
-                                </MudChatFooter>
-                            }
-                        </MudChat>
-                    </ItemContent>
-                    <Placeholder>
-                        <p>
-                            <MudProgressLinear Color="Color.Primary" Indeterminate Class="my-7" />
-                        </p>
-                    </Placeholder>
-                    <EmptyContent>
-                        <figure class="text-center">
-                            <blockquote class="blockquote">
-                                <p>Сообщений нет</p>
-                            </blockquote>
-                            @* <figcaption class="blockquote-footer">
+                    </MudChat>
+                </ItemContent>
+                <Placeholder>
+                    <p>
+                        <MudProgressLinear Color="Color.Primary" Indeterminate Class="my-7" />
+                    </p>
+                </Placeholder>
+                <EmptyContent>
+                    <figure class="text-center">
+                        <blockquote class="blockquote">
+                            <p>Сообщений нет</p>
+                        </blockquote>
+                        @* <figcaption class="blockquote-footer">
                                 Someone famous in <cite title="Source Title">Source Title</cite>
                             </figcaption> *@
-                        </figure>
-                    </EmptyContent>
-                </Virtualize>
+                    </figure>
+                </EmptyContent>
+            </Virtualize>
             <MudMenu PositionAtCursor @ref="_contextMenu" id="_contextMenu">
                 <MudMenuItem Icon="@Icons.Material.Filled.Block" OnClick="@BanUser">
                     Ban
@@ -168,7 +168,7 @@
             if (UsersSessions.Count != 0)
             {
                 <p class="pa-2">
-                    Операторы:
+                    Операторы <sup>(online)</sup>:
                     @foreach (PongClientsWebChatEventModel _userClient in UsersSessions.Where(x => !string.IsNullOrWhiteSpace(x.CurrentUserSession?.UserName)).DistinctBy(x => x.CurrentUserSession!.UserName))
                     {
                         <span class="badge text-bg-light">@_userClient.CurrentUserSession!.UserName</span>
