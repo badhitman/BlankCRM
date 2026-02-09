@@ -35,12 +35,6 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
 
     [Inject]
     IEventNotifyReceive<StateWebChatModel> StateSetWebChatEventRepo { get; set; } = default!;
-    
-    //[Inject]
-    //IEventNotifyReceive<ConnectionCloseWebChatEventModel> ConnectionCloseWebChatEventRepo { get; set; } = default!;
-
-    //[Inject]
-    //IEventNotifyReceive<ConnectionOpenWebChatEventModel> ConnectionOpenWebChatEventRepo { get; set; } = default!;
 
 
     /// <inheritdoc/>
