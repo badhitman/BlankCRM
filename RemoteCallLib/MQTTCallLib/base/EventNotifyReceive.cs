@@ -2,20 +2,19 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using static SharedLib.GlobalStaticConstantsRoutes;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using MQTTnet;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Threading;
 using MQTTnet.Packets;
 using Newtonsoft.Json;
-using SharedLib;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using static SharedLib.GlobalStaticConstantsRoutes;
+using SharedLib;
+using MQTTnet;
+using System;
 
 namespace RemoteCallLib;
 
@@ -29,7 +28,7 @@ public class EventNotifyReceive<T> : IEventNotifyReceive<T>, IAsyncDisposable
     /// </summary>
     public event IEventNotifyReceive<T>.AccountHandler? Notify;
 
-    IMqttClient mqttClient;
+    IMqttClient? mqttClient;
     MqttClientFactory mqttFactory = new();
 
     readonly MQTTClientConfigModel MQConfigRepo;
@@ -50,10 +49,6 @@ public class EventNotifyReceive<T> : IEventNotifyReceive<T>, IAsyncDisposable
         MQConfigRepo = rabbitConf;
 
         using IServiceScope scope = servicesProvider.CreateScope();
-
-        mqttClient = mqttFactory.CreateMqttClient();
-
-        //loggerRepo.LogInformation($"Subscriber [{QueueName}] socket ready...");
     }
 
     /// <inheritdoc/>
@@ -92,7 +87,7 @@ public class EventNotifyReceive<T> : IEventNotifyReceive<T>, IAsyncDisposable
             }
             return Task.CompletedTask;
         }
-
+        mqttClient = mqttFactory.CreateMqttClient();
         mqttClient.ApplicationMessageReceivedAsync += ApplicationMessageReceived;
 
         try
@@ -103,7 +98,7 @@ public class EventNotifyReceive<T> : IEventNotifyReceive<T>, IAsyncDisposable
         }
         catch (Exception ex)
         {
-            LoggerRepo.LogError(ex, "can`t connect/subscribe");
+            LoggerRepo.LogError(ex, $"can`t connect/subscribe: `{QueueName}`");
             mqttClient.ApplicationMessageReceivedAsync -= ApplicationMessageReceived;
             return;
         }
@@ -116,7 +111,7 @@ public class EventNotifyReceive<T> : IEventNotifyReceive<T>, IAsyncDisposable
         if (_propertiesValues is not null)
             usrProps.AddRange(_propertiesValues.Select(x => new MqttUserProperty(x.Key, x.Value)));
 
-        if (mqttClient.IsConnected)
+        if (mqttClient?.IsConnected == true)
         {
             if (!isMute)
             {
@@ -129,7 +124,7 @@ public class EventNotifyReceive<T> : IEventNotifyReceive<T>, IAsyncDisposable
                 await mqttClient.DisconnectAsync(new() { UserProperties = usrProps }, stoppingToken);
             }
         }
-        mqttClient.Dispose();
+        mqttClient?.Dispose();
         Notify = null;
     }
 

@@ -5,7 +5,7 @@
 <MudTable ServerData="ServerReload" Dense Hover @ref="tableRef">
     <ToolBarContent>
         <MudText Typo="Typo.h6">
-            WEB чаты
+            WEB чаты:
             @if (IsBusyProgress)
             {
                 <sup class="spinner-grow spinner-grow-sm ms-2" role="status">
@@ -19,8 +19,13 @@
                      title="Обновить таблицу"
                      @onclick="async () => { if (tableRef is not null) await tableRef.ReloadServerData(); }"></sup>
             }
-            <MudSpacer />
         </MudText>
+        <MudSpacer />
+        <MudCheckBox @bind-Value="AnotherValue"
+                     Color="@Color.Secondary"
+                     TriState>
+            Отображение: @(AnotherValue == null ? "Все" : (AnotherValue.Value ? "Закрытые (только)" : "Активные (строго)"))
+        </MudCheckBox>
     </ToolBarContent>
     <HeaderContent>
         <MudTh>Сообщение/Вход</MudTh>

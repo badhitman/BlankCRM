@@ -33,6 +33,18 @@ public partial class WebChatsManageComponent : BlazorBusyComponentUsersCachedMod
     bool muteSound;
     readonly string LayoutContainerId = Guid.NewGuid().ToString();
 
+    bool? _anotherValue;
+    bool? AnotherValue
+    {
+        get => _anotherValue;
+        set
+        {
+            _anotherValue = value;
+            if (tableRef is not null)
+                InvokeAsync(tableRef.ReloadServerData);
+        }
+    }
+
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
@@ -115,6 +127,7 @@ public partial class WebChatsManageComponent : BlazorBusyComponentUsersCachedMod
             Payload = new()
             {
                 FilterUserIdentityId = FilterUserIdentityId,
+                IsDisabledFiltered = AnotherValue,
             }
         };
         await SetBusyAsync(token: token);
