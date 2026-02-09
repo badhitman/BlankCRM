@@ -39,7 +39,7 @@
                 <MudSpacer />
                 <span class="btn-group" role="group" aria-label="Basic example">
                     <button type="button"
-                            class="btn btn-outline-info btn-sm"
+                            class="btn btn-outline-info bi bi-arrow-clockwise"
                             @onclick="StateChatRequest"
                             title="Проверить состояние области чата">
                         Статус чата
@@ -47,22 +47,21 @@
                     @if (chatStatusRef?.StateWebChat is not null && !chatStatusRef.StateWebChat.StateDialog)
                     {
                         <button type="button"
-                                class="btn btn-outline-info btn-sm"
+                                class="btn btn-outline-info bi bi-chat-text"
                                 @onclick="SetStateChatRequest"
                                 title="Открыть диалог чата клиенту">
-                            Отобразить чат
                         </button>
                     }
                     @if (RoomIsEdit)
                     {
-                        <button class="btn btn-outline-primary btn-sm"
+                        <button class="btn btn-outline-primary"
                                 type="button"
                                 title="Перезагрузить данные с сервера"
                                 @onclick="ReloadRoom">
                             Отмена
                         </button>
                     }
-                    <button class="btn btn-outline-@(RoomIsEdit ? "success" : "secondary") btn-sm"
+                    <button class="btn btn-outline-@(RoomIsEdit ? "success" : "secondary")"
                             type="button"
                             disabled="@RoomNotEdit"
                             title="Сохранить изменения чата"
