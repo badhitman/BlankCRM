@@ -41,7 +41,7 @@
                     <button type="button"
                             class="btn btn-outline-info bi bi-arrow-clockwise"
                             @onclick="StateChatRequest"
-                            title="Проверить состояние области чата">                        
+                            title="Проверить состояние области чата">
                     </button>
                     @if (chatStatusRef?.StateWebChat is not null && !chatStatusRef.StateWebChat.StateDialog)
                     {
@@ -65,7 +65,6 @@
                             disabled="@RoomNotEdit"
                             title="Сохранить изменения чата"
                             @onclick="SaveRoom">
-                        
                     </button>
                 </span>
             </h5>
@@ -82,26 +81,29 @@
                 }
             </h6>
             <hr />
-            <div class="mb-3">
-                <label for="exampleInputHumanName1" class="form-label">HumanName</label>
-                <input type="text"
-                       class="form-control"
-                       id="exampleInputHumanName1"
-                       aria-describedby="humanNameHelp"
-                       @bind-value="roomEdit.InitiatorHumanName"
-                       @bind-value:event="oninput">
-                <div id="humanNameHelp" class="form-text">Имя для обращения.</div>
-            </div>
-            <div class="mb-3">
-                <label for="exampleInputContacts1" class="form-label">Contacts</label>
-                <input type="text"
-                       class="form-control"
-                       id="exampleInputContacts1"
-                       aria-describedby="contactsHelp"
-                       @bind-value="roomEdit.InitiatorContacts"
-                       @bind-value:event="oninput">
-                <div id="contactsHelp" class="form-text">Контакты для связи (Email).</div>
-            </div>
+            <MudGrid Class="mb-3">
+                <MudItem xs=12 md=6>
+                    <label for="exampleInputHumanName1" class="form-label">HumanName</label>
+                    <input type="text"
+                           class="form-control"
+                           id="exampleInputHumanName1"
+                           aria-describedby="humanNameHelp"
+                           @bind-value="roomEdit.InitiatorHumanName"
+                           @bind-value:event="oninput">
+                    <div id="humanNameHelp" class="form-text">Имя для обращения.</div>
+                </MudItem>
+                <MudItem xs=12 md=6>
+                    <label for="exampleInputContacts1" class="form-label">Contacts</label>
+                    <input type="text"
+                           class="form-control"
+                           id="exampleInputContacts1"
+                           aria-describedby="contactsHelp"
+                           @bind-value="roomEdit.InitiatorContacts"
+                           @bind-value:event="oninput">
+                    <div id="contactsHelp" class="form-text">Контакты для связи (Email).</div>
+                </MudItem>
+            </MudGrid>
+
             <UserSelectInputComponent SelectHandleAction="SelectUserHandler"
                                       SelectedUserInit="@roomEdit.InitiatorIdentityId"
                                       IsReadOnly="IsBusyProgress"
