@@ -17,7 +17,7 @@ public partial class RealtimeLayerContext : DbContext
         //#if DEBUG
         //        Database.EnsureCreated();
         //#else
-        Database.Migrate();
+        //Database.Migrate();
         //#endif
     }
 

@@ -9,7 +9,7 @@ namespace SharedLib;
 /// <summary>
 /// DialogWebChatModelDB
 /// </summary>
-[Index(nameof(InitiatorContactsNormalized))]
+[Index(nameof(InitiatorContactsNormalized)), Index(nameof(HelpdeskId))]
 public class DialogWebChatModelDB : DialogWebChatViewModel
 {
     /// <summary>
@@ -19,4 +19,10 @@ public class DialogWebChatModelDB : DialogWebChatViewModel
 
     /// <inheritdoc/>
     public List<UserJoinDialogWebChatModelDB>? UsersJoins { get; set; }
+
+    /// <inheritdoc/>
+    public required string BaseUri { get; set; }
+
+    /// <inheritdoc/>
+    public int? HelpdeskId { get; set; }
 }

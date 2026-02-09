@@ -23,13 +23,50 @@ public partial class WebChatService : IWebChatService
         RealtimeContext context = await mainDbFactory.CreateDbContextAsync(token);
         await context.Messages.AddAsync(req, token);
         await context.SaveChangesAsync(token);
-        await context.Dialogs
-            .Where(x => x.Id == req.DialogOwnerId)
-            .ExecuteUpdateAsync(set => set
+        IQueryable<DialogWebChatModelDB> q = context.Dialogs
+            .Where(x => x.Id == req.DialogOwnerId);
+        await q.ExecuteUpdateAsync(set => set
                 .SetProperty(p => p.LastMessageAtUTC, DateTime.UtcNow), cancellationToken: token);
 
         if (req.AttachesFiles is null)
             await notifyWebChatRepo.NewMessageWebChatAsync(new() { DialogId = req.DialogOwnerId, TextMessage = req.Text }, token);
+
+        string _baseUri = await q.Select(x => x.BaseUri).FirstAsync(cancellationToken: token);
+        IQueryable<UserJoinDialogWebChatModelDB> q2 = context.UsersDialogsJoins.Where(x => x.DialogJoinId == req.DialogOwnerId && (x.OutDateUTC == null || x.OutDateUTC == default));
+        if (req.InitiatorMessageSender)
+        {
+            if (!await q2.AnyAsync(cancellationToken: token))
+            {
+                TResponseModel<long?> notifyTg = await StorageRepo.ReadParameterAsync<long?>(GlobalStaticCloudStorageMetadata.WebChatNotificationTelegramForNewMessage, token);
+                if (notifyTg.Success() && notifyTg.Response.HasValue)
+                {
+                    SendTextMessageTelegramBotModel tgMsgSend = new()
+                    {
+                        From = "Уведомление",
+                        Message = $"Сообщение в [без-хозном] чате: {_baseUri}web-chats/room-{req.DialogOwnerId}\n`{req.Text}`",
+                        UserTelegramId = notifyTg.Response.Value,
+                    };
+                    await tgRepo.SendTextMessageTelegramAsync(tgMsgSend, waitResponse: false, token: token);
+                }
+            }
+            else
+            {
+                TResponseModel<UserInfoModel[]> usersGet = await identityRepo
+                    .GetUsersOfIdentityAsync(await q2.Select(x => x.UserIdentityId).ToArrayAsync(cancellationToken: token), token);
+
+                if (usersGet.Response is not null && usersGet.Response.Length != 0)
+                    foreach (UserInfoModel usr in usersGet.Response.Where(x => x.TelegramId.HasValue))
+                    {
+                        SendTextMessageTelegramBotModel tgMsgSend = new()
+                        {
+                            From = "Уведомление",
+                            Message = $"Сообщение в [наблюдаемом] чате: {_baseUri}web-chats/room-{req.DialogOwnerId}\n`{req.Text}`",
+                            UserTelegramId = usr.TelegramId!.Value,
+                        };
+                        await tgRepo.SendTextMessageTelegramAsync(tgMsgSend, waitResponse: false, token: token);
+                    }
+            }
+        }
 
         return new()
         {

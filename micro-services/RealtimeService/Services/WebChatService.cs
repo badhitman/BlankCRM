@@ -2,17 +2,23 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using DbcLib;
 using Microsoft.EntityFrameworkCore;
 using MQTTnet.Server;
 using SharedLib;
+using DbcLib;
 
 namespace RealtimeService;
 
 /// <summary>
 /// WebChatService
 /// </summary>
-public partial class WebChatService(IDbContextFactory<RealtimeContext> mainDbFactory, IIdentityTransmission identityRepo, IEventsWebChatsNotifies notifyWebChatRepo, MqttServer mqttServerRepo)
+public partial class WebChatService(
+    IDbContextFactory<RealtimeContext> mainDbFactory,
+    IIdentityTransmission identityRepo,
+    IEventsWebChatsNotifies notifyWebChatRepo,
+    ITelegramTransmission tgRepo,
+    IParametersStorageTransmission StorageRepo,
+    MqttServer mqttServerRepo)
     : IWebChatService
 {
     /// <inheritdoc/>
@@ -54,6 +60,7 @@ public partial class WebChatService(IDbContextFactory<RealtimeContext> mainDbFac
                 InitiatorIdentityId = req.UserIdentityId,
                 Language = req.Language,
                 UserAgent = req.UserAgent,
+                BaseUri = req.BaseUri,
             };
 
         readSession ??= new()
@@ -65,12 +72,24 @@ public partial class WebChatService(IDbContextFactory<RealtimeContext> mainDbFac
             InitiatorIdentityId = req.UserIdentityId,
             Language = req.Language,
             UserAgent = req.UserAgent,
+            BaseUri = req.BaseUri,
         };
 
         if (readSession.Id == 0)
         {
             await context.Dialogs.AddAsync(readSession, cancellationToken);
             await context.SaveChangesAsync(cancellationToken);
+            TResponseModel<long?> notifyTg = await StorageRepo.ReadParameterAsync<long?>(GlobalStaticCloudStorageMetadata.WebChatNotificationTelegramForNewDialog, cancellationToken);
+            if (notifyTg.Success() && notifyTg.Response.HasValue)
+            {
+                SendTextMessageTelegramBotModel tgMsgSend = new()
+                {
+                    From = "Уведомление",
+                    Message = $"Создан новый чат: {req.BaseUri}web-chats/room-{readSession.Id}",
+                    UserTelegramId = notifyTg.Response.Value,
+                };
+                await tgRepo.SendTextMessageTelegramAsync(tgMsgSend, waitResponse: false, token: cancellationToken);
+            }
         }
         else
         {

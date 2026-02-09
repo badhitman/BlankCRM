@@ -25,6 +25,9 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
     IWebChatService WebChatRepo { get; set; } = default!;
 
     [Inject]
+    NavigationManager NavRepo { get; set; } = default!;
+
+    [Inject]
     IEventsWebChatsNotifies EventsWebChatsHandleRepo { get; set; } = default!;
 
     [Inject]
@@ -181,6 +184,7 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
             UserIdentityId = CurrentUserSession?.UserId,
             UserAgent = UserAgent.UserAgent,
             Language = UserAgent.Language,
+            BaseUri = NavRepo.BaseUri,
         });
         dialogSession = initSessionTicket.Response;
         dialogSessionEdit = GlobalTools.CreateDeepCopy(dialogSession);

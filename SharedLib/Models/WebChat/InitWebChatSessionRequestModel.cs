@@ -24,4 +24,6 @@ public class InitWebChatSessionRequestModel
 
     /// <inheritdoc/>
     public required string? Language { get; set; }
+    /// <inheritdoc/>
+    public required string BaseUri { get; set; }
 }
