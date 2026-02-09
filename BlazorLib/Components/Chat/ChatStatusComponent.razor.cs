@@ -77,6 +77,7 @@ public partial class ChatStatusComponent : BlazorBusyComponentBaseAuthModel
         await StateEchoWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.StateEchoWebChatNotifyReceive, DialogId.ToString()), StateEchoWebChatEventHandle, LayoutContainerId, null, isMute: true);
         await ConnectionOpenWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.ConnectionOpenWebChatNotifyReceive, DialogId.ToString()), ConnectionOpenWebChatEventHandle, LayoutContainerId, null, isMute: true);
         await ConnectionCloseWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.ConnectionCloseWebChatNotifyReceive, DialogId.ToString()), ConnectionCloseWebChatEventHandle, LayoutContainerId, null, isMute: true);
+        //
         await EventsWebChatsHandleRepo.StateGetWebChatAsync(new() { DialogId = DialogId });
     }
 
