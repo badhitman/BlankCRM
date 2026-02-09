@@ -29,7 +29,7 @@
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Активность">
-            <MudLink Href="@($"/web-chats/room-{context.Id}")">
+            <MudLink Href="@($"/web-chats/room-{context.Id}")" Class="me-2">
                 @context.LastMessageAtUTC?.GetCustomTime().ToString()
                 <span class="ms-1">@context.LastOnlineAtUTC.GetCustomTime()</span>
             </MudLink>
