@@ -33,7 +33,10 @@
                 @context.LastMessageAtUTC?.GetCustomTime().ToString()
                 <span class="ms-1">@context.LastOnlineAtUTC.GetCustomTime()</span>
             </MudLink>
-            <ChatStatusComponent @key="Guid.NewGuid()" DialogId="context.Id" OnLoadHandler="() => { }" />
+            @if (!IsBusyProgress)
+            {
+                <ChatStatusComponent DialogId="context.Id" OnLoadHandler="() => { }" />
+            }
         </MudTd>
         <MudTd DataLabel="Инициатор">
             @if (string.IsNullOrWhiteSpace(context.InitiatorIdentityId))

@@ -28,11 +28,14 @@
                         <sup class="ms-2">@roomEdit.InitiatorHumanName</sup>
                     }
                 </code>
-                <sup class="ms-2">
-                    <ChatStatusComponent DialogId="DialogId"
-                                         @ref="chatStatusRef"
-                                         OnLoadHandler="OnLoadStatusAction" />
-                </sup>
+                @if (!IsBusyProgress)
+                {
+                    <sup class="ms-2">
+                        <ChatStatusComponent DialogId="DialogId"
+                                             @ref="chatStatusRef"
+                                             OnLoadHandler="OnLoadStatusAction" />
+                    </sup>
+                }
                 <MudSpacer />
                 <span class="btn-group" role="group" aria-label="Basic example">
                     <button type="button"
