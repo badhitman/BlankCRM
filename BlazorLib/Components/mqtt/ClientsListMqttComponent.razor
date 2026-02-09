@@ -1,59 +1,52 @@
-﻿@inherits BlazorBusyComponentBaseAuthModel
+﻿@using MudBlazor
+@inherits BlazorBusyComponentBaseAuthModel
 
-@if (clients is not null && clients.Count != 0)
-{
-    <table class="table table-striped table-hover">
-        <thead>
-            <tr>
-                <th scope="col" @onclick="Reload" style="cursor:pointer;">
-                    @if (IsBusyProgress)
-                    {
-                        <div class="spinner-border spinner-border-sm" role="status">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
-                    }
-                    else
-                    {
-                        <text>#</text>
-                    }
-                </th>
-                <th scope="col">Sent</th>
-                <th scope="col">Received</th>
-                <th scope="col">Last Packet Sent</th>
-               @*  <th scope="col">Remote End Point</th> *@
-                <th scope="col">Connected</th>
-                <th scope="col">Sent Application Messages Count</th>
-                <th scope="col">Last NonKeep Alive Packet Received</th>
-                <th scope="col">Last Packet Received</th>
-                <th scope="col">Received Application Messages Count</th>
-                <th scope="col">Protocol Version</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (MqttClientModel _cli in clients)
-            {
-                <tr>
-                    <th scope="row">@_cli.Id</th>
-                    <td>
-                        <span style="display: block;">
-                            @_cli.BytesSent&nbsp;(@GlobalToolsStandard.SizeDataAsString(_cli.SentPacketsCount).Replace(" ", "_"))
-                        </span>
-                    </td>
-                    <td>
-                        <span style="display: block;">
-                            @_cli.ReceivedPacketsCount&nbsp;(@GlobalToolsStandard.SizeDataAsString(_cli.BytesReceived).Replace(" ", "_"))
-                        </span>
-                    </td>
-                    <td>@_cli.LastPacketSentTimestamp</td>
-                    @* <td>@_cli.RemoteEndPoint</td> *@
-                    <td>@_cli.ConnectedTimestamp</td>
-                    <td>@_cli.SentApplicationMessagesCount</td>
-                    <td>@_cli.LastNonKeepAlivePacketReceivedTimestamp</td>
-                    <td>@_cli.LastPacketReceivedTimestamp</td>
-                    <td>@_cli.ReceivedApplicationMessagesCount</td>
-                    <td>@_cli.ProtocolVersion</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+<MudTable Items="@clients" Dense Hover Bordered Striped Filter="new Func<MqttClientModel, bool>(FilterFunc1)">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Подключения</MudText>
+        <MudSpacer />
+        <MudTextField @bind-Value="searchString1"
+                      Placeholder="Search"
+                      Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search"
+                      IconSize="Size.Medium"
+                      Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Id</MudTh>
+        <MudTh>Sent</MudTh>
+        <MudTh>Received</MudTh>
+        <MudTh>Last Packet Sent</MudTh>
+        <MudTh>Remote End Point</MudTh>
+        <MudTh>Connected</MudTh>
+        <MudTh>Sent Application Messages Count</MudTh>
+        <MudTh>Last NonKeep Alive Packet Received</MudTh>
+        <MudTh>Last Packet Received</MudTh>
+        <MudTh>Received Application Messages Count</MudTh>
+        <MudTh>Protocol Version</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Id"><ClientIdViewMqttComponent ClientId="@context.Id" /></MudTd>
+        <MudTd DataLabel="Sent">
+            <span style="display: block;">
+                @context.BytesSent&nbsp;(@GlobalToolsStandard.SizeDataAsString(context.SentPacketsCount).Replace(" ", "_"))
+            </span>
+        </MudTd>
+        <MudTd DataLabel="Received">
+            <span style="display: block;">
+                @context.ReceivedPacketsCount&nbsp;(@GlobalToolsStandard.SizeDataAsString(context.BytesReceived).Replace(" ", "_"))
+            </span>
+        </MudTd>
+        <MudTd DataLabel="Last Packet Sent">@context.LastPacketSentTimestamp</MudTd>
+        <MudTd DataLabel="Remote End Point">@context.RemoteEndPoint</MudTd>
+        <MudTd DataLabel="Connected">@context.ConnectedTimestamp</MudTd>
+        <MudTd DataLabel="Sent Application Messages Count">@context.SentApplicationMessagesCount</MudTd>
+        <MudTd DataLabel="Last NonKeep Alive Packet Received">@context.LastNonKeepAlivePacketReceivedTimestamp</MudTd>
+        <MudTd DataLabel="Last Packet Received">@context.LastPacketReceivedTimestamp</MudTd>
+        <MudTd DataLabel="Received Application Messages Count">@context.ReceivedApplicationMessagesCount</MudTd>
+        <MudTd DataLabel="Protocol Version">@context.ProtocolVersion</MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>

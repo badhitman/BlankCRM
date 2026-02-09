@@ -1,0 +1,15 @@
+﻿@if (segments is null)
+{
+    @ClientId
+}
+else
+{
+    <code @onclick="() => showId = !showId">@segments[0]</code>
+    <text>&nbsp;</text>
+    <span @onclick="() => showId = !showId">@segments[1]</span>
+    <text>&nbsp;</text>
+    @if (showId)
+    {
+        <small @onclick="() => showId = !showId">@segments[2]</small>
+    }
+}
