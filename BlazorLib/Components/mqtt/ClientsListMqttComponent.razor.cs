@@ -72,7 +72,7 @@ public partial class ClientsListMqttComponent : BlazorBusyComponentBaseAuthModel
         {
             clients.Clear();
             if (res.Response is not null && res.Response.Count != 0)
-                clients = res.Response;
+                clients.AddRange(res.Response.OrderByDescending(x => x.LastPacketSentTimestamp.Ticks + x.LastPacketSentTimestamp.Ticks));
         }
         await SetBusyAsync(false);
     }
