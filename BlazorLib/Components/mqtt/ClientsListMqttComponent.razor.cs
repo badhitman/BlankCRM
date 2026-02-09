@@ -4,7 +4,6 @@
 
 using Microsoft.AspNetCore.Components;
 using SharedLib;
-using static MudBlazor.CategoryTypes;
 
 namespace BlazorLib.Components.mqtt;
 

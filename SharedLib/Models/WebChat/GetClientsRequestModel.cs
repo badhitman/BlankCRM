@@ -9,5 +9,4 @@ namespace SharedLib;
 /// </summary>
 public class GetClientsRequestModel
 {
-
 }
