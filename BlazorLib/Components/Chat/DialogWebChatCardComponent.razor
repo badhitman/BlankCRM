@@ -129,7 +129,7 @@
 
             <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-6">
                 <MudTabPanel Text="Переписка">
-                    <MessagesForWebChatComponent DialogWebChat="dialogEdit" />
+                    <MessagesForWebChatComponent DialogWebChat="dialogEdit" @ref="messagesRef" />
                 </MudTabPanel>
                 <MudTabPanel Text="Заметки">
                     <CKEditorParameterStorageComponent Label="Комментарий"
