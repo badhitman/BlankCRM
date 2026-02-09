@@ -307,6 +307,26 @@ public static partial class GlobalStaticCloudStorageMetadata
     };
 
     /// <summary>
+    /// Создание новой сессии (web chat)
+    /// </summary>
+    public static StorageMetadataModel WebChatNotificationTelegramForNewDialog => new()
+    {
+        ApplicationName = $"{Routes.WEB_CONTROLLER_NAME}-{Routes.CHATS_CONTROLLER_NAME}",
+        PropertyName = $"{Routes.TELEGRAM_CONTROLLER_NAME}-{Routes.NOTIFICATIONS_CONTROLLER_NAME}",
+        PrefixPropertyName = $"{Routes.DIALOG_CONTROLLER_NAME}-{Routes.INIT_ACTION_NAME}",
+    };
+
+    /// <summary>
+    /// Новые сообщения (web chat)
+    /// </summary>
+    public static StorageMetadataModel WebChatNotificationTelegramForNewMessage => new()
+    {
+        ApplicationName = $"{Routes.WEB_CONTROLLER_NAME}-{Routes.CHATS_CONTROLLER_NAME}",
+        PropertyName = $"{Routes.TELEGRAM_CONTROLLER_NAME}-{Routes.NOTIFICATIONS_CONTROLLER_NAME}",
+        PrefixPropertyName = $"{Routes.MESSAGES_CONTROLLER_NAME}-{Routes.INIT_ACTION_NAME}",
+    };
+
+    /// <summary>
     /// Уведомления Telegram о созданных заявках
     /// </summary>
     public static StorageMetadataModel HelpDeskNotificationTelegramForCreateIssue => new()
@@ -494,7 +514,7 @@ public static partial class GlobalStaticCloudStorageMetadata
     {
         ApplicationName = Path.Combine(Routes.WEB_CONTROLLER_NAME, Routes.CHAT_CONTROLLER_NAME),
         PropertyName = Path.Combine(Routes.COMMENT_CONTROLLER_NAME),
-         OwnerPrimaryKey = webChatId,
+        OwnerPrimaryKey = webChatId,
     };
 
     /// <summary>

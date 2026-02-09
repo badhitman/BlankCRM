@@ -1,13 +1,23 @@
 ﻿@using BlazorLib.Components.Telegram
-<div class="row row-cols-1 row-cols-md-2 g-1">
+<div class="row row-cols-1 row-cols-md-3 g-1">
     <div class="col">
-        <ChatSelectComponent Title="Переадресация Telegram сообщений (глобально)"
+        <ChatSelectComponent Title="Переадресация Telegram сообщений (HelpDesk глобально)"
                              Subtitle="Для клиентов, на которых ни кто не подписан"
                              KeyStorage="GlobalStaticCloudStorageMetadata.HelpDeskNotificationTelegramGlobalForIncomingMessage" />
     </div>
     <div class="col">
-        <ChatSelectComponent Title="Новые заявки"
+        <ChatSelectComponent Title="Новая заявка HelpDesk"
                              Subtitle="Уведомления TelegramBot при создании новых заявок"
                              KeyStorage="GlobalStaticCloudStorageMetadata.HelpDeskNotificationTelegramForCreateIssue" />
+    </div>
+    <div class="col">
+        <ChatSelectComponent Title="Новый чат"
+                             Subtitle="Уведомления TelegramBot при создании новых чатов"
+                             KeyStorage="GlobalStaticCloudStorageMetadata.WebChatNotificationTelegramForNewDialog" />
+    </div>
+    <div class="col">
+        <ChatSelectComponent Title="Сообщения инициатора в [без-хозных] чатах"
+                             Subtitle="Уведомления TelegramBot о первом сообщениях в чате [без наблюдателей]"
+                             KeyStorage="GlobalStaticCloudStorageMetadata.WebChatNotificationTelegramForNewMessage" />
     </div>
 </div>
