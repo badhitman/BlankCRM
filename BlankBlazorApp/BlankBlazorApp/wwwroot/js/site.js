@@ -184,10 +184,10 @@ window.effects = {
         // Run the effect
         $(`#${domId}`).effect(selectedEffect, options, 500);
     },
-    Toast: (heading, text, icon, loader, loaderBg) => {
+    Toast: (heading, textMsg, icon, loader, loaderBg) => {
         $.toast({
             heading: heading,
-            text: text,
+            text: textMsg,
             icon: icon,
             loader: loader,
             loaderBg: loaderBg
