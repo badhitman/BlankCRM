@@ -12,7 +12,7 @@
     <MudProgressLinear Color="Color.Primary" Indeterminate />
 }
 
-@if (CurrentRoom is not null && roomEdit is not null)
+@if (CurrentDialog is not null && roomEdit is not null)
 {
     <div class="card">
         <div class="card-body">
@@ -41,8 +41,7 @@
                     <button type="button"
                             class="btn btn-outline-info bi bi-arrow-clockwise"
                             @onclick="StateChatRequest"
-                            title="Проверить состояние области чата">
-                        Статус чата
+                            title="Проверить состояние области чата">                        
                     </button>
                     @if (chatStatusRef?.StateWebChat is not null && !chatStatusRef.StateWebChat.StateDialog)
                     {
@@ -54,19 +53,19 @@
                     }
                     @if (RoomIsEdit)
                     {
-                        <button class="btn btn-outline-primary"
+                        <button class="btn btn-outline-primary bi bi-escape"
                                 type="button"
                                 title="Перезагрузить данные с сервера"
                                 @onclick="ReloadRoom">
                             Отмена
                         </button>
                     }
-                    <button class="btn btn-outline-@(RoomIsEdit ? "success" : "secondary")"
+                    <button class="btn btn-outline-@(RoomIsEdit ? "success" : "secondary") bi bi-floppy-fill"
                             type="button"
                             disabled="@RoomNotEdit"
                             title="Сохранить изменения чата"
                             @onclick="SaveRoom">
-                        Сохранить
+                        
                     </button>
                 </span>
             </h5>

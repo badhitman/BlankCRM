@@ -37,18 +37,18 @@ public partial class DialogWebChatCardComponent : BlazorBusyComponentUsersCached
     }
 
     UserSelectInputComponent? userSelectorRef;
-    DialogWebChatModelDB? CurrentRoom, roomEdit;
+    DialogWebChatModelDB? CurrentDialog, roomEdit;
     bool RoomIsEdit
     {
         get
         {
-            if (CurrentRoom is null || roomEdit is null)
+            if (CurrentDialog is null || roomEdit is null)
                 return false;
 
             bool isEq =
-                ((string.IsNullOrWhiteSpace(CurrentRoom.InitiatorContacts) && string.IsNullOrWhiteSpace(roomEdit.InitiatorContacts)) || CurrentRoom.InitiatorContacts == roomEdit.InitiatorContacts) &&
-                ((string.IsNullOrWhiteSpace(CurrentRoom.InitiatorHumanName) && string.IsNullOrWhiteSpace(roomEdit.InitiatorHumanName)) || CurrentRoom.InitiatorHumanName == roomEdit.InitiatorHumanName) &&
-                ((string.IsNullOrWhiteSpace(CurrentRoom.InitiatorIdentityId) && string.IsNullOrWhiteSpace(roomEdit.InitiatorIdentityId)) || CurrentRoom.InitiatorIdentityId == roomEdit.InitiatorIdentityId);
+                ((string.IsNullOrWhiteSpace(CurrentDialog.InitiatorContacts) && string.IsNullOrWhiteSpace(roomEdit.InitiatorContacts)) || CurrentDialog.InitiatorContacts == roomEdit.InitiatorContacts) &&
+                ((string.IsNullOrWhiteSpace(CurrentDialog.InitiatorHumanName) && string.IsNullOrWhiteSpace(roomEdit.InitiatorHumanName)) || CurrentDialog.InitiatorHumanName == roomEdit.InitiatorHumanName) &&
+                ((string.IsNullOrWhiteSpace(CurrentDialog.InitiatorIdentityId) && string.IsNullOrWhiteSpace(roomEdit.InitiatorIdentityId)) || CurrentDialog.InitiatorIdentityId == roomEdit.InitiatorIdentityId);
 
             return !isEq;
         }
@@ -106,11 +106,18 @@ public partial class DialogWebChatCardComponent : BlazorBusyComponentUsersCached
             SenderActionUserId = CurrentUserSession.UserId,
             Payload = [DialogId]
         });
-        CurrentRoom = res.Response?.First();
-        roomEdit = GlobalTools.CreateDeepCopy(CurrentRoom);
+        CurrentDialog = res.Response?.FirstOrDefault();
+        roomEdit = GlobalTools.CreateDeepCopy(CurrentDialog);
 
-        if (!string.IsNullOrWhiteSpace(CurrentRoom?.InitiatorIdentityId))
-            await CacheUsersUpdate([CurrentRoom.InitiatorIdentityId]);
+        if(CurrentDialog is null)
+        {
+            await SetBusyAsync(false);
+            SnackBarRepo.Error("CurrentRoom is null");
+            return;
+        }
+
+        if (!string.IsNullOrWhiteSpace(CurrentDialog?.InitiatorIdentityId))
+            await CacheUsersUpdate([CurrentDialog.InitiatorIdentityId]);
 
         if (userSelectorRef is not null)
             await userSelectorRef.SetSelectedUser(roomEdit?.InitiatorIdentityId);
