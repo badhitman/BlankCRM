@@ -88,6 +88,7 @@
                             class="btn btn-outline-info bi bi-key-fill"
                             @onclick="async () => await JoinToChat(true)"
                             title="Взять в работу">
+                        Взять в работу
                     </button>
                 }
                 @if (CurrentUserSession is not null && q?.Any(x => x.UserIdentityId == CurrentUserSession.UserId) != true)
@@ -96,12 +97,13 @@
                             class="btn btn-outline-info bi bi-box-arrow-up-right"
                             @onclick="async () => await JoinToChat(false)"
                             title="Вступить в чат">
+                        Присоединиться к чату
                     </button>
                 }
                 <button type="button"
                         class="btn btn-outline-info bi bi-arrow-clockwise"
                         @onclick="StateChatRequest"
-                        title="Проверить состояние области чата">
+                        title="Проверить состояние области чата">Получить статус
                 </button>
                 @if (chatStatusRef?.StateWebChat is not null && !chatStatusRef.StateWebChat.StateDialog)
                 {
@@ -109,6 +111,7 @@
                             class="btn btn-outline-info bi bi-chat-text"
                             @onclick="SetStateChatRequest"
                             title="Открыть диалог чата клиенту">
+                            Открыть окно чата
                     </button>
                 }
                 @if (RoomIsEdit)
@@ -125,6 +128,7 @@
                         disabled="@RoomNotEdit"
                         title="Сохранить изменения чата"
                         @onclick="SaveRoom">
+                        Записать
                 </button>
             </div>
 
