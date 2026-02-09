@@ -50,32 +50,37 @@ public partial class WebChatService : IWebChatService
         if (await context.UsersDialogsJoins.AnyAsync(x => x.UserIdentityId == req.Payload.UserIdentityId && x.DialogJoinId == req.Payload.DialogJoinId && x.OutDateUTC == null, cancellationToken: token))
             return ResponseBaseModel.CreateSuccess("Пользователь уже участвует в диалоге!");
 
-        TResponseModel<UserInfoModel[]> getUser = await identityRepo.GetUsersOfIdentityAsync([req.Payload.UserIdentityId], token);
-
         UserJoinDialogWebChatModelDB joinDb = UserJoinDialogWebChatModelDB.Build(req.Payload);
         joinDb.JoinedDateUTC = DateTime.UtcNow;
 
         await using IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
         await context.UsersDialogsJoins.AddAsync(joinDb, token);
-        string textMsg = $"К чату присоединялся `{getUser.Response?.FirstOrDefault(x => x.UserId == req.Payload.UserIdentityId)?.UserName ?? req.Payload.UserIdentityId}`";
-        await context.Messages.AddAsync(new()
+        await context.SaveChangesAsync(token);
+
+        TResponseModel<UserInfoModel[]> getUser = await identityRepo.GetUsersOfIdentityAsync([req.Payload.UserIdentityId], token);
+        UserInfoModel? userData = getUser.Response?.FirstOrDefault(x => x.UserId == req.Payload.UserIdentityId);
+        string textMsg = $"К чату присоединился `{userData?.UserName ?? req.Payload.UserIdentityId}`";
+
+        MessageWebChatModelDB newMsgDb = new()
         {
             Text = textMsg,
             CreatedAtUTC = DateTime.UtcNow,
             DialogOwnerId = req.Payload.DialogJoinId,
             SenderUserIdentityId = GlobalStaticConstantsRoles.Roles.System,
-        }, token);
+        };
+        TResponseModel<int> resAddingMsg = await CreateMessageWebChatAsync(newMsgDb, token);
+        if (!resAddingMsg.Success() || resAddingMsg.Response < 1)
+        {
+            await transaction.RollbackAsync(token);
+            return new() { Messages = resAddingMsg.Messages };
+        }
 
-        await context.SaveChangesAsync(token);
-
-        await context.Dialogs
-            .Where(x => x.Id == req.Payload.DialogJoinId)
-            .ExecuteUpdateAsync(set => set
+        IQueryable<DialogWebChatModelDB> q = context.Dialogs
+            .Where(x => x.Id == req.Payload.DialogJoinId);
+        await q.ExecuteUpdateAsync(set => set
                 .SetProperty(p => p.LastMessageAtUTC, DateTime.UtcNow), cancellationToken: token);
 
         await transaction.CommitAsync(token);
-
-        await notifyWebChatRepo.NewMessageWebChatAsync(new() { DialogId = req.Payload.DialogJoinId, TextMessage = textMsg }, token);
         return ResponseBaseModel.CreateSuccess("Ok");
     }
 
@@ -94,17 +99,23 @@ public partial class WebChatService : IWebChatService
             .ExecuteUpdateAsync(set => set.SetProperty(p => p.OutDateUTC, DateTime.UtcNow), cancellationToken: token);
 
         TResponseModel<UserInfoModel[]> getUser = await identityRepo.GetUsersOfIdentityAsync([req.SenderActionUserId], token);
+        UserInfoModel? userData = getUser.Response?.FirstOrDefault(x => x.UserId == req.SenderActionUserId);
         int dialogId = await q.Select(x => x.DialogJoinId).FirstAsync(cancellationToken: token);
         string textMsg = $"Из чата вышел `{getUser.Response?.FirstOrDefault(x => x.UserId == req.SenderActionUserId)?.UserName ?? req.SenderActionUserId}`";
-        await context.Messages.AddAsync(new()
+
+        MessageWebChatModelDB newMsgDb = new()
         {
             Text = textMsg,
             CreatedAtUTC = DateTime.UtcNow,
             DialogOwnerId = dialogId,
             SenderUserIdentityId = GlobalStaticConstantsRoles.Roles.System,
-        }, token);
-
-        await context.SaveChangesAsync(token);
+        };
+        TResponseModel<int> resAddingMsg = await CreateMessageWebChatAsync(newMsgDb, token);
+        if (!resAddingMsg.Success() || resAddingMsg.Response < 1)
+        {
+            await transaction.RollbackAsync(token);
+            return new() { Messages = resAddingMsg.Messages };
+        }
 
         await context.Dialogs
             .Where(x => x.Id == req.Payload)
@@ -112,7 +123,19 @@ public partial class WebChatService : IWebChatService
                 .SetProperty(p => p.LastMessageAtUTC, DateTime.UtcNow), cancellationToken: token);
 
         await transaction.CommitAsync(token);
-        await notifyWebChatRepo.NewMessageWebChatAsync(new() { DialogId = dialogId, TextMessage = textMsg }, token);
+
+        if (userData?.TelegramId.HasValue == true)
+        {
+
+            SendTextMessageTelegramBotModel tgMsgSend = new()
+            {
+                From = "Уведомление",
+                Message = $"Вы покинули чат: {await q.Select(x => x.DialogJoin!.BaseUri).FirstAsync(cancellationToken: token)}web-chats/room-{req.Payload}",
+                UserTelegramId = userData.TelegramId.Value,
+            };
+            await tgRepo.SendTextMessageTelegramAsync(tgMsgSend, waitResponse: false, token: token);
+        }
+
         return ResponseBaseModel.CreateSuccess("Ok");
     }
 }
