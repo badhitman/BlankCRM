@@ -72,6 +72,8 @@ public class EventNotifyReceive<T> : IEventNotifyReceive<T>, IAsyncDisposable
                 sr = content.Equals("null", StringComparison.OrdinalIgnoreCase)
                 ? default
                 : JsonConvert.DeserializeObject<T?>(content);
+                e.ReasonCode = MqttApplicationMessageReceivedReasonCode.Success;
+                e.ResponseReasonString = typeof(T).Name;
             }
             catch (Exception ex)
             {

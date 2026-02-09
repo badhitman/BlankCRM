@@ -85,6 +85,8 @@ public class MQTTListenerService<TQueue, TRequest, TResponse>
                 ? default
                 : JsonConvert.DeserializeObject<TRequest?>(content);
                 answer.Response = await receiveService.ResponseHandleActionAsync(sr);
+                e.ReasonCode = MqttApplicationMessageReceivedReasonCode.Success;
+                e.ResponseReasonString = typeof(TRequest).Name;
             }
             catch (Exception ex)
             {
