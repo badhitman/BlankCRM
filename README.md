@@ -143,7 +143,7 @@ dotnet run --project BlankCRM.AppHost/BlankCRM.AppHost.csproj --publisher manife
 - Служба равно как и другие службы использует RabbitMQ для обслуживания входящих команд, на которые она зарегистрировала свои обработчики[^1]
 
 #### [RealtimeService](https://github.com/badhitman/BlankCRM/tree/main/micro-services/RealtimeService)
-- MQTT сервер для организации функциональность "реального времени". Фронт-клиент подключён к MQTT, а бэк может взаимодействовать с клиентами напрямую по собственной инициативе.
+- MQTT сервер для организации функциональности "реального времени". Фронт-клиент подключён к MQTT, а бэк может взаимодействовать с клиентами напрямую по собственной инициативе. Бэк может отправить сообщение/команду в любой Blazor компонент.
 - WebChat: чат между посетителями сайта и сотрудниками компании (служба поддержки).
 
 #### [IdentityService](https://github.com/badhitman/BlankCRM/tree/main/micro-services/IdentityService)
