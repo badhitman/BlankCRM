@@ -24,13 +24,13 @@ public partial class DialogWebChatCardComponent : BlazorBusyComponentUsersCached
     public int DialogId { get; set; }
 
 
-    readonly string LayoutContainerId = Guid.NewGuid().ToString();
     ChatStatusComponent? chatStatusRef;
 
     async Task SetStateChatRequest(Microsoft.AspNetCore.Components.Web.MouseEventArgs args)
             => await EventsWebChatsHandleRepo.StateSetWebChatAsync(new StateWebChatModel() { DialogId = DialogId, StateDialog = true });
     async Task StateChatRequest(Microsoft.AspNetCore.Components.Web.MouseEventArgs args)
     {
+        chatStatusRef = null;
         await EventsWebChatsHandleRepo.StateGetWebChatAsync(new GetStateWebChatEventModel() { DialogId = DialogId });
     }
 
@@ -52,7 +52,6 @@ public partial class DialogWebChatCardComponent : BlazorBusyComponentUsersCached
         }
     }
     bool RoomNotEdit => !RoomIsEdit;
-
 
 
     async Task SaveRoom()
