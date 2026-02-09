@@ -31,7 +31,9 @@ public partial class DialogWebChatCardComponent : BlazorBusyComponentUsersCached
     async Task StateChatRequest(Microsoft.AspNetCore.Components.Web.MouseEventArgs args)
     {
         chatStatusRef = null;
+        await SetBusyAsync();
         await EventsWebChatsHandleRepo.StateGetWebChatAsync(new GetStateWebChatEventModel() { DialogId = DialogId });
+        await SetBusyAsync(false);
     }
 
     UserSelectInputComponent? userSelectorRef;
