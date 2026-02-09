@@ -110,6 +110,7 @@ public partial class MessagesForWebChatComponent : BlazorBusyComponentUsersCache
             CreatedAtUTC = DateTime.UtcNow,
             DialogOwnerId = DialogWebChat.Id,
             InitiatorMessageSender = false,
+            AttachesFiles = loadedFiles.Count == 0 ? null : []
         };
         muteSound = true;
         await SetBusyAsync();

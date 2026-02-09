@@ -186,11 +186,11 @@ window.effects = {
     },
     Toast: (heading, text, icon, loader, loaderBg) => {
         $.toast({
-            heading: 'Information',
-            text: 'Loaders are enabled by default. Use `loader`, `loaderBg` to change the default behavior',
-            icon: 'info',
-            loader: true,        // Change it to false to disable loader
-            loaderBg: '#9EC600'  // To change the background
+            heading: heading,
+            text: text,
+            icon: icon,
+            loader: loader,
+            loaderBg: loaderBg
         })
     }
 }

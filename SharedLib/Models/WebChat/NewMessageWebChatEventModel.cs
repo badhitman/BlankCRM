@@ -11,4 +11,7 @@ public class NewMessageWebChatEventModel
 {
     /// <inheritdoc/>
     public int DialogId { get; set; }
+
+    /// <inheritdoc/>
+    public required string TextMessage { get; set; }
 }

@@ -57,9 +57,10 @@ public partial class WebChatService : IWebChatService
 
         await using IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
         await context.UsersDialogsJoins.AddAsync(joinDb, token);
+        string textMsg = $"К чату присоединялся `{getUser.Response?.FirstOrDefault(x => x.UserId == req.Payload.UserIdentityId)?.UserName ?? req.Payload.UserIdentityId}`";
         await context.Messages.AddAsync(new()
         {
-            Text = $"К чату присоединялся `{getUser.Response?.FirstOrDefault(x => x.UserId == req.Payload.UserIdentityId)?.UserName ?? req.Payload.UserIdentityId}`",
+            Text = textMsg,
             CreatedAtUTC = DateTime.UtcNow,
             DialogOwnerId = req.Payload.DialogJoinId,
             SenderUserIdentityId = GlobalStaticConstantsRoles.Roles.System,
@@ -74,7 +75,7 @@ public partial class WebChatService : IWebChatService
 
         await transaction.CommitAsync(token);
 
-        await notifyWebChatRepo.NewMessageWebChatAsync(new() { DialogId = req.Payload.DialogJoinId }, token);
+        await notifyWebChatRepo.NewMessageWebChatAsync(new() { DialogId = req.Payload.DialogJoinId, TextMessage = textMsg }, token);
         return ResponseBaseModel.CreateSuccess("Ok");
     }
 
@@ -94,9 +95,10 @@ public partial class WebChatService : IWebChatService
 
         TResponseModel<UserInfoModel[]> getUser = await identityRepo.GetUsersOfIdentityAsync([req.SenderActionUserId], token);
         int dialogId = await q.Select(x => x.DialogJoinId).FirstAsync(cancellationToken: token);
+        string textMsg = $"Из чата вышел `{getUser.Response?.FirstOrDefault(x => x.UserId == req.SenderActionUserId)?.UserName ?? req.SenderActionUserId}`";
         await context.Messages.AddAsync(new()
         {
-            Text = $"Из чата вышел `{getUser.Response?.FirstOrDefault(x => x.UserId == req.SenderActionUserId)?.UserName ?? req.SenderActionUserId}`",
+            Text = textMsg,
             CreatedAtUTC = DateTime.UtcNow,
             DialogOwnerId = dialogId,
             SenderUserIdentityId = GlobalStaticConstantsRoles.Roles.System,
@@ -110,7 +112,7 @@ public partial class WebChatService : IWebChatService
                 .SetProperty(p => p.LastMessageAtUTC, DateTime.UtcNow), cancellationToken: token);
 
         await transaction.CommitAsync(token);
-        await notifyWebChatRepo.NewMessageWebChatAsync(new() { DialogId = dialogId }, token);
+        await notifyWebChatRepo.NewMessageWebChatAsync(new() { DialogId = dialogId, TextMessage = textMsg }, token);
         return ResponseBaseModel.CreateSuccess("Ok");
     }
 }

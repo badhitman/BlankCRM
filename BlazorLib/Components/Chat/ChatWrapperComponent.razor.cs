@@ -232,7 +232,10 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
             missingMessages = 0;
 
         if (!ChatDialogOpen)
-            tasks.Add(Task.Run(async () => await JsRuntime.InvokeVoidAsync("effects.JQuery", "shake", "missingMessagesBadge")));
+        {
+            tasks.Add(Task.Run(async () => await JsRuntime.InvokeVoidAsync("effects.JQuery", "pulsate", "missingMessagesBadge")));
+            tasks.Add(Task.Run(async () => await JsRuntime.InvokeVoidAsync("effects.Toast", "Новое сообщение в чате", "text", "info", true, "#9EC600")));
+        }
 
         if (!muteSound)
             tasks.Add(Task.Run(async () => await JsRuntime.InvokeVoidAsync("methods.PlayAudio", "audioPlayerChatWrapperComponent")));

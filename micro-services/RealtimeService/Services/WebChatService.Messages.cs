@@ -28,7 +28,8 @@ public partial class WebChatService : IWebChatService
             .ExecuteUpdateAsync(set => set
                 .SetProperty(p => p.LastMessageAtUTC, DateTime.UtcNow), cancellationToken: token);
 
-        await notifyWebChatRepo.NewMessageWebChatAsync(new() { DialogId = req.DialogOwnerId }, token);
+        if (req.AttachesFiles is null)
+            await notifyWebChatRepo.NewMessageWebChatAsync(new() { DialogId = req.DialogOwnerId, TextMessage = req.Text }, token);
 
         return new()
         {
@@ -49,10 +50,10 @@ public partial class WebChatService : IWebChatService
         await q.ExecuteUpdateAsync(set => set
                 .SetProperty(p => p.IsDisabled, r => !r.IsDisabled), cancellationToken: token);
 
-        await notifyWebChatRepo.NewMessageWebChatAsync(new()
-        {
-            DialogId = await q.Select(x => x.DialogOwnerId).FirstAsync(cancellationToken: token)
-        }, token);
+        //await notifyWebChatRepo.NewMessageWebChatAsync(new()
+        //{
+        //    DialogId = await q.Select(x => x.DialogOwnerId).FirstAsync(cancellationToken: token)
+        //}, token);
 
         return ResponseBaseModel.CreateSuccess("Ok");
     }
@@ -145,7 +146,8 @@ public partial class WebChatService : IWebChatService
 
         await notifyWebChatRepo.NewMessageWebChatAsync(new()
         {
-            DialogId = await q.Select(x => x.DialogOwnerId).FirstAsync(cancellationToken: token)
+            DialogId = await q.Select(x => x.DialogOwnerId).FirstAsync(cancellationToken: token),
+            TextMessage = req.Payload.Text,
         }, token);
 
         return ResponseBaseModel.CreateSuccess("Ok");
