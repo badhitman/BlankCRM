@@ -43,7 +43,10 @@ public partial class MessagesForWebChatComponent : BlazorBusyComponentUsersCache
     string? _textSendMessage;
     MudMenu? _contextMenu;
     MudTable<MessageWebChatModelDB>? tableRef;
-    bool muteSound;
+    
+    /// <inheritdoc/>
+    public bool SoundIsMute { get; set; }
+    
     readonly string LayoutContainerId = Guid.NewGuid().ToString();
 
     private readonly List<IBrowserFile> loadedFiles = [];
@@ -112,7 +115,7 @@ public partial class MessagesForWebChatComponent : BlazorBusyComponentUsersCache
             InitiatorMessageSender = false,
             AttachesFiles = loadedFiles.Count == 0 ? null : []
         };
-        muteSound = true;
+        SoundIsMute = true;
         await SetBusyAsync();
 
         TResponseModel<int> res = await WebChatRepo.CreateMessageWebChatAsync(req);
@@ -228,10 +231,10 @@ public partial class MessagesForWebChatComponent : BlazorBusyComponentUsersCache
             {
                 await tableRef.ReloadServerData();
                 StateHasChanged();
-                if (!muteSound)
+                if (!SoundIsMute)
                     await JsRuntime.InvokeVoidAsync("methods.PlayAudio", "audioPlayerMessagesForWebChatComponent");
                 else
-                    muteSound = false;
+                    SoundIsMute = false;
             });
     }
 

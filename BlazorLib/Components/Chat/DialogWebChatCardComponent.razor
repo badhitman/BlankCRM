@@ -12,20 +12,21 @@
     <MudProgressLinear Color="Color.Primary" Indeterminate />
 }
 
-@if (CurrentDialog is not null && roomEdit is not null)
+@if (currentDialog is not null && dialogEdit is not null)
 {
+    IQueryable<UserJoinDialogWebChatModelDB>? q = dialogEdit.UsersJoins?.Where(x => x.OutDateUTC == null || x.OutDateUTC == default).AsQueryable();
     <div class="card">
         <div class="card-body">
             <h5 class="card-title align-start d-flex">
                 Чат:
                 <code>
-                    @if (!string.IsNullOrWhiteSpace(roomEdit.InitiatorIdentityId))
+                    @if (!string.IsNullOrWhiteSpace(dialogEdit.InitiatorIdentityId))
                     {
-                        <text>@(UsersCache.FirstOrDefault(x => x.UserId == roomEdit.InitiatorIdentityId)?.ToString() ?? roomEdit.InitiatorIdentityId)</text>
+                        <text>@(UsersCache.FirstOrDefault(x => x.UserId == dialogEdit.InitiatorIdentityId)?.ToString() ?? dialogEdit.InitiatorIdentityId)</text>
                     }
                     else
                     {
-                        <sup class="ms-2">@roomEdit.InitiatorHumanName</sup>
+                        <sup class="ms-2">@dialogEdit.InitiatorHumanName</sup>
                     }
                 </code>
                 @if (!IsBusyProgress)
@@ -38,6 +39,22 @@
                 }
                 <MudSpacer />
                 <span class="btn-group" role="group" aria-label="Basic example">
+                    @if (q?.Any() != true)
+                    {
+                        <button type="button"
+                                class="btn btn-outline-info bi bi-key-fill"
+                                @onclick="async () => await JoinToChat(true)"
+                                title="Взять в работу">
+                        </button>
+                    }
+                    @if (CurrentUserSession is not null && q?.Any(x => x.UserIdentityId == CurrentUserSession.UserId) != true)
+                    {
+                        <button type="button"
+                                class="btn btn-outline-info bi bi-box-arrow-up-right"
+                                @onclick="async () => await JoinToChat(false)"
+                                title="Вступить в чат">
+                        </button>
+                    }
                     <button type="button"
                             class="btn btn-outline-info bi bi-arrow-clockwise"
                             @onclick="StateChatRequest"
@@ -56,7 +73,7 @@
                         <button class="btn btn-outline-primary bi bi-escape"
                                 type="button"
                                 title="Перезагрузить данные с сервера"
-                                @onclick="ReloadRoom">
+                                @onclick="ReloadDialog">
                             Отмена
                         </button>
                     }
@@ -68,11 +85,11 @@
                     </button>
                 </span>
             </h5>
-            <h6 class="card-subtitle mb-2 text-body-secondary">
-                @if (roomEdit.UsersJoins is not null && roomEdit.UsersJoins.Count != 0)
+            <h6 class="card-subtitle mb-2 text-body-sDialogdary">
+                @if (q is not null && q.Any())
                 {
                     <text>Сотрудники:</text>
-                    @foreach (UserJoinDialogWebChatModelDB userJ in roomEdit.UsersJoins)
+                    @foreach (UserJoinDialogWebChatModelDB userJ in q)
                     {
                         <span class="badge text-bg-primary me-2">
                             @(UsersCache.FirstOrDefault(x => x.UserId == userJ.UserIdentityId)?.ToString() ?? userJ.UserIdentityId)
@@ -88,7 +105,7 @@
                            class="form-control"
                            id="exampleInputHumanName1"
                            aria-describedby="humanNameHelp"
-                           @bind-value="roomEdit.InitiatorHumanName"
+                           @bind-value="dialogEdit.InitiatorHumanName"
                            @bind-value:event="oninput">
                     <div id="humanNameHelp" class="form-text">Имя для обращения.</div>
                 </MudItem>
@@ -98,29 +115,29 @@
                            class="form-control"
                            id="exampleInputContacts1"
                            aria-describedby="contactsHelp"
-                           @bind-value="roomEdit.InitiatorContacts"
+                           @bind-value="dialogEdit.InitiatorContacts"
                            @bind-value:event="oninput">
                     <div id="contactsHelp" class="form-text">Контакты для связи (Email).</div>
                 </MudItem>
             </MudGrid>
 
             <UserSelectInputComponent SelectHandleAction="SelectUserHandler"
-                                      SelectedUserInit="@roomEdit.InitiatorIdentityId"
+                                      SelectedUserInit="@dialogEdit.InitiatorIdentityId"
                                       IsReadOnly="IsBusyProgress"
                                       @ref="userSelectorRef"
                                       Label="Заказчик" />
 
             <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-6">
                 <MudTabPanel Text="Переписка">
-                    <MessagesForWebChatComponent DialogWebChat="roomEdit" />
+                    <MessagesForWebChatComponent DialogWebChat="dialogEdit" />
                 </MudTabPanel>
                 <MudTabPanel Text="Заметки">
                     <CKEditorParameterStorageComponent Label="Комментарий"
                                                        KeyStorage="@GlobalStaticCloudStorageMetadata.WebChatCommentary(DialogId)" />
                 </MudTabPanel>
-                @if (!string.IsNullOrWhiteSpace(roomEdit.InitiatorIdentityId))
+                @if (!string.IsNullOrWhiteSpace(dialogEdit.InitiatorIdentityId))
                 {
-                    <CascadingValue Value="roomEdit.InitiatorIdentityId" Name="ClientId">
+                    <CascadingValue Value="dialogEdit.InitiatorIdentityId" Name="ClientId">
                         <MudTabPanel Text="Заказы">
                             <RetailOrdersListComponent />
                         </MudTabPanel>
@@ -139,8 +156,8 @@
         </div>
     </div>
     <small class="text-body-secondary">
-        created: @roomEdit.CreatedAtUTC.GetCustomTime() |
-        deadline: @roomEdit.DeadlineUTC.GetCustomTime() |
-        online: @roomEdit.LastOnlineAtUTC.GetCustomTime()
+        created: @dialogEdit.CreatedAtUTC.GetCustomTime() |
+        deadline: @dialogEdit.DeadlineUTC.GetCustomTime() |
+        online: @dialogEdit.LastOnlineAtUTC.GetCustomTime()
     </small>
 }
