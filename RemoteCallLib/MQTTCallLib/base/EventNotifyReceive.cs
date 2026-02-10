@@ -41,7 +41,7 @@ public class EventNotifyReceive<T>(
     /// <inheritdoc/>
     public async Task RegisterAction(string QueueName, Action<T> actNotify, string layoutContainerId, byte[]? userInfoBytes, bool isMute = false, List<KeyValuePair<string, byte[]>>? propertiesValues = null, CancellationToken stoppingToken = default)
     {
-        queueName = QueueName.Replace("\\", "/");
+        queueName = $"{QueueName.Replace("\\", "/")}_{LayoutContainerId}";
         _propertiesValues = propertiesValues;
         _userInfoBytes = userInfoBytes;
         LayoutContainerId = layoutContainerId;
@@ -85,7 +85,7 @@ public class EventNotifyReceive<T>(
 
         try
         {
-            await mqttClient.SubscribeAsync($"{queueName}_{LayoutContainerId}", cancellationToken: stoppingToken);
+            await mqttClient.SubscribeAsync(queueName, cancellationToken: stoppingToken);
             loggerRepo.LogTrace($"{nameof(queueName)}:{queueName}");
         }
         catch (Exception ex)
@@ -102,7 +102,7 @@ public class EventNotifyReceive<T>(
         List<MqttUserProperty> usrProps = [];
         if (_propertiesValues is not null)
             usrProps.AddRange(_propertiesValues.Select(x => new MqttUserProperty(x.Key, x.Value)));
-        await mqttClient.UnsubscribeAsync($"{queueName}_{LayoutContainerId}", cancellationToken: stoppingToken);
+        await mqttClient.UnsubscribeAsync(queueName, cancellationToken: stoppingToken);
         if (mqttClient?.IsConnected == true)
         {
             if (!isMute)
