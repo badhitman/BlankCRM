@@ -94,7 +94,14 @@ public class EventNotifyReceive<T> : IEventNotifyReceive<T>, IAsyncDisposable
         try
         {
             await mqttClient.ConnectAsync(GetMqttClientOptionsBuilder(queueName, isMute), stoppingToken);
-            await mqttClient.SubscribeAsync(queueName, cancellationToken: stoppingToken);
+
+            MqttClientSubscribeOptions subOpt = new()
+            {
+                TopicFilters = [new() { Topic = queueName, QualityOfServiceLevel = MQTTnet.Protocol.MqttQualityOfServiceLevel.AtMostOnce }],
+                UserProperties = [new(Routes.OBJECT_CONTROLLER_NAME, Encoding.UTF8.GetBytes(LayoutContainerId))]
+            };
+
+            await mqttClient.SubscribeAsync(subOpt, cancellationToken: stoppingToken);
             LoggerRepo.LogTrace($"{nameof(queueName)}:{queueName}");
         }
         catch (Exception ex)
@@ -114,6 +121,13 @@ public class EventNotifyReceive<T> : IEventNotifyReceive<T>, IAsyncDisposable
 
         if (mqttClient?.IsConnected == true)
         {
+            MqttClientUnsubscribeOptions unsubscribeOptions = new()
+            {
+                TopicFilters = [queueName],
+                UserProperties = [new(Routes.OBJECT_CONTROLLER_NAME, Encoding.UTF8.GetBytes(LayoutContainerId!))]
+            };
+
+            await mqttClient.UnsubscribeAsync(unsubscribeOptions, stoppingToken);
             if (!isMute)
             {
                 usrProps.Add(new(Routes.USER_CONTROLLER_NAME, _userInfoBytes ?? Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(null))));
