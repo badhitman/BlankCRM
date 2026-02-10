@@ -41,10 +41,10 @@ public class EventNotifyReceive<T>(
     /// <inheritdoc/>
     public async Task RegisterAction(string QueueName, Action<T> actNotify, string layoutContainerId, byte[]? userInfoBytes, bool isMute = false, List<KeyValuePair<string, byte[]>>? propertiesValues = null, CancellationToken stoppingToken = default)
     {
-        queueName = $"{QueueName.Replace("\\", "/")}_{LayoutContainerId}";
+        LayoutContainerId = layoutContainerId;
+        queueName = $"{LayoutContainerId}_{QueueName.Replace("\\", "/")}";
         _propertiesValues = propertiesValues;
         _userInfoBytes = userInfoBytes;
-        LayoutContainerId = layoutContainerId;
         Task ApplicationMessageReceived(MqttApplicationMessageReceivedEventArgs e)
         {
             string content = Encoding.UTF8.GetString(e.ApplicationMessage.Payload).Trim();
