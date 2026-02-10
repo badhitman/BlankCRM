@@ -237,16 +237,13 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
         }
         catch (TaskCanceledException)
         {
+            RealtimeCore.Dispose();
             Dispose();
             return;
         }
         catch (OperationCanceledException)
         {
-            Dispose();
-            return;
-        }
-        catch (Exception)
-        {
+            RealtimeCore.Dispose();
             Dispose();
             return;
         }
