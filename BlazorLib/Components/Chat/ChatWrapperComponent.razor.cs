@@ -231,7 +231,19 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
 
     async void GetStateWebChatWebChatHandler(GetStateWebChatEventModel req)
     {
-        UserAgent = await JsRuntime.InvokeAsync<AboutUserAgentModel?>("methods.AboutUserAgent");
+        try
+        {
+            UserAgent = await JsRuntime.InvokeAsync<AboutUserAgentModel?>("methods.AboutUserAgent");
+        }
+        catch (TaskCanceledException)
+        {
+            return;
+        }
+        catch (OperationCanceledException)
+        {
+            return;
+        }
+
         await EventsWebChatsHandleRepo.StateEchoWebChatAsync(new StateWebChatModel()
         {
             StateDialog = ChatDialogOpen,
