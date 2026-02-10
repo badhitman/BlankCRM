@@ -74,7 +74,12 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
         }
 
         if (dialogSession is not null)
-            await EventsWebChatsHandleRepo.StateEchoWebChatAsync(new StateWebChatModel() { StateDialog = ChatDialogOpen, DialogId = dialogSession.Id });
+            await EventsWebChatsHandleRepo.StateEchoWebChatAsync(new StateWebChatModel()
+            {
+                StateDialog = ChatDialogOpen,
+                DialogId = dialogSession.Id,
+                UserIdentityId = CurrentUserSession?.UserId,
+            });
     }
 
     async ValueTask<ItemsProviderResult<MessageWebChatModelDB>> LoadMessages(ItemsProviderRequest request)
@@ -215,13 +220,23 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
     {
         ChatDialogOpen = req.StateDialog;
         if (dialogSession is not null)
-            await EventsWebChatsHandleRepo.StateEchoWebChatAsync(new() { StateDialog = ChatDialogOpen, DialogId = dialogSession.Id });
+            await EventsWebChatsHandleRepo.StateEchoWebChatAsync(new()
+            {
+                StateDialog = ChatDialogOpen,
+                DialogId = dialogSession.Id,
+                UserIdentityId = CurrentUserSession?.UserId,
+            });
         await InvokeAsync(StateHasChanged);
     }
 
     async void GetStateWebChatWebChatHandler(GetStateWebChatEventModel req)
     {
-        await EventsWebChatsHandleRepo.StateEchoWebChatAsync(new StateWebChatModel() { StateDialog = ChatDialogOpen, DialogId = req.DialogId });
+        await EventsWebChatsHandleRepo.StateEchoWebChatAsync(new StateWebChatModel()
+        {
+            StateDialog = ChatDialogOpen,
+            DialogId = req.DialogId,
+            UserIdentityId = CurrentUserSession?.UserId,
+        });
     }
 
     async void NewMessageWebChatHandler(NewMessageWebChatEventModel req)

@@ -23,6 +23,9 @@ public partial class WebChatsManageComponent : BlazorBusyComponentUsersCachedMod
     [Inject]
     IEventNotifyReceive<NewMessageWebChatEventModel> NewMessageWebChatEventRepo { get; set; } = default!;
 
+    [Inject]
+    IEventNotifyReceive<StateWebChatModel> StateEchoWebChatEventRepo { get; set; } = default!;
+
 
     /// <inheritdoc/>
     [Parameter]
@@ -50,6 +53,20 @@ public partial class WebChatsManageComponent : BlazorBusyComponentUsersCachedMod
     {
         await base.OnInitializedAsync();
         await NewMessageWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.NewMessageWebChatNotifyReceive, "#"), NewMessageWebChatHandler, LayoutContainerId, CurrentUserSessionBytes);
+        await StateEchoWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.StateEchoWebChatNotifyReceive, "#"), StateEchoWebChatEventHandle, LayoutContainerId, null, isMute: true);
+    }
+
+    async void StateEchoWebChatEventHandle(StateWebChatModel req)
+    {
+        if (req.StateDialog && req.UserIdentityId != CurrentUserSession?.UserId)
+        {
+            await JsRuntime.InvokeVoidAsync("methods.PlayAudio", "audioPlayerStateEchoForWebChatComponent");
+            if (!string.IsNullOrWhiteSpace(req.UserIdentityId))
+            {
+                await CacheUsersUpdate([req.UserIdentityId]);
+                await JsRuntime.InvokeVoidAsync("effects.Toast", "Пользователь вошёл в чат", UsersCache.FirstOrDefault(x => x.UserId == req.UserIdentityId)?.ToString() ?? req.UserIdentityId ?? "не авторизован", "info", true, "#9EC600");
+            }
+        }
     }
 
     void NewMessageWebChatHandler(NewMessageWebChatEventModel model)
@@ -144,6 +161,8 @@ public partial class WebChatsManageComponent : BlazorBusyComponentUsersCachedMod
     /// <inheritdoc/>
     public override void Dispose()
     {
+        StateEchoWebChatEventRepo.UnregisterAction();
         NewMessageWebChatEventRepo.UnregisterAction();
+        base.Dispose();
     }
 }

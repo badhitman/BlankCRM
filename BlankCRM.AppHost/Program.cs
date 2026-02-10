@@ -130,13 +130,6 @@ public class Program
         IResourceBuilder<IResourceWithConnectionString> redisConnectionStr = builder.AddConnectionString($"RedisConnectionString{_modePrefix}");
         IResourceBuilder<IResourceWithConnectionString> identityConnectionStr = builder.AddConnectionString($"IdentityConnection{_modePrefix}");
         
-        IResourceBuilder<ProjectResource> storageService = builder.AddProject<Projects.StorageService>("storageservice")
-            .WithReference(builder.AddConnectionString($"NlogsConnection{_modePrefix}"))
-            .WithEnvironment(act => rabbitConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
-            .WithEnvironment(act => mongoConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
-            .WithReference(builder.AddConnectionString($"CloudParametersConnection{_modePrefix}"))
-            ;
-
 #if OUTER_DATA
         IResourceBuilder<ProjectResource> apiBreezRuService = builder.AddProject<Projects.ApiBreezRuService>("apibreezrueservice")
             .WithEnvironment(act => rabbitConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
@@ -205,39 +198,28 @@ public class Program
             .WithReference(redisConnectionStr)
             ;
 
-        IResourceBuilder<ProjectResource> constructorService = builder.AddProject<Projects.ConstructorService>("constructorservice")
-            .WithReference(builder.AddConnectionString($"ConstructorConnection{_modePrefix}"))
-            .WithEnvironment(act => rabbitConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
-            ;
-
         IResourceBuilder<ProjectResource> identityService = builder.AddProject<Projects.IdentityService>("identityservice")
             .WithReference(identityConnectionStr)
             .WithReference(redisConnectionStr)
             .WithEnvironment(act => smtpConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
             .WithEnvironment(act => rabbitConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
             ;
-
-        IResourceBuilder<ProjectResource> telegramBotService = builder.AddProject<Projects.TelegramBotService>("telegrambotpolling")
-            .WithEnvironment(act => rabbitConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
-            .WithEnvironment($"{BotConfiguration.Configuration}:{nameof(BotConfiguration.BotToken)}", builder.Configuration[$"{BotConfiguration.Configuration}:{nameof(BotConfiguration.BotToken)}"])
-            .WithReference(builder.AddConnectionString($"TelegramBotConnection{_modePrefix}"))
-            ;
         //
-        builder.AddProject<Projects.BlankBlazorApp>("blankblazorapp")
+        IResourceBuilder<ProjectResource> webService = builder.AddProject<Projects.BlankBlazorApp>("blankblazorapp")
             .WithReference(realtimeService)
             .WaitFor(realtimeService)
 
             .WithReference(filesIndexingService)
             .WaitFor(filesIndexingService)
 
-            .WithReference(storageService)
-            .WaitFor(storageService)
+            //.WithReference(storageService)
+            //.WaitFor(storageService)
 
             .WithReference(helpdeskService)
             .WaitFor(helpdeskService)
 
-            .WithReference(telegramBotService)
-            .WaitFor(telegramBotService)
+            //.WithReference(telegramBotService)
+            //.WaitFor(telegramBotService)
 
             .WithReference(identityService)
             .WaitFor(identityService)
@@ -250,12 +232,16 @@ public class Program
 
             .WithReference(apiRestService)
             .WaitFor(apiRestService)
+            
             .WithReference(commerceService)
             .WaitFor(commerceService)
+            
             .WithReference(bankService)
             .WaitFor(bankService)
-            .WithReference(constructorService)
-            .WaitFor(constructorService)
+            
+            //.WithReference(constructorService)
+            //.WaitFor(constructorService)
+            
             .WithReference(kladrService)
             .WaitFor(kladrService)
 # if OUTER_DATA
@@ -272,6 +258,33 @@ public class Program
             .WaitFor(feedsHaierProffRuService)
 #endif
         ;
+
+        IResourceBuilder<ProjectResource> storageService = builder.AddProject<Projects.StorageService>("storageservice")
+            .WithReference(builder.AddConnectionString($"NlogsConnection{_modePrefix}"))
+            .WithEnvironment(act => rabbitConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
+            .WithEnvironment(act => mongoConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
+            .WithReference(builder.AddConnectionString($"CloudParametersConnection{_modePrefix}"))
+
+            .WithReference(webService)
+            .WaitFor(webService)
+            ;
+
+        IResourceBuilder<ProjectResource> telegramBotService = builder.AddProject<Projects.TelegramBotService>("telegrambotpolling")
+            .WithEnvironment(act => rabbitConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
+            .WithEnvironment($"{BotConfiguration.Configuration}:{nameof(BotConfiguration.BotToken)}", builder.Configuration[$"{BotConfiguration.Configuration}:{nameof(BotConfiguration.BotToken)}"])
+            .WithReference(builder.AddConnectionString($"TelegramBotConnection{_modePrefix}"))
+
+            .WithReference(webService)
+            .WaitFor(webService)
+            ;
+
+        IResourceBuilder<ProjectResource> constructorService = builder.AddProject<Projects.ConstructorService>("constructorservice")
+            .WithReference(builder.AddConnectionString($"ConstructorConnection{_modePrefix}"))
+            .WithEnvironment(act => rabbitConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
+
+            .WithReference(webService)
+            .WaitFor(webService)
+            ;
 
         builder.Build().Run();
     }

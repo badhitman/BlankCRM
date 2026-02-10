@@ -28,7 +28,12 @@ public partial class DialogWebChatCardComponent : BlazorBusyComponentUsersCached
     MessagesForWebChatComponent? messagesRef;
 
     async Task SetStateChatRequest(Microsoft.AspNetCore.Components.Web.MouseEventArgs args)
-            => await EventsWebChatsHandleRepo.StateSetWebChatAsync(new StateWebChatModel() { DialogId = DialogId, StateDialog = true });
+            => await EventsWebChatsHandleRepo.StateSetWebChatAsync(new StateWebChatModel()
+            {
+                DialogId = DialogId,
+                StateDialog = true,
+                UserIdentityId = CurrentUserSession?.UserId,
+            });
     async Task StateChatRequest(Microsoft.AspNetCore.Components.Web.MouseEventArgs args)
     {
         chatStatusRef = null;
@@ -39,7 +44,7 @@ public partial class DialogWebChatCardComponent : BlazorBusyComponentUsersCached
 
     UserSelectInputComponent? userSelectorRef;
     DialogWebChatModelDB? currentDialog, dialogEdit;
-    bool RoomIsEdit
+    bool DialogIsEdit
     {
         get
         {
@@ -54,7 +59,7 @@ public partial class DialogWebChatCardComponent : BlazorBusyComponentUsersCached
             return !isEq;
         }
     }
-    bool RoomNotEdit => !RoomIsEdit;
+    bool RoomNotEdit => !DialogIsEdit;
 
 
     async Task JoinToChat(bool isExclusive = false)

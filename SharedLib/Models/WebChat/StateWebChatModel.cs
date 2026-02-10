@@ -10,8 +10,11 @@ namespace SharedLib;
 public class StateWebChatModel
 {
     /// <inheritdoc/>
-    public int DialogId { get; set; }
+    public required int DialogId { get; set; }
 
     /// <inheritdoc/>
-    public bool StateDialog { get; set; }
+    public required bool StateDialog { get; set; }
+
+    /// <inheritdoc/>
+    public required string? UserIdentityId { get; set; }
 }

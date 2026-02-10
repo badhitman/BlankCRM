@@ -103,7 +103,8 @@
                 <button type="button"
                         class="btn btn-outline-info bi bi-arrow-clockwise"
                         @onclick="StateChatRequest"
-                        title="Проверить состояние области чата">Получить статус
+                        title="Проверить состояние области чата">
+                    Получить статус
                 </button>
                 @if (chatStatusRef?.StateWebChat is not null && !chatStatusRef.StateWebChat.StateDialog)
                 {
@@ -111,10 +112,10 @@
                             class="btn btn-outline-info bi bi-chat-text"
                             @onclick="SetStateChatRequest"
                             title="Открыть диалог чата клиенту">
-                            Открыть окно чата
+                        Открыть окно чата
                     </button>
                 }
-                @if (RoomIsEdit)
+                @if (DialogIsEdit)
                 {
                     <button class="btn btn-outline-primary bi bi-escape"
                             type="button"
@@ -123,12 +124,12 @@
                         Отмена
                     </button>
                 }
-                <button class="btn btn-outline-@(RoomIsEdit ? "success" : "secondary") bi bi-floppy-fill"
+                <button class="btn btn-outline-@(DialogIsEdit ? "success" : "secondary") bi bi-floppy-fill"
                         type="button"
                         disabled="@RoomNotEdit"
                         title="Сохранить изменения чата"
                         @onclick="SaveRoom">
-                        Записать
+                    Записать
                 </button>
             </div>
 
