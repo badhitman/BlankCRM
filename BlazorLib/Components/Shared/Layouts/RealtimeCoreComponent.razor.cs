@@ -2,9 +2,10 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using BlazorLib.Components.Chat;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Options;
-using BlazorLib.Components.Chat;
+using Microsoft.JSInterop;
 using SharedLib;
 
 namespace BlazorLib.Components.Shared.Layouts;
@@ -14,6 +15,9 @@ namespace BlazorLib.Components.Shared.Layouts;
 /// </summary>
 public partial class RealtimeCoreComponent
 {
+    [Inject]
+    IJSRuntime JsRuntime { get; set; } = default!;
+
     [Inject]
     NavigationManager NavRepo { get; set; } = default!;
 
@@ -66,6 +70,27 @@ public partial class RealtimeCoreComponent
 
     async void PingClientsWebChatHandler(PingClientsWebChatEventModel req)
     {
+
+
+
+        try
+        {
+            _ = await JsRuntime.InvokeAsync<AboutUserAgentModel?>("methods.AboutUserAgent", timeout: TimeSpan.FromSeconds(5));
+        }
+        catch (TaskCanceledException)
+        {
+            chatWrapperRef?.Dispose();
+            Dispose();
+            return;
+        }
+        catch (OperationCanceledException)
+        {
+            chatWrapperRef?.Dispose();
+            Dispose();
+            return;
+        }
+
+
         if (req.LayoutContainerId.Equals(LayoutContainerId))
             return;
 
