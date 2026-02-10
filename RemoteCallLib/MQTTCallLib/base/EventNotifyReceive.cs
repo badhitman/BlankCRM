@@ -2,18 +2,19 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using static SharedLib.GlobalStaticConstantsRoutes;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Threading;
+using MQTTnet;
 using MQTTnet.Packets;
+using MQTTnet.Protocol;
 using Newtonsoft.Json;
+using SharedLib;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using SharedLib;
-using MQTTnet;
-using System;
+using System.Threading;
+using System.Threading.Tasks;
+using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace RemoteCallLib;
 
@@ -84,7 +85,7 @@ public class EventNotifyReceive<T>(
         mqttClient.ApplicationMessageReceivedAsync += ApplicationMessageReceived;
         MqttClientSubscribeOptions subscribeOptions = new()
         {
-            TopicFilters = [new() { Topic = queueName }],
+            TopicFilters = [new() { Topic = queueName, QualityOfServiceLevel = MqttQualityOfServiceLevel.AtMostOnce }],
             UserProperties = [new(Routes.USER_CONTROLLER_NAME, _userInfoBytes ?? Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(null)))]
         };
 
