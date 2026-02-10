@@ -82,10 +82,18 @@ public class EventNotifyReceive<T>(
         }
 
         mqttClient.ApplicationMessageReceivedAsync += ApplicationMessageReceived;
+        MqttClientSubscribeOptions subscribeOptions = new()
+        {
+            TopicFilters = [new() { Topic = queueName }],
+            UserProperties = [new(Routes.USER_CONTROLLER_NAME, _userInfoBytes ?? Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(null)))]
+        };
+
+        if (_propertiesValues is not null && _propertiesValues.Count != 0)
+            _propertiesValues.ForEach(x => subscribeOptions.UserProperties.Add(new(x.Key, x.Value)));
 
         try
         {
-            await mqttClient.SubscribeAsync(queueName, cancellationToken: stoppingToken);
+            await mqttClient.SubscribeAsync(subscribeOptions, cancellationToken: stoppingToken);
             loggerRepo.LogTrace($"{nameof(queueName)}:{queueName}");
         }
         catch (Exception ex)
@@ -99,24 +107,23 @@ public class EventNotifyReceive<T>(
     /// <inheritdoc/>
     public async Task UnregisterAction(bool isMute = false, CancellationToken stoppingToken = default)
     {
+        if (mqttClient is null)
+            return;
+
+        MqttClientUnsubscribeOptionsBuilder unsubscribeOptions = new MqttClientUnsubscribeOptionsBuilder()
+            .WithTopicFilter(queueName);
+
         List<MqttUserProperty> usrProps = [];
-        if (_propertiesValues is not null)
-            usrProps.AddRange(_propertiesValues.Select(x => new MqttUserProperty(x.Key, x.Value)));
-        await mqttClient.UnsubscribeAsync(queueName, cancellationToken: stoppingToken);
-        if (mqttClient?.IsConnected == true)
-        {
-            if (!isMute)
-            {
-                usrProps.Add(new(Routes.USER_CONTROLLER_NAME, _userInfoBytes ?? Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(null))));
-                await mqttClient.DisconnectAsync(new() { UserProperties = usrProps }, stoppingToken);
-            }
-            else
-            {
-                usrProps.Add(new(Routes.MUTE_CONTROLLER_NAME, new ReadOnlyMemory<byte>([1])));
-                await mqttClient.DisconnectAsync(new() { UserProperties = usrProps }, stoppingToken);
-            }
-        }
-        mqttClient?.Dispose();
+        if (_propertiesValues is not null && _propertiesValues.Count != 0)
+            _propertiesValues.ForEach(x => unsubscribeOptions.WithUserProperty(new(x.Key, x.Value)));
+
+        if (!isMute)
+            unsubscribeOptions.WithUserProperty(new(Routes.USER_CONTROLLER_NAME, _userInfoBytes ?? Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(null))));
+        else
+            unsubscribeOptions.WithUserProperty(new(Routes.MUTE_CONTROLLER_NAME, new ReadOnlyMemory<byte>([1])));
+
+        await mqttClient.UnsubscribeAsync(unsubscribeOptions.Build(), cancellationToken: stoppingToken);
+
         Notify = null;
     }
 
@@ -125,16 +132,12 @@ public class EventNotifyReceive<T>(
         MqttClientOptionsBuilder builder = new MqttClientOptionsBuilder()
                .WithTcpServer(rabbitConf.Host, rabbitConf.Port)
                .WithProtocolVersion(MQTTnet.Formatter.MqttProtocolVersion.V500)
-               .WithUserProperty(Routes.USER_CONTROLLER_NAME, _userInfoBytes ?? Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(null)));
+               ;
 
-        if (isMute)
-            builder.WithUserProperty(Routes.MUTE_CONTROLLER_NAME, new ReadOnlyMemory<byte>([1]));
-
-        if (_propertiesValues is not null)
-            foreach (KeyValuePair<string, byte[]> userProp in _propertiesValues)
-                builder.WithUserProperty(userProp.Key, new ReadOnlyMemory<byte>(userProp.Value));
-
-        return builder.Build();
+        return new MqttClientOptionsBuilder()
+               .WithTcpServer(rabbitConf.Host, rabbitConf.Port)
+               .WithProtocolVersion(MQTTnet.Formatter.MqttProtocolVersion.V500)
+               .Build();
     }
 
     /// <inheritdoc/>
