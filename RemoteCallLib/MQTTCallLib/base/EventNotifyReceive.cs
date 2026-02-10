@@ -20,9 +20,6 @@ namespace RemoteCallLib;
 /// <summary>
 /// EventNotifyReceive
 /// </summary>
-/// <remarks>
-/// EventNotifyReceive
-/// </remarks>
 public class EventNotifyReceive<T>(
     MQTTClientConfigModel rabbitConf,
     ILogger<EventNotifyReceive<T>> loggerRepo) : IEventNotifyReceive<T>, IAsyncDisposable
