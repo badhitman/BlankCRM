@@ -3,7 +3,6 @@
 ////////////////////////////////////////////////
 
 using static SharedLib.GlobalStaticConstantsRoutes;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -21,40 +20,31 @@ namespace RemoteCallLib;
 /// <summary>
 /// EventNotifyReceive
 /// </summary>
-public class EventNotifyReceive<T> : IEventNotifyReceive<T>, IAsyncDisposable
+/// <remarks>
+/// EventNotifyReceive
+/// </remarks>
+public class EventNotifyReceive<T>(
+    MQTTClientConfigModel rabbitConf,
+    ILogger<EventNotifyReceive<T>> loggerRepo) : IEventNotifyReceive<T>, IAsyncDisposable
 {
     /// <summary>
     /// Notify
     /// </summary>
     public event IEventNotifyReceive<T>.AccountHandler? Notify;
 
-    IMqttClient? mqttClient;
+    static IMqttClient? mqttClient;
     MqttClientFactory mqttFactory = new();
-
-    readonly MQTTClientConfigModel MQConfigRepo;
-    readonly ILogger<EventNotifyReceive<T>> LoggerRepo;
     byte[]? _userInfoBytes;
-    string? LayoutContainerId;
+    string?
+        LayoutContainerId,
+        queueName;
+
     List<KeyValuePair<string, byte[]>>? _propertiesValues;
-
-    /// <summary>
-    /// EventNotifyReceive
-    /// </summary>
-    public EventNotifyReceive(
-        MQTTClientConfigModel rabbitConf,
-        IServiceProvider servicesProvider,
-        ILogger<EventNotifyReceive<T>> loggerRepo)
-    {
-        LoggerRepo = loggerRepo;
-        MQConfigRepo = rabbitConf;
-
-        using IServiceScope scope = servicesProvider.CreateScope();
-    }
 
     /// <inheritdoc/>
     public async Task RegisterAction(string QueueName, Action<T> actNotify, string layoutContainerId, byte[]? userInfoBytes, bool isMute = false, List<KeyValuePair<string, byte[]>>? propertiesValues = null, CancellationToken stoppingToken = default)
     {
-        QueueName = QueueName.Replace("\\", "/");
+        queueName = QueueName.Replace("\\", "/");
         _propertiesValues = propertiesValues;
         _userInfoBytes = userInfoBytes;
         LayoutContainerId = layoutContainerId;
@@ -72,13 +62,13 @@ public class EventNotifyReceive<T> : IEventNotifyReceive<T>, IAsyncDisposable
             }
             catch (Exception ex)
             {
-                LoggerRepo.LogError(ex, $"Ошибка выполнения удалённой команды: {QueueName}");
+                loggerRepo.LogError(ex, $"Ошибка выполнения удалённой команды: {queueName}");
                 //
                 e.ReasonCode = MqttApplicationMessageReceivedReasonCode.UnspecifiedError;
                 e.ResponseReasonString = ex.Message;
             }
             if (sr is null)
-                LoggerRepo.LogError($"Ошибка обработки удалённой команды (source is null): {QueueName}");
+                loggerRepo.LogError($"Ошибка обработки удалённой команды (source is null): {queueName}");
             else
             {
                 actNotify(sr);
@@ -87,18 +77,23 @@ public class EventNotifyReceive<T> : IEventNotifyReceive<T>, IAsyncDisposable
             }
             return Task.CompletedTask;
         }
-        mqttClient = mqttFactory.CreateMqttClient();
+
+        if (mqttClient is null)
+        {
+            mqttClient = mqttFactory.CreateMqttClient();
+            await mqttClient.ConnectAsync(GetClientOptionsBuilderMQTT(isMute), stoppingToken);
+        }
+
         mqttClient.ApplicationMessageReceivedAsync += ApplicationMessageReceived;
 
         try
         {
-            await mqttClient.ConnectAsync(GetMqttClientOptionsBuilder(QueueName, isMute), stoppingToken);
-            await mqttClient.SubscribeAsync(QueueName, cancellationToken: stoppingToken);
-            LoggerRepo.LogTrace($"QueueName:{QueueName}");
+            await mqttClient.SubscribeAsync($"{queueName}_{LayoutContainerId}", cancellationToken: stoppingToken);
+            loggerRepo.LogTrace($"{nameof(queueName)}:{queueName}");
         }
         catch (Exception ex)
         {
-            LoggerRepo.LogError(ex, $"can`t connect/subscribe: `{QueueName}`");
+            loggerRepo.LogError(ex, $"can`t connect/subscribe: `{queueName}`");
             mqttClient.ApplicationMessageReceivedAsync -= ApplicationMessageReceived;
             return;
         }
@@ -110,7 +105,7 @@ public class EventNotifyReceive<T> : IEventNotifyReceive<T>, IAsyncDisposable
         List<MqttUserProperty> usrProps = [];
         if (_propertiesValues is not null)
             usrProps.AddRange(_propertiesValues.Select(x => new MqttUserProperty(x.Key, x.Value)));
-
+        await mqttClient.UnsubscribeAsync($"{queueName}_{LayoutContainerId}", cancellationToken: stoppingToken);
         if (mqttClient?.IsConnected == true)
         {
             if (!isMute)
@@ -128,19 +123,18 @@ public class EventNotifyReceive<T> : IEventNotifyReceive<T>, IAsyncDisposable
         Notify = null;
     }
 
-    MqttClientOptions GetMqttClientOptionsBuilder(string queueName, bool isMute)
+    MqttClientOptions GetClientOptionsBuilderMQTT(bool isMute)
     {
         MqttClientOptionsBuilder builder = new MqttClientOptionsBuilder()
-               .WithTcpServer(MQConfigRepo.Host, MQConfigRepo.Port)
+               .WithTcpServer(rabbitConf.Host, rabbitConf.Port)
                .WithProtocolVersion(MQTTnet.Formatter.MqttProtocolVersion.V500)
-               .WithClientId($"{queueName} [{nameof(EventNotifyReceive<>)}.{typeof(T).Name}] {Guid.NewGuid()}")
                .WithUserProperty(Routes.USER_CONTROLLER_NAME, _userInfoBytes ?? Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(null)));
 
         if (isMute)
             builder.WithUserProperty(Routes.MUTE_CONTROLLER_NAME, new ReadOnlyMemory<byte>([1]));
 
         if (_propertiesValues is not null)
-            foreach (var userProp in _propertiesValues)
+            foreach (KeyValuePair<string, byte[]> userProp in _propertiesValues)
                 builder.WithUserProperty(userProp.Key, new ReadOnlyMemory<byte>(userProp.Value));
 
         return builder.Build();
