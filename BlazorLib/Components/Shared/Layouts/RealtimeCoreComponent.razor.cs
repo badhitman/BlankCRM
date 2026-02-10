@@ -70,12 +70,9 @@ public partial class RealtimeCoreComponent
 
     async void PingClientsWebChatHandler(PingClientsWebChatEventModel req)
     {
-
-
-
         try
         {
-            _ = await JsRuntime.InvokeAsync<AboutUserAgentModel?>("methods.AboutUserAgent", timeout: TimeSpan.FromSeconds(5));
+            _ = await JsRuntime.InvokeAsync<AboutUserAgentModel?>("methods.AboutUserAgent", timeout: TimeSpan.FromSeconds(2));
         }
         catch (TaskCanceledException)
         {

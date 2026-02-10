@@ -233,7 +233,7 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
     {
         try
         {
-            UserAgent = await JsRuntime.InvokeAsync<AboutUserAgentModel?>("methods.AboutUserAgent", timeout: TimeSpan.FromSeconds(5));
+            UserAgent = await JsRuntime.InvokeAsync<AboutUserAgentModel?>("methods.AboutUserAgent", timeout: TimeSpan.FromSeconds(2));
         }
         catch (TaskCanceledException)
         {
