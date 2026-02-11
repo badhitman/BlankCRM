@@ -69,7 +69,7 @@ public class RabbitClient : IRabbitClient
 
         activity?.Start();
 
-        string response_topic = waitResponse ? $"{AppName}:{RabbitConfigRepo.QueueMqNamePrefixForResponse.Replace("\\", "/")}{queue}_{Guid.NewGuid()}" : "";
+        string response_topic = waitResponse ? $"{AppName}.{RabbitConfigRepo.QueueMqNamePrefixForResponse.Replace("\\", "/")}{queue}_{Guid.NewGuid()}" : "";
         activity?.SetTag(nameof(response_topic), response_topic);
 
         string msg;
