@@ -19,6 +19,8 @@ namespace DbPostgreLib.Migrations.Realtime
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     InitiatorContactsNormalized = table.Column<string>(type: "text", nullable: true),
+                    BaseUri = table.Column<string>(type: "text", nullable: false),
+                    HelpdeskId = table.Column<int>(type: "integer", nullable: true),
                     InitiatorContacts = table.Column<string>(type: "text", nullable: true),
                     InitiatorHumanName = table.Column<string>(type: "text", nullable: true),
                     InitiatorIdentityId = table.Column<string>(type: "text", nullable: true),
@@ -114,6 +116,11 @@ namespace DbPostgreLib.Migrations.Realtime
                 name: "IX_Dialogs_DeadlineUTC",
                 table: "Dialogs",
                 column: "DeadlineUTC");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Dialogs_HelpdeskId",
+                table: "Dialogs",
+                column: "HelpdeskId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Dialogs_InitiatorContacts",

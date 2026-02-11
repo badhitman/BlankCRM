@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.Realtime
 {
     [DbContext(typeof(RealtimeContext))]
-    [Migration("20260209153826_RealtimeContext003")]
-    partial class RealtimeContext003
+    [Migration("20260211120918_RealtimeContext001")]
+    partial class RealtimeContext001
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
