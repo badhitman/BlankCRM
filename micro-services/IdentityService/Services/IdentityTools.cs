@@ -716,7 +716,7 @@ public class IdentityTools(
             };
         }
 
-        res.Response = users.Select(convert_user).ToArray();
+        res.Response = [.. users.Select(convert_user)];
 
         if (users_emails.Any(x => x == GlobalStaticConstantsRoles.Roles.System))
             res.Response = [.. res.Response.Union([UserInfoModel.BuildSystem()])];

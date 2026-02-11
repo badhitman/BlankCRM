@@ -61,13 +61,14 @@ public partial class ArticlesListComponent : BlazorBusyComponentBaseAuthModel
         TPaginationResponseStandardModel<ArticleModelDB> rest = await HelpDeskRepo
             .ArticlesSelectAsync(req, token);
 
+        SnackBarRepo.ShowMessagesResponse(rest.Status.Messages);
+        if (rest.Response is null)
+            return new() { TotalItems = rest.TotalRowsCount, Items = [] };
+
+        await UpdateUsersData([.. rest.Response.Select(x => x.AuthorIdentityId)]);
         await SetBusyAsync(false, token: token);
 
-        // Forward the provided token to methods which support it
-        List<ArticleModelDB> data = rest.Response!;
-        await UpdateUsersData([.. rest.Response!.Select(x => x.AuthorIdentityId)]);
-        // Return the data
-        return new() { TotalItems = rest.TotalRowsCount, Items = data };
+        return new() { TotalItems = rest.TotalRowsCount, Items = rest.Response };
     }
 
     async Task UpdateUsersData(string?[] users_ids)
