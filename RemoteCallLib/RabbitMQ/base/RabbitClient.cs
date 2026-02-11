@@ -2,17 +2,18 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System.Diagnostics.Metrics;
-using RabbitMQ.Client.Events;
-using System.Diagnostics;
-using System.Text.Json;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
-using System.Text;
+using RabbitMQ.Client.Events;
+using RabbitMQ.Client.Exceptions;
 using SharedLib;
+using System.Diagnostics;
+using System.Diagnostics.Metrics;
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace RemoteCallLib;
 
@@ -122,6 +123,13 @@ public class RabbitClient : IRabbitClient
                 return default;
             }
             catch (OperationCanceledException)
+            {
+                _connection?.Dispose();
+                _channel?.Dispose();
+
+                return default;
+            }
+            catch(OperationInterruptedException ex)
             {
                 _connection?.Dispose();
                 _channel?.Dispose();
