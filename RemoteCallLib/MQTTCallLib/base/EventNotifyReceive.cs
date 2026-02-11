@@ -127,7 +127,14 @@ public class EventNotifyReceive<T> : IEventNotifyReceive<T>, IAsyncDisposable
                 UserProperties = [new(Routes.OBJECT_CONTROLLER_NAME, Encoding.UTF8.GetBytes(LayoutContainerId!))]
             };
 
-            await mqttClient.UnsubscribeAsync(unsubscribeOptions, stoppingToken);
+            if (mqttClient.IsConnected)
+                await mqttClient.UnsubscribeAsync(unsubscribeOptions, stoppingToken);
+            else
+            {
+                mqttClient?.Dispose();
+                return;
+            }
+
             if (!isMute)
             {
                 usrProps.Add(new(Routes.USER_CONTROLLER_NAME, _userInfoBytes ?? Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(null))));
