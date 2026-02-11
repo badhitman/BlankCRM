@@ -22,10 +22,10 @@ public partial class RetailService(IIdentityTransmission identityRepo,
     /// <summary>
     /// Статусы документов, которые не участвуют в оборотах
     /// </summary>
-    /// <remarks>
-    /// Движения остатков на складах
-    /// </remarks>
-    static readonly StatusesDocumentsEnum?[] offOrdersStatuses = [StatusesDocumentsEnum.Canceled, null, 0];
+    static readonly StatusesDocumentsEnum?[] offOrdersStatuses = [null, 0,
+        StatusesDocumentsEnum.Canceled, StatusesDocumentsEnum.Created,
+        StatusesDocumentsEnum.Reopen, StatusesDocumentsEnum.Pause];
+
     static readonly DeliveryStatusesEnum?[] offDeliveriesStatuses = [null, 0, DeliveryStatusesEnum.Canceled, DeliveryStatusesEnum.Created];
 
     /// <inheritdoc/>

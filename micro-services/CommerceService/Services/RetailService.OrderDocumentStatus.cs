@@ -124,12 +124,7 @@ public partial class RetailService : IRetailService
             await context.SaveChangesAsync(token);
         }
 
-        await transaction.CommitAsync(token);
-        //docDb = await context.OrdersRetail
-        //        .Include(x => x.Rows)
-        //        .Include(x => x.Statuses)
-        //        .FirstAsync(x => x.Id == req.Payload.OrderDocumentId, cancellationToken: token);
-
+        await transaction.CommitAsync(token);        
         return new()
         {
             Response = req.Payload.Id,

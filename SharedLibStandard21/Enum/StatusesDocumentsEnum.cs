@@ -20,7 +20,7 @@ public enum StatusesDocumentsEnum
     /// <summary>
     /// Повторное открытие
     /// </summary>
-    [Description("Возвращён в работу")]
+    [Description("Возвращён/Исправить")]
     Reopen = 40,
 
     /// <summary>
