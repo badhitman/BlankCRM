@@ -49,7 +49,7 @@ public abstract class BlazorBusyComponentBaseAuthModel : BlazorBusyComponentBase
         TResponseModel<UserInfoModel[]> getDataUser = await IdentityRepo.GetUsersOfIdentityAsync([_usr.UserId]);
         SnackBarRepo.ShowMessagesResponse(getDataUser.Messages);
         if (getDataUser.Response is null || !getDataUser.Response.Any(x => x.UserId == _usr.UserId))
-            throw new Exception(JsonConvert.SerializeObject(getDataUser, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings));
+            throw new Exception($"exception for find user user: {JsonConvert.SerializeObject(_usr, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}\n data: \n{JsonConvert.SerializeObject(getDataUser, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
 
         CurrentUserSession = getDataUser.Response.First(x => x.UserId == _usr.UserId);
         await SetBusyAsync(false);
