@@ -166,7 +166,10 @@ public class IdentityTransmission(IRabbitClient rabbitClient) : IIdentityTransmi
 
     /// <inheritdoc/>
     public async Task<TResponseModel<UserInfoModel[]>> GetUsersOfIdentityAsync(string[] ids_users, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<TResponseModel<UserInfoModel[]>>(GlobalStaticConstantsTransmission.TransmissionQueues.GetUsersOfIdentityReceive, ids_users, token: token) ?? new();
+    {
+        TResponseModel<UserInfoModel[]> res = await rabbitClient.MqRemoteCallAsync<TResponseModel<UserInfoModel[]>>(GlobalStaticConstantsTransmission.TransmissionQueues.GetUsersOfIdentityReceive, ids_users, token: token) ?? new();
+        return res;
+    }
 
     /// <inheritdoc/>
     public async Task<TResponseModel<bool>> ClaimsUserFlushAsync(string userIdIdentity, CancellationToken token = default)
