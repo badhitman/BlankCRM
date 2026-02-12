@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using Microsoft.Extensions.Caching.Memory;
 using SharedLib;
 
 namespace RemoteCallLib;
@@ -9,8 +10,10 @@ namespace RemoteCallLib;
 /// <summary>
 /// [remote]: Identity
 /// </summary>
-public class IdentityTransmission(IRabbitClient rabbitClient) : IIdentityTransmission
+public class IdentityTransmission(IRabbitClient rabbitClient, IMemoryCache cache) : IIdentityTransmission
 {
+    static readonly TimeSpan _ts = TimeSpan.FromSeconds(2);
+
     /// <inheritdoc/>
     public async Task<TResponseModel<string>> CreateUserManualAsync(TAuthRequestStandardModel<UserInfoBaseModel> user, CancellationToken token = default)
        => await rabbitClient.MqRemoteCallAsync<TResponseModel<string>>(GlobalStaticConstantsTransmission.TransmissionQueues.CreateManualUserReceive, user, token: token) ?? new();
@@ -166,7 +169,21 @@ public class IdentityTransmission(IRabbitClient rabbitClient) : IIdentityTransmi
     /// <inheritdoc/>
     public async Task<TResponseModel<UserInfoModel[]>> GetUsersOfIdentityAsync(string[] ids_users, CancellationToken token = default)
     {
+        bool isSingle = ids_users.Length == 1;
+        if (isSingle)
+        {
+            string mem_token = $"user-identity/{ids_users[0]}";
+            if (cache.TryGetValue(mem_token, out UserInfoModel? users_cache) && users_cache is not null)
+                return new() { Response = [users_cache] };
+        }
+
         TResponseModel<UserInfoModel[]> res = await rabbitClient.MqRemoteCallAsync<TResponseModel<UserInfoModel[]>>(GlobalStaticConstantsTransmission.TransmissionQueues.GetUsersOfIdentityReceive, ids_users, token: token) ?? new();
+        if (isSingle && res.Response is not null && res.Response.Length == 1)
+        {
+            string mem_token = $"user-identity/{ids_users[0]}";
+            cache.Set(mem_token, res.Response[0], new MemoryCacheEntryOptions().SetAbsoluteExpiration(_ts));
+        }
+
         return res;
     }
 
