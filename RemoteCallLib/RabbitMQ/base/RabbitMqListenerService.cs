@@ -56,7 +56,9 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
         ResponseQueueArguments ??= new()
         {
             { "x-message-ttl", rabbitConf.Value.RemoteCallTimeoutMs },
-            { "x-expires", rabbitConf.Value.RemoteCallTimeoutMs }
+            { "x-expires", rabbitConf.Value.RemoteCallTimeoutMs },
+            { "x-consumer-timeout", rabbitConf.Value.RemoteCallTimeoutMs + 100 },
+            { "x-queue-type", "quorum" },
         };
 
         using IServiceScope scope = servicesProvider.CreateScope();
