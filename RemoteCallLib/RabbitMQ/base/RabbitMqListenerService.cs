@@ -78,7 +78,7 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
     {
         _connection = await factory.CreateConnectionAsync(stoppingToken);
         _channel = await _connection.CreateChannelAsync(cancellationToken: stoppingToken);
-        await _channel.QueueDeclareAsync(queue: QueueName, durable: true, exclusive: false, autoDelete: false, arguments: null, cancellationToken: stoppingToken);
+        await _channel.QueueDeclareAsync(queue: QueueName, durable: true, exclusive: false, autoDelete: false, arguments: ResponseQueueArguments!, cancellationToken: stoppingToken);
 
         stoppingToken.ThrowIfCancellationRequested();
         TResponseMQModel<TResponse> answer = new()

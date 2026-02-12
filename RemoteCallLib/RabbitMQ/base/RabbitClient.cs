@@ -256,7 +256,7 @@ public class RabbitClient : IRabbitClient
 
         try
         {
-            await _channel!.QueueDeclareAsync(queue: queue, durable: true, exclusive: false, autoDelete: false, arguments: null, cancellationToken: tokenOuter);
+            await _channel!.QueueDeclareAsync(queue: queue, durable: true, exclusive: false, autoDelete: false, arguments: ResponseQueueArguments!, cancellationToken: tokenOuter);
         }
         catch (TaskCanceledException)
         {
