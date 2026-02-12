@@ -114,7 +114,7 @@ public class RabbitClient : IRabbitClient
             properties.ReplyTo = response_topic;
             try
             {
-                await _channel.QueueDeclareAsync(queue: response_topic, durable: false, exclusive: false, autoDelete: true, arguments: ResponseQueueArguments!, cancellationToken: tokenOuter);
+                await _channel.QueueDeclareAsync(queue: response_topic, durable: false, exclusive: false, autoDelete: true, arguments: null, cancellationToken: tokenOuter);
             }
             catch (TaskCanceledException)
             {
