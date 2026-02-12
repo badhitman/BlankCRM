@@ -1,9 +1,27 @@
 ﻿@page "/nomenclature/offer-card/{OfferId:int}"
+@using MudBlazor
 
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 @attribute [Authorize]
 
-<OfferCardEditComponent OfferId="OfferId" />
+<MudCard>
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText Typo="Typo.h6">Offer # OfferId</MudText>
+        </CardHeaderContent>
+        @* <CardHeaderActions>
+            <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Default" />
+        </CardHeaderActions> *@
+    </MudCardHeader>
+    <MudCardContent>
+        <OfferCardEditComponent OfferId="OfferId" />
+    </MudCardContent>
+    @*  <MudCardActions>
+        <MudButton Variant="Variant.Text" Color="Color.Primary">Read more</MudButton>
+    </MudCardActions> *@
+</MudCard>
+
+
 
 @code {
     [Parameter]

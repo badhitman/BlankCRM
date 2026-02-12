@@ -46,7 +46,7 @@
                             <TinyMCE.Blazor.Editor @bind-Value="editNomenclature.Description" ScriptSrc="@GlobalStaticConstants.TinyMCEditorScriptSrc" Conf="@editorConf" />
                         </MudTabPanel>
                         <MudTabPanel Text="Файлы" Disabled="@(NomenclatureId < 1)">
-                            <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-6">
+                            <MudTabs Elevation="2" Rounded ApplyEffectsToContainer>
                                 <MudTabPanel Text="Хранилище">
                                     <FilesContextViewComponent ApplicationsNames="@([Routes.NOMENCLATURE_CONTROLLER_NAME])"
                                                                Title="Файлы"
@@ -56,9 +56,12 @@
                                                                @ref="filesViewRef"
                                                                ManageMode />
                                 </MudTabPanel>
-                                <MudTabPanel Text="Установки">
-                                    <GoodsFilesConfigsComponent />
-                                </MudTabPanel>
+                                @if (filesViewRef is not null)
+                                {
+                                    <MudTabPanel Text="Установки">
+                                        <GoodsFilesConfigsComponent OwnerTypeName="@nameof(NomenclatureModelDB)" FilesContextViewComponent="filesViewRef" />
+                                    </MudTabPanel>
+                                }
                             </MudTabs>
                         </MudTabPanel>
                         <MudTabPanel Text="Теги" Disabled="@(NomenclatureId < 1)">

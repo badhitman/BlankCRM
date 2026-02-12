@@ -24,12 +24,6 @@ public partial class FilesContextViewComponent : MetaPropertyBaseComponent
     [Inject]
     IStorageTransmission FilesRepo { get; set; } = default!;
 
-    [Inject]
-    IHelpDeskTransmission HdRepo { get; set; } = default!;
-
-    [Inject]
-    ICommerceTransmission CommRepo { get; set; } = default!;
-
 
     bool CanAddingFile => OwnerPrimaryKey.HasValue && OwnerPrimaryKey.Value > 0 &&
         !string.IsNullOrWhiteSpace(PrefixPropertyName) &&
