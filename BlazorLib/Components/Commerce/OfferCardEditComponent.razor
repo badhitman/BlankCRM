@@ -6,98 +6,100 @@
     @if (CurrentOffer is not null)
     {
         <div class="card-header">
-            <span>Offer #@CurrentOffer.Id <sup><a href="/nomenclature/card/@CurrentOffer.NomenclatureId">номенклатура @CurrentOffer.Nomenclature?.Name</a></sup></span>
+            <a href="/nomenclature/card/@CurrentOffer.NomenclatureId">номенклатура @CurrentOffer.Nomenclature?.Name</a>
         </div>
     }
     <div class="card-body">
         @if (IsBusyProgress || editOffer is null)
         {
-            <MudProgressLinear Rounded />
+            <MudProgressLinear Color="Color.Primary" Indeterminate />
         }
-        else
+        @if (editOffer is not null)
         {
-            <MudTabPanel Text="Основное">
-                <MudTextField Disabled="(IsBusyProgress || CurrentUserSession?.IsAdmin != true)" @bind-Value="editOffer.Name" Label="Полное наименование" Variant="Variant.Outlined" Immediate ShrinkLabel></MudTextField>
-                <MudStack Row Class="mb-3">
-                    <MudTextField Disabled="(IsBusyProgress || CurrentUserSession?.IsAdmin != true)" @bind-Value="editOffer.ShortName" Label="Название (краткое)" Variant="Variant.Outlined" Immediate ShrinkLabel></MudTextField>
-                    <MudSelect Disabled="(IsBusyProgress || CurrentUserSession?.IsAdmin != true)" @bind-Value="editOffer.OfferUnit" Label="Единица измерения" Placeholder="Выбор ед.изм." Variant="Variant.Outlined">
-                        @foreach (UnitsOfMeasurementEnum u in Enum.GetValues(typeof(UnitsOfMeasurementEnum)).Cast<UnitsOfMeasurementEnum>())
+            <MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-6">
+                <MudTabPanel Text="Основное">
+                    <MudTextField Disabled="(IsBusyProgress || CurrentUserSession?.IsAdmin != true)" @bind-Value="editOffer.Name" Label="Полное наименование" Variant="Variant.Outlined" Immediate ShrinkLabel></MudTextField>
+                    <MudStack Row Class="mb-3">
+                        <MudTextField Disabled="(IsBusyProgress || CurrentUserSession?.IsAdmin != true)" @bind-Value="editOffer.ShortName" Label="Название (краткое)" Variant="Variant.Outlined" Immediate ShrinkLabel></MudTextField>
+                        <MudSelect Disabled="(IsBusyProgress || CurrentUserSession?.IsAdmin != true)" @bind-Value="editOffer.OfferUnit" Label="Единица измерения" Placeholder="Выбор ед.изм." Variant="Variant.Outlined">
+                            @foreach (UnitsOfMeasurementEnum u in Enum.GetValues(typeof(UnitsOfMeasurementEnum)).Cast<UnitsOfMeasurementEnum>())
+                            {
+                                <MudSelectItem Value="u">@u.DescriptionInfo()</MudSelectItem>
+                            }
+                        </MudSelect>
+                        <MudNumericField Disabled="(IsBusyProgress || CurrentUserSession?.IsAdmin != true)" @bind-Value="editOffer.Multiplicity" Label="Кратность" Variant="Variant.Outlined" Immediate />
+                        <MudNumericField Disabled="(IsBusyProgress || CurrentUserSession?.IsAdmin != true)" @bind-Value="editOffer.Price" Label="Цена" Format="N2" Variant="Variant.Outlined" Immediate />
+                        <MudNumericField Disabled="(IsBusyProgress || CurrentUserSession?.IsAdmin != true)" @bind-Value="editOffer.Weight" Label="Вес" Format="N2" Variant="Variant.Outlined" Immediate />
+                        <MudFab Disabled="(IsBusyProgress || !CanSave || CurrentUserSession?.IsAdmin != true)" title="Сохранить изменения" OnClick="SaveOffer" StartIcon="@Icons.Material.Filled.Save" Color="@(CanSave? Color.Info: Color.Default)" Size="Size.Small" Class="align-self-center" />
+                        @if (!IsBusyProgress || CanSave)
                         {
-                            <MudSelectItem Value="u">@u.DescriptionInfo()</MudSelectItem>
+                            <MudFab OnClick="() => editOffer = GlobalTools.CreateDeepCopy(CurrentOffer)!" title="Отменить изменение" StartIcon="@Icons.Material.Filled.Cancel" Color="Color.Surface" Size="Size.Small" Class="align-self-center" />
                         }
-                    </MudSelect>
-                    <MudNumericField Disabled="(IsBusyProgress || CurrentUserSession?.IsAdmin != true)" @bind-Value="editOffer.Multiplicity" Label="Кратность" Variant="Variant.Outlined" Immediate />
-                    <MudNumericField Disabled="(IsBusyProgress || CurrentUserSession?.IsAdmin != true)" @bind-Value="editOffer.Price" Label="Цена" Format="N2" Variant="Variant.Outlined" Immediate />
-                    <MudNumericField Disabled="(IsBusyProgress || CurrentUserSession?.IsAdmin != true)" @bind-Value="editOffer.Weight" Label="Вес" Format="N2" Variant="Variant.Outlined" Immediate />
-                    <MudFab Disabled="(IsBusyProgress || !CanSave || CurrentUserSession?.IsAdmin != true)" title="Сохранить изменения" OnClick="SaveOffer" StartIcon="@Icons.Material.Filled.Save" Color="@(CanSave? Color.Info: Color.Default)" Size="Size.Small" Class="align-self-center" />
-                    @if (!IsBusyProgress || CanSave)
-                    {
-                        <MudFab OnClick="() => editOffer = GlobalTools.CreateDeepCopy(CurrentOffer)!" title="Отменить изменение" StartIcon="@Icons.Material.Filled.Cancel" Color="Color.Surface" Size="Size.Small" Class="align-self-center" />
-                    }
-                </MudStack>
-                <MudSwitch Disabled="(IsBusyProgress || CurrentUserSession?.IsAdmin != true)" @bind-Value="editOffer.IsDisabled" Label="Отключение" Color="Color.Secondary" />
+                    </MudStack>
+                    <MudSwitch Disabled="(IsBusyProgress || CurrentUserSession?.IsAdmin != true)" @bind-Value="editOffer.IsDisabled" Label="Отключение" Color="Color.Secondary" />
+                    <AuthorizeView Roles="@GlobalStaticConstantsRoles.Roles.Admin">
+                        <Authorized>
+                            <div class="input-group has-validation my-3">
+                                <span class="input-group-text" id="basic-tmpl-@editOffer.Id" aria-describedby="validationQuantitiesTemplate">Шаблон количества</span>
+                                <input @bind-value="editOffer.QuantitiesTemplate" @bind-value:event="oninput" type="text" class="form-control is-@(editOffer.QuantitiesTemplateValidate ? "" : "in")valid" placeholder="Значения через пробел" aria-label="Значения через пробел" aria-describedby="basic-tmpl-@editOffer.Id">
+                                @if (editOffer.QuantitiesTemplateValidate)
+                                {
+                                    <div class="valid-feedback">
+                                        Доступные значения количества в заказе: числа через пробел
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div id="validationQuantitiesTemplate" class="invalid-feedback">
+                                        Доступные значения количества в заказе: числа через пробел
+                                    </div>
+                                }
+                            </div>
+
+                            <div class="card mt-3">
+                                <div class="card-body">
+                                    <TinyMCE.Blazor.Editor @bind-Value="editOffer.Description" ScriptSrc="@GlobalStaticConstants.TinyMCEditorScriptSrc" Conf="@editorConf" Disable="@(OfferId < 1)" />
+                                </div>
+                            </div>
+                        </Authorized>
+                        <NotAuthorized>
+                            @((MarkupString)(editOffer.Description ?? ""))
+                        </NotAuthorized>
+                    </AuthorizeView>
+                    <TagsViewComponent ApplicationsNames="@([Routes.OFFER_CONTROLLER_NAME])"
+                                       ManageMode
+                                       PrefixPropertyName="@Routes.DEFAULT_CONTROLLER_NAME"
+                                       PropertyName="@Routes.METADATA_CONTROLLER_NAME"
+                                       Title="Теги"
+                                       OwnerPrimaryKey="@OfferId" />
+                </MudTabPanel>
                 <AuthorizeView Roles="@GlobalStaticConstantsRoles.Roles.Admin">
                     <Authorized>
-                        <div class="input-group has-validation my-3">
-                            <span class="input-group-text" id="basic-tmpl-@editOffer.Id" aria-describedby="validationQuantitiesTemplate">Шаблон количества</span>
-                            <input @bind-value="editOffer.QuantitiesTemplate" @bind-value:event="oninput" type="text" class="form-control is-@(editOffer.QuantitiesTemplateValidate ? "" : "in")valid" placeholder="Значения через пробел" aria-label="Значения через пробел" aria-describedby="basic-tmpl-@editOffer.Id">
-                            @if (editOffer.QuantitiesTemplateValidate)
-                            {
-                                <div class="valid-feedback">
-                                    Доступные значения количества в заказе: числа через пробел
-                                </div>
-                            }
-                            else
-                            {
-                                <div id="validationQuantitiesTemplate" class="invalid-feedback">
-                                    Доступные значения количества в заказе: числа через пробел
-                                </div>
-                            }
-                        </div>
-
-                        <div class="card mt-3">
-                            <div class="card-body">
-                                <TinyMCE.Blazor.Editor @bind-Value="editOffer.Description" ScriptSrc="@GlobalStaticConstants.TinyMCEditorScriptSrc" Conf="@editorConf" Disable="@(OfferId < 1)" />
-                            </div>
-                        </div>
-                    </Authorized>
-                    <NotAuthorized>
-                        @((MarkupString)(editOffer.Description ?? ""))
-                    </NotAuthorized>
-                </AuthorizeView>
-                <TagsViewComponent ApplicationsNames="@([Routes.OFFER_CONTROLLER_NAME])"
-                                   ManageMode
-                                   PrefixPropertyName="@Routes.DEFAULT_CONTROLLER_NAME"
-                                   PropertyName="@Routes.METADATA_CONTROLLER_NAME"
-                                   Title="Теги"
-                                   OwnerPrimaryKey="@OfferId" />
-            </MudTabPanel>
-            <AuthorizeView Roles="@GlobalStaticConstantsRoles.Roles.Admin">
-                <Authorized>
-                    <MudTabPanel Text="Заказы">
-                        <OrdersJournalComponent OfferFilter="editOffer.Id" />
-                    </MudTabPanel>
-                </Authorized>
-            </AuthorizeView>
-            <MudTabPanel Text="Файлы">
-                <MudTabs Elevation="2" Rounded ApplyEffectsToContainer>
-                    <MudTabPanel Text="Хранилище">
-                        <FilesContextViewComponent ApplicationsNames="@([Routes.OFFER_CONTROLLER_NAME])"
-                                                   PrefixPropertyName="@Routes.USER_CONTROLLER_NAME"
-                                                   PropertyName="@Routes.ATTACHMENT_CONTROLLER_NAME"
-                                                   OwnerPrimaryKey="OfferId"
-                                                   @ref="filesViewRef"
-                                                   Title="Файлы"
-                                                   ManageMode />
-                    </MudTabPanel>
-                    @if (filesViewRef is not null)
-                    {
-                        <MudTabPanel Text="Установки">
-                            <GoodsFilesConfigsComponent OwnerTypeName="@nameof(OfferModelDB)" FilesContextViewComponent="filesViewRef" />
+                        <MudTabPanel Text="Заказы">
+                            <OrdersJournalComponent OfferFilter="editOffer.Id" />
                         </MudTabPanel>
-                    }
-                </MudTabs>
-            </MudTabPanel>
+                    </Authorized>
+                </AuthorizeView>
+                <MudTabPanel Text="Файлы">
+                    <MudTabs Elevation="2" Rounded ApplyEffectsToContainer>
+                        <MudTabPanel Text="Хранилище">
+                            <FilesContextViewComponent ApplicationsNames="@([Routes.OFFER_CONTROLLER_NAME])"
+                                                       PrefixPropertyName="@Routes.USER_CONTROLLER_NAME"
+                                                       PropertyName="@Routes.ATTACHMENT_CONTROLLER_NAME"
+                                                       OwnerPrimaryKey="OfferId"
+                                                       @ref="filesViewRef"
+                                                       Title="Файлы"
+                                                       ManageMode />
+                        </MudTabPanel>
+                        @if (filesViewRef is not null)
+                        {
+                            <MudTabPanel Text="Установки">
+                                <GoodsFilesConfigsComponent OwnerTypeName="@nameof(OfferModelDB)" FilesContextViewComponent="filesViewRef" />
+                            </MudTabPanel>
+                        }
+                    </MudTabs>
+                </MudTabPanel>
+            </MudTabs>
         }
     </div>
 </div>
