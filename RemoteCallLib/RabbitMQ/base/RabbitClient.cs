@@ -129,8 +129,11 @@ public class RabbitClient : IRabbitClient
 
                 return default;
             }
-            catch(OperationInterruptedException)
+            catch(OperationInterruptedException ex)
             {
+                msg = "exception basic ask. error {56AA49DF-E8F8-489F-A2AB-591511EE7B33}";
+                loggerRepo.LogError(ex, msg);
+
                 _connection?.Dispose();
                 _channel?.Dispose();
 
