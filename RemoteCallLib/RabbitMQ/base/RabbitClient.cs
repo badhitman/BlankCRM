@@ -45,6 +45,7 @@ public class RabbitClient : IRabbitClient
             { "x-message-ttl", rabbitConf.Value.RemoteCallTimeoutMs },
             { "x-expires", rabbitConf.Value.RemoteCallTimeoutMs },
             { "x-consumer-timeout", rabbitConf.Value.RemoteCallTimeoutMs + 100 },
+            { "x-queue-type", "quorum" },
         };
         factory = new()
         {
@@ -131,7 +132,7 @@ public class RabbitClient : IRabbitClient
             }
             catch(OperationInterruptedException ex)
             {
-                msg = "exception basic ask. error {56AA49DF-E8F8-489F-A2AB-591511EE7B33}";
+                msg = $"exception basic ask for [queue: {response_topic}]. error 56AA49DF-E8F8-489F-A2AB-591511EE7B33";
                 loggerRepo.LogError(ex, msg);
 
                 _connection?.Dispose();
