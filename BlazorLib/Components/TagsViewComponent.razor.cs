@@ -3,7 +3,6 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
-using BlazorLib;
 using SharedLib;
 using MudBlazor;
 
@@ -79,7 +78,7 @@ public partial class TagsViewComponent : MetaPropertyBaseComponent
         }
     }
 
-    private async Task<IEnumerable<string?>> Search(string value, CancellationToken token)
+    async Task<IEnumerable<string?>> Search(string value, CancellationToken token)
     {
         TPaginationRequestStandardModel<SelectMetadataRequestModel> req = new()
         {
