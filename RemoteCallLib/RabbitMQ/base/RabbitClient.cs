@@ -129,7 +129,7 @@ public class RabbitClient : IRabbitClient
 
                 return default;
             }
-            catch(OperationInterruptedException ex)
+            catch(OperationInterruptedException)
             {
                 _connection?.Dispose();
                 _channel?.Dispose();
