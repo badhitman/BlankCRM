@@ -22,6 +22,16 @@ public class OfferAvailabilityModelDB : RowOfSimpleDocumentModel
     /// </summary>
     public decimal Quantity { get; set; }
 
+    /// <summary>
+    /// Organization
+    /// </summary>
+    public OrganizationModelDB? Organization { get; set; }
+    /// <summary>
+    /// Organization
+    /// </summary>
+    public int? OrganizationId { get; set; }
+
+
     /// <inheritdoc/>
     public override string ToString()
     {

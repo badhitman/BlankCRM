@@ -37,7 +37,7 @@
         </div>
         <div class="card-body">
             <MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-2">
-                <MudTabPanel Text="Параметры">
+                <MudTabPanel Text="Оферы">
                     <DynamicComponent Type="GetType(ViewSet.DescriptionInfo())" Parameters="Parameters" />
                 </MudTabPanel>
                 <AuthorizeView Roles="@GlobalStaticConstantsRoles.Roles.Admin">
@@ -46,13 +46,20 @@
                             <TinyMCE.Blazor.Editor @bind-Value="editNomenclature.Description" ScriptSrc="@GlobalStaticConstants.TinyMCEditorScriptSrc" Conf="@editorConf" />
                         </MudTabPanel>
                         <MudTabPanel Text="Файлы" Disabled="@(NomenclatureId < 1)">
-                            <FilesContextViewComponent ApplicationsNames="@([Routes.NOMENCLATURE_CONTROLLER_NAME])"
-                                                       Title="Файлы"
-                                                       PropertyName="@Routes.ATTACHMENT_CONTROLLER_NAME"
-                                                       PrefixPropertyName="@Routes.USER_CONTROLLER_NAME"
-                                                       OwnerPrimaryKey="NomenclatureId"
-                                                       @ref="filesViewRef"
-                                                       ManageMode />
+                            <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-6">
+                                <MudTabPanel Text="Хранилище">
+                                    <FilesContextViewComponent ApplicationsNames="@([Routes.NOMENCLATURE_CONTROLLER_NAME])"
+                                                               Title="Файлы"
+                                                               PropertyName="@Routes.ATTACHMENT_CONTROLLER_NAME"
+                                                               PrefixPropertyName="@Routes.USER_CONTROLLER_NAME"
+                                                               OwnerPrimaryKey="NomenclatureId"
+                                                               @ref="filesViewRef"
+                                                               ManageMode />
+                                </MudTabPanel>
+                                <MudTabPanel Text="Установки">
+                                    <GoodsFilesConfigsComponent />
+                                </MudTabPanel>
+                            </MudTabs>
                         </MudTabPanel>
                         <MudTabPanel Text="Теги" Disabled="@(NomenclatureId < 1)">
                             <MudText>

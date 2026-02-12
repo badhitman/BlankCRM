@@ -119,6 +119,11 @@ public partial class CommerceLayerContext : DbContext
     public DbSet<OfferModelDB> Offers { get; set; } = default!;
 
     /// <summary>
+    /// GoodsFilesConfigs
+    /// </summary>
+    public DbSet<FileGoodsConfigModelDB> GoodsFilesConfigs { get; set; } = default!;
+
+    /// <summary>
     /// Правила формирования цены
     /// </summary>
     public DbSet<PriceRuleForOfferModelDB> PricesRules { get; set; } = default!;

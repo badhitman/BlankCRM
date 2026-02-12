@@ -3,19 +3,32 @@
 
 @using MudBlazor
 @inherits BlazorBusyComponentBaseAuthModel
+
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 @attribute [Authorize]
 
-<MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-2">
-    <MudTabPanel Text="Параметры">
-        <CascadingValue Value="GetMode">
-            <NomenclatureEditComponent NomenclatureId="NomenclatureId" />
-        </CascadingValue>
-    </MudTabPanel>
-    @if (CurrentUserSession?.IsAdmin == true)
-    {
-        <MudTabPanel Text="Заказы">
-            <OrdersJournalComponent NomenclatureFilter="NomenclatureId" />
-        </MudTabPanel>
-    }
-</MudTabs>
+<MudCard>
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText Typo="Typo.h6">Номенклатура #@NomenclatureId</MudText>
+        </CardHeaderContent>
+        @* <CardHeaderActions>
+            <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Default" />
+        </CardHeaderActions> *@
+    </MudCardHeader>
+    <MudCardContent>
+        <MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-2">
+            <MudTabPanel Text="Настройки">
+                <CascadingValue Value="GetMode">
+                    <NomenclatureEditComponent NomenclatureId="NomenclatureId" />
+                </CascadingValue>
+            </MudTabPanel>
+            @if (CurrentUserSession?.IsAdmin == true)
+            {
+                <MudTabPanel Text="Заказы">
+                    <OrdersJournalComponent NomenclatureFilter="NomenclatureId" />
+                </MudTabPanel>
+            }
+        </MudTabs>
+    </MudCardContent>
+</MudCard>

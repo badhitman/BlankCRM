@@ -3,8 +3,6 @@
 ////////////////////////////////////////////////
 
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace SharedLib;
 
@@ -12,6 +10,7 @@ namespace SharedLib;
 /// StorageArticleModelDB
 /// </summary>
 [Index(nameof(CreatedAtUTC)), Index(nameof(LastUpdatedAtUTC)), Index(nameof(AuthorIdentityId))]
+[Index(nameof(NormalizedNameUpper)), Index(nameof(ProjectId)), Index(nameof(SortIndex))]
 public class ArticleModelDB : EntryDescriptionModel
 {
     /// <inheritdoc/>

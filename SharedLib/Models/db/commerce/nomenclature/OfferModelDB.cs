@@ -28,6 +28,12 @@ public class OfferModelDB : EntrySwitchableUpdatedStandardModel
     /// </summary>
     public List<OfferAvailabilityModelDB>? Registers { get; set; }
 
+    /// <inheritdoc/>
+    public OrganizationModelDB? Organization { get; set; }
+    /// <inheritdoc/>
+    public int? OrganizationId { get; set; }
+
+
     /// <summary>
     /// QuantitiesTemplateValidate
     /// </summary>
