@@ -141,14 +141,20 @@ public partial class WebChatService(
         if (!string.IsNullOrWhiteSpace(req.Payload?.FilterUserIdentityId))
             q = q.Where(x => x.InitiatorIdentityId == req.Payload.FilterUserIdentityId);
 
+        IOrderedQueryable<DialogWebChatModelDB> oq() => req.SortBy switch
+        {
+            nameof(DialogWebChatViewModel.LastMessageAtUTC) => req.SortingDirection == DirectionsEnum.Down ? q.OrderByDescending(x => x.LastMessageAtUTC) : q.OrderBy(x => x.LastMessageAtUTC),
+            nameof(DialogWebChatViewModel.LastOnlineAtUTC) => req.SortingDirection == DirectionsEnum.Down ? q.OrderByDescending(x => x.LastOnlineAtUTC) : q.OrderBy(x => x.LastOnlineAtUTC),
+            _ => q.OrderByDescending(x => x.LastMessageAtUTC),
+        };
+
         return new()
         {
             PageSize = req.PageSize,
             PageNum = req.PageNum,
             SortBy = req.SortBy,
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
-            Response = await q
-                             .OrderByDescending(x => x.LastMessageAtUTC)
+            Response = await oq()
                              .Skip(req.PageNum * req.PageSize)
                              .Take(req.PageSize)
                              .Include(x => x.UsersJoins)

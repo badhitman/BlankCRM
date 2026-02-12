@@ -141,6 +141,7 @@ public partial class WebChatsManageComponent : BlazorBusyComponentUsersCachedMod
             PageNum = state.Page,
             PageSize = state.PageSize,
             SortingDirection = state.SortDirection.Convert(),
+            SortBy = state.SortLabel,
             Payload = new()
             {
                 FilterUserIdentityId = FilterUserIdentityId,

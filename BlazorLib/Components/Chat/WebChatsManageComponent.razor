@@ -28,15 +28,20 @@
         </MudCheckBox>
     </ToolBarContent>
     <HeaderContent>
-        <MudTh>Сообщение/Вход</MudTh>
+        <MudTh title="Дата/Время последнего сообщения"><MudTableSortLabel SortLabel="@(nameof(DialogWebChatModelDB.LastMessageAtUTC))" T="DialogWebChatModelDB">Сообщение</MudTableSortLabel></MudTh>
+        <MudTh title="Дата/Время последнего посещения"><MudTableSortLabel SortLabel="@(nameof(DialogWebChatModelDB.LastOnlineAtUTC))" T="DialogWebChatModelDB">Вход</MudTableSortLabel></MudTh>
         <MudTh>Инициатор</MudTh>
         <MudTh>Участники</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Активность">
-            <MudLink Href="@($"/web-chats/room-{context.Id}")" Class="me-2">
+        <MudTd DataLabel="Сообщение" title="Дата/Время последнего сообщения">
+            <MudLink Href="@($"/web-chats/room-{context.Id}")">
                 @context.LastMessageAtUTC?.GetCustomTime().ToString()
-                <span class="ms-1">@context.LastOnlineAtUTC.GetCustomTime()</span>
+            </MudLink>
+        </MudTd>
+        <MudTd DataLabel="Вход" title="Дата/Время последнего посещения">
+            <MudLink Href="@($"/web-chats/room-{context.Id}")" Class="me-2">
+                @context.LastOnlineAtUTC.GetCustomTime()
             </MudLink>
             @if (!IsBusyProgress)
             {
