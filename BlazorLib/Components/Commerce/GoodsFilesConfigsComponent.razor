@@ -1,3 +1,18 @@
-﻿@inherits BlazorBusyComponentBaseAuthModel
+﻿@using MudBlazor
+@inherits BlazorBusyComponentBaseAuthModel
 
-<h3>GoodsFilesConfigsComponent</h3>
+@if (FilesList is not null)
+{
+    <MudSelect T="int" Label="Files" MultiSelection @bind-Value="_value" @bind-SelectedValues="SelectedFiles">
+        @foreach (StorageFileModelDB _file in FilesList)
+        {
+            <MudSelectItem T="int" Value="@_file.Id">@_file.FileName</MudSelectItem>
+        }
+    </MudSelect>
+}
+@if (FilesConfigs is not null)
+{
+    <div class="alert alert-primary" role="alert">
+        A simple primary alert—check it out!
+    </div>
+}

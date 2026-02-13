@@ -27,6 +27,8 @@
         <MudTh>ContentType</MudTh>
         <MudTh>Property</MudTh>
         <MudTh>Prefix</MudTh>
+        <MudTh title="Owner PrimaryKey">PK</MudTh>
+        @* <MudTh title="Referrer upload page">Referrer</MudTh> *@
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="CreatedAt">
@@ -35,15 +37,31 @@
         </MudTd>
         @if (ApplicationsNames.Length != 1)
         {
-            <MudTd DataLabel="ContentType">@context.ApplicationName</MudTd>
+            <MudTd DataLabel="ContentType">
+                @context.ApplicationName
+            </MudTd>
         }
         <MudTd DataLabel="FileName">
             <a target="_blank" href="/cloud-fs/read/@context.Id/@context.FileName">@context.FileName</a> <sup style="cursor:pointer;" @onclick="() => FileManage(context)" class="bi bi-server"></sup>
         </MudTd>
-        <MudTd DataLabel="FileLength">@(GlobalToolsStandard.SizeDataAsString(context.FileLength))</MudTd>
-        <MudTd DataLabel="ContentType">@context.ContentType</MudTd>
-        <MudTd DataLabel="Property">@context.PropertyName</MudTd>
-        <MudTd DataLabel="Prefix">@context.PrefixPropertyName</MudTd>
+        <MudTd DataLabel="FileLength">
+            @(GlobalToolsStandard.SizeDataAsString(context.FileLength))
+        </MudTd>
+        <MudTd DataLabel="ContentType">
+            @context.ContentType
+        </MudTd>
+        <MudTd DataLabel="Property">
+            @context.PropertyName
+        </MudTd>
+        <MudTd DataLabel="Prefix">
+            @context.PrefixPropertyName
+        </MudTd>
+        <MudTd DataLabel="PK" title="Owner PrimaryKey">
+            @context.OwnerPrimaryKey
+        </MudTd>
+        @* <MudTd DataLabel="Referrer" title="Referrer upload page">
+            @context.ReferrerMain
+        </MudTd> *@
     </RowTemplate>
     <NoRecordsContent>
         <MudText>Данные отсутствуют</MudText>

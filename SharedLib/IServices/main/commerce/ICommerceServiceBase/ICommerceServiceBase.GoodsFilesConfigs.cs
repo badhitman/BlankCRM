@@ -1,0 +1,11 @@
+﻿////////////////////////////////////////////////
+// © https://github.com/badhitman - @FakeGov 
+////////////////////////////////////////////////
+
+namespace SharedLib;
+
+/// <inheritdoc/>
+public partial interface ICommerceServiceBase
+{
+    
+}

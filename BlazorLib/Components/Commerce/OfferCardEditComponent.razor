@@ -16,7 +16,7 @@
         }
         @if (editOffer is not null)
         {
-            <MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-6">
+            <MudTabs Elevation="2" Rounded ApplyEffectsToContainer>
                 <MudTabPanel Text="Основное">
                     <MudTextField Disabled="(IsBusyProgress || CurrentUserSession?.IsAdmin != true)" @bind-Value="editOffer.Name" Label="Полное наименование" Variant="Variant.Outlined" Immediate ShrinkLabel></MudTextField>
                     <MudStack Row Class="mb-3">

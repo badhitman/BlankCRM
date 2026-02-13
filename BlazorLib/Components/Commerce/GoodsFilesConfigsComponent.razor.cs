@@ -27,6 +27,17 @@ public partial class GoodsFilesConfigsComponent : BlazorBusyComponentBaseAuthMod
 
     List<StorageFileModelDB>? FilesList;
     List<FileGoodsConfigModelDB>? FilesConfigs;
+    int _value = 0;
+
+    IEnumerable<int> _selectedFiles = new HashSet<int>();
+    IEnumerable<int> SelectedFiles
+    {
+        get => _selectedFiles;
+        set
+        {
+            _selectedFiles = value;
+        }
+    }
 
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
