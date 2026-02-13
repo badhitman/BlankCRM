@@ -21,7 +21,7 @@
 
         @if (_included.Count(x => x) == _included.Count || _included.Count(x => !x) == _included.Count)
         {
-            <FilesContextViewComponent Title="Файлы" ApplicationsNames="@([])" PropertyName="@string.Empty" />
+            <FilesContextViewComponent ShowReferralColumn />
         }
         else
         {

@@ -24,15 +24,18 @@ public partial class FilesContextViewComponent : MetaPropertyBaseComponent
     [Inject]
     IStorageTransmission FilesRepo { get; set; } = default!;
 
+    /// <inheritdoc/>
+    [Parameter]
+    public bool ShowReferralColumn { get; set; }
 
     bool CanAddingFile => OwnerPrimaryKey.HasValue && OwnerPrimaryKey.Value > 0 &&
         !string.IsNullOrWhiteSpace(PrefixPropertyName) &&
         !string.IsNullOrWhiteSpace(PropertyName) &&
-        ApplicationsNames.Length == 1;
+        ApplicationsNames?.Length == 1;
 
-    private string? searchString = null;
-    private string _inputFileId = Guid.NewGuid().ToString();
-    private readonly List<IBrowserFile> loadedFiles = [];
+    string? searchString = null;
+    string _inputFileId = Guid.NewGuid().ToString();
+    readonly List<IBrowserFile> loadedFiles = [];
 
     /// <summary>
     /// Table (ref)
@@ -72,9 +75,11 @@ public partial class FilesContextViewComponent : MetaPropertyBaseComponent
     {
         if (CurrentUserSession is null)
             throw new Exception("CurrentUserSession is null");
-
+        if (ApplicationsNames is null || ApplicationsNames.Length != 1)
+            throw new Exception("loadedFiles.Count == 0");
         if (loadedFiles.Count == 0)
-            throw new Exception();
+            throw new Exception("loadedFiles.Count == 0");
+
         string appName = ApplicationsNames.Single();
         StorageFileMetadataModel req = new()
         {
@@ -145,7 +150,7 @@ public partial class FilesContextViewComponent : MetaPropertyBaseComponent
         }
     }
 
-    private async Task<TableData<StorageFileModelDB>> ServerReload(TableState state, CancellationToken token)
+    async Task<TableData<StorageFileModelDB>> ServerReload(TableState state, CancellationToken token)
     {
         await SetBusyAsync(token: token);
         TPaginationRequestStandardModel<SelectMetadataRequestModel> req = new()
@@ -173,7 +178,7 @@ public partial class FilesContextViewComponent : MetaPropertyBaseComponent
         return new() { TotalItems = rest.TotalRowsCount, Items = data };
     }
 
-    private void OnSearch(string text)
+    void OnSearch(string text)
     {
         searchString = text;
         if (TableRef is not null)

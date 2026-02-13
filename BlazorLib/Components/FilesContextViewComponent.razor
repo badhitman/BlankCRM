@@ -1,12 +1,15 @@
-﻿@using BlazorLib.Components.FilesIndexing
-@using MudBlazor
+﻿@using static SharedLib.GlobalStaticConstantsRoutes
+@using BlazorLib.Components.FilesIndexing
 @using System.Globalization
-@using static SharedLib.GlobalStaticConstantsRoutes
+@using MudBlazor
 @inherits MetaPropertyBaseComponent
 
 <MudTable ServerData="ServerReload" Dense Hover @ref="TableRef" Loading="IsBusyProgress">
     <ToolBarContent>
-        <MudText Typo="Typo.h6">@Title</MudText>
+        @if (!string.IsNullOrWhiteSpace(Title))
+        {
+            <MudText Typo="Typo.h6">@Title</MudText>
+        }
         <MudSpacer />
         <MudTextField T="string"
                       ValueChanged="@(s => OnSearch(s))"
@@ -18,7 +21,7 @@
     </ToolBarContent>
     <HeaderContent>
         <MudTh><MudTableSortLabel InitialDirection="SortDirection.Descending" SortLabel="CreatedAt" T="StorageFileModelDB">CreatedAt</MudTableSortLabel></MudTh>
-        @if (ApplicationsNames.Length != 1)
+        @if (ApplicationsNames is null || ApplicationsNames.Length != 1)
         {
             <MudTh>App</MudTh>
         }
@@ -28,14 +31,17 @@
         <MudTh>Property</MudTh>
         <MudTh>Prefix</MudTh>
         <MudTh title="Owner PrimaryKey">PK</MudTh>
-        @* <MudTh title="Referrer upload page">Referrer</MudTh> *@
+        @if (ShowReferralColumn)
+        {
+            <MudTh title="Referrer upload page">Referrer</MudTh>
+        }
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="CreatedAt">
             @context.CreatedAt.GetCustomTime().ToString("d", GlobalStaticConstants.RU)
             <sup>@context.CreatedAt.GetCustomTime().ToString("t", GlobalStaticConstants.RU)</sup>
         </MudTd>
-        @if (ApplicationsNames.Length != 1)
+        @if (ApplicationsNames is null || ApplicationsNames.Length != 1)
         {
             <MudTd DataLabel="ContentType">
                 @context.ApplicationName
@@ -59,9 +65,12 @@
         <MudTd DataLabel="PK" title="Owner PrimaryKey">
             @context.OwnerPrimaryKey
         </MudTd>
-        @* <MudTd DataLabel="Referrer" title="Referrer upload page">
-            @context.ReferrerMain
-        </MudTd> *@
+        @if (ShowReferralColumn)
+        {
+            <MudTd DataLabel="Referrer" title="Referrer upload page">
+                @context.ReferrerMain
+            </MudTd>
+        }
     </RowTemplate>
     <NoRecordsContent>
         <MudText>Данные отсутствуют</MudText>

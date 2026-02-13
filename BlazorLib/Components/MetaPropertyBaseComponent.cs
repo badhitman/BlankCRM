@@ -3,7 +3,6 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
-using BlazorLib;
 
 namespace BlazorLib;
 
@@ -15,14 +14,14 @@ public class MetaPropertyBaseComponent : BlazorBusyComponentBaseAuthModel
     /// <summary>
     /// Приложения
     /// </summary>
-    [Parameter, EditorRequired]
-    public required string[] ApplicationsNames { get; set; }
+    [Parameter]
+    public string[]? ApplicationsNames { get; set; }
 
     /// <summary>
     /// Имя
     /// </summary>
-    [Parameter, EditorRequired]
-    public required string PropertyName { get; set; }
+    [Parameter]
+    public string? PropertyName { get; set; }
 
     /// <summary>
     /// Префикс
@@ -45,6 +44,6 @@ public class MetaPropertyBaseComponent : BlazorBusyComponentBaseAuthModel
     /// <summary>
     /// Title
     /// </summary>
-    [Parameter, EditorRequired]
-    public  required string Title { get; set; }
+    [Parameter]
+    public string? Title { get; set; }
 }

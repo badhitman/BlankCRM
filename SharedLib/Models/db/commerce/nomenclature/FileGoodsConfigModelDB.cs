@@ -13,13 +13,18 @@ namespace SharedLib;
 public class FileGoodsConfigModelDB : EntrySwitchableModel
 {
     /// <summary>
+    /// FileId
+    /// </summary>
+    public required int FileId { get; set; }
+
+    /// <summary>
     /// владелец
     /// </summary>
     public required int OwnerId { get; set; }
     /// <summary>
     /// владелец
     /// </summary>
-    public required int OwnerTypeName { get; set; }
+    public required string OwnerTypeName { get; set; }
 
     /// <summary>
     /// Описание/примечание для объекта

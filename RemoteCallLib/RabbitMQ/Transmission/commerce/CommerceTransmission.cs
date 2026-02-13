@@ -198,4 +198,12 @@ public partial class CommerceTransmission(IRabbitClient rabbitClient) : ICommerc
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> UploadOffersAsync(List<NomenclatureScopeModel> req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.UploadOffersCommerceReceive, req, token: token) ?? new();
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> FilesForGoodSetAsync(TAuthRequestStandardModel<FilesForGoodSetRequestModel> req, CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.FilesForGoodSetCommerceReceive, req, token: token) ?? new();
+
+    /// <inheritdoc/>
+    public async Task<TPaginationResponseStandardModel<FileGoodsConfigModelDB>> FilesForGoodSelectAsync(TPaginationRequestStandardModel<FilesForGoodSelectRequestModel> req, CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<TPaginationResponseStandardModel<FileGoodsConfigModelDB>>(GlobalStaticConstantsTransmission.TransmissionQueues.FilesForGoodSelectCommerceReceive, req, token: token) ?? new();
 }

@@ -32,7 +32,7 @@ public partial class TagsViewComponent : MetaPropertyBaseComponent
 
     private async Task AddChip()
     {
-        if (string.IsNullOrWhiteSpace(_value) || !OwnerPrimaryKey.HasValue)
+        if (string.IsNullOrWhiteSpace(_value) || !OwnerPrimaryKey.HasValue || ApplicationsNames is null || ApplicationsNames.Length != 1)
             return;
         await SetBusyAsync();
         ResponseBaseModel res = await TagsRepo.TagSetAsync(new()
@@ -60,22 +60,23 @@ public partial class TagsViewComponent : MetaPropertyBaseComponent
 
     private async Task OnChipClosed(MudChip<TagViewModel> chip)
     {
-        if (!string.IsNullOrWhiteSpace(chip.Value?.TagName) && OwnerPrimaryKey.HasValue)
+        if (string.IsNullOrWhiteSpace(chip.Value?.TagName) || !OwnerPrimaryKey.HasValue || ApplicationsNames is null || ApplicationsNames.Length != 1)
+            return;
+
+        await SetBusyAsync();
+        ResponseBaseModel res = await TagsRepo.TagSetAsync(new()
         {
-            await SetBusyAsync();
-            ResponseBaseModel res = await TagsRepo.TagSetAsync(new()
-            {
-                PrefixPropertyName = PrefixPropertyName,
-                ApplicationName = ApplicationsNames.Single(),
-                PropertyName = PropertyName,
-                Name = chip.Value.TagName,
-                Id = OwnerPrimaryKey.Value,
-                Set = false
-            });
-            SnackBarRepo.ShowMessagesResponse(res.Messages);
-            await SetBusyAsync(false);
-            await ReloadTags();
-        }
+            PrefixPropertyName = PrefixPropertyName,
+            ApplicationName = ApplicationsNames.Single(),
+            PropertyName = PropertyName,
+            Name = chip.Value.TagName,
+            Id = OwnerPrimaryKey.Value,
+            Set = false
+        });
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
+        await SetBusyAsync(false);
+        await ReloadTags();
+
     }
 
     async Task<IEnumerable<string?>> Search(string value, CancellationToken token)
@@ -116,7 +117,7 @@ public partial class TagsViewComponent : MetaPropertyBaseComponent
         {
             Payload = new()
             {
-                ApplicationsNames = this.ApplicationsNames,
+                ApplicationsNames = ApplicationsNames,
                 IdentityUsersIds = [],
                 PropertyName = PropertyName,
                 OwnerPrimaryKey = OwnerPrimaryKey,
