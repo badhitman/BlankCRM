@@ -9,7 +9,7 @@ namespace SharedLib;
 /// <summary>
 /// FileGoodsConfigModelDB
 /// </summary>
-[Index(nameof(OwnerId), nameof(OwnerTypeName), IsUnique = true), Index(nameof(IsGallery))]
+[Index(nameof(FileId), nameof(OwnerId), nameof(OwnerTypeName), IsUnique = true), Index(nameof(IsGallery))]
 public class FileGoodsConfigModelDB : EntrySwitchableModel
 {
     /// <summary>
@@ -40,4 +40,7 @@ public class FileGoodsConfigModelDB : EntrySwitchableModel
     /// IsGallery
     /// </summary>
     public bool IsGallery { get; set; }
+
+    /// <inheritdoc/>
+    public uint SortIndex { get; set; }
 }

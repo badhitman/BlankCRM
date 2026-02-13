@@ -94,7 +94,9 @@
                         @if (filesViewRef is not null)
                         {
                             <MudTabPanel Text="Установки">
-                                <GoodsFilesConfigsComponent OwnerTypeName="@nameof(OfferModelDB)" FilesContextViewComponent="filesViewRef" />
+                                <GoodsFilesConfigsComponent OwnerTypeName="@nameof(OfferModelDB)"
+                                                            FilesContextViewComponent="filesViewRef"
+                                                            OwnerId="OfferId" />
                             </MudTabPanel>
                         }
                     </MudTabs>

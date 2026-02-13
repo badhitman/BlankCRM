@@ -125,6 +125,7 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<OffersReadReceive, TAuthRequestStandardModel<int[]>, TResponseModel<OfferModelDB[]>>()
             .RegisterMqListener<FilesForGoodSelectReceive, TPaginationRequestStandardModel<FilesForGoodSelectRequestModel>, TPaginationResponseStandardModel<FileGoodsConfigModelDB>>()
             .RegisterMqListener<FilesForGoodSetReceive, TAuthRequestStandardModel<FilesForGoodSetRequestModel>, ResponseBaseModel>()
+            .RegisterMqListener<FileForGoodUpdateReceive, TAuthRequestStandardModel<FileGoodsConfigModelDB>, ResponseBaseModel>()
             .RegisterMqListener<NomenclaturesReadReceive, TAuthRequestStandardModel<int[]>, TResponseModel<List<NomenclatureModelDB>>>()
             .RegisterMqListener<OfficesOrganizationsReadReceive, int[], TResponseModel<OfficeOrganizationModelDB[]>>()
             .RegisterMqListener<RowsDeleteFromOrderReceive, TAuthRequestStandardModel<int[]>, TResponseModel<RowOrderDocumentRecord[]>>()

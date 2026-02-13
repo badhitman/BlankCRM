@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace SharedLib;
 
 /// <inheritdoc/>
-[Index(nameof(ReferrerMain)),Index(nameof(NormalizedFileNameUpper))]
+[Index(nameof(ReferrerMain)), Index(nameof(NormalizedFileNameUpper))]
 public class StorageFileModelDB : StorageFileMiddleModel
 {
     /// <summary>

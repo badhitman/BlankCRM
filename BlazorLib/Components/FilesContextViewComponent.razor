@@ -38,7 +38,7 @@
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="CreatedAt">
-            @context.CreatedAt.GetCustomTime().ToString("d", GlobalStaticConstants.RU)
+            @($"#{context.Id} {context.CreatedAt.GetCustomTime().ToString("d", GlobalStaticConstants.RU)}")
             <sup>@context.CreatedAt.GetCustomTime().ToString("t", GlobalStaticConstants.RU)</sup>
         </MudTd>
         @if (ApplicationsNames is null || ApplicationsNames.Length != 1)

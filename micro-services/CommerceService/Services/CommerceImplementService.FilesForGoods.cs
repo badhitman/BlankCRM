@@ -26,14 +26,14 @@ public partial class CommerceImplementService : ICommerceService
         if (req.Payload.SelectedFiles is null || !req.Payload.SelectedFiles.Any())
             return ResponseBaseModel.CreateSuccess($"Удалено: {await q.ExecuteUpdateAsync(set => set.SetProperty(p => p.IsDisabled, true), cancellationToken: token)}");
 
-        int _enable = await q.Where(x => !req.Payload.SelectedFiles.Contains(x.FileId))
+        int _disable = await q.Where(x => !x.IsDisabled && !req.Payload.SelectedFiles.Contains(x.FileId))
                .ExecuteUpdateAsync(set => set.SetProperty(p => p.IsDisabled, true), cancellationToken: token);
 
-        int _disable = await q.Where(x => req.Payload.SelectedFiles.Contains(x.FileId))
+        int _enable = await q.Where(x => x.IsDisabled && req.Payload.SelectedFiles.Contains(x.FileId))
                .ExecuteUpdateAsync(set => set.SetProperty(p => p.IsDisabled, false), cancellationToken: token);
 
         int[] filesIds = [.. q.Where(x => !x.IsDisabled).Select(x => x.FileId)];
-        req.Payload.SelectedFiles = req.Payload.SelectedFiles.Where(x => !filesIds.Contains(x));
+        req.Payload.SelectedFiles = [..req.Payload.SelectedFiles.Where(x => !filesIds.Contains(x))];
         if (req.Payload.SelectedFiles.Any())
         {
             await context.GoodsFilesConfigs.AddRangeAsync(req.Payload.SelectedFiles.Select(x => new FileGoodsConfigModelDB()
@@ -43,7 +43,7 @@ public partial class CommerceImplementService : ICommerceService
                 Name = "",
                 OwnerId = req.Payload.OwnerId,
             }), token);
-            return ResponseBaseModel.CreateSuccess($"Добавлено: {context.SaveChangesAsync(token)}. Включено: {_enable}; Выключено: {_disable}");
+            return ResponseBaseModel.CreateSuccess($"Добавлено: {await context.SaveChangesAsync(token)}. Включено: {_enable}; Выключено: {_disable}");
         }
 
         return ResponseBaseModel.CreateSuccess($"Включено: {_enable}; Выключено: {_disable}");
@@ -57,7 +57,7 @@ public partial class CommerceImplementService : ICommerceService
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         IQueryable<FileGoodsConfigModelDB> q = context.GoodsFilesConfigs
-            .Where(x => x.OwnerId == req.Payload.OwnerId && x.OwnerTypeName == req.Payload.OwnerTypeName);
+            .Where(x => !x.IsDisabled && x.OwnerId == req.Payload.OwnerId && x.OwnerTypeName == req.Payload.OwnerTypeName);
 
         return new()
         {
@@ -66,7 +66,23 @@ public partial class CommerceImplementService : ICommerceService
             SortBy = req.SortBy,
             SortingDirection = req.SortingDirection,
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
-            Response = await q.Skip(req.PageNum * req.PageSize).Take(req.PageSize).ToListAsync(cancellationToken: token),
+            Response = await q.OrderBy(x => x.SortIndex).Skip(req.PageNum * req.PageSize).Take(req.PageSize).ToListAsync(cancellationToken: token),
         };
+    }
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> FileForGoodUpdateAsync(TAuthRequestStandardModel<FileGoodsConfigModelDB> req, CancellationToken token = default)
+    {
+        if (req.Payload is null)
+            return ResponseBaseModel.CreateError("req.Payload is null");
+
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        return ResponseBaseModel.CreateSuccess($"Выполнено: {await context.GoodsFilesConfigs
+            .Where(x => x.Id == req.Payload.Id)
+            .ExecuteUpdateAsync(set => set
+                .SetProperty(p => p.IsGallery, req.Payload.IsGallery)
+                .SetProperty(p => p.Name, req.Payload.Name)
+                .SetProperty(p => p.FullDescription, req.Payload.FullDescription)
+                .SetProperty(p => p.ShortDescription, req.Payload.ShortDescription), cancellationToken: token)}");
     }
 }

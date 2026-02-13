@@ -3,16 +3,61 @@
 
 @if (FilesList is not null)
 {
-    <MudSelect T="int" Label="Files" MultiSelection @bind-Value="_value" @bind-SelectedValues="SelectedFiles">
+    <MudSelect ToStringFunc="@convertFunc"
+               T="StorageFileModelDB"
+               Label="Файлы для витрины"
+               ReadOnly="IsBusyProgress"
+               MultiSelection @bind-SelectedValues="SelectedFiles">
         @foreach (StorageFileModelDB _file in FilesList)
         {
-            <MudSelectItem T="int" Value="@_file.Id">@_file.FileName</MudSelectItem>
+            <MudSelectItem title="@($"#{_file.Id}")" T="StorageFileModelDB" Value="@_file" />
         }
     </MudSelect>
 }
-@if (FilesConfigs is not null)
+@if (IsBusyProgress)
 {
-    <div class="alert alert-primary" role="alert">
-        A simple primary alert—check it out!
+    <MudCard>
+        <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="200px" />
+        <MudCardContent>
+            <MudSkeleton Width="30%" Height="42px;" />
+            <MudSkeleton Width="80%" />
+            <MudSkeleton Width="100%" />
+        </MudCardContent>
+        <MudCardActions>
+            <MudSkeleton Width="64px" Height="40px" Class="ml-2" />
+            <MudSkeleton Width="105px" Height="40px" Class="ml-3" />
+        </MudCardActions>
+    </MudCard>
+}
+else if (FilesList is not null && FilesConfigs is not null && FilesConfigs.Count != 0)
+{
+    int i = -1;
+    <div class="alert alert-primary mt-3" role="alert">
+        @for (i = 0; i < FilesConfigs.Count; i++)
+        {
+            FileGoodsConfigModelDB _f = FilesConfigs[i];
+            StorageFileModelDB _f2 = FilesList.First(x => x.Id == _f.FileId);
+            if (GlobalToolsStandard.IsImageFile(_f2.FileName))
+                continue;
+            <span class="badge text-bg-secondary me-2">@_f2.FileName</span>
+        }
+        @if (i >= 0)
+        {
+            <hr />
+        }
+        <div class="row row-cols-1 row-cols-md-4 g-1">
+            @for (i = 0; i < FilesConfigs.Count; i++)
+            {
+                FileGoodsConfigModelDB _f = FilesConfigs[i];
+                StorageFileModelDB _f2 = FilesList.First(x => x.Id == _f.FileId);
+                if (!GlobalToolsStandard.IsImageFile(_f2.FileName))
+                    continue;
+                <div class="col">
+                    <FileGoodsCardComponent ReloadHandler="async () => await ReloadData()"
+                                            FileObjectConfig="_f"
+                                            FileObject="_f2" />
+                </div>
+            }
+        </div>
     </div>
 }

@@ -12,4 +12,7 @@ public partial interface ICommerceServiceBase
 
     /// <inheritdoc/>
     public Task<TPaginationResponseStandardModel<FileGoodsConfigModelDB>> FilesForGoodSelectAsync(TPaginationRequestStandardModel<FilesForGoodSelectRequestModel> req, CancellationToken token = default);
+
+    /// <inheritdoc/>
+    public Task<ResponseBaseModel> FileForGoodUpdateAsync(TAuthRequestStandardModel<FileGoodsConfigModelDB> req, CancellationToken token = default);
 }
