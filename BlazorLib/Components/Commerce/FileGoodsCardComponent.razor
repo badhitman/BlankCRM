@@ -47,7 +47,7 @@
                    OnClick="async () => await MoveFileAsync(DirectionsEnum.Up)"
                    StartIcon="@Icons.Material.Filled.ArrowBackIos"></MudButton>
         <MudButton Variant="Variant.Text"
-                   Disabled="@(IsBusyProgress ||nextDisabled.Contains(MoveStatus))"
+                   Disabled="@(IsBusyProgress || nextDisabled.Contains(MoveStatus))"
                    Color="Color.Primary"
                    OnClick="async () => await MoveFileAsync(DirectionsEnum.Down)"
                    EndIcon="@Icons.Material.Filled.ArrowForwardIos"></MudButton>

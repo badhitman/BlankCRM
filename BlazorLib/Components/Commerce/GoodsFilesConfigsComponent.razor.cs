@@ -47,13 +47,16 @@ public partial class GoodsFilesConfigsComponent : BlazorBusyComponentBaseAuthMod
         }
     }
 
-    MoveRowStatesEnum GetMoveStatus(int currentIndex, FileGoodsConfigModelDB conf, StorageFileModelDB file)
+    MoveRowStatesEnum GetMoveStatus(FileGoodsConfigModelDB conf, StorageFileModelDB file)
     {
         if (FilesConfigs is null || FilesConfigs.Count <= 1 || FilesList is null)
             return MoveRowStatesEnum.Singleton;
 
         bool _isGal = GlobalToolsStandard.IsImageFile(file.FileName);
         List<FileGoodsConfigModelDB> prepareList = [.. FilesConfigs.Where(x => GlobalToolsStandard.IsImageFile(FilesList.First(y => y.Id == x.FileId).FileName) == _isGal).OrderBy(x => x.SortIndex)];
+        if (prepareList.Count <= 1)
+            return MoveRowStatesEnum.Singleton;
+
         int _fi = prepareList.FindIndex(x => x.Id == conf.Id);
         if (_fi == 0)
             return MoveRowStatesEnum.Start;
