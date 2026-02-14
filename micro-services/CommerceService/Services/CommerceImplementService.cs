@@ -27,6 +27,7 @@ public partial class CommerceImplementService(
     IWebTransmission webTransmissionRepo,
     IHelpDeskTransmission HelpDeskRepo,
     IRubricsTransmission RubricsRepo,
+    IStorageTransmission FilesRepo,
     ITelegramTransmission tgRepo,
     ILogger<CommerceImplementService> loggerRepo,
     WebConfigModel _webConf,

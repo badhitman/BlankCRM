@@ -15,4 +15,7 @@ public partial interface ICommerceServiceBase
 
     /// <inheritdoc/>
     public Task<ResponseBaseModel> FileForGoodUpdateAsync(TAuthRequestStandardModel<FileGoodsConfigModelDB> req, CancellationToken token = default);
+
+    /// <inheritdoc/>
+    public Task<ResponseBaseModel> MoveFileForGoodsAsync(TAuthRequestStandardModel<MoveMetaObjectModel> req, CancellationToken token = default);
 }

@@ -24,9 +24,11 @@ public partial class FilesContextViewComponent : MetaPropertyBaseComponent
     [Inject]
     IStorageTransmission FilesRepo { get; set; } = default!;
 
+
     /// <inheritdoc/>
     [Parameter]
     public bool ShowReferralColumn { get; set; }
+
 
     bool CanAddingFile => OwnerPrimaryKey.HasValue && OwnerPrimaryKey.Value > 0 &&
         !string.IsNullOrWhiteSpace(PrefixPropertyName) &&
@@ -160,9 +162,9 @@ public partial class FilesContextViewComponent : MetaPropertyBaseComponent
                 SearchQuery = searchString,
                 ApplicationsNames = ApplicationsNames,
                 IdentityUsersIds = [],
-                PropertyName = ManageMode ? "" : PropertyName,
+                PropertyName = PropertyName,
                 OwnerPrimaryKey = OwnerPrimaryKey,
-                PrefixPropertyName = ManageMode ? "" : PrefixPropertyName,
+                PrefixPropertyName = PrefixPropertyName,
             },
             PageNum = state.Page,
             PageSize = state.PageSize,

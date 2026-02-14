@@ -18,6 +18,18 @@ public partial class FileGoodsCardComponent : BlazorBusyComponentBaseAuthModel
 
     /// <inheritdoc/>
     [Parameter, EditorRequired]
+    public required string ApplicationName { get; set; }
+
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required string? PropertyName { get; set; }
+
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required string? PrefixPropertyName { get; set; }
+
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
     public required FileGoodsConfigModelDB FileObjectConfig { get; set; }
 
     /// <inheritdoc/>
@@ -28,6 +40,14 @@ public partial class FileGoodsCardComponent : BlazorBusyComponentBaseAuthModel
     [Parameter, EditorRequired]
     public required Action ReloadHandler { get; set; }
 
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required MoveRowStatesEnum MoveStatus { get; set; }
+
+
+    static MoveRowStatesEnum[]
+          backDisabled = [MoveRowStatesEnum.Singleton, MoveRowStatesEnum.Start],
+          nextDisabled = [MoveRowStatesEnum.Singleton, MoveRowStatesEnum.End];
 
     string _fileName = "/img/noimage-simple.png";
     FileGoodsConfigModelDB fileObjectEdit = default!;
@@ -35,6 +55,27 @@ public partial class FileGoodsCardComponent : BlazorBusyComponentBaseAuthModel
                      fileObjectEdit.Name != FileObjectConfig.Name ||
                      fileObjectEdit.FullDescription != FileObjectConfig.FullDescription ||
                      fileObjectEdit.ShortDescription != FileObjectConfig.ShortDescription;
+
+    async Task MoveFileAsync(DirectionsEnum direct)
+    {
+        TAuthRequestStandardModel<MoveMetaObjectModel> req = new()
+        {
+            SenderActionUserId = CurrentUserSession?.UserId,
+            Payload = new()
+            {
+                Direct = direct,
+                Id = fileObjectEdit.Id,
+                ApplicationName = ApplicationName,
+                PrefixPropertyName = PrefixPropertyName,
+                PropertyName = PropertyName,
+            }
+        };
+        await SetBusyAsync();
+        ResponseBaseModel res = await CommerceRepo.MoveFileForGoodsAsync(req);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
+        await SetBusyAsync(false);
+        ReloadHandler();
+    }
 
     async Task SaveConfig()
     {

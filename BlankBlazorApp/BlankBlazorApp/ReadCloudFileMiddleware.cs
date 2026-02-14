@@ -66,9 +66,17 @@ public partial class ReadCloudFileMiddleware(RequestDelegate next)
 
         http_context.Response.Headers.Append($"Content-disposition", $"attachment; filename={System.Net.WebUtility.UrlEncode(rest.Response.FileName)}");
         http_context.Response.Headers.Append($"Content-type", rest.Response.ContentType);
+        http_context.Response.Headers.Append($"Content-Length", rest.Response.Payload.Length.ToString());
 
         await http_context.Response.BodyWriter.WriteAsync(rest.Response.Payload);
-        await _next.Invoke(_http_context);
+        try
+        {
+            await _next.Invoke(_http_context);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, nameof(ReadCloudFileMiddleware));
+        }
     }
 
     [GeneratedRegex(@"^/(\d+)/(.*)", RegexOptions.Compiled)]

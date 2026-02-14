@@ -2,25 +2,26 @@
 @inherits BlazorBusyComponentBaseAuthModel
 
 <MudCard>
-    
     <MudCardMedia Image="@_fileName" />
     <MudCardContent>
         <div class="mb-3">
-            <label for="exampleInputEmail1" class="form-label">Name</label>
+            <label for="exampleInputEmail1" class="form-label">Переопределить имя</label>
             <input @bind-value="fileObjectEdit.Name"
                    @bind-value:event="oninput"
                    type="text"
+                   disabled="@IsBusyProgress"
                    placeholder="@FileObject.FileName"
                    class="form-control"
                    id="exampleInputEmail1"
                    aria-describedby="emailHelp">
-            <div id="emailHelp" class="form-text">Если не указать, тогда оригинальное</div>
+            <div id="emailHelp" class="form-text">Для отображения в карточке</div>
         </div>
         <div class="mb-3">
             <label for="exampleInputEmail2" class="form-label">Короткое описание (опционально)</label>
             <input @bind-value="fileObjectEdit.ShortDescription"
                    @bind-value:event="oninput"
                    type="text"
+                   disabled="@IsBusyProgress"
                    class="form-control"
                    id="exampleInputEmail2"
                    aria-describedby="emailHelp2">
@@ -38,19 +39,24 @@
     <MudCardActions>
         <MudButton Variant="Variant.Text"
                    Color="Color.Primary"
+                   Disabled="@(IsBusyProgress || backDisabled.Contains(MoveStatus))"
+                   OnClick="async () => await MoveFileAsync(DirectionsEnum.Up)"
                    StartIcon="@Icons.Material.Filled.ArrowBackIos"></MudButton>
         <MudButton Variant="Variant.Text"
+                   Disabled="@(IsBusyProgress ||nextDisabled.Contains(MoveStatus))"
                    Color="Color.Primary"
+                   OnClick="async () => await MoveFileAsync(DirectionsEnum.Down)"
                    EndIcon="@Icons.Material.Filled.ArrowForwardIos"></MudButton>
         <MudButton Variant="Variant.Text"
                    Color="Color.Info"
                    EndIcon="@Icons.Material.Filled.Save"
                    OnClick="SaveConfig"
-                   Disabled="@(!IsEdited)"></MudButton>
+                   Disabled="@(IsBusyProgress || !IsEdited)"></MudButton>
         @if (IsEdited)
         {
             <MudButton Variant="Variant.Text"
                        Color="Color.Success"
+                       Disabled="IsBusyProgress"
                        EndIcon="@Icons.Material.Filled.Cancel"
                        OnClick="() => fileObjectEdit = GlobalTools.CreateDeepCopy(FileObjectConfig)!"></MudButton>
         }

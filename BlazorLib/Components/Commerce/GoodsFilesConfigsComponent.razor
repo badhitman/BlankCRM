@@ -29,7 +29,7 @@
         </MudCardActions>
     </MudCard>
 }
-else if (FilesList is not null && FilesConfigs is not null && FilesConfigs.Count != 0)
+else if (FilesList is not null && FilesConfigs is not null && FilesConfigs.Count != 0 && FilesContextViewComponent.ApplicationsNames is not null)
 {
     int i = -1;
     <div class="alert alert-primary mt-3" role="alert">
@@ -53,7 +53,11 @@ else if (FilesList is not null && FilesConfigs is not null && FilesConfigs.Count
                 if (!GlobalToolsStandard.IsImageFile(_f2.FileName))
                     continue;
                 <div class="col">
-                    <FileGoodsCardComponent ReloadHandler="async () => await ReloadData()"
+                    <FileGoodsCardComponent ReloadHandler="async () => await InvokeAsync(ReloadData)"
+                                            ApplicationName="@FilesContextViewComponent.ApplicationsNames.Single()"
+                                            PropertyName="@FilesContextViewComponent.PropertyName"
+                                            PrefixPropertyName="@FilesContextViewComponent.PrefixPropertyName"
+                                            MoveStatus="@GetMoveStatus(i, _f,_f2)"
                                             FileObjectConfig="_f"
                                             FileObject="_f2" />
                 </div>

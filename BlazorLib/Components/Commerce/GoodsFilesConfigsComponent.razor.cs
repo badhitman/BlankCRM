@@ -47,9 +47,26 @@ public partial class GoodsFilesConfigsComponent : BlazorBusyComponentBaseAuthMod
         }
     }
 
+    MoveRowStatesEnum GetMoveStatus(int currentIndex, FileGoodsConfigModelDB conf, StorageFileModelDB file)
+    {
+        if (FilesConfigs is null || FilesConfigs.Count <= 1 || FilesList is null)
+            return MoveRowStatesEnum.Singleton;
+
+        bool _isGal = GlobalToolsStandard.IsImageFile(file.FileName);
+        List<FileGoodsConfigModelDB> prepareList = [.. FilesConfigs.Where(x => GlobalToolsStandard.IsImageFile(FilesList.First(y => y.Id == x.FileId).FileName) == _isGal).OrderBy(x => x.SortIndex)];
+        int _fi = prepareList.FindIndex(x => x.Id == conf.Id);
+        if (_fi == 0)
+            return MoveRowStatesEnum.Start;
+
+        if (_fi == prepareList.Count - 1)
+            return MoveRowStatesEnum.End;
+
+        return MoveRowStatesEnum.Between;
+    }
+
     async Task FilesSelectedSet()
     {
-        if (FilesList is null || FilesConfigs is null)
+        if (FilesList is null || FilesConfigs is null || FilesContextViewComponent.ApplicationsNames is null)
             return;
 
         StorageFileModelDB[] _filesControl = [.. FilesList.Where(x => FilesConfigs.Any(y => y.FileId == x.Id))];
@@ -65,6 +82,9 @@ public partial class GoodsFilesConfigsComponent : BlazorBusyComponentBaseAuthMod
                 OwnerId = OwnerId,
                 OwnerTypeName = OwnerTypeName,
                 SelectedFiles = SelectedFiles.Select(x => x.Id),
+                ApplicationName = FilesContextViewComponent.ApplicationsNames.Single(),
+                PrefixPropertyName = FilesContextViewComponent.PropertyName,
+                PropertyName = FilesContextViewComponent.PropertyName,
             }
         };
         ResponseBaseModel res = await CommerceRepo.FilesForGoodSetAsync(req);
@@ -108,13 +128,13 @@ public partial class GoodsFilesConfigsComponent : BlazorBusyComponentBaseAuthMod
             Payload = new()
             {
                 OwnerId = OwnerId,
-                OwnerTypeName = OwnerTypeName
+                OwnerTypeName = OwnerTypeName,
             },
             PageNum = 0,
             PageSize = int.MaxValue,
         };
         TPaginationResponseStandardModel<FileGoodsConfigModelDB> res2 = await CommerceRepo.FilesForGoodSelectAsync(req2);
-        FilesConfigs = res2.Response;
+        FilesConfigs = res2.Response?.OrderBy(x => x.SortIndex).ToList();
         if (FilesList is not null && FilesConfigs is not null)
             _selectedFiles = new HashSet<StorageFileModelDB>(FilesList.Where(x => FilesConfigs.Any(y => y.FileId == x.Id)));
 

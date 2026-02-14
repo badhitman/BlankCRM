@@ -655,6 +655,9 @@ public static partial class GlobalStaticConstantsTransmission
         public readonly static string FileForGoodsUpdateCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, $"{Routes.FILE_CONTROLLER_NAME}-for-{Routes.GOODS_CONTROLLER_NAME}", Routes.UPDATE_ACTION_NAME);
 
         /// <inheritdoc/>
+        public readonly static string FileForGoodsMoveCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, $"{Routes.FILE_CONTROLLER_NAME}-for-{Routes.GOODS_CONTROLLER_NAME}", Routes.MOVE_ACTION_NAME);
+
+        /// <inheritdoc/>
         public readonly static string IncomingMerchantPaymentTBankReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, $"T-{Routes.BANK_CONTROLLER_NAME}", Routes.MERCHANT_CONTROLLER_NAME, $"{Routes.INCOMING_CONTROLLER_NAME}-{Routes.PAYMENT_CONTROLLER_NAME}", Routes.DELETE_ACTION_NAME);
 
         /// <inheritdoc/>

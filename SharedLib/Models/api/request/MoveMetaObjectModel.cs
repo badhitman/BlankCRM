@@ -5,19 +5,16 @@
 namespace SharedLib;
 
 /// <summary>
-/// FilesForGoodSetRequestModel
+/// MoveMetaObjectModel
 /// </summary>
-public class FilesForGoodSetRequestModel : FilesForGoodModel
+public class MoveMetaObjectModel : MoveObjectModel
 {
-    /// <inheritdoc/>
-    public IEnumerable<int>? SelectedFiles { get; set; }
-
     /// <inheritdoc/>
     public required string ApplicationName { get; set; }
 
     /// <inheritdoc/>
-    public required string? PrefixPropertyName { get; set; }
+    public required string? PropertyName { get; set; }
 
     /// <inheritdoc/>
-    public required string? PropertyName { get; set; }
+    public required string? PrefixPropertyName { get; set; }
 }
