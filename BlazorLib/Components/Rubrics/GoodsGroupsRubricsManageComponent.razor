@@ -1,4 +1,7 @@
-﻿<h3>GoodsGroupsRubricsManageComponent</h3>
+﻿@using static SharedLib.GlobalStaticConstantsRoutes
+
+<RubricsManageComponent TEntity="RubricNodeBodyComponent"
+                        ContextName="@($"{Routes.GOODS_CONTROLLER_NAME}-{Routes.CATEGORIES_CONTROLLER_NAME}")" />
 
 @code {
 
