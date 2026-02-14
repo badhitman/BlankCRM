@@ -35,6 +35,10 @@
             <input @bind="fileObjectEdit.IsGallery" type="checkbox" class="form-check-input" id="exampleCheck1">
             <label class="form-check-label" for="exampleCheck1">Галерея</label>
         </div>
+        @if (IsBusyProgress)
+        {
+            <MudProgressLinear Color="Color.Primary" Indeterminate Class="my-7" />
+        }
     </MudCardContent>
     <MudCardActions>
         <MudButton Variant="Variant.Text"
