@@ -66,8 +66,7 @@
             <div class="card">
                 <div class="card-body">
                     <h6 class="card-title">Категории</h6>
-                    <RubricsManageComponent TEntity="RubricNodeBodyComponent"
-                                            SingleLevelMode
+                    <RubricsManageComponent TEntity="RubricNodeBodyComponent"                                            
                                             ContextName="@Routes.ARTICLES_CONTROLLER_NAME"
                                             SelectedValuesChanged="@(new TreeViewOptionsHandler() { SelectedNodes = SelectedNodesRead(), SelectedValuesChangedHandler = SelectedRubricsChange })" />
                 </div>

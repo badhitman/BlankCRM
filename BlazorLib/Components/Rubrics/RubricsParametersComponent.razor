@@ -89,8 +89,20 @@
                             <h5 class="card-title">Категории</h5>
                             <h6 class="card-subtitle mb-2 text-body-secondary">Категории статей</h6>
                             <RubricsManageComponent TEntity="RubricNodeBodyComponent"
-                                                    SingleLevelMode
                                                     ContextName="@Routes.ARTICLES_CONTROLLER_NAME" />
+                        </div>
+                    </div>
+                </MudPaper>
+            </MudTabPanel>
+            <MudTabPanel ToolTip="Группы/категории для структурирования номенклатуры"
+                         Text="Номенклатура (категории)"
+                         Icon="@Icons.Material.Filled.ShoppingCart">
+                <MudPaper Class="ma-2" Elevation="3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Категории номенклатуры</h5>
+                            <h6 class="card-subtitle mb-2 text-body-secondary">Группы/категории для структурирования номенклатуры</h6>
+                            <GoodsGroupsRubricsManageComponent />
                         </div>
                     </div>
                 </MudPaper>

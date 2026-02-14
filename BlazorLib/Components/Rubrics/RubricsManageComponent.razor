@@ -18,6 +18,7 @@
 }
 
 <MudTreeView Style="width: 100%"
+             AutoSelectParent="false"
              ServerData="@LoadServerData"
              Items="@InitialTreeItems"
              SelectionMode="@(SelectedValuesChanged is null ? SelectionMode.ToggleSelection : SelectionMode.MultiSelection)"
