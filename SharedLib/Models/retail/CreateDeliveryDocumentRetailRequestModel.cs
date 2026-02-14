@@ -27,6 +27,7 @@ public class CreateDeliveryDocumentRetailRequestModel : DeliveryDocumentRetailMo
             DeliveryStatus = other.DeliveryStatus,
             DeliveryStatusesLog = other.DeliveryStatusesLog,
             DeliveryType = other.DeliveryType,
+            DeliveryTypeId = other.DeliveryTypeId,
             Description = other.Description,
             Id = other.Id,
             InjectToOrderId = injectToOrderId,

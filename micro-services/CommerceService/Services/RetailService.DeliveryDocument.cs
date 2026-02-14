@@ -266,7 +266,6 @@ public partial class RetailService : IRetailService
         #region delivery-type migration (from enum to db)
         DeliveryDocumentRetailModelDB[] migrateDb = await q
             .Where(x => x.DeliveryTypeId == 0)
-            .Take(10)
             .ToArrayAsync(cancellationToken: token);
         Dictionary<string, int> map = [];
         foreach (DeliveryDocumentRetailModelDB pmDb in migrateDb)
@@ -304,7 +303,7 @@ public partial class RetailService : IRetailService
             q = q.Where(x => req.Payload.RecipientsFilterIdentityId.Contains(x.RecipientIdentityUserId));
 
         if (req.Payload?.TypesFilter is not null && req.Payload.TypesFilter.Length != 0)
-            q = q.Where(x => req.Payload.TypesFilter.Contains(x.DeliveryType));
+            q = q.Where(x => req.Payload.TypesFilter.Contains(x.DeliveryTypeId));
 
         if (req.Payload?.StatusesFilter is not null && req.Payload.StatusesFilter.Count != 0)
         {
@@ -396,7 +395,7 @@ public partial class RetailService : IRetailService
             q = q.Where(x => req.RecipientsFilterIdentityId.Contains(x.RecipientIdentityUserId));
 
         if (req.TypesFilter is not null && req.TypesFilter.Length != 0)
-            q = q.Where(x => req.TypesFilter.Contains(x.DeliveryType));
+            q = q.Where(x => req.TypesFilter.Contains(x.DeliveryTypeId));
 
         if (req.StatusesFilter is not null && req.StatusesFilter.Count != 0)
         {

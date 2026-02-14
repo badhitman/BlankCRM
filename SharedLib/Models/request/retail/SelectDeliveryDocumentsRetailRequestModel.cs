@@ -18,7 +18,7 @@ public class SelectDeliveryDocumentsRetailRequestModel : PeriodBaseModel
     public int? FilterOrderId { get; set; }
 
     /// <inheritdoc/>
-    public DeliveryTypesEnum[]? TypesFilter { get; set; }
+    public int[]? TypesFilter { get; set; }
 
     /// <inheritdoc/>
     public List<DeliveryStatusesEnum?>? StatusesFilter { get; set; }

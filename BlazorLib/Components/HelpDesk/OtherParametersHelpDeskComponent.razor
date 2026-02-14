@@ -19,7 +19,7 @@
     <MudTabPanel Text="Parameters">
         <ul class="list-group list-group-flush">
             <li class="list-group-item my-2">
-                <div class="row row-cols-1 row-cols-md-2 g-1">
+                <div class="row row-cols-1 row-cols-md-3 g-1">
                     <div class="col">
                         <div class="card">
                             <div class="card-body">
@@ -70,6 +70,15 @@
                                                             Label="Автогенератор Email"
                                                             HintTrue="Email клиенту можно не указывать"
                                                             HintFalse="Email клиента требуется указывать" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                <RubricParameterStorageComponent Label="Предоплаченные"
+                                                                 KeyStorage="GlobalStaticCloudStorageMetadata.DeliveryTypePickup" />
                             </div>
                         </div>
                     </div>

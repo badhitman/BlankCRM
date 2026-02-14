@@ -21,7 +21,7 @@ public class DeliveryDocumentRetailModelDB : EntryUpdatedModel
     /// </summary>
     [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
     [Newtonsoft.Json.JsonConverter(typeof(StringEnumConverter))]
-    public DeliveryTypesEnum DeliveryType { get; set; }
+    public DeliveryTypesEnumObsolete DeliveryType { get; set; }
 
     /// <summary>
     /// Метод/тип доставки
@@ -113,7 +113,7 @@ public class DeliveryDocumentRetailModelDB : EntryUpdatedModel
     /// <inheritdoc/>
     public override string ToString()
     {
-        string res = $"[{DeliveryType.DescriptionInfo()}]";
+        string res = "";
 
         if (DeliveryStatus is null || DeliveryStatus == 0)
             res = $"{res} (не обработан)";
@@ -138,6 +138,7 @@ public class DeliveryDocumentRetailModelDB : EntryUpdatedModel
             DeliveryStatus = other.DeliveryStatus,
             DeliveryStatusesLog = other.DeliveryStatusesLog,
             DeliveryType = other.DeliveryType,
+            DeliveryTypeId = other.DeliveryTypeId,
             Description = other.Description,
             Id = other.Id,
             Notes = other.Notes,

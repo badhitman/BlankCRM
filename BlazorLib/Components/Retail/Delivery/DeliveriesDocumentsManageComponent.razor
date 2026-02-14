@@ -10,9 +10,9 @@
                         CheckMark Variant="Variant.Text"
                         SelectedColor="Color.Primary"
                         Color="Color.Info">
-                @foreach (DeliveryTypesEnum dt in Enum.GetValues(typeof(DeliveryTypesEnum)))
+                @foreach (UniversalBaseModel dt in AllDeliveriesTypes)
                 {
-                    <MudChip Value="@dt" Text="@dt.DescriptionInfo()" />
+                    <MudChip Value="@dt.Id" Text="@dt.Name" />
                 }
             </MudChipSet>
         </div>

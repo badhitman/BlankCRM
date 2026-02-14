@@ -14,6 +14,9 @@ namespace BlazorLib.Components.Retail.Delivery;
 public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthModel
 {
     [Inject]
+    IRubricsTransmission RubricsRepo { get; set; } = default!;
+
+    [Inject]
     IRetailService RetailRepo { get; set; } = default!;
 
     [Inject]
@@ -39,6 +42,7 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
     public string? ClientId { get; set; }
 
 
+    List<UniversalBaseModel> AllDeliveriesTypes = [];
     ChatTelegramStandardModel? currentChatTelegram;
     DeliveryDocumentRetailModelDB? currentDoc, editDoc;
     UserInfoModel? recipientUser;
@@ -46,6 +50,7 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
     string images_upload_url = default!;
     Dictionary<string, object> editorConf = default!;
     decimal totalWeightOrdersDocumentsLinks;
+    int rubricDeliveryTypePickup;
 
     bool CannotSave
     {
@@ -54,7 +59,7 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
             if (IsBusyProgress || currentDoc is null || editDoc is null)
                 return true;
 
-            if (editDoc.DeliveryType != DeliveryTypesEnum.Pickup && string.IsNullOrWhiteSpace(editDoc.KladrCode) && string.IsNullOrWhiteSpace(editDoc.AddressUserComment))
+            if (editDoc.DeliveryTypeId != rubricDeliveryTypePickup && string.IsNullOrWhiteSpace(editDoc.KladrCode) && string.IsNullOrWhiteSpace(editDoc.AddressUserComment))
                 return true;
 
             if (string.IsNullOrWhiteSpace(editDoc.RecipientIdentityUserId) || editDoc.WarehouseId <= 0)
@@ -64,7 +69,7 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
                 currentDoc.Id > 0 &&
                 currentDoc.Notes == editDoc.Notes &&
                 currentDoc.PackageSize == editDoc.PackageSize &&
-                currentDoc.DeliveryType == editDoc.DeliveryType &&
+                currentDoc.DeliveryTypeId == editDoc.DeliveryTypeId &&
                 currentDoc.RecipientIdentityUserId == editDoc.RecipientIdentityUserId &&
                 currentDoc.ShippingCost == editDoc.ShippingCost &&
                 currentDoc.WeightShipping == editDoc.WeightShipping &&
@@ -241,6 +246,12 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
 
         images_upload_url = $"{GlobalStaticConstants.TinyMCEditorUploadImage}{Routes.DELIVERY_CONTROLLER_NAME}/{Routes.DOCUMENT_CONTROLLER_NAME}?{nameof(StorageMetadataModel.PrefixPropertyName)}={Routes.IMAGE_ACTION_NAME}&{nameof(StorageMetadataModel.OwnerPrimaryKey)}={DeliveryDocumentId}";
         editorConf = GlobalStaticConstants.TinyMCEditorConf(images_upload_url);
+        
+        TResponseModel<int?> res_RubricDeliveryTypePickup = await StorageTransmissionRepo.ReadParameterAsync<int?>(GlobalStaticCloudStorageMetadata.DeliveryTypePickup);
+        rubricDeliveryTypePickup = res_RubricDeliveryTypePickup.Response ?? 0;
+
+        string ctx = Path.Combine(Routes.DELIVERIES_CONTROLLER_NAME, Routes.TYPES_CONTROLLER_NAME);
+        AllDeliveriesTypes = await RubricsRepo.RubricsChildListAsync(new() { ContextName = ctx });
 
         if (DeliveryDocumentId > 0)
         {

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using MudBlazor;
 using SharedLib;
+using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace BlazorLib.Components.Retail.Delivery;
 
@@ -53,6 +54,7 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
 
 
     bool _equalSumFilter;
+    List<UniversalBaseModel> AllDeliveriesTypes = [];
     string? searchString = null;
     /// <summary>
     /// RubricsCache
@@ -85,8 +87,8 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
         }
     }
 
-    IReadOnlyCollection<DeliveryTypesEnum> _selectedTypes = [];
-    IReadOnlyCollection<DeliveryTypesEnum> SelectedTypes
+    IReadOnlyCollection<int> _selectedTypes = [];
+    IReadOnlyCollection<int> SelectedTypes
     {
         get => _selectedTypes;
         set
@@ -193,15 +195,19 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
             SnackBarRepo.Error("CurrentUserSession is null");
             return;
         }
+
+        string ctx = Path.Combine(Routes.DELIVERIES_CONTROLLER_NAME, Routes.TYPES_CONTROLLER_NAME);
+        AllDeliveriesTypes = await RubricsRepo.RubricsChildListAsync(new() { ContextName = ctx });
+
         bool _needReload = false;
         await Task.WhenAll([
                 Task.Run(async () => {
-                    TResponseModel<DeliveryTypesEnum?[]?> _readTypesFilter = await StorageRepo.ReadParameterAsync<DeliveryTypesEnum?[]?>(GlobalStaticCloudStorageMetadata.RetailDeliveriesJournalByTypesFilters(CurrentUserSession.UserId));
+                    TResponseModel<int?[]?> _readTypesFilter = await StorageRepo.ReadParameterAsync<int?[]?>(GlobalStaticCloudStorageMetadata.RetailDeliveriesJournalByTypesFilters(CurrentUserSession.UserId));
                     if (_readTypesFilter.Success() && _readTypesFilter.Response is not null)
                     {
-                        List<DeliveryTypesEnum> _markers = [];
+                        List<int> _markers = [];
                         includeUnsetStatus = _readTypesFilter.Response.Any(x => x is null);
-                        foreach (DeliveryTypesEnum _sd in _readTypesFilter.Response.Where(x => x is not null)!)
+                        foreach (int _sd in _readTypesFilter.Response.Where(x => x is not null)!)
                             _markers.Add(_sd);
 
                         _selectedTypes = [.. _markers];
@@ -244,7 +250,7 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
 
         await Task.WhenAll([
                  Task.Run(async () => { await StorageRepo.SaveParameterAsync<DeliveryStatusesEnum?[]>([.. _storeStatuses], GlobalStaticCloudStorageMetadata.RetailDeliveriesJournalByStatusesFilters(CurrentUserSession.UserId), true, false); }),
-                 Task.Run(async () => { await StorageRepo.SaveParameterAsync<DeliveryTypesEnum[]>([.. _selectedTypes], GlobalStaticCloudStorageMetadata.RetailDeliveriesJournalByTypesFilters(CurrentUserSession.UserId), true, false); })
+                 Task.Run(async () => { await StorageRepo.SaveParameterAsync<int[]>([.. _selectedTypes], GlobalStaticCloudStorageMetadata.RetailDeliveriesJournalByTypesFilters(CurrentUserSession.UserId), true, false); })
             ]);
     }
 

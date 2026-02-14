@@ -1174,6 +1174,11 @@ public static partial class GlobalStaticConstantsRoutes
         public const string USER_CONTROLLER_NAME = "user";
 
         /// <summary>
+        /// Pickup
+        /// </summary>
+        public const string PICKUP_CONTROLLER_NAME = "pickup";
+
+        /// <summary>
         /// Permission
         /// </summary>
         public const string PERMISSION_CONTROLLER_NAME = "permission";

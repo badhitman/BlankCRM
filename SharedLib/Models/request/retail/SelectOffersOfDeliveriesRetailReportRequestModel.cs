@@ -13,5 +13,5 @@ public class SelectOffersOfDeliveriesRetailReportRequestModel : SelectRetailDocu
     public List<DeliveryStatusesEnum?>? StatusesFilter { get; set; }
 
     /// <inheritdoc/>
-    public List<DeliveryTypesEnum?>? TypesFilter { get; set; }
+    public List<int?>? TypesFilter { get; set; }
 }

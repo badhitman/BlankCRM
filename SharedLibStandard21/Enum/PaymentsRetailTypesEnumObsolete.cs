@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using System;
 using System.ComponentModel;
 
 namespace SharedLib;
@@ -9,6 +10,7 @@ namespace SharedLib;
 /// <summary>
 /// Типы оплаты в рознице
 /// </summary>
+[Obsolete("use rubrics")]
 public enum PaymentsRetailTypesEnumObsolete
 {
     /// <summary>

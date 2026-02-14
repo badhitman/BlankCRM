@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using System;
 using System.ComponentModel;
 
 namespace SharedLib;
@@ -9,7 +10,8 @@ namespace SharedLib;
 /// <summary>
 /// Методы доставки
 /// </summary>
-public enum DeliveryTypesEnum
+[Obsolete("use rubrics")]
+public enum DeliveryTypesEnumObsolete
 {
     /// <summary>
     /// Почта
