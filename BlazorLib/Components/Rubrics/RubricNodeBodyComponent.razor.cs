@@ -25,6 +25,15 @@ public partial class RubricNodeBodyComponent : BlazorBusyComponentBaseModel
     [Parameter, EditorRequired]
     public required string? ContextName { get; set; }
 
+    /// <summary>
+    /// Имя-префикс
+    /// </summary>
+    /// <remarks>
+    /// Для организации внутри одного контекста разных наборов рубрик
+    /// </remarks>
+    [Parameter, EditorRequired]
+    public required string? PrefixName { get; set; }
+
 
     string? NewTagName { get; set; }
     TPaginationResponseStandardModel<TagViewModel> TagsCollection = new();

@@ -14,16 +14,14 @@
                 <OrdersJournalComponent NomenclatureFilter="NomenclatureId" />
             </MudTabPanel>
             <MudTabPanel Disabled="@(NomenclatureId < 1 || IsBusyProgress)" Text="Категории">
-                <MudPaper Class="ma-2" Elevation="3">
-                    <div class="card">
-                        <div class="card-body">
-                            <h6 class="card-title">Категории</h6>
-                            <RubricsManageComponent TEntity="RubricNodeBodyComponent"
-                                                    ContextName="@($"{Routes.GOODS_CONTROLLER_NAME}-{Routes.CATEGORIES_CONTROLLER_NAME}")"
-                                                    SelectedValuesChanged="@(new TreeViewOptionsHandler() { SelectedNodes = SelectedNodesRead(), SelectedValuesChangedHandler = SelectedRubricsChange })" />
-                        </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h6 class="card-title">Категории</h6>
+                        <RubricsManageComponent TEntity="RubricNodeBodyComponent"
+                                                ContextName="@($"{Routes.GOODS_CONTROLLER_NAME}-{Routes.CATEGORIES_CONTROLLER_NAME}")"
+                                                SelectedValuesChanged="@(new TreeViewOptionsHandler() { SelectedNodes = SelectedNodesRead(), SelectedValuesChangedHandler = SelectedRubricsChange })" />
                     </div>
-                </MudPaper>
+                </div>
             </MudTabPanel>
         </Authorized>
     </AuthorizeView>

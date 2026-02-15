@@ -27,9 +27,13 @@ public class RubricsService(
         using HelpDeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
         string? _ctx1 = req.ContextName?.Replace("/", "\\");
         string? _ctx2 = req.ContextName?.Replace("\\", "/");
-        IQueryable<UniversalBaseModel> q = context
-            .Rubrics
-            .Where(x => x.PrefixName == req.PrefixName && (x.ContextName == _ctx1 || x.ContextName == _ctx2))
+        IQueryable<RubricModelDB> pq = context.Rubrics.Where(x => x.ContextName == _ctx1 || x.ContextName == _ctx2);
+
+        pq = string.IsNullOrWhiteSpace(req.PrefixName)
+           ? pq.Where(x => x.PrefixName == null || x.PrefixName == "")
+           : pq.Where(x => x.PrefixName == req.PrefixName);
+
+        IQueryable<UniversalBaseModel> q = pq
             .Select(x => new UniversalBaseModel()
             {
                 Name = x.Name,
