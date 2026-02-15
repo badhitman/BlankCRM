@@ -5,7 +5,11 @@
 
 @inherits BlazorBusyComponentBaseModel
 
-@if (InitialTreeItems.Count == 0)
+@if (IsBusyProgress)
+{
+    <MudProgressLinear Color="Color.Primary" Indeterminate Class="my-7" />
+}
+else if (InitialTreeItems.Count == 0)
 {
     <figure class="text-center">
         <blockquote class="blockquote">
@@ -213,11 +217,12 @@
     public async Task<IReadOnlyCollection<TreeItemData<UniversalBaseModel?>>> LoadServerData(UniversalBaseModel? parentValue)
     {
         ArgumentNullException.ThrowIfNull(parentValue);
-
+        await SetBusyAsync();
         List<UniversalBaseModel> rubrics = await RequestRubrics(parentValue.Id);
         TreeItemDataRubricModel findNode = FindNode(parentValue.Id, InitialTreeItems) ?? throw new Exception();
 
         findNode.Children = ConvertRubrics(rubrics)!;
+        await SetBusyAsync(false);
         return findNode.Children;
     }
 
