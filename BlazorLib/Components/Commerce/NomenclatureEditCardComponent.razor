@@ -1,4 +1,5 @@
-﻿@using MudBlazor
+﻿@using Microsoft.Extensions.Options
+@using MudBlazor
 @using static SharedLib.GlobalStaticConstantsRoutes
 @inherits BlazorBusyComponentBaseAuthModel
 
@@ -17,41 +18,34 @@
                 <div class="card">
                     <div class="card-body">
                         <h6 class="card-title">Категории</h6>
-                        <RubricsManageComponent TEntity="RubricNodeBodyComponent"
-                                                ContextName="@($"{Routes.GOODS_CONTROLLER_NAME}-{Routes.CATEGORIES_CONTROLLER_NAME}")"
-                                                SelectedValuesChanged="@(new TreeViewOptionsHandler() { SelectedNodes = SelectedNodesRead(), SelectedValuesChangedHandler = SelectedRubricsChange })" />
+                        @if (CommerceConf.Value.NomenclaturesRubricsPrefixes?.Any(x => !string.IsNullOrWhiteSpace(x)) != true)
+                        {
+                            <RubricsManageComponent TEntity="RubricNodeBodyComponent"
+                                                    ContextName="@($"{Routes.GOODS_CONTROLLER_NAME}-{Routes.CATEGORIES_CONTROLLER_NAME}")"
+                                                    SelectedValuesChanged="@(new TreeViewOptionsHandler() { SelectedNodes = SelectedNodesRead(), SelectedValuesChangedHandler = SelectedRubricsChange })" />
+                        }
+                        else
+                        {
+                            <MudTabs Outlined Position="@Position.Left" Rounded Border ApplyEffectsToContainer @bind-ActivePanelIndex="ActiveIndex" @ref="panelRef">
+                                <MudTabPanel Text="По умолчанию">
+                                    <RubricsManageComponent TEntity="RubricNodeBodyComponent"
+                                                            ContextName="@($"{Routes.GOODS_CONTROLLER_NAME}-{Routes.CATEGORIES_CONTROLLER_NAME}")"
+                                                            SelectedValuesChanged="@(new TreeViewOptionsHandler() { SelectedNodes = SelectedNodesRead(), SelectedValuesChangedHandler = SelectedRubricsChange })" />
+                                </MudTabPanel>
+                                @foreach (string _prefixName in CommerceConf.Value.NomenclaturesRubricsPrefixes)
+                                {
+                                    <MudTabPanel Text="@_prefixName" ID="_prefixName">
+                                        <RubricsManageComponent TEntity="RubricNodeBodyComponent"
+                                                                ContextName="@($"{Routes.GOODS_CONTROLLER_NAME}-{Routes.CATEGORIES_CONTROLLER_NAME}")"
+                                                                PrefixName="@_prefixName"
+                                                                SelectedValuesChanged="@(new TreeViewOptionsHandler() { SelectedNodes = SelectedNodesRead(), SelectedValuesChangedHandler = SelectedRubricsChange })" />
+                                    </MudTabPanel>
+                                }
+                            </MudTabs>
+                        }
                     </div>
                 </div>
             </MudTabPanel>
         </Authorized>
     </AuthorizeView>
 </MudTabs>
-
-@code {
-    /// <summary>
-    /// NomenclatureId
-    /// </summary>
-    [Parameter, EditorRequired]
-    public int NomenclatureId { get; set; }
-
-    /// <summary>
-    /// ViewMode
-    /// </summary>
-    [Parameter]
-    public string? ViewMode { get; set; }
-
-    OffersListModesEnum GetMode => string.IsNullOrWhiteSpace(ViewMode) || !Enum.TryParse(typeof(OffersListModesEnum), ViewMode, out object? pvm) ? OffersListModesEnum.Goods : (OffersListModesEnum)pvm;
-    int[] SelectedNodesRead() => [];//orignArticle?.RubricsJoins?.Select(x => x.RubricId).ToArray() ?? [];
-
-    async void SelectedRubricsChange(IReadOnlyCollection<UniversalBaseModel?> req)
-    {
-        //if (editArticle?.RubricsJoins is not null && !req.Any(x => !editArticle!.RubricsJoins.Any(y => y.RubricId == x?.Id)) && !editArticle.RubricsJoins.Any(x => !req.Any(y => y?.Id == x.RubricId)))
-        //    return;
-
-        //await SetBusyAsync();
-        //ResponseBaseModel res = await ArticlesRepo.UpdateRubricsForArticleAsync(new() { ArticleId = ArticleId, RubricsIds = [.. req.Select(x => x!.Id)] });
-        //await LoadArticleData();
-        //await SetBusyAsync(false);
-        //SnackBarRepo.ShowMessagesResponse(res.Messages);
-    }
-}

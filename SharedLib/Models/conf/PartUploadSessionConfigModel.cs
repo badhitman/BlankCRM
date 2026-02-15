@@ -9,7 +9,7 @@ namespace SharedLib;
 /// </summary>
 public class PartUploadSessionConfigModel
 {
-/// <summary>
+    /// <summary>
     /// Срок жизни сессии (максимальный допустимый срок в секундах) для загрузки больших файлов (частями).
     /// </summary>
     /// <remarks>
@@ -26,4 +26,7 @@ public class PartUploadSessionConfigModel
     /// Размер порции данных (максимальный допустимый)
     /// </remarks>
     public required long PartUploadSize { get; set; }
+
+    /// <inheritdoc/>
+    public static readonly string Configuration = "PartUploadSessionConfig";
 }

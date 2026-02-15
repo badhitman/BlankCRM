@@ -99,17 +99,17 @@ builder.Configuration.AddCommandLine(args);
 
 builder.Services
     .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
-    .Configure<RestApiConfigBaseModel>(builder.Configuration.GetSection("ApiAccess"))
-    .Configure<PartUploadSessionConfigModel>(builder.Configuration.GetSection("PartUploadSessionConfig"))
+    .Configure<RestApiConfigBaseModel>(builder.Configuration.GetSection(RestApiConfigBaseModel.Configuration))
+    .Configure<PartUploadSessionConfigModel>(builder.Configuration.GetSection(PartUploadSessionConfigModel.Configuration))
 ;
 
 builder.Services.AddOpenApi();
 builder.Services.AddOptions();
 builder.Services.AddMemoryCache();
 
-string connectionNlogsString = builder.Configuration.GetConnectionString($"NLogsConnection{_modePrefix}") ?? throw new InvalidOperationException($"Connection string 'NLogsConnection{_modePrefix}' not found.");
+string connectionNLogsString = builder.Configuration.GetConnectionString($"NLogsConnection{_modePrefix}") ?? throw new InvalidOperationException($"Connection string 'NLogsConnection{_modePrefix}' not found.");
 builder.Services.AddDbContextFactory<NLogsContext>(opt =>
-    opt.UseNpgsql(connectionNlogsString));
+    opt.UseNpgsql(connectionNLogsString));
 
 builder.Services.AddStackExchangeRedisCache(options =>
 {

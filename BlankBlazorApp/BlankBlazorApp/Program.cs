@@ -141,7 +141,8 @@ builder.Services
     .Configure<ServerConfigModel>(builder.Configuration.GetSection("ServerConfig"))
     .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
     .Configure<TelegramBotConfigModel>(builder.Configuration.GetSection(WebConfigModel.Configuration))
-    ;
+    .Configure<CommerceConfigModel>(builder.Configuration.GetSection(CommerceConfigModel.Configuration))
+;
 
 NavMainMenuModel? mainNavMenu = builder.Configuration.GetSection("NavMenuConfig").Get<NavMainMenuModel>();
 mainNavMenu ??= new NavMainMenuModel() { NavMenuItems = [new NavItemModel() { HrefNav = "", Title = "Home", IsNavLinkMatchAll = true }] };

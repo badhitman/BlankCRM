@@ -1,8 +1,44 @@
-﻿@using static SharedLib.GlobalStaticConstantsRoutes
+﻿@using Microsoft.Extensions.Options
+@using MudBlazor
+@using static SharedLib.GlobalStaticConstantsRoutes
 
-<RubricsManageComponent TEntity="RubricNodeBodyComponent"
-                        ContextName="@($"{Routes.GOODS_CONTROLLER_NAME}-{Routes.CATEGORIES_CONTROLLER_NAME}")" />
+@if (CommerceConf.Value.NomenclaturesRubricsPrefixes?.Any(x => !string.IsNullOrWhiteSpace(x)) != true)
+{
+    <RubricsManageComponent TEntity="RubricNodeBodyComponent"
+                            ContextName="@($"{Routes.GOODS_CONTROLLER_NAME}-{Routes.CATEGORIES_CONTROLLER_NAME}")" />
+}
+else
+{
+    <MudTabs Outlined Position="@Position.Left" Rounded Border ApplyEffectsToContainer @bind-ActivePanelIndex="ActiveIndex" @ref="panelRef">
+        <MudTabPanel Text="По умолчанию">
+            <RubricsManageComponent TEntity="RubricNodeBodyComponent"
+                                    ContextName="@($"{Routes.GOODS_CONTROLLER_NAME}-{Routes.CATEGORIES_CONTROLLER_NAME}")" />
+        </MudTabPanel>
+        @foreach (string _prefixName in CommerceConf.Value.NomenclaturesRubricsPrefixes.Where(x => !string.IsNullOrWhiteSpace(x)))
+        {
+            <MudTabPanel Text="@_prefixName" ID="_prefixName">
+                <RubricsManageComponent TEntity="RubricNodeBodyComponent"
+                                        PrefixName="@_prefixName"
+                                        ContextName="@($"{Routes.GOODS_CONTROLLER_NAME}-{Routes.CATEGORIES_CONTROLLER_NAME}")" />
+            </MudTabPanel>
+        }
+    </MudTabs>
+}
 
 @code {
+    [Inject]
+    IOptions<CommerceConfigModel> CommerceConf { get; set; } = default!;
 
+    MudTabs? panelRef;
+    string? activePrefixName;
+    int _activeIndex;
+    int ActiveIndex
+    {
+        get => _activeIndex;
+        set
+        {
+            _activeIndex = value;
+            activePrefixName = panelRef?.ActivePanel?.ID?.ToString();
+        }
+    }
 }
