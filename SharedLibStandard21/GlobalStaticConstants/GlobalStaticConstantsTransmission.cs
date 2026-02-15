@@ -692,6 +692,11 @@ public static partial class GlobalStaticConstantsTransmission
         /// </summary>
         public readonly static string NomenclatureUpdateOrCreateCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, Routes.NOMENCLATURE_CONTROLLER_NAME, $"{Routes.UPDATE_ACTION_NAME}-or-{Routes.CREATE_ACTION_NAME}");
 
+        /// <summary>
+        /// Обновление номенклатуры
+        /// </summary>
+        public readonly static string NomenclatureRubricsSetCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, $"{Routes.NOMENCLATURE_CONTROLLER_NAME}-{Routes.RUBRICS_CONTROLLER_NAME}", Routes.SET_ACTION_NAME);
+
         /// <inheritdoc/>
         public readonly static string CalendarScheduleUpdateOrCreateCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, $"{Routes.WORKSCHEDULE_CONTROLLER_NAME}-{Routes.CALENDAR_CONTROLLER_NAME}", $"{Routes.UPDATE_ACTION_NAME}-or-{Routes.CREATE_ACTION_NAME}");
 

@@ -30,7 +30,7 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<MessageVoteReceive, TAuthRequestStandardModel<VoteIssueRequestModel>, TResponseModel<bool?>>()
             .RegisterMqListener<MessageUpdateOrCreateReceive, TAuthRequestStandardModel<IssueMessageHelpDeskBaseModel>, TResponseModel<int?>>()
             .RegisterMqListener<SetWebConfigReceive, HelpDeskConfigModel, ResponseBaseModel>()
-            .RegisterMqListener<UpdateRubricsForArticleReceive, ArticleRubricsSetModel, ResponseBaseModel>()
+            .RegisterMqListener<UpdateRubricsForArticleReceive, RubricsSetModel, ResponseBaseModel>()
             .RegisterMqListener<ArticlesReadReceive, int[], TResponseModel<ArticleModelDB[]>>()
             .RegisterMqListener<ArticleCreateOrUpdateReceive, ArticleModelDB, TResponseModel<int>>()
             .RegisterMqListener<IssuesReadReceive, TAuthRequestStandardModel<IssuesReadRequestModel>, TResponseModel<IssueHelpDeskModelDB[]>>()

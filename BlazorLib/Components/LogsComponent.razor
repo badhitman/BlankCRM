@@ -136,7 +136,11 @@
                 }
             </MudTd>
         }
-        <MudTd DataLabel="Message" Class="@_classLevel">@context.RecordMessage</MudTd>
+        <MudTd DataLabel="Message" Class="@_classLevel">
+            <pre style="max-height:250px;">
+                @context.RecordMessage
+            </pre>
+        </MudTd>
         <MudTd DataLabel="Level" Class="@_classLevel">@context.RecordLevel</MudTd>
 
         @if (StackTrace)

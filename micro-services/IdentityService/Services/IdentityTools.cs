@@ -1965,7 +1965,7 @@ public class IdentityTools(
         if (roles_that_need_add_in_db.Length != 0)
         {
             loggerRepo.LogWarning($"Созданы новые роли: {JsonConvert.SerializeObject(roles_that_need_add_in_db, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
-            await identityContext
+            await identityContext.Roles
                 .AddRangeAsync(roles_that_need_add_in_db.Select(r => new ApplicationRole() { Name = r, Title = r, NormalizedName = userManager.NormalizeName(r) }), token);
             await identityContext.SaveChangesAsync(token);
         }
@@ -1984,7 +1984,7 @@ public class IdentityTools(
                 .Select(x => x.Id)
                 .ToArrayAsync(cancellationToken: token);
 
-            await identityContext.AddRangeAsync(roles_that_need_add_in_db.Select(x => new IdentityUserRole<string>() { RoleId = x, UserId = req.UserId }), token);
+            await identityContext.UserRoles.AddRangeAsync(roles_that_need_add_in_db.Select(x => new IdentityUserRole<string>() { RoleId = x, UserId = req.UserId }), token);
             await identityContext.SaveChangesAsync(token);
         }
         return ResponseBaseModel.CreateSuccess($"Добавлено {roles_that_need_add_in_db.Length} ролей пользователю");

@@ -483,6 +483,44 @@ public partial class CommerceImplementService(
     }
 
     /// <inheritdoc/>
+    public async Task<ResponseBaseModel> RubricsForNomenclaturesSetAsync(RubricsSetModel req, CancellationToken token = default)
+    {
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        int resChanges;
+        if (req.RubricsIds.Length == 0)
+        {
+            resChanges = await context.NomenclaturesRubricsJoins.Where(x => x.NomenclatureId == req.OwnerId).ExecuteDeleteAsync(cancellationToken: token);
+            return resChanges == 0
+                ? ResponseBaseModel.CreateInfo("У статьи нет рубрик")
+                : ResponseBaseModel.CreateSuccess("Удалены все рубрики для статьи");
+        }
+        NomenclatureRubricJoinModelDB[] rubrics_db = await context
+            .NomenclaturesRubricsJoins
+            .Where(x => x.NomenclatureId == req.OwnerId)
+            .ToArrayAsync(cancellationToken: token);
+        ResponseBaseModel res = new();
+        int[] _ids = [.. rubrics_db.Where(x => !req.RubricsIds.Contains(x.RubricId)).Select(x => x.Id)];
+        if (_ids.Length != 0)
+        {
+            resChanges = await context.NomenclaturesRubricsJoins
+                .Where(x => _ids.Any(y => y == x.Id))
+                .ExecuteDeleteAsync(cancellationToken: token);
+
+            res.AddInfo($"Удалено рубрик: {resChanges}");
+        }
+
+        _ids = [.. req.RubricsIds.Where(x => !rubrics_db.Any(y => y.RubricId == x))];
+        if (_ids.Length != 0)
+        {
+            await context.NomenclaturesRubricsJoins.AddRangeAsync(_ids.Select(x => new NomenclatureRubricJoinModelDB() { NomenclatureId = req.OwnerId, RubricId = x }), token);
+            resChanges = await context.SaveChangesAsync(token);
+            res.AddSuccess($"Добавлено рубрик: {resChanges}");
+        }
+
+        return res;
+    }
+
+    /// <inheritdoc/>
     public async Task<TResponseModel<List<NomenclatureModelDB>>> NomenclaturesReadAsync(TAuthRequestStandardModel<int[]> req, CancellationToken token = default)
     {
         if (req.Payload is null || req.Payload.Length == 0)
@@ -773,7 +811,7 @@ public partial class CommerceImplementService(
 
             try
             {
-                await context.AddRangeAsync(offersLocked);
+                await context.LockTransactions.AddRangeAsync(offersLocked);
                 await context.SaveChangesAsync(token);
             }
             catch (Exception ex)
@@ -1028,7 +1066,7 @@ public partial class CommerceImplementService(
         string msg;
         try
         {
-            await context.AddRangeAsync(lockers, token);
+            await context.LockTransactions.AddRangeAsync(lockers, token);
             await context.SaveChangesAsync(token);
         }
         catch (Exception ex)
@@ -1224,7 +1262,7 @@ public partial class CommerceImplementService(
 
         try
         {
-            await context.AddRangeAsync(offersLocked);
+            await context.LockTransactions.AddRangeAsync(offersLocked);
             await context.SaveChangesAsync(token);
         }
         catch (Exception ex)
@@ -1336,7 +1374,7 @@ public partial class CommerceImplementService(
         using IDbContextTransaction transaction = context.Database.BeginTransaction(System.Data.IsolationLevel.Serializable);
         try
         {
-            await context.AddRangeAsync(offersLocked);
+            await context.LockTransactions.AddRangeAsync(offersLocked);
             await context.SaveChangesAsync(token);
         }
         catch (Exception ex)

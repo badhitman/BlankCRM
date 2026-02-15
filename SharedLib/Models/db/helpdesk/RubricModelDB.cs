@@ -10,7 +10,7 @@ namespace SharedLib;
 /// Рубрики
 /// </summary>
 [Index(nameof(NormalizedNameUpper)), Index(nameof(ContextName)), Index(nameof(Name)), Index(nameof(IsDisabled))]
-[Index(nameof(SortIndex), nameof(ParentId), nameof(ContextName), IsUnique = true)]
+[Index(nameof(SortIndex), nameof(ParentId), nameof(ContextName), IsUnique = true), Index(nameof(PrefixName))]
 public class RubricModelDB : RubricStandardModel
 {
     /// <inheritdoc/>

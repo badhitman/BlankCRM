@@ -202,7 +202,7 @@ public class Program
             }];
                 demo_rubrics[0].NestedRubrics = [new() { Name = "Справки", NormalizedNameUpper = "СПРАВКИ", Parent = demo_rubrics[0], SortIndex = 1 }, new() { Name = "Жалобы", NormalizedNameUpper = "ЖАЛОБЫ", Parent = demo_rubrics[0], SortIndex = 2 }];
                 demo_rubrics[1].NestedRubrics = [new() { Name = "Линия 1", NormalizedNameUpper = "ЛИНИЯ 1", Parent = demo_rubrics[1], SortIndex = 1 }, new() { Name = "Линия 2", NormalizedNameUpper = "ЛИНИЯ 2", Parent = demo_rubrics[1], SortIndex = 2 }];
-                await context_seed.AddRangeAsync(demo_rubrics);
+                await context_seed.Rubrics.AddRangeAsync(demo_rubrics);
                 await context_seed.SaveChangesAsync();
             }
 

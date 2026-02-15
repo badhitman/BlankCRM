@@ -11,6 +11,14 @@ namespace SharedLib;
 /// </summary>
 public class RubricStandardModel : UniversalLayerModel
 {
+    /// <summary>
+    /// Имя-префикс
+    /// </summary>
+    /// <remarks>
+    /// Для организации внутри одного контекста разных наборов рубрик
+    /// </remarks>
+    public string? PrefixName { get; set; }
+
     /// <inheritdoc/>
     public virtual List<RubricStandardModel>? NestedRubrics { get; set; }
 

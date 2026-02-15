@@ -79,7 +79,7 @@ public partial class ArticleEditComponent : BlazorBusyComponentBaseAuthModel
             return;
 
         await SetBusyAsync();
-        ResponseBaseModel res = await ArticlesRepo.UpdateRubricsForArticleAsync(new() { ArticleId = ArticleId, RubricsIds = [.. req.Select(x => x!.Id)] });
+        ResponseBaseModel res = await ArticlesRepo.RubricsForArticleSetAsync(new() { OwnerId = ArticleId, RubricsIds = [.. req.Select(x => x!.Id)] });
         await LoadArticleData();
         await SetBusyAsync(false);
         SnackBarRepo.ShowMessagesResponse(res.Messages);

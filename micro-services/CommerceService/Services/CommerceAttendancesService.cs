@@ -133,7 +133,7 @@ public partial class CommerceImplementService : ICommerceService
 
         try
         {
-            await context.AddRangeAsync(offersLocked);
+            await context.LockTransactions.AddRangeAsync(offersLocked);
             await context.SaveChangesAsync(token);
         }
         catch (Exception ex)
@@ -415,7 +415,7 @@ public partial class CommerceImplementService : ICommerceService
         using IDbContextTransaction transaction = context.Database.BeginTransaction(System.Data.IsolationLevel.Serializable);
         try
         {
-            await context.AddRangeAsync(offersLocked);
+            await context.LockTransactions.AddRangeAsync(offersLocked);
             await context.SaveChangesAsync(token);
         }
         catch (Exception ex)

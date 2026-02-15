@@ -25,11 +25,11 @@ public class RubricsService(
     public async Task<List<UniversalBaseModel>> RubricsChildListAsync(RubricsListRequestStandardModel req, CancellationToken token = default)
     {
         using HelpDeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
-        string? _ctx1 = req.ContextName?.Replace("/","\\");
+        string? _ctx1 = req.ContextName?.Replace("/", "\\");
         string? _ctx2 = req.ContextName?.Replace("\\", "/");
         IQueryable<UniversalBaseModel> q = context
             .Rubrics
-            .Where(x => x.ContextName == _ctx1 || x.ContextName == _ctx2)
+            .Where(x => x.PrefixName == req.PrefixName && (x.ContextName == _ctx1 || x.ContextName == _ctx2))
             .Select(x => new UniversalBaseModel()
             {
                 Name = x.Name,
@@ -133,7 +133,7 @@ public class RubricsService(
 
         List<RubricModelDB> all = await context
             .Rubrics
-            .Where(x => x.ContextName == req.Payload.ContextName && x.ParentId == data.ParentId)
+            .Where(x => x.PrefixName == req.Payload.PrefixName && x.ContextName == req.Payload.ContextName && x.ParentId == data.ParentId)
             .OrderBy(x => x.SortIndex)
             .ToListAsync(cancellationToken: token);
 
@@ -151,13 +151,13 @@ public class RubricsService(
                 RubricModelDB r1 = all[i - 1], r2 = all[i];
                 uint val1 = r1.SortIndex, val2 = r2.SortIndex;
                 r1.SortIndex = uint.MaxValue;
-                context.Update(r1);
+                context.Rubrics.Update(r1);
                 await context.SaveChangesAsync(token);
                 r2.SortIndex = val1;
-                context.Update(r2);
+                context.Rubrics.Update(r2);
                 await context.SaveChangesAsync(token);
                 r1.SortIndex = val2;
-                context.Update(r1);
+                context.Rubrics.Update(r1);
                 await context.SaveChangesAsync(token);
 
                 res.AddSuccess($"Рубрика '{data.Name}' сдвинута выше");
@@ -174,13 +174,13 @@ public class RubricsService(
                 RubricModelDB r1 = all[i + 1], r2 = all[i];
                 uint val1 = r1.SortIndex, val2 = r2.SortIndex;
                 r1.SortIndex = uint.MaxValue;
-                context.Update(r1);
+                context.Rubrics.Update(r1);
                 await context.SaveChangesAsync(token);
                 r2.SortIndex = val1;
-                context.Update(r2);
+                context.Rubrics.Update(r2);
                 await context.SaveChangesAsync(token);
                 r1.SortIndex = val2;
-                context.Update(r1);
+                context.Rubrics.Update(r1);
                 await context.SaveChangesAsync(token);
 
                 res.AddSuccess($"Рубрика '{data.Name}' сдвинута ниже");
@@ -200,7 +200,7 @@ public class RubricsService(
 
         if (nu)
         {
-            context.UpdateRange(all);
+            context.Rubrics.UpdateRange(all);
         }
         context.Remove(locker);
         await context.SaveChangesAsync(token);
@@ -228,7 +228,9 @@ public class RubricsService(
         }
         rubric.NormalizedNameUpper = rubric.Name.ToUpper();
         using HelpDeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
-        RubricModelDB? doubleRubricDb = await context.Rubrics.FirstOrDefaultAsync(x => x.ContextName == rubric.ContextName && x.Id != rubric.Id && x.ParentId == rubric.ParentId && x.Name == rubric.Name, cancellationToken: token);
+        RubricModelDB? doubleRubricDb = await context.Rubrics
+            .FirstOrDefaultAsync(x => x.PrefixName == rubric.PrefixName && x.ContextName == rubric.ContextName && x.Id != rubric.Id && x.ParentId == rubric.ParentId && x.Name == rubric.Name, cancellationToken: token);
+
         if (doubleRubricDb is not null)
         {
             res.AddError("Объект с таким именем уже существует в данном узле");

@@ -5,14 +5,14 @@
 namespace SharedLib;
 
 /// <summary>
-/// Article Rubrics Set
+/// Rubrics Set
 /// </summary>
-public class ArticleRubricsSetModel
+public class RubricsSetModel
 {
     /// <summary>
-    /// ArticleId
+    /// OwnerId
     /// </summary>
-    public required int ArticleId { get; set; }
+    public required int OwnerId { get; set; }
 
     /// <summary>
     /// RubricsIds

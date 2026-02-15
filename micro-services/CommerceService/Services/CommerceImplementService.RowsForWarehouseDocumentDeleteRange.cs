@@ -76,7 +76,7 @@ public partial class CommerceImplementService : ICommerceService
         using IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(System.Data.IsolationLevel.Serializable, cancellationToken: token);
         try
         {
-            await context.AddRangeAsync(offersLocked, token);
+            await context.LockTransactions.AddRangeAsync(offersLocked, token);
             await context.SaveChangesAsync(token);
         }
         catch (Exception ex)

@@ -15,7 +15,7 @@ public class HelpDeskTransmission(IRabbitClient rabbitClient) : IHelpDeskTransmi
 
     #region articles
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> UpdateRubricsForArticleAsync(ArticleRubricsSetModel req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> RubricsForArticleSetAsync(RubricsSetModel req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.RubricsForArticleSetReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>

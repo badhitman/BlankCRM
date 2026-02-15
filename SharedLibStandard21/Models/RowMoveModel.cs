@@ -26,4 +26,12 @@ public class RowMoveModel
     /// ContextName
     /// </summary>
     public string? ContextName { get; set; }
+    
+    /// <summary>
+    /// Имя-префикс
+    /// </summary>
+    /// <remarks>
+    /// Для организации внутри одного контекста разных наборов рубрик
+    /// </remarks>
+    public string? PrefixName { get; set; }
 }

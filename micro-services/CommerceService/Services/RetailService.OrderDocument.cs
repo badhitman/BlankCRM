@@ -170,7 +170,7 @@ public partial class RetailService : IRetailService
             {
                 try
                 {
-                    await context.AddRangeAsync(offersLocked, token);
+                    await context.LockTransactions.AddRangeAsync(offersLocked, token);
                     await context.SaveChangesAsync(token);
                 }
                 catch (Exception ex)

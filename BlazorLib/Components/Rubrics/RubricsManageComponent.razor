@@ -69,6 +69,15 @@
     public string? ContextName { get; set; }
 
     /// <summary>
+    /// Имя-префикс
+    /// </summary>
+    /// <remarks>
+    /// Для организации внутри одного контекста разных наборов рубрик
+    /// </remarks>
+    [Parameter]
+    public string? PrefixName { get; set; }
+
+    /// <summary>
     /// ValueChanged
     /// </summary>
     [Parameter]
@@ -86,6 +95,7 @@
         Dictionary<string, object?> _res = new();
         _res.Add("Node", _node);
         _res.Add("ContextName", ContextName);
+        _res.Add("PrefixName", PrefixName);
         return _res;
     }
 
@@ -214,7 +224,7 @@
     async Task<List<UniversalBaseModel>> RequestRubrics(int? parent_id = null)
     {
         await SetBusyAsync();
-        List<UniversalBaseModel> rest = await RubricsRepo.RubricsChildListAsync(new() { Request = parent_id ?? 0, ContextName = ContextName });
+        List<UniversalBaseModel> rest = await RubricsRepo.RubricsChildListAsync(new() { Request = parent_id ?? 0, ContextName = ContextName, PrefixName = PrefixName });
 
         rest = [.. rest.OrderBy(x => x.SortIndex)];
 

@@ -149,7 +149,7 @@ public class ManufactureService(
             return _doc;
         })];
 
-        await context_forms.AddRangeAsync(_project_snapshot.Documents, token);
+        await context_forms.DocumentsSnapshots.AddRangeAsync(_project_snapshot.Documents, token);
         await context_forms.SaveChangesAsync(token);
         await transaction.CommitAsync(token);
     }

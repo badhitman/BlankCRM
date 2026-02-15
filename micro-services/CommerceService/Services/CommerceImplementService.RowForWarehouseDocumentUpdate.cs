@@ -124,7 +124,7 @@ public partial class CommerceImplementService : ICommerceService
 
         try
         {
-            await context.AddRangeAsync(lockers, token);
+            await context.LockTransactions.AddRangeAsync(lockers, token);
             await context.SaveChangesAsync(token);
         }
         catch (Exception ex)

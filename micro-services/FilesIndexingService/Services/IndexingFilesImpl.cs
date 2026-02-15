@@ -122,7 +122,7 @@ public class IndexingFilesImpl(
 
         if (sheetsDb.Count != 0)
         {
-            await context.AddRangeAsync(sheetsDb, token);
+            await context.SheetsExcelIndexesFiles.AddRangeAsync(sheetsDb, token);
             await context.SaveChangesAsync(token);
         }
 
@@ -210,10 +210,10 @@ public class IndexingFilesImpl(
         (List<ParagraphWordIndexFileModelDB> _paragraphs, List<TableWordIndexFileModelDB> _tablesDb) = WordRead(file_db.Id, wordprocessingDocument.MainDocumentPart.Document.Body);
 
         if (_tablesDb.Count != 0)
-            await context.AddRangeAsync(_tablesDb, token);
+            await context.TablesWordIndexesFiles.AddRangeAsync(_tablesDb, token);
 
         if (_paragraphs.Count != 0)
-            await context.AddRangeAsync(_paragraphs, token);
+            await context.ParagraphsWordIndexesFiles.AddRangeAsync(_paragraphs, token);
 
         if (_tablesDb.Count != 0 || _paragraphs.Count != 0)
             await context.SaveChangesAsync(token);

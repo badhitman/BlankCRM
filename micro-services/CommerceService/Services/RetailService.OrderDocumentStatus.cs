@@ -73,7 +73,7 @@ public partial class RetailService : IRetailService
         string msg;
         try
         {
-            await context.AddRangeAsync(lockers, token);
+            await context.LockTransactions.AddRangeAsync(lockers, token);
             await context.SaveChangesAsync(token);
         }
         catch (Exception ex)
@@ -206,7 +206,7 @@ public partial class RetailService : IRetailService
         string msg;
         try
         {
-            await context.AddRangeAsync(lockers, token);
+            await context.LockTransactions.AddRangeAsync(lockers, token);
             await context.SaveChangesAsync(token);
         }
         catch (Exception ex)
@@ -308,7 +308,7 @@ public partial class RetailService : IRetailService
         string msg;
         try
         {
-            await context.AddRangeAsync(lockers, token);
+            await context.LockTransactions.AddRangeAsync(lockers, token);
             await context.SaveChangesAsync(token);
         }
         catch (Exception ex)

@@ -114,6 +114,11 @@ public partial class CommerceLayerContext : DbContext
     public DbSet<NomenclatureModelDB> Nomenclatures { get; set; } = default!;
 
     /// <summary>
+    /// NomenclatureRubricJoins
+    /// </summary>
+    public DbSet<NomenclatureRubricJoinModelDB> NomenclaturesRubricsJoins { get; set; } = default!;
+
+    /// <summary>
     /// Offers
     /// </summary>
     public DbSet<OfferModelDB> Offers { get; set; } = default!;

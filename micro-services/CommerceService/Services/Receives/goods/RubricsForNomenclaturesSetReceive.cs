@@ -5,23 +5,23 @@
 using RemoteCallLib;
 using SharedLib;
 
-namespace Transmission.Receives.helpdesk;
+namespace Transmission.Receives.commerce;
 
 /// <summary>
-/// UpdateRubricsForArticleReceive
+/// RubricsForNomenclaturesSet
 /// </summary>
-public class UpdateRubricsForArticleReceive(IArticlesService artRepo, ITracesIndexing indexingRepo)
+public class RubricsForNomenclaturesSetReceive(ICommerceService commerceRepo, ITracesIndexing indexingRepo)
     : IResponseReceive<RubricsSetModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.RubricsForArticleSetReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.NomenclatureRubricsSetCommerceReceive;
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(RubricsSetModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, null, req);
-        ResponseBaseModel res = await artRepo.RubricsForArticleSetAsync(req, token);
+        ResponseBaseModel res = await commerceRepo.RubricsForNomenclaturesSetAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }

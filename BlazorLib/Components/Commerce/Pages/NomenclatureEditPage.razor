@@ -3,8 +3,8 @@
 
 @using MudBlazor
 @using static SharedLib.GlobalStaticConstantsRoutes
-@inherits BlazorBusyComponentBaseAuthModel
 
+@inherits BlazorBusyComponentBaseAuthModel
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 @attribute [Authorize]
 
@@ -18,30 +18,20 @@
         </CardHeaderActions> *@
     </MudCardHeader>
     <MudCardContent>
-        <MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-2">
-            <MudTabPanel Text="Настройки">
-                <CascadingValue Value="GetMode">
-                    <NomenclatureEditComponent NomenclatureId="NomenclatureId" />
-                </CascadingValue>
-            </MudTabPanel>
-            @if (CurrentUserSession?.IsAdmin == true)
-            {
-                <MudTabPanel Text="Заказы">
-                    <OrdersJournalComponent NomenclatureFilter="NomenclatureId" />
-                </MudTabPanel>
-                <MudTabPanel Disabled="@(NomenclatureId < 1 || IsBusyProgress)" Text="Категории">
-                    <MudPaper Class="ma-2" Elevation="3">
-                        <div class="card">
-                            <div class="card-body">
-                                <h6 class="card-title">Категории</h6>
-                                <RubricsManageComponent TEntity="RubricNodeBodyComponent"
-                                                        ContextName="@($"{Routes.GOODS_CONTROLLER_NAME}-{Routes.CATEGORIES_CONTROLLER_NAME}")"
-                                                        SelectedValuesChanged="@(new TreeViewOptionsHandler() { SelectedNodes = SelectedNodesRead(), SelectedValuesChangedHandler = SelectedRubricsChange })" />
-                            </div>
-                        </div>
-                    </MudPaper>
-                </MudTabPanel>
-            }
-        </MudTabs>
+        <NomenclatureEditCardComponent NomenclatureId="NomenclatureId" ViewMode="ViewMode" />
     </MudCardContent>
 </MudCard>
+
+@code {
+    /// <summary>
+    /// NomenclatureId
+    /// </summary>
+    [Parameter]
+    public int NomenclatureId { get; set; }
+
+    /// <summary>
+    /// ViewMode
+    /// </summary>
+    [Parameter]
+    public string? ViewMode { get; set; }
+}

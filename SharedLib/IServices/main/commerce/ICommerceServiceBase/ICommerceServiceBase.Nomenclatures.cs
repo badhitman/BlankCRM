@@ -21,4 +21,9 @@ public partial interface ICommerceServiceBase
     /// NomenclaturesRead
     /// </summary>
     public Task<TResponseModel<List<NomenclatureModelDB>>> NomenclaturesReadAsync(TAuthRequestStandardModel<int[]> req, CancellationToken token = default);
+
+    /// <summary>
+    /// Установит рубрики для номенклатуры
+    /// </summary>
+    public Task<ResponseBaseModel> RubricsForNomenclaturesSetAsync(RubricsSetModel req, CancellationToken token = default);
 }

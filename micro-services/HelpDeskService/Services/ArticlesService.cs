@@ -125,20 +125,20 @@ public class ArticlesService(IDbContextFactory<HelpDeskContext> helpdeskDbFactor
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> UpdateRubricsForArticleAsync(ArticleRubricsSetModel req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> RubricsForArticleSetAsync(RubricsSetModel req, CancellationToken token = default)
     {
         using HelpDeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
         int resChanges;
         if (req.RubricsIds.Length == 0)
         {
-            resChanges = await context.RubricsArticlesJoins.Where(x => x.ArticleId == req.ArticleId).ExecuteDeleteAsync(cancellationToken: token);
+            resChanges = await context.RubricsArticlesJoins.Where(x => x.ArticleId == req.OwnerId).ExecuteDeleteAsync(cancellationToken: token);
             return resChanges == 0
                 ? ResponseBaseModel.CreateInfo("У статьи нет рубрик")
                 : ResponseBaseModel.CreateSuccess("Удалены все рубрики для статьи");
         }
         RubricArticleJoinModelDB[] rubrics_db = await context
             .RubricsArticlesJoins
-            .Where(x => x.ArticleId == req.ArticleId)
+            .Where(x => x.ArticleId == req.OwnerId)
             .ToArrayAsync(cancellationToken: token);
         ResponseBaseModel res = new();
         int[] _ids = [.. rubrics_db.Where(x => !req.RubricsIds.Contains(x.RubricId)).Select(x => x.Id)];
@@ -154,7 +154,7 @@ public class ArticlesService(IDbContextFactory<HelpDeskContext> helpdeskDbFactor
         _ids = [.. req.RubricsIds.Where(x => !rubrics_db.Any(y => y.RubricId == x))];
         if (_ids.Length != 0)
         {
-            await context.AddRangeAsync(_ids.Select(x => new RubricArticleJoinModelDB() { ArticleId = req.ArticleId, RubricId = x }), token);
+            await context.RubricsArticlesJoins.AddRangeAsync(_ids.Select(x => new RubricArticleJoinModelDB() { ArticleId = req.OwnerId, RubricId = x }), token);
             resChanges = await context.SaveChangesAsync(token);
 
             res.AddSuccess($"Добавлено рубрик: {resChanges}");

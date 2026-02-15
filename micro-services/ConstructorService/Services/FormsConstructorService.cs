@@ -218,7 +218,7 @@ public partial class FormsConstructorService(
             OwnerId = session.Id,
             JoinFormToTabId = form_join.Id
         })];
-        await context_forms.AddRangeAsync(rows_add, cancellationToken);
+        await context_forms.ValuesSessions.AddRangeAsync(rows_add, cancellationToken);
         session.LastDocumentUpdateActivity = DateTime.UtcNow;
 
         await context_forms.SaveChangesAsync(cancellationToken);
@@ -575,7 +575,7 @@ public partial class FormsConstructorService(
 
         MemberOfProjectConstructorModelDB[] usersDb = [.. usersForAdd.Select(x => new MemberOfProjectConstructorModelDB() { UserId = x.UserId, ProjectId = req.ProjectId })];
 
-        await context_forms.AddRangeAsync(usersDb);
+        await context_forms.MembersOfProjects.AddRangeAsync(usersDb);
         await context_forms.SaveChangesAsync(token);
 
         return ResponseBaseModel.CreateSuccess($"Пользователи/участники х{string.Join("; ", usersForAdd.Select(x => x.Email))}ъ добавлены к проекту '{projectDb.Name}'");
@@ -3116,7 +3116,7 @@ public partial class FormsConstructorService(
         values_upd = [.. req.SessionValues.Where(x => x.Id == 0)];
         if (values_upd.Length != 0)
         {
-            await context_forms.AddRangeAsync(values_upd);
+            await context_forms.ValuesSessions.AddRangeAsync(values_upd);
             await context_forms.SaveChangesAsync(token);
         }
 
