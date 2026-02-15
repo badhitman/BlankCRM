@@ -315,7 +315,7 @@ public static partial class GlobalStaticCloudStorageMetadata
         ApplicationName = Routes.RETAIL_CONTROLLER_NAME,
         PropertyName = Path.Combine(Routes.PICKUP_CONTROLLER_NAME, Routes.SET_ACTION_NAME),
         PrefixPropertyName = Routes.GLOBAL_CONTROLLER_NAME,
-        ContextName = Path.Combine(Routes.DELIVERY_CONTROLLER_NAME, Routes.TYPE_CONTROLLER_NAME),
+        ContextName = Path.Combine(Routes.DELIVERIES_CONTROLLER_NAME, Routes.TYPES_CONTROLLER_NAME),
     };
 
 
