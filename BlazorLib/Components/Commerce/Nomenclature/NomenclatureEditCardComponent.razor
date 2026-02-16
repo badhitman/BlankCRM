@@ -3,7 +3,7 @@
 @using static SharedLib.GlobalStaticConstantsRoutes
 @inherits BlazorBusyComponentBaseAuthModel
 
-<MudTabs Elevation="2" Rounded ApplyEffectsToContainer @bind-ActivePanelIndex="WrapperActiveIndex">
+<MudTabs Elevation="2" Rounded ApplyEffectsToContainer @bind-ActivePanelIndex="WrapperActiveIndex" Style="width: 100%;">
     <MudTabPanel Text="Настройки">
         <CascadingValue Value="GetMode">
             <NomenclatureEditComponent NomenclatureId="NomenclatureId" />
@@ -14,13 +14,13 @@
             <MudTabPanel Text="Заказы">
                 <OrdersJournalComponent NomenclatureFilter="NomenclatureId" />
             </MudTabPanel>
-            <MudTabPanel Disabled="@(NomenclatureId < 1 || IsBusyProgress)" Text="Категории">
+            <MudTabPanel Disabled="@(NomenclatureId < 1 || IsBusyProgress)" Text="Категории" Style="width: 100%;">
                 <div class="card">
                     <div class="card-body">
                         <h6 class="card-title">Категории</h6>
                         @if (CommerceConf.Value.NomenclaturesRubricsPrefixes?.Any(x => !string.IsNullOrWhiteSpace(x)) != true)
                         {
-                            <RubricsManageComponent TEntity="RubricNodeBodyComponent"
+                            <RubricsManageComponent TEntity="RubricNodeBodyNomenclatureComponent"
                                                     FullChildsLoad
                                                     @ref="rmRef"
                                                     ContextName="@($"{Routes.GOODS_CONTROLLER_NAME}-{Routes.CATEGORIES_CONTROLLER_NAME}")"
@@ -28,9 +28,9 @@
                         }
                         else
                         {
-                            <MudTabs Outlined Position="@Position.Left" Rounded Border ApplyEffectsToContainer @bind-ActivePanelIndex="GoodsRubricsActiveIndex" @ref="panelRef">
-                                <MudTabPanel Text="По умолчанию">
-                                    <RubricsManageComponent TEntity="RubricNodeBodyComponent"
+                            <MudTabs Outlined Position="@Position.Left" Rounded Border ApplyEffectsToContainer @bind-ActivePanelIndex="GoodsRubricsActiveIndex" @ref="panelRef" Style="width: 100%;">
+                                <MudTabPanel Text="По умолчанию" Style="width: 100%;">
+                                    <RubricsManageComponent TEntity="RubricNodeBodyNomenclatureComponent"
                                                             FullChildsLoad
                                                             @ref="rmRef"
                                                             ContextName="@($"{Routes.GOODS_CONTROLLER_NAME}-{Routes.CATEGORIES_CONTROLLER_NAME}")"
@@ -38,8 +38,8 @@
                                 </MudTabPanel>
                                 @foreach (string _prefixName in CommerceConf.Value.NomenclaturesRubricsPrefixes)
                                 {
-                                    <MudTabPanel Text="@_prefixName" ID="_prefixName">
-                                        <RubricsManageComponent TEntity="RubricNodeBodyComponent"
+                                    <MudTabPanel Text="@_prefixName" ID="_prefixName" Style="width: 100%;">
+                                        <RubricsManageComponent TEntity="RubricNodeBodyNomenclatureComponent"
                                                                 FullChildsLoad
                                                                 @ref="rmRef"
                                                                 ContextName="@($"{Routes.GOODS_CONTROLLER_NAME}-{Routes.CATEGORIES_CONTROLLER_NAME}")"

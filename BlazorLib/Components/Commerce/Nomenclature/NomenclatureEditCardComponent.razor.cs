@@ -38,7 +38,7 @@ public partial class NomenclatureEditCardComponent : BlazorBusyComponentBaseAuth
     bool _isLoad, _isInitialized;
     MudTabs? panelRef;
     string? activePrefixName;
-    RubricsManageComponent<RubricNodeBodyComponent>? rmRef;
+    RubricsManageComponent<RubricNodeBodyNomenclatureComponent>? rmRef;
 
     int _activeIndexWrapper;
     int WrapperActiveIndex

@@ -1,0 +1,14 @@
+﻿@using MudBlazor
+@inherits RubricNodeBodyComponent
+
+<span class="font-monospace" style="justify-self: start;">
+    @Node.Text
+    @if (IsBusyProgress)
+    {
+        <span class="loader"></span>
+    }
+</span>
+<MudSpacer />
+<div style="justify-self: end;">
+    test 1
+</div>

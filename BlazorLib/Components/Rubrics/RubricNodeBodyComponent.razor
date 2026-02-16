@@ -1,50 +1,53 @@
 ﻿@using MudBlazor
 @inherits BlazorBusyComponentBaseModel
-
-<div class="hstack gap-3" @onclick:stopPropagation="true" title="@($"#{Node.Value!.Id}{(Node.Selected ? " | SELECTED" : "")}")">
-    <span class="font-monospace">@Node.Text</span>
-    @if (IsBusyProgress)
-    {
-        <span class="loader"></span>
-    }
-    @if (TagsCollection.Response is not null && TagsCollection.Response.Count != 0)
-    {
-        @foreach (TagViewModel tv in TagsCollection.Response)
+<div style="display: grid; grid-template-columns: 1fr auto; align-items: center; width: 100%">
+    <span class="font-monospace" style="justify-self: start;">
+        @Node.Text
+        @if (IsBusyProgress)
         {
-            <AuthorizeView Context="col" Roles="@($"{GlobalStaticConstantsRoles.Roles.Admin}")">
-                <Authorized>
-                    <MudChip T="string"
-                             Size="Size.Small"
-                             Value="@tv.TagName"
-                             OnClose="DeleteTagHandle">@tv.TagName</MudChip>
-                </Authorized>
-                <NotAuthorized>
-                    <MudChip T="string"
-                             Size="Size.Small"
-                             Value="@tv.TagName">@tv.TagName</MudChip>
-                </NotAuthorized>
-            </AuthorizeView>
+            <span class="loader"></span>
         }
-    }
-    <AuthorizeView Context="col" Roles="@($"{GlobalStaticConstantsRoles.Roles.Admin}")">
-        <Authorized>
-            <MudSpacer />
-            <div class="input-group input-group-sm">
-                <span class="input-group-text" id="inputGroup-sizing-sm">new tag</span>
-                <input @bind-value="NewTagName"
-                       @bind-value:event="oninput"
-                       type="text"
-                       class="form-control"
-                       aria-label="Sizing example input"
-                       aria-describedby="inputGroup-sizing-sm">
-                <button class="btn btn-outline-@(CannotAddingTag ? "secondary" : "info")"
-                        type="button"
-                        disabled="@CannotAddingTag"
-                        id="button-addon2"
-                        @onclick="CreateNewTag">
-                    add
-                </button>
-            </div>
-        </Authorized>
-    </AuthorizeView>
+    </span>
+    <div style="justify-self: end;">
+        @if (TagsCollection.Response is not null && TagsCollection.Response.Count != 0)
+        {
+            @foreach (TagViewModel tv in TagsCollection.Response)
+            {
+                <AuthorizeView Context="col" Roles="@($"{GlobalStaticConstantsRoles.Roles.Admin}")">
+                    <Authorized>
+                        <MudChip T="string"
+                                 Size="Size.Small"
+                                 Value="@tv.TagName"
+                                 OnClose="DeleteTagHandle">@tv.TagName</MudChip>
+                    </Authorized>
+                    <NotAuthorized>
+                        <MudChip T="string"
+                                 Size="Size.Small"
+                                 Value="@tv.TagName">@tv.TagName</MudChip>
+                    </NotAuthorized>
+                </AuthorizeView>
+            }
+        }
+        <AuthorizeView Context="col" Roles="@($"{GlobalStaticConstantsRoles.Roles.Admin}")">
+            <Authorized>
+                <MudSpacer />
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">new tag</span>
+                    <input @bind-value="NewTagName"
+                           @bind-value:event="oninput"
+                           type="text"
+                           class="form-control"
+                           aria-label="Sizing example input"
+                           aria-describedby="inputGroup-sizing-sm">
+                    <button class="btn btn-outline-@(CannotAddingTag ? "secondary" : "info")"
+                            type="button"
+                            disabled="@CannotAddingTag"
+                            id="button-addon2"
+                            @onclick="CreateNewTag">
+                        add
+                    </button>
+                </div>
+            </Authorized>
+        </AuthorizeView>
+    </div>
 </div>

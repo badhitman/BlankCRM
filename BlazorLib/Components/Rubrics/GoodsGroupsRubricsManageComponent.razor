@@ -4,20 +4,20 @@
 
 @if (CommerceConf.Value.NomenclaturesRubricsPrefixes?.Any(x => !string.IsNullOrWhiteSpace(x)) != true)
 {
-    <RubricsManageComponent TEntity="RubricNodeBodyComponent"
+    <RubricsManageComponent TEntity="RubricNodeBodyNomenclatureConfigComponent"
                             ContextName="@($"{Routes.GOODS_CONTROLLER_NAME}-{Routes.CATEGORIES_CONTROLLER_NAME}")" />
 }
 else
 {
-    <MudTabs Outlined Position="@Position.Left" Rounded Border ApplyEffectsToContainer @bind-ActivePanelIndex="ActiveIndex" @ref="panelRef">
-        <MudTabPanel Text="По умолчанию">
-            <RubricsManageComponent TEntity="RubricNodeBodyComponent"
+    <MudTabs Outlined Position="@Position.Left" Rounded Border ApplyEffectsToContainer @bind-ActivePanelIndex="ActiveIndex" @ref="panelRef" Style="width:100%">
+        <MudTabPanel Text="По умолчанию" Style="width: 100%;">
+            <RubricsManageComponent TEntity="RubricNodeBodyNomenclatureConfigComponent"
                                     ContextName="@($"{Routes.GOODS_CONTROLLER_NAME}-{Routes.CATEGORIES_CONTROLLER_NAME}")" />
         </MudTabPanel>
         @foreach (string _prefixName in CommerceConf.Value.NomenclaturesRubricsPrefixes.Where(x => !string.IsNullOrWhiteSpace(x)))
         {
-            <MudTabPanel Text="@_prefixName" ID="_prefixName">
-                <RubricsManageComponent TEntity="RubricNodeBodyComponent"
+            <MudTabPanel Text="@_prefixName" ID="_prefixName" Style="width:100%">
+                <RubricsManageComponent TEntity="RubricNodeBodyNomenclatureConfigComponent"
                                         PrefixName="@_prefixName"
                                         ContextName="@($"{Routes.GOODS_CONTROLLER_NAME}-{Routes.CATEGORIES_CONTROLLER_NAME}")" />
             </MudTabPanel>
