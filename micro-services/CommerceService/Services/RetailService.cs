@@ -15,7 +15,6 @@ public partial class RetailService(IIdentityTransmission identityRepo,
     ILogger<RetailService> loggerRepo,
     IKladrNavigationService kladrRepo,
     ITracesIndexing indexingRepo,
-    IRubricsTransmission RubricRepo,
     IParametersStorageTransmission StorageTransmissionRepo,
     IDbContextFactory<CommerceContext> commerceDbFactory) : IRetailService
 {

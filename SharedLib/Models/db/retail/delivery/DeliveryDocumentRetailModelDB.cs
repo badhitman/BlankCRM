@@ -13,16 +13,9 @@ namespace SharedLib;
 /// </summary>
 [Index(nameof(DeliveryCode)), Index(nameof(RecipientIdentityUserId)), Index(nameof(DeliveryPaymentUponReceipt))]
 [Index(nameof(KladrCode)), Index(nameof(AddressUserComment)), Index(nameof(AuthorIdentityUserId)), Index(nameof(DeliveryStatus))]
-[Index(nameof(WarehouseId)), Index(nameof(DeliveryType)), Index(nameof(DeliveryTypeId)), Index(nameof(KladrTitle))]
+[Index(nameof(WarehouseId)), Index(nameof(DeliveryTypeId)), Index(nameof(KladrTitle))]
 public class DeliveryDocumentRetailModelDB : EntryUpdatedModel
 {
-    /// <summary>
-    /// Метод/тип доставки
-    /// </summary>
-    [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
-    [Newtonsoft.Json.JsonConverter(typeof(StringEnumConverter))]
-    public DeliveryTypesEnumObsolete DeliveryType { get; set; }
-
     /// <summary>
     /// Метод/тип доставки
     /// </summary>
@@ -137,7 +130,6 @@ public class DeliveryDocumentRetailModelDB : EntryUpdatedModel
             DeliveryPaymentUponReceipt = other.DeliveryPaymentUponReceipt,
             DeliveryStatus = other.DeliveryStatus,
             DeliveryStatusesLog = other.DeliveryStatusesLog,
-            DeliveryType = other.DeliveryType,
             DeliveryTypeId = other.DeliveryTypeId,
             Description = other.Description,
             Id = other.Id,

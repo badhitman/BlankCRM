@@ -242,7 +242,6 @@ public partial class RetailService : IRetailService
                 .SetProperty(p => p.RecipientIdentityUserId, req.Payload.RecipientIdentityUserId)
                 .SetProperty(p => p.KladrTitle, req.Payload.KladrTitle)
                 .SetProperty(p => p.KladrCode, req.Payload.KladrCode)
-                .SetProperty(p => p.DeliveryType, req.Payload.DeliveryType)
                 .SetProperty(p => p.DeliveryTypeId, req.Payload.DeliveryTypeId)
                 .SetProperty(p => p.DeliveryPaymentUponReceipt, req.Payload.DeliveryPaymentUponReceipt)
                 .SetProperty(p => p.DeliveryCode, req.Payload.DeliveryCode)
@@ -261,37 +260,6 @@ public partial class RetailService : IRetailService
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         IQueryable<DeliveryDocumentRetailModelDB> q = context.DeliveryDocumentsRetail.AsQueryable();
-
-
-        #region delivery-type migration (from enum to db)
-        DeliveryDocumentRetailModelDB[] migrateDb = await q
-            .Where(x => x.DeliveryTypeId == 0)
-            .ToArrayAsync(cancellationToken: token);
-        Dictionary<string, int> map = [];
-        foreach (DeliveryDocumentRetailModelDB pmDb in migrateDb)
-        {
-            if (map.ContainsKey(pmDb.DeliveryType.DescriptionInfo()))
-                await q.Where(x => x.Id == pmDb.Id)
-                    .ExecuteUpdateAsync(set => set
-                        .SetProperty(p => p.DeliveryTypeId, map[pmDb.DeliveryType.DescriptionInfo()]), cancellationToken: token);
-            else
-            {
-                TResponseModel<int> getRubric = await RubricRepo.RubricCreateOrUpdateAsync(new()
-                {
-                    ContextName = Path.Combine(Routes.DELIVERIES_CONTROLLER_NAME, Routes.TYPES_CONTROLLER_NAME),
-                    Name = pmDb.DeliveryType.DescriptionInfo(),
-                }, token);
-                if (getRubric.Response > 0)
-                {
-                    map.Add(pmDb.DeliveryType.DescriptionInfo(), getRubric.Response);
-                    await q.Where(x => x.Id == pmDb.Id)
-                        .ExecuteUpdateAsync(set => set
-                            .SetProperty(p => p.DeliveryTypeId, getRubric.Response), cancellationToken: token);
-                }
-            }
-        }
-        #endregion
-
 
         if (!string.IsNullOrWhiteSpace(req.FindQuery))
             q = q.Where(x =>

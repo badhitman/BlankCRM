@@ -26,7 +26,6 @@ public class CreateDeliveryDocumentRetailRequestModel : DeliveryDocumentRetailMo
             DeliveryPaymentUponReceipt = other.DeliveryPaymentUponReceipt,
             DeliveryStatus = other.DeliveryStatus,
             DeliveryStatusesLog = other.DeliveryStatusesLog,
-            DeliveryType = other.DeliveryType,
             DeliveryTypeId = other.DeliveryTypeId,
             Description = other.Description,
             Id = other.Id,
