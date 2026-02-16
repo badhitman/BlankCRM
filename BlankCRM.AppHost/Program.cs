@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Configuration;
-using System.Text;
+using Microsoft.Extensions.Logging;
 using SharedLib;
+using System.Text;
 
 namespace DesignerApp.AppHost;
 
@@ -19,7 +20,10 @@ public class Program
 
         string _modePrefix = Environment.GetEnvironmentVariable(nameof(GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix)) ?? "";
         if (!string.IsNullOrWhiteSpace(_modePrefix) && !GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix.EndsWith(_modePrefix))
+        {
             GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix += _modePrefix.Trim();
+            GlobalStaticConstantsTransmission.TransmissionQueueNamePrefixMQTT += _modePrefix.Trim();
+        }
 
         string curr_dir = Directory.GetCurrentDirectory();
         builder.Configuration.SetBasePath(curr_dir);

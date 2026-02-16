@@ -57,6 +57,8 @@ if (!string.IsNullOrWhiteSpace(_modePrefix) && !GlobalStaticConstantsTransmissio
 {
     GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix += _modePrefix.Trim();
     logger.Warn($"actual [{nameof(GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix)}: `{_modePrefix}`]");
+    GlobalStaticConstantsTransmission.TransmissionQueueNamePrefixMQTT += _modePrefix.Trim();
+    logger.Warn($"actual [{nameof(GlobalStaticConstantsTransmission.TransmissionQueueNamePrefixMQTT)}: `{_modePrefix}`]");
 }
 
 string curr_dir = Directory.GetCurrentDirectory();

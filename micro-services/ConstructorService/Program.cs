@@ -40,7 +40,10 @@ logger.Warn($"init main: {_environmentName}");
 
 string _modePrefix = Environment.GetEnvironmentVariable(nameof(GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix)) ?? "";
 if (!string.IsNullOrWhiteSpace(_modePrefix) && !GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix.EndsWith(_modePrefix))
+{
     GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix += _modePrefix.Trim();
+    GlobalStaticConstantsTransmission.TransmissionQueueNamePrefixMQTT += _modePrefix.Trim();
+}
 
 string curr_dir = Directory.GetCurrentDirectory();
 builder.Configuration.SetBasePath(curr_dir);
