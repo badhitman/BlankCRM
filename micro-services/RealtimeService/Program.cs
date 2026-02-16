@@ -110,7 +110,7 @@ public class Program
         {
             // This will allow MQTT connections based on TCP port 1883.
             o.ListenAnyIP(_conf.Port, l => l.UseMqtt());
-
+            logger.Warn($"mqtt port: {_conf.Port}");
             // This will allow MQTT connections based on HTTP WebSockets with URI "localhost:5000/mqtt"
             // See code below for URI configuration.
             //o.ListenAnyIP(3883); // Default HTTP pipeline
