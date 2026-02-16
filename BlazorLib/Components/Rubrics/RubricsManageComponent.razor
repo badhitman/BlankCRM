@@ -45,13 +45,15 @@ else if (InitialTreeItems.Count == 0)
                             {
                                 <RubricNodeEditComponent ReadOnly="@(SelectedValuesChanged is not null)" ContextName="@ContextName">
                                     <ItemBody>
-                                        <DynamicComponent Type="typeof(TEntity)" Parameters="parameters(item)" />
+                                        <DynamicComponent Type="typeof(TEntity)"
+                                                          Parameters="parameters(item)" />
                                     </ItemBody>
                                 </RubricNodeEditComponent>
                             }
                             else if (SelectedValuesChanged is null)
                             {
-                                <RubricNodeCreatingNewComponent ContextName="@ContextName" TEntity="TEntity" />
+                                <RubricNodeCreatingNewComponent ContextName="@ContextName"
+                                                                TEntity="TEntity" />
                             }
                         </CascadingValue>
                     </CascadingValue>
