@@ -107,7 +107,10 @@ public class Program
         ;
         _conf.Reload(builder.Configuration.GetSection("RealtimeConfig").Get<MQTTClientConfigModel>()!);
         logger.Warn($"mqtt config: {JsonConvert.SerializeObject(_conf)}");
-        logger.Warn($"global config: {JsonConvert.SerializeObject(builder.Configuration.Sources)}");
+        foreach (KeyValuePair<string, string?> _kvp in builder.Configuration.AsEnumerable())
+        {
+            logger.Warn($"global config: {JsonConvert.SerializeObject(_kvp)}");
+        }
 
         builder.WebHost.ConfigureKestrel((b, o) =>
         {
