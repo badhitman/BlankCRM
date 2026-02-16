@@ -75,7 +75,7 @@
                     <select class="form-select" id="exampleInputTypePayment" @bind="editDoc.DeliveryTypeId">
                         @foreach (RubricNestedModel _pt in AllDeliveriesTypes)
                         {
-                            <option value="@_pt">@_pt.Name</option>
+                            <option value="@_pt.Id">@_pt.Name</option>
                         }
                     </select>
                 </MudItem>
