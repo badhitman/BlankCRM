@@ -25,13 +25,13 @@ public partial class RubricsForInstrumentComponent : BlazorBusyComponentBaseMode
     public required InstrumentTradeStockSharpViewModel Instrument { get; set; }
 
 
-    List<UniversalBaseModel>? RubricsAll;
+    List<RubricNestedModel>? RubricsAll;
     MudDialog? _dialogRef;
     bool _visible;
     readonly DialogOptions _dialogOptions = new() { FullWidth = true };
 
-    UniversalBaseModel? _selectedRubric;
-    UniversalBaseModel? SelectedRubric
+    RubricNestedModel? _selectedRubric;
+    RubricNestedModel? SelectedRubric
     {
         get => _selectedRubric;
         set
@@ -42,8 +42,8 @@ public partial class RubricsForInstrumentComponent : BlazorBusyComponentBaseMode
         }
     }
 
-    IReadOnlyCollection<UniversalBaseModel>? _selectedRubrics;
-    IReadOnlyCollection<UniversalBaseModel>? SelectedRubrics
+    IReadOnlyCollection<RubricNestedModel>? _selectedRubrics;
+    IReadOnlyCollection<RubricNestedModel>? SelectedRubrics
     {
         get => _selectedRubrics;
         set
@@ -77,7 +77,7 @@ public partial class RubricsForInstrumentComponent : BlazorBusyComponentBaseMode
 
     async Task RubricsForInstrument()
     {
-        TResponseModel<List<UniversalBaseModel>> res = await SsRepo.GetRubricsForInstrumentAsync(Instrument.Id);
+        TResponseModel<List<RubricNestedModel>> res = await SsRepo.GetRubricsForInstrumentAsync(Instrument.Id);
         _selectedRubrics = res.Response is null ? null : [.. res.Response];
         _selectedRubric = _selectedRubrics?.FirstOrDefault();
     }
@@ -92,10 +92,10 @@ public partial class RubricsForInstrumentComponent : BlazorBusyComponentBaseMode
         await SetBusyAsync(false);
     }
 
-    private readonly ElementComparer Comparer = new();
-    class ElementComparer : IEqualityComparer<UniversalBaseModel>
+    readonly ElementComparer Comparer = new();
+    class ElementComparer : IEqualityComparer<RubricNestedModel>
     {
-        public bool Equals(UniversalBaseModel? a, UniversalBaseModel? b) => a?.Id == b?.Id;
-        public int GetHashCode(UniversalBaseModel x) => HashCode.Combine(x?.Id);
+        public bool Equals(RubricNestedModel? a, RubricNestedModel? b) => a?.Id == b?.Id;
+        public int GetHashCode(RubricNestedModel x) => HashCode.Combine(x?.Id);
     }
 }

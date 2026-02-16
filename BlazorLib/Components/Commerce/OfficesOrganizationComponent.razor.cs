@@ -27,7 +27,7 @@ public partial class OfficesOrganizationComponent : BlazorBusyComponentBaseAuthM
     public required OrganizationModelDB Organization { get; set; }
 
 
-    UniversalBaseModel? SelectedRubric;
+    RubricNestedModel? SelectedRubric;
 
     Dictionary<int, List<RubricStandardModel>> RubriciesCached = [];
     string? addingAddress, addingContacts, addingName, addingDescr, addingKladrCode, addingKladrTitle;
@@ -156,7 +156,7 @@ public partial class OfficesOrganizationComponent : BlazorBusyComponentBaseAuthM
         return value.LastOrDefault()?.Name;
     }
 
-    void RubricSelectAction(UniversalBaseModel? selectedRubric)
+    void RubricSelectAction(RubricNestedModel? selectedRubric)
     {
         SelectedRubric = selectedRubric;
         StateHasChanged();

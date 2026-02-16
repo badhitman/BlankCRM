@@ -165,7 +165,7 @@ public partial class OrderDocumentCardComponent : BlazorBusyComponentBaseAuthMod
         await SetBusyAsync(false);
     }
 
-    async void WarehouseSelectAction(UniversalBaseModel? selectedWarehouse)
+    async void WarehouseSelectAction(RubricNestedModel? selectedWarehouse)
     {
         if (editDocument is null)
             throw new ArgumentNullException(nameof(editDocument));

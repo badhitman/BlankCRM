@@ -42,7 +42,7 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
     public string? ClientId { get; set; }
 
 
-    List<UniversalBaseModel> AllDeliveriesTypes = [];
+    List<RubricNestedModel> AllDeliveriesTypes = [];
     ChatTelegramStandardModel? currentChatTelegram;
     DeliveryDocumentRetailModelDB? currentDoc, editDoc;
     UserInfoModel? recipientUser;
@@ -109,7 +109,7 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
     }
 
 
-    async void WarehouseSelectAction(UniversalBaseModel? selectedWarehouse)
+    async void WarehouseSelectAction(RubricNestedModel? selectedWarehouse)
     {
         if (editDoc is null)
             throw new ArgumentNullException(nameof(editDoc));

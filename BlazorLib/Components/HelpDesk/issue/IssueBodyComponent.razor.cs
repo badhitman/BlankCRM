@@ -46,9 +46,9 @@ public partial class IssueBodyComponent : IssueWrapBaseModel
     ModesSelectRubricsEnum ModeSelectingRubrics;
     bool ShowDisabledRubrics;
     bool IsEditMode { get; set; }
-    UniversalBaseModel? SelectedRubric;
+    RubricNestedModel? SelectedRubric;
 
-    void RubricSelectAction(UniversalBaseModel? selectedRubric)
+    void RubricSelectAction(RubricNestedModel? selectedRubric)
     {
         SelectedRubric = selectedRubric;
         RubricIssueEdit = SelectedRubric?.Id;

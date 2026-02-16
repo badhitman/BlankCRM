@@ -86,8 +86,8 @@ public partial class DataStockSharpTransmissionMQTT(IMQTTClient mqClient) : IDat
         => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.InstrumentRubricUpdateStockSharpReceive, req, token: cancellationToken) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<UniversalBaseModel>>> GetRubricsForInstrumentAsync(int idInstrument, CancellationToken cancellationToken = default)
-        => await mqClient.MqRemoteCallAsync<TResponseModel<List<UniversalBaseModel>>>(GlobalStaticConstantsTransmission.TransmissionQueues.GetRubricsForInstrumentStockSharpReceive, idInstrument, token: cancellationToken) ?? new();
+    public async Task<TResponseModel<List<RubricNestedModel>>> GetRubricsForInstrumentAsync(int idInstrument, CancellationToken cancellationToken = default)
+        => await mqClient.MqRemoteCallAsync<TResponseModel<List<RubricNestedModel>>>(GlobalStaticConstantsTransmission.TransmissionQueues.GetRubricsForInstrumentStockSharpReceive, idInstrument, token: cancellationToken) ?? new();
 
     /// <inheritdoc/>
     public async Task<TResponseModel<List<InstrumentTradeStockSharpViewModel>>> GetInstrumentsForRubricAsync(int idRubric, CancellationToken cancellationToken = default)

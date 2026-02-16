@@ -10,7 +10,7 @@
                         CheckMark Variant="Variant.Text"
                         SelectedColor="Color.Primary"
                         Color="Color.Info">
-                @foreach (UniversalBaseModel dt in AllDeliveriesTypes)
+                @foreach (RubricNestedModel dt in AllDeliveriesTypes)
                 {
                     <MudChip Value="@dt.Id" Text="@dt.Name" />
                 }

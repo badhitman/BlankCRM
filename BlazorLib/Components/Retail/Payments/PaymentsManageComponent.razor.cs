@@ -36,7 +36,7 @@ public partial class PaymentsManageComponent : BlazorBusyComponentUsersCachedMod
 
 
     MudTable<PaymentRetailDocumentModelDB>? _tableRef;
-    List<UniversalBaseModel> AllPaymentsTypes = [];
+    List<RubricNestedModel> AllPaymentsTypes = [];
     /// <summary>
     /// RubricsCache
     /// </summary>

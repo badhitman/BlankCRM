@@ -16,7 +16,7 @@
         </MudText>
         <MudSpacer />
         <MudChipSet @bind-SelectedValues="SelectedWarehouses" SelectionMode="SelectionMode.MultiSelection" CheckMark Variant="Variant.Text" Color="Color.Info">
-            @foreach (UniversalBaseModel war in Warehouses)
+            @foreach (RubricNestedModel war in Warehouses)
             {
                 <MudChip Value="@war.Id" Text="@war.Name" />
             }

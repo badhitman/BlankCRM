@@ -22,8 +22,8 @@ public class RubricsTransmission(IRabbitClient rabbitClient) : IRubricsTransmiss
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(GlobalStaticConstantsTransmission.TransmissionQueues.RubricForIssuesUpdateReceive, issueTheme, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<List<UniversalBaseModel>> RubricsChildListAsync(RubricsListRequestStandardModel req, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<List<UniversalBaseModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.RubricsChildListHelpDeskReceive, req, token: token) ?? new();
+    public async Task<List<RubricNestedModel>> RubricsChildListAsync(RubricsListRequestStandardModel req, CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<List<RubricNestedModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.RubricsChildListHelpDeskReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> RubricMoveAsync(TAuthRequestStandardModel<RowMoveModel> req, CancellationToken token = default)

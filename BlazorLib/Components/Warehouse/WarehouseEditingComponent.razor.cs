@@ -57,13 +57,13 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
 
     bool CantSave => Id > 0 && CurrentDocument.Equals(editDocument);
 
-    void IncomingRubricSelectAction(UniversalBaseModel? selectedRubric)
+    void IncomingRubricSelectAction(RubricNestedModel? selectedRubric)
     {
         editDocument.WarehouseId = selectedRubric?.Id ?? 0;
         StateHasChanged();
     }
 
-    void WriteOffRubricSelectAction(UniversalBaseModel? selectedRubric)
+    void WriteOffRubricSelectAction(RubricNestedModel? selectedRubric)
     {
         editDocument.WritingOffWarehouseId = selectedRubric?.Id ?? 0;
         StateHasChanged();

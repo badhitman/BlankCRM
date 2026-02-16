@@ -49,7 +49,7 @@ public partial class CreateIssueComponent : BlazorBusyComponentBaseModel
 
     ModesSelectRubricsEnum ModeSelectingRubrics;
     bool ShowDisabledRubrics;
-    UniversalBaseModel? SelectedRubric;
+    RubricNestedModel? SelectedRubric;
 
     async Task CreateIssue()
     {
@@ -101,7 +101,7 @@ public partial class CreateIssueComponent : BlazorBusyComponentBaseModel
         await SetBusyAsync(false);
     }
 
-    void RubricSelectAction(UniversalBaseModel? selectedRubric)
+    void RubricSelectAction(RubricNestedModel? selectedRubric)
     {
         SelectedRubric = selectedRubric;
         StateHasChanged();

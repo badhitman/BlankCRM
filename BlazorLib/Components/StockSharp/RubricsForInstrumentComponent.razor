@@ -11,7 +11,7 @@
 }
 else if (SelectedRubrics is not null)
 {
-    foreach (UniversalBaseModel node in SelectedRubrics)
+    foreach (RubricNestedModel node in SelectedRubrics)
     {
         <u>@node.Name</u>
         ;
@@ -28,7 +28,7 @@ else if (SelectedRubrics is not null)
     </TitleContent>
     <DialogContent>
         <MudChipSet @bind-SelectedValue="SelectedRubric"
-                    T="UniversalBaseModel"
+                    T="RubricNestedModel"
                     Comparer="Comparer"
                     SelectionMode="SelectionMode.ToggleSelection"                    
                     CheckMark
@@ -36,7 +36,7 @@ else if (SelectedRubrics is not null)
                     Color="Color.Info">
             @if (RubricsAll is not null)
             {
-                foreach (UniversalBaseModel rubric in RubricsAll)
+                foreach (RubricNestedModel rubric in RubricsAll)
                 {
                     <MudChip Value="@rubric" Text="@rubric.Name" />
                 }

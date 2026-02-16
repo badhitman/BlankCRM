@@ -34,7 +34,7 @@
                 <h6 class="card-subtitle mb-2 text-body-secondary">
                     Отключённые типы оплаты (для платежей)
                 </h6>
-                @foreach (UniversalBaseModel prt in AllPaymentsTypes)
+                @foreach (RubricNestedModel prt in AllPaymentsTypes)
                 {
                     bool _ic = WalletTypeElement.DisabledPaymentsTypes!.Any(x => x.PaymentType == prt.Id) == true;
                     <div class="form-check form-check-inline">

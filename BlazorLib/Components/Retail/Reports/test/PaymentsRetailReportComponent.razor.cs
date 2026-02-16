@@ -28,7 +28,7 @@ public partial class PaymentsRetailReportComponent : BlazorBusyComponentBaseMode
 
 
     MudTable<WalletRetailReportRowModel>? _tableRef;
-    List<UniversalBaseModel> AllPaymentsTypes = [];
+    List<RubricNestedModel> AllPaymentsTypes = [];
     bool includeUnset;
 
     DateRange? _dateRange;

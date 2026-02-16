@@ -69,7 +69,7 @@ public partial class TabAddressOfOrderDocumentComponent : OffersTableBaseCompone
             : RegistersCache.Where(x => x.OfferId == ctx.OfferId && x.WarehouseId == CurrentTab.WarehouseId).Sum(x => x.Quantity);
     }
 
-    void RubricSelectAction(UniversalBaseModel? selectedRubric)
+    void RubricSelectAction(RubricNestedModel? selectedRubric)
     {
         CurrentTab.WarehouseId = selectedRubric?.Id ?? 0;
 

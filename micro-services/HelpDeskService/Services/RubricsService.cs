@@ -2,13 +2,15 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using static SharedLib.GlobalStaticConstantsTransmission;
+using DbcLib;
+using DocumentFormat.OpenXml.Drawing;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Caching.Memory;
-using System.Text.RegularExpressions;
-using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using SharedLib;
-using DbcLib;
+using System.Text.RegularExpressions;
+using static SharedLib.GlobalStaticConstantsTransmission;
 
 namespace HelpDeskService;
 
@@ -22,8 +24,8 @@ public class RubricsService(
     static readonly TimeSpan _ts = TimeSpan.FromSeconds(5);
 
     /// <inheritdoc/>
-    public async Task<List<UniversalBaseModel>> RubricsChildListAsync(RubricsListRequestStandardModel req, CancellationToken token = default)
-    {
+    public async Task<List<RubricNestedModel>> RubricsChildListAsync(RubricsListRequestStandardModel req, CancellationToken token = default)
+    {//RubricNestedModel
         using HelpDeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
         string? _ctx1 = req.ContextName?.Replace("/", "\\");
         string? _ctx2 = req.ContextName?.Replace("\\", "/");
@@ -33,8 +35,8 @@ public class RubricsService(
            ? pq.Where(x => x.PrefixName == null || x.PrefixName == "")
            : pq.Where(x => x.PrefixName == req.PrefixName);
 
-        IQueryable<UniversalBaseModel> q = pq
-            .Select(x => new UniversalBaseModel()
+        IQueryable<RubricNestedModel> q = pq
+            .Select(x => new RubricNestedModel()
             {
                 Name = x.Name,
                 Description = x.Description,
@@ -50,8 +52,50 @@ public class RubricsService(
             q = q.Where(x => x.ParentId == null || x.ParentId < 1);
         else
             q = q.Where(x => x.ParentId == req.Request);
-        List<UniversalBaseModel> res = await q.ToListAsync(cancellationToken: token);
+        List<RubricNestedModel> res = await q.ToListAsync(cancellationToken: token);
+
+        if (req.FullChildsLoad)
+        {
+            foreach (RubricNestedModel _node in res)
+                await IncludeChilds(_node, pq, req.PrefixName, token);
+        }
+
         return res;
+    }
+
+    static async Task IncludeChilds(RubricNestedModel node, IQueryable<RubricModelDB> pq, string? prefix, CancellationToken token = default)
+    {
+        IQueryable<RubricNestedModel> q = pq.Where(x => x.ParentId == node.Id)
+            .Select(x => new RubricNestedModel()
+            {
+                Name = x.Name,
+                Description = x.Description,
+                Id = x.Id,
+                IsDisabled = x.IsDisabled,
+                ParentId = x.ParentId,
+                ProjectId = x.ProjectId,
+                SortIndex = x.SortIndex,
+            })
+            .AsQueryable();
+        List<RubricNestedModel> res = await q.ToListAsync(cancellationToken: token);
+        node.NestedRubrics = [.. res.Select(x => new RubricStandardModel()
+        {
+            Id = x.Id,
+            Name = x.Name,
+            PrefixName = prefix,
+            ParentId = x.ParentId,
+            ProjectId = x.ProjectId,
+            SortIndex = x.SortIndex,
+            IsDisabled = x.IsDisabled,
+            ContextName = x.ContextName,
+            CreatedAtUTC = x.CreatedAtUTC,
+            Description    = x.Description,
+            LastUpdatedAtUTC = x.LastUpdatedAtUTC,
+            NormalizedNameUpper = x.NormalizedNameUpper,
+        })];
+
+        foreach (RubricStandardModel _node in node.NestedRubrics)
+            await IncludeChilds(_node, pq, prefix, token);
     }
 
     /// <inheritdoc/>

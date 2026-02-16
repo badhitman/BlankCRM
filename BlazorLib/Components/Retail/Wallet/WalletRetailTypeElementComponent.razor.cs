@@ -28,7 +28,7 @@ public partial class WalletRetailTypeElementComponent : BlazorBusyComponentBaseA
     bool CannotSave => !IsEdited || IsBusyProgress;
 
     WalletRetailTypeViewModel? _walletCopy;
-    List<UniversalBaseModel> AllPaymentsTypes = [];
+    List<RubricNestedModel> AllPaymentsTypes = [];
     bool IsEdited => _walletCopy is not null && !WalletTypeElement.Equals(_walletCopy);
 
 

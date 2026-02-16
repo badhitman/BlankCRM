@@ -50,7 +50,7 @@
 
     /// <inheritdoc/>
     [CascadingParameter, EditorRequired]
-    public required TreeItemData<UniversalBaseModel> Item { get; set; }
+    public required TreeItemData<RubricNestedModel> Item { get; set; }
 
     /// <summary>
     /// Имя контекста
@@ -59,7 +59,7 @@
     public string? ContextName { get; set; }
 
 
-    UniversalBaseModel ItemModel = default!;
+    RubricNestedModel ItemModel = default!;
 
     string? rubricName;
 
@@ -85,7 +85,7 @@
     /// <inheritdoc/>
     protected override void OnInitialized()
     {
-        ItemModel = new UniversalLayerModel()
+        ItemModel = new RubricNestedModel()
         {
             Name = "",
             ParentId = Item.Value?.ParentId,

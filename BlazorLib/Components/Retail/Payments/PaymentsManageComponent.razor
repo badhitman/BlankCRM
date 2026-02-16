@@ -11,7 +11,7 @@
                         Class="me-2"
                         Variant="Variant.Text"
                         Color="Color.Info">
-                @foreach (UniversalBaseModel pt in AllPaymentsTypes)
+                @foreach (RubricNestedModel pt in AllPaymentsTypes)
                 {
                     <MudChip Value="@pt.Id" Text="@pt.Name" />
                 }

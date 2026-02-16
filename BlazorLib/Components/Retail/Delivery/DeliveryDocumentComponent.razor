@@ -73,7 +73,7 @@
                 <MudItem xs="12" md=6 Class="mb-3">
                     <label for="exampleInputTypePayment" class="form-label">Тип/способ доставки</label>
                     <select class="form-select" id="exampleInputTypePayment" @bind="editDoc.DeliveryTypeId">
-                        @foreach (UniversalBaseModel _pt in AllDeliveriesTypes)
+                        @foreach (RubricNestedModel _pt in AllDeliveriesTypes)
                         {
                             <option value="@_pt">@_pt.Name</option>
                         }

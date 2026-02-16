@@ -42,14 +42,14 @@ public partial class RubricInputComponent : BlazorBusyComponentBaseModel
 
     /// <inheritdoc/>
     [Parameter, EditorRequired]
-    public required Action<UniversalBaseModel?> SelectRubricsHandle { get; set; }
+    public required Action<RubricNestedModel?> SelectRubricsHandle { get; set; }
 
     /// <inheritdoc/>
     [Parameter, EditorRequired]
     public ModesSelectRubricsEnum ModeSelectingRubrics { get; set; }
 
 
-    readonly List<(int parentId, List<UniversalBaseModel> nestedElements)> SelectSource = [];
+    readonly List<(int parentId, List<RubricNestedModel> nestedElements)> SelectSource = [];
     List<RubricStandardModel> RubricHierarchy = [];
 
     /// <summary>
@@ -74,17 +74,17 @@ public partial class RubricInputComponent : BlazorBusyComponentBaseModel
     }
 
     #region NullElement
-    string TitleNullElement((int parentId, List<UniversalBaseModel> nestedElements) kvp, UniversalBaseModel? currentSelected)
+    string TitleNullElement((int parentId, List<RubricNestedModel> nestedElements) kvp, RubricNestedModel? currentSelected)
     {
         return currentSelected is null
             ? NullElementText ?? ""
             : "";
     }
 
-    bool ShowNullElement((int parentId, List<UniversalBaseModel> nestedElements) kvp, UniversalBaseModel? currentSelected)
+    bool ShowNullElement((int parentId, List<RubricNestedModel> nestedElements) kvp, RubricNestedModel? currentSelected)
                 => ModeSelectingRubrics == ModesSelectRubricsEnum.AllowWithoutRubric || (kvp.parentId == 0 && SelectedRubricId is null);
 
-    bool DisablesNullElement((int parentId, List<UniversalBaseModel> nestedElements) kvp, UniversalBaseModel? currentSelected)
+    bool DisablesNullElement((int parentId, List<RubricNestedModel> nestedElements) kvp, RubricNestedModel? currentSelected)
     {
         if (ModeSelectingRubrics == ModesSelectRubricsEnum.AllowWithoutRubric)
             return false;
@@ -92,14 +92,14 @@ public partial class RubricInputComponent : BlazorBusyComponentBaseModel
         return true;
     }
 
-    bool SelectedNullElement((int parentId, List<UniversalBaseModel> nestedElements) kvp, UniversalBaseModel? currentSelected)
+    bool SelectedNullElement((int parentId, List<RubricNestedModel> nestedElements) kvp, RubricNestedModel? currentSelected)
     {
         return currentSelected is null;
     }
     #endregion
 
 
-    async void HandleSelectionChange(ChangeEventArgs e, (int parentId, List<UniversalBaseModel> nestedElements) _kvp)
+    async void HandleSelectionChange(ChangeEventArgs e, (int parentId, List<RubricNestedModel> nestedElements) _kvp)
     {
         int
             _valId = int.Parse(e.Value!.ToString()!),

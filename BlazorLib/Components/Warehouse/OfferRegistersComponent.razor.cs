@@ -23,7 +23,7 @@ public partial class OfferRegistersComponent : BlazorBusyComponentRubricsCachedM
 
     MudTable<OfferAvailabilityModelDB>? table;
 
-    List<UniversalBaseModel> Warehouses = [];
+    List<RubricNestedModel> Warehouses = [];
 
     IReadOnlyCollection<int> _selectedWarehouses = [];
     IReadOnlyCollection<int> SelectedWarehouses

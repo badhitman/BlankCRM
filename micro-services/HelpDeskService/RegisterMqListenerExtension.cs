@@ -18,7 +18,7 @@ public static class RegisterMqListenerExtension
     public static IServiceCollection HelpDeskRegisterMqListeners(this IServiceCollection services)
     {
         return services
-            .RegisterMqListener<RubricsListReceive, RubricsListRequestStandardModel, List<UniversalBaseModel>>()
+            .RegisterMqListener<RubricsListReceive, RubricsListRequestStandardModel, List<RubricNestedModel>>()
             .RegisterMqListener<RubricCreateOrUpdateReceive, RubricStandardModel, TResponseModel<int>>()
             .RegisterMqListener<RubricMoveReceive, TAuthRequestStandardModel<RowMoveModel>, ResponseBaseModel>()
             .RegisterMqListener<RubricReadReceive, int, TResponseModel<List<RubricStandardModel>>>()

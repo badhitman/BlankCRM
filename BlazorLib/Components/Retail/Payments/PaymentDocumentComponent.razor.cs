@@ -40,7 +40,7 @@ public partial class PaymentDocumentComponent : BlazorBusyComponentBaseAuthModel
     public string? ClientId { get; set; }
 
 
-    List<UniversalBaseModel> AllPaymentsTypes = [];
+    List<RubricNestedModel> AllPaymentsTypes = [];
     PaymentRetailDocumentModelDB? currentDoc, editDoc;
     UserInfoModel? userRecipient;
     WalletSelectInputComponent? recipientWalletRef;

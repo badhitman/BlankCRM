@@ -22,11 +22,13 @@ else if (InitialTreeItems.Count == 0)
 }
 
 <MudTreeView Style="width: 100%"
+             @ref="_treeRef"
              AutoSelectParent="false"
              ServerData="@LoadServerData"
+             AutoExpand
              Items="@InitialTreeItems"
              SelectionMode="@(SelectedValuesChanged is null ? SelectionMode.ToggleSelection : SelectionMode.MultiSelection)"
-             T="UniversalBaseModel"
+             T="RubricNestedModel"
              SelectedValuesChanged="SelectedValuesChangeHandler">
     <ItemTemplate Context="item">
         <MudTreeViewItem @key="@($"node-rubric-{item.Value?.Id}")"
@@ -95,8 +97,15 @@ else if (InitialTreeItems.Count == 0)
     [Parameter]
     public bool SingleLevelMode { get; set; }
 
+    /// <summary>
+    /// Загрузить сразу всё дерево
+    /// </summary>
+    [Parameter]
+    public bool FullChildsLoad { get; set; }
 
-    IDictionary<string, object?> parameters(TreeItemData<UniversalBaseModel?> _node)
+
+    MudTreeView<RubricNestedModel>? _treeRef;
+    IDictionary<string, object?> parameters(TreeItemData<RubricNestedModel?> _node)
     {
         Dictionary<string, object?> _res = new();
         _res.Add("Node", _node);
@@ -107,20 +116,20 @@ else if (InitialTreeItems.Count == 0)
 
 
     List<TreeItemDataRubricModel> InitialTreeItems { get; set; } = [];
-    void SelectedValuesChangeHandler(IReadOnlyCollection<UniversalBaseModel?> SelectedValues)
-    {
+    void SelectedValuesChangeHandler(IReadOnlyCollection<RubricNestedModel?> SelectedValues)
+    {//_treeRef
         SelectedValuesChanged?.SelectedValuesChangedHandler(SelectedValues);
     }
 
-    List<TreeItemData<UniversalBaseModel>> ConvertRubrics(IEnumerable<UniversalBaseModel> rubrics)
+    List<TreeItemData<RubricNestedModel>> ConvertRubrics(IEnumerable<RubricNestedModel> rubrics)
     {
         (uint min, uint max) = rubrics.Any(x => x.SortIndex != uint.MaxValue)
             ? (rubrics.Min(x => x.SortIndex), rubrics.Where(x => x.SortIndex != uint.MaxValue).Max(x => x.SortIndex))
             : (0, 0);
 
-        List<TreeItemData<UniversalBaseModel>> res = [];
+        List<TreeItemData<RubricNestedModel>> res = [];
 
-        foreach (UniversalBaseModel x in rubrics)
+        foreach (RubricNestedModel x in rubrics)
         {
             MoveRowStatesEnum mhp;
             if (x.SortIndex == min && x.SortIndex == max)
@@ -147,7 +156,7 @@ else if (InitialTreeItems.Count == 0)
         return res;
     }
 
-    void ItemUpdAction(UniversalBaseModel sender)
+    void ItemUpdAction(RubricNestedModel sender)
     {
         TreeItemDataRubricModel findNode = FindNode(sender.Id, InitialTreeItems) ?? throw new Exception();
         findNode.Text = sender.Name;
@@ -157,7 +166,7 @@ else if (InitialTreeItems.Count == 0)
     async void ReloadNodeAction(int parent_id)
     {
         await SetBusyAsync();
-        List<UniversalBaseModel> rubrics = await RequestRubrics(parent_id);
+        List<RubricNestedModel> rubrics = await RequestRubrics(parent_id);
         if (parent_id > 0)
         {
             TreeItemDataRubricModel findNode = FindNode(parent_id, InitialTreeItems) ?? throw new Exception();
@@ -176,13 +185,13 @@ else if (InitialTreeItems.Count == 0)
         if (res is not null)
             return res;
 
-        TreeItemDataRubricModel? FindChildNode(List<TreeItemData<UniversalBaseModel?>> children)
+        TreeItemDataRubricModel? FindChildNode(List<TreeItemData<RubricNestedModel?>> children)
         {
-            TreeItemData<UniversalBaseModel?>? res_child = children.FirstOrDefault(x => x.Value?.Id == parent_id);
+            TreeItemData<RubricNestedModel?>? res_child = children.FirstOrDefault(x => x.Value?.Id == parent_id);
             if (res_child is not null)
                 return (TreeItemDataRubricModel?)res_child;
 
-            foreach (TreeItemData<UniversalBaseModel?> c in children)
+            foreach (TreeItemData<RubricNestedModel?> c in children)
             {
                 if (c.Children is not null)
                 {
@@ -211,17 +220,17 @@ else if (InitialTreeItems.Count == 0)
     /// <inheritdoc/>
     protected override async void OnInitialized()
     {
-        List<UniversalBaseModel> rubrics = await RequestRubrics();
+        List<RubricNestedModel> rubrics = await RequestRubrics();
         InitialTreeItems = [.. ConvertRubrics(rubrics).Select(x => new TreeItemDataRubricModel(x))];
         StateHasChanged();
     }
 
     /// <inheritdoc/>
-    public async Task<IReadOnlyCollection<TreeItemData<UniversalBaseModel?>>> LoadServerData(UniversalBaseModel? parentValue)
+    public async Task<IReadOnlyCollection<TreeItemData<RubricNestedModel?>>> LoadServerData(RubricNestedModel? parentValue)
     {
         ArgumentNullException.ThrowIfNull(parentValue);
         await SetBusyAsync();
-        List<UniversalBaseModel> rubrics = await RequestRubrics(parentValue.Id);
+        List<RubricNestedModel> rubrics = await RequestRubrics(parentValue.Id);
         TreeItemDataRubricModel findNode = FindNode(parentValue.Id, InitialTreeItems) ?? throw new Exception();
 
         findNode.Children = ConvertRubrics(rubrics)!;
@@ -229,15 +238,21 @@ else if (InitialTreeItems.Count == 0)
         return findNode.Children;
     }
 
-    async Task<List<UniversalBaseModel>> RequestRubrics(int? parent_id = null)
+    async Task<List<RubricNestedModel>> RequestRubrics(int? parent_id = null)
     {
         await SetBusyAsync();
-        List<UniversalBaseModel> rest = await RubricsRepo.RubricsChildListAsync(new() { Request = parent_id ?? 0, ContextName = ContextName, PrefixName = PrefixName });
+        List<RubricNestedModel> rest = await RubricsRepo.RubricsChildListAsync(new()
+        {
+            Request = parent_id ?? 0,
+            ContextName = ContextName,
+            PrefixName = PrefixName,
+            FullChildsLoad = FullChildsLoad
+        });
 
         rest = [.. rest.OrderBy(x => x.SortIndex)];
 
         if (SelectedValuesChanged is null)
-            rest.Add(new UniversalBaseModel() { Name = "", SortIndex = uint.MaxValue, ParentId = parent_id });
+            rest.Add(new RubricNestedModel() { Name = "", SortIndex = uint.MaxValue, ParentId = parent_id });
 
         await SetBusyAsync(false);
         return rest;

@@ -10,12 +10,12 @@ namespace BlazorLib;
 /// <summary>
 /// Tree Item Data Rubric
 /// </summary>
-public class TreeItemDataRubricModel : TreeItemData<UniversalBaseModel?>
+public class TreeItemDataRubricModel : TreeItemData<RubricNestedModel?>
 {
     /// <summary>
     /// Tree Item Data Rubric
     /// </summary>
-    public TreeItemDataRubricModel(UniversalBaseModel entry, string icon) : base(entry)
+    public TreeItemDataRubricModel(RubricNestedModel entry, string icon) : base(entry)
     {
         Text = entry.Name;
         Icon = icon;
@@ -23,7 +23,7 @@ public class TreeItemDataRubricModel : TreeItemData<UniversalBaseModel?>
     }
 
     /// <inheritdoc/>
-    public TreeItemDataRubricModel(TreeItemData<UniversalBaseModel> x)
+    public TreeItemDataRubricModel(TreeItemData<RubricNestedModel> x)
     {
         TreeItemDataRubricModel _sender = (TreeItemDataRubricModel)x!;
         Value = _sender.Value;
@@ -62,7 +62,7 @@ public class TreeItemDataRubricModel : TreeItemData<UniversalBaseModel?>
 
 
     /// <inheritdoc/>
-    public static bool operator ==(TreeItemDataRubricModel? e1, TreeItemData<UniversalBaseModel?> e2)
+    public static bool operator ==(TreeItemDataRubricModel? e1, TreeItemData<RubricNestedModel?> e2)
     {
         if (e2.Value is null && e1?.Value is null)
             return true;
@@ -73,7 +73,7 @@ public class TreeItemDataRubricModel : TreeItemData<UniversalBaseModel?>
     }
 
     /// <inheritdoc/>
-    public static bool operator !=(TreeItemDataRubricModel? e1, TreeItemData<UniversalBaseModel?> e2)
+    public static bool operator !=(TreeItemDataRubricModel? e1, TreeItemData<RubricNestedModel?> e2)
     {
         if (e2.Value is null && e1?.Value is null)
             return false;
@@ -85,7 +85,7 @@ public class TreeItemDataRubricModel : TreeItemData<UniversalBaseModel?>
 
 
     /// <inheritdoc/>
-    public static bool operator ==(TreeItemData<UniversalBaseModel?> e1, TreeItemDataRubricModel? e2)
+    public static bool operator ==(TreeItemData<RubricNestedModel?> e1, TreeItemDataRubricModel? e2)
     {
         if (e1.Value is null && e2?.Value is null)
             return true;
@@ -96,7 +96,7 @@ public class TreeItemDataRubricModel : TreeItemData<UniversalBaseModel?>
     }
 
     /// <inheritdoc/>
-    public static bool operator !=(TreeItemData<UniversalBaseModel?> e2, TreeItemDataRubricModel? e1)
+    public static bool operator !=(TreeItemData<RubricNestedModel?> e2, TreeItemDataRubricModel? e1)
     {
         if(e2.Value is null && e1?.Value is null)
             return true;
@@ -123,7 +123,7 @@ public class TreeItemDataRubricModel : TreeItemData<UniversalBaseModel?>
 
             return Value.Equals(_e.Value);
         }
-        else if (obj is TreeItemData<UniversalBaseModel?> _v)
+        else if (obj is TreeItemData<RubricNestedModel?> _v)
         {
             if (_v.Value is null && Value is null)
                 return true;

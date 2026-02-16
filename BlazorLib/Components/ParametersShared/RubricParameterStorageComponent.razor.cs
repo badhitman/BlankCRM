@@ -46,7 +46,7 @@ public partial class RubricParameterStorageComponent : BlazorBusyComponentBaseMo
 
 
     int? _rubricSelected;
-    void RubricSelectAction(UniversalBaseModel? selectedRubric)
+    void RubricSelectAction(RubricNestedModel? selectedRubric)
     {
         _rubricSelected = selectedRubric?.Id;
         InvokeAsync(SaveRubric);

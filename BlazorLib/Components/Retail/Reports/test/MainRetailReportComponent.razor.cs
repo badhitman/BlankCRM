@@ -35,7 +35,7 @@ public partial class MainRetailReportComponent : BlazorBusyComponentBaseModel
 
 
     int? prePaidTypePayment;
-    List<UniversalBaseModel> AllPaymentsTypes = [];
+    List<RubricNestedModel> AllPaymentsTypes = [];
     MainReportResponseModel? ReportData;
 
     DateRange? _dateRange;

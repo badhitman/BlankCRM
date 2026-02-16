@@ -34,27 +34,46 @@ public partial class NomenclatureEditCardComponent : BlazorBusyComponentBaseAuth
     public string? ViewMode { get; set; }
 
 
+    bool _isLoad;
     MudTabs? panelRef;
     string? activePrefixName;
-    int _activeIndex;
-    int ActiveIndex
+
+    int _activeIndexWrapper;
+    int WrapperActiveIndex
     {
-        get => _activeIndex;
+        get => _activeIndexWrapper;
         set
         {
-            _activeIndex = value;
+            _activeIndexWrapper = value;
+            _isLoad = false;
+        }
+    }
+
+    int _activeIndexGoodsRubrics;
+    int GoodsRubricsActiveIndex
+    {
+        get => _activeIndexGoodsRubrics;
+        set
+        {
+            _activeIndexGoodsRubrics = value;            
             activePrefixName = panelRef?.ActivePanel?.ID?.ToString();
         }
     }
-    NomenclatureModelDB? orignNomenclature, editNomenclature;
+    
+    NomenclatureModelDB? originNomenclature, editNomenclature;
 
     OffersListModesEnum GetMode => string.IsNullOrWhiteSpace(ViewMode) || !Enum.TryParse(typeof(OffersListModesEnum), ViewMode, out object? pvm) ? OffersListModesEnum.Goods : (OffersListModesEnum)pvm;
-    int[] SelectedNodesRead() => orignNomenclature?.RubricsJoins?.Select(x => x.RubricId).ToArray() ?? [];
+    int[] SelectedNodesRead() => originNomenclature?.RubricsJoins?.Select(x => x.RubricId).ToArray() ?? [];
 
-    async void SelectedRubricsChange(IReadOnlyCollection<UniversalBaseModel?> req)
+    async void SelectedRubricsChange(IReadOnlyCollection<RubricNestedModel?> req)
     {
         if (CurrentUserSession is null)
             return;
+        if (!_isLoad)
+        {
+            _isLoad = true;
+            return;
+        }
 
         if (editNomenclature?.RubricsJoins is not null && !req.Any(x => !editNomenclature!.RubricsJoins.Any(y => y.RubricId == x?.Id)) && !editNomenclature.RubricsJoins.Any(x => !req.Any(y => y?.Id == x.RubricId)))
             return;
@@ -80,7 +99,7 @@ public partial class NomenclatureEditCardComponent : BlazorBusyComponentBaseAuth
         await base.OnInitializedAsync();
         await LoadNomenclatureData();
     }
-
+    
     async Task LoadNomenclatureData()
     {
         if (CurrentUserSession is null)
@@ -93,8 +112,8 @@ public partial class NomenclatureEditCardComponent : BlazorBusyComponentBaseAuth
         if (res.Response is null)
             throw new Exception($"res.Response is null > {nameof(LoadNomenclatureData)}");
 
-        orignNomenclature = res.Response.Single();
-        editNomenclature = GlobalTools.CreateDeepCopy(orignNomenclature) ?? throw new Exception($"editNomenclature is null > {nameof(LoadNomenclatureData)}");
+        originNomenclature = res.Response.Single();
+        editNomenclature = GlobalTools.CreateDeepCopy(originNomenclature) ?? throw new Exception($"editNomenclature is null > {nameof(LoadNomenclatureData)}");
 
         await SetBusyAsync(false);
     }

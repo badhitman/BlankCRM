@@ -2,14 +2,12 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using System.Collections.Generic;
-
 namespace SharedLib;
 
 /// <summary>
 /// Рубрики
 /// </summary>
-public class RubricStandardModel : UniversalLayerModel
+public class RubricStandardModel : RubricNestedModel
 {
     /// <summary>
     /// Имя-префикс
@@ -18,9 +16,6 @@ public class RubricStandardModel : UniversalLayerModel
     /// Для организации внутри одного контекста разных наборов рубрик
     /// </remarks>
     public string? PrefixName { get; set; }
-
-    /// <inheritdoc/>
-    public virtual List<RubricStandardModel>? NestedRubrics { get; set; }
 
     /// <summary>
     /// Владелец (вышестоящая рубрика)

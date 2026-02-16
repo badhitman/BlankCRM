@@ -13,9 +13,9 @@
     }
 </label>
 
-@foreach ((int parentId, List<UniversalBaseModel> nestedElements) _kvp in SelectSource)
+@foreach ((int parentId, List<RubricNestedModel> nestedElements) _kvp in SelectSource)
 {
-    UniversalBaseModel? _currentSelected = SelectedRubricId is null
+    RubricNestedModel? _currentSelected = SelectedRubricId is null
         ? null
         : _kvp.nestedElements.FirstOrDefault(x => RubricHierarchy.Any(y => y.Id == x.Id));
 
@@ -26,7 +26,7 @@
                 @TitleNullElement(_kvp, _currentSelected)
             </option>
         }
-        @foreach (UniversalBaseModel rubricNode in _kvp.nestedElements)
+        @foreach (RubricNestedModel rubricNode in _kvp.nestedElements)
         {
             bool _isSel = _currentSelected?.Id == rubricNode.Id;
             <option class="text-primary-emphasis" disabled="@rubricNode.IsDisabled" value="@rubricNode.Id" selected="@_isSel">@rubricNode.Name</option>

@@ -12,7 +12,7 @@ public class TreeViewOptionsHandler
     /// <summary>
     /// SelectedValuesChangedHandler
     /// </summary>
-    public required Action<IReadOnlyCollection<UniversalBaseModel?>> SelectedValuesChangedHandler { get; set; }
+    public required Action<IReadOnlyCollection<RubricNestedModel?>> SelectedValuesChangedHandler { get; set; }
 
     /// <summary>
     /// SelectedNodes

@@ -20,7 +20,7 @@
                         <MudItem xs="12" md="6" Class="mb-3">
                             <label for="exampleInputTypePayment" class="form-label">Тип/способ оплаты</label>
                             <select class="form-select" id="exampleInputTypePayment" @bind="editDoc.TypePaymentId">
-                                @foreach (UniversalBaseModel _pt in AllPaymentsTypes)
+                                @foreach (RubricNestedModel _pt in AllPaymentsTypes)
                                 {
                                     <option value="@_pt.Id">@_pt.Name</option>
                                 }

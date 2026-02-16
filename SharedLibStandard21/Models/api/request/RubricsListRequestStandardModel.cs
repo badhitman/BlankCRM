@@ -24,4 +24,9 @@ public class RubricsListRequestStandardModel : TProjectedRequestStandardModel<in
     /// Для организации внутри одного контекста разных наборов рубрик
     /// </remarks>
     public string? PrefixName { get; set; }
+
+    /// <summary>
+    /// Загрузить сразу всё дерево
+    /// </summary>
+    public bool FullChildsLoad { get; set; }
 }

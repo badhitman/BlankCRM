@@ -38,7 +38,7 @@ public partial class OfficeOrganizationComponent : BlazorBusyComponentBaseAuthMo
         OfficeEdit?.KladrTitle != OfficeCurrent?.KladrTitle ||
         OfficeEdit?.ParentId != OfficeCurrent?.ParentId);
 
-    UniversalBaseModel? SelectedRubric;
+    RubricNestedModel? SelectedRubric;
 
     EntryAltStandardModel? SelectedKladrObject
     {
@@ -76,7 +76,7 @@ public partial class OfficeOrganizationComponent : BlazorBusyComponentBaseAuthMo
         if (res_rubric.Success() && res_rubric.Response is not null && res_rubric.Response.Count != 0)
         {
             RubricStandardModel r = res_rubric.Response.First();
-            SelectedRubric = new UniversalBaseModel()
+            SelectedRubric = new RubricNestedModel()
             {
                 Name = r.Name,
                 Description = r.Description,
@@ -134,7 +134,7 @@ public partial class OfficeOrganizationComponent : BlazorBusyComponentBaseAuthMo
         await SetBusyAsync(false);
     }
 
-    void RubricSelectAction(UniversalBaseModel? selectedRubric)
+    void RubricSelectAction(RubricNestedModel? selectedRubric)
     {
         SelectedRubric = selectedRubric;
         OfficeEdit!.ParentId = selectedRubric?.Id ?? 0;

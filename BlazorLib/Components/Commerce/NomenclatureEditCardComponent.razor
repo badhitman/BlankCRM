@@ -3,7 +3,7 @@
 @using static SharedLib.GlobalStaticConstantsRoutes
 @inherits BlazorBusyComponentBaseAuthModel
 
-<MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-2">
+<MudTabs Elevation="2" Rounded ApplyEffectsToContainer @bind-ActivePanelIndex="WrapperActiveIndex">
     <MudTabPanel Text="Настройки">
         <CascadingValue Value="GetMode">
             <NomenclatureEditComponent NomenclatureId="NomenclatureId" />
@@ -26,9 +26,10 @@
                         }
                         else
                         {
-                            <MudTabs Outlined Position="@Position.Left" Rounded Border ApplyEffectsToContainer @bind-ActivePanelIndex="ActiveIndex" @ref="panelRef">
+                            <MudTabs Outlined Position="@Position.Left" Rounded Border ApplyEffectsToContainer @bind-ActivePanelIndex="GoodsRubricsActiveIndex" @ref="panelRef">
                                 <MudTabPanel Text="По умолчанию">
                                     <RubricsManageComponent TEntity="RubricNodeBodyComponent"
+                                                            FullChildsLoad
                                                             ContextName="@($"{Routes.GOODS_CONTROLLER_NAME}-{Routes.CATEGORIES_CONTROLLER_NAME}")"
                                                             SelectedValuesChanged="@(new TreeViewOptionsHandler() { SelectedNodes = SelectedNodesRead(), SelectedValuesChangedHandler = SelectedRubricsChange })" />
                                 </MudTabPanel>
@@ -36,6 +37,7 @@
                                 {
                                     <MudTabPanel Text="@_prefixName" ID="_prefixName">
                                         <RubricsManageComponent TEntity="RubricNodeBodyComponent"
+                                                                FullChildsLoad
                                                                 ContextName="@($"{Routes.GOODS_CONTROLLER_NAME}-{Routes.CATEGORIES_CONTROLLER_NAME}")"
                                                                 PrefixName="@_prefixName"
                                                                 SelectedValuesChanged="@(new TreeViewOptionsHandler() { SelectedNodes = SelectedNodesRead(), SelectedValuesChangedHandler = SelectedRubricsChange })" />

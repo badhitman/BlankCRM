@@ -54,7 +54,7 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
 
 
     bool _equalSumFilter;
-    List<UniversalBaseModel> AllDeliveriesTypes = [];
+    List<RubricNestedModel> AllDeliveriesTypes = [];
     string? searchString = null;
     /// <summary>
     /// RubricsCache

@@ -77,7 +77,7 @@ public interface IDataStockSharpService
     /// <summary>
     /// GetRubricsForInstrumentAsync
     /// </summary>
-    public Task<TResponseModel<List<UniversalBaseModel>>> GetRubricsForInstrumentAsync(int idInstrument, CancellationToken cancellationToken = default);
+    public Task<TResponseModel<List<RubricNestedModel>>> GetRubricsForInstrumentAsync(int idInstrument, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Получить инструменты для рубрики

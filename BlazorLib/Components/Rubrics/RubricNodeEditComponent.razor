@@ -76,7 +76,7 @@
 
     /// <inheritdoc/>
     [CascadingParameter, EditorRequired]
-    public required Action<UniversalBaseModel> ItemUpdateHandle { get; set; }
+    public required Action<RubricNestedModel> ItemUpdateHandle { get; set; }
 
     /// <inheritdoc/>
     [CascadingParameter, EditorRequired]
@@ -87,7 +87,7 @@
 
     bool IsRenameMode;
 
-    UniversalBaseModel? ItemModel;
+    RubricNestedModel? ItemModel;
 
     string? itemSystemName;
 
