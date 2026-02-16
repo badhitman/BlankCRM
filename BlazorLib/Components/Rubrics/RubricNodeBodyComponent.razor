@@ -1,7 +1,7 @@
 ﻿@using MudBlazor
 @inherits BlazorBusyComponentBaseModel
 
-<div class="hstack gap-3" @onclick:stopPropagation="true">
+<div class="hstack gap-3" @onclick:stopPropagation="true" title="@($"#{Node.Value!.Id}{(Node.Selected ? " | SELECTED" : "")}")">
     <span class="font-monospace">@Node.Text</span>
     @if (IsBusyProgress)
     {

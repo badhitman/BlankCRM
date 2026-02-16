@@ -21,6 +21,8 @@
                         @if (CommerceConf.Value.NomenclaturesRubricsPrefixes?.Any(x => !string.IsNullOrWhiteSpace(x)) != true)
                         {
                             <RubricsManageComponent TEntity="RubricNodeBodyComponent"
+                                                    FullChildsLoad
+                                                    @ref="rmRef"
                                                     ContextName="@($"{Routes.GOODS_CONTROLLER_NAME}-{Routes.CATEGORIES_CONTROLLER_NAME}")"
                                                     SelectedValuesChanged="@(new TreeViewOptionsHandler() { SelectedNodes = SelectedNodesRead(), SelectedValuesChangedHandler = SelectedRubricsChange })" />
                         }
@@ -30,6 +32,7 @@
                                 <MudTabPanel Text="По умолчанию">
                                     <RubricsManageComponent TEntity="RubricNodeBodyComponent"
                                                             FullChildsLoad
+                                                            @ref="rmRef"
                                                             ContextName="@($"{Routes.GOODS_CONTROLLER_NAME}-{Routes.CATEGORIES_CONTROLLER_NAME}")"
                                                             SelectedValuesChanged="@(new TreeViewOptionsHandler() { SelectedNodes = SelectedNodesRead(), SelectedValuesChangedHandler = SelectedRubricsChange })" />
                                 </MudTabPanel>
@@ -38,6 +41,7 @@
                                     <MudTabPanel Text="@_prefixName" ID="_prefixName">
                                         <RubricsManageComponent TEntity="RubricNodeBodyComponent"
                                                                 FullChildsLoad
+                                                                @ref="rmRef"
                                                                 ContextName="@($"{Routes.GOODS_CONTROLLER_NAME}-{Routes.CATEGORIES_CONTROLLER_NAME}")"
                                                                 PrefixName="@_prefixName"
                                                                 SelectedValuesChanged="@(new TreeViewOptionsHandler() { SelectedNodes = SelectedNodesRead(), SelectedValuesChangedHandler = SelectedRubricsChange })" />

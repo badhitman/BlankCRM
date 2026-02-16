@@ -24,15 +24,14 @@ else if (InitialTreeItems.Count == 0)
 <MudTreeView Style="width: 100%"
              @ref="_treeRef"
              AutoSelectParent="false"
-             ServerData="@LoadServerData"
+             ServerData="@(FullChildsLoad ? null : LoadServerData)"
              AutoExpand
              Items="@InitialTreeItems"
              SelectionMode="@(SelectedValuesChanged is null ? SelectionMode.ToggleSelection : SelectionMode.MultiSelection)"
              T="RubricNestedModel"
              SelectedValuesChanged="SelectedValuesChangeHandler">
     <ItemTemplate Context="item">
-        <MudTreeViewItem @key="@($"node-rubric-{item.Value?.Id}")"
-                         Text="@item.Text"
+        <MudTreeViewItem Text="@item.Text"
                          Icon="@item.Icon"
                          IconExpanded="@Icons.Custom.Uncategorized.FolderOpen"
                          Value="item.Value"
@@ -114,11 +113,32 @@ else if (InitialTreeItems.Count == 0)
         return _res;
     }
 
-
+    public bool IsStarted { get; private set; }
     List<TreeItemDataRubricModel> InitialTreeItems { get; set; } = [];
     void SelectedValuesChangeHandler(IReadOnlyCollection<RubricNestedModel?> SelectedValues)
-    {//_treeRef
+    {
+        if (!IsStarted)
+        {
+            List<RubricNestedModel> _src = [];
+            ExtractSelected(_treeRef!.Items!, _src);
+            SelectedValuesChanged?.SelectedValuesChangedHandler(_src);
+            //     _isStarted = true;
+            return;
+        }
+
         SelectedValuesChanged?.SelectedValuesChangedHandler(SelectedValues);
+    }
+
+    void ExtractSelected(IEnumerable<TreeItemData<RubricNestedModel>> sender, List<RubricNestedModel> src)
+    {
+        foreach (TreeItemData<RubricNestedModel> _n in sender)
+        {
+            if (_n.Selected)
+                src.Add(_n.Value!);
+
+            if (_n.Children is not null && _n.Children.Count != 0)
+                ExtractSelected(_n.Children, src);
+        }
     }
 
     List<TreeItemData<RubricNestedModel>> ConvertRubrics(IEnumerable<RubricNestedModel> rubrics)
@@ -141,10 +161,14 @@ else if (InitialTreeItems.Count == 0)
             else
                 mhp = MoveRowStatesEnum.Between;
 
+            var _ex = x.NestedRubrics is not null && x.NestedRubrics.Count != 0;
+
             TreeItemDataRubricModel _ri = new(x, x.Id == 0 ? Icons.Material.Filled.PlaylistAdd : SelectedValuesChanged is null ? Icons.Material.Filled.CropFree : Icons.Custom.Uncategorized.Folder)
             {
                 MoveRowState = mhp,
-                Selected = SelectedValuesChanged?.SelectedNodes.Contains(x.Id) == true
+                Selected = SelectedValuesChanged?.SelectedNodes.Contains(x.Id) == true,
+                Expanded = _ex,
+                Children = (_ex ? ConvertRubrics(x.NestedRubrics!) : null)!,
             };
 
             if (SingleLevelMode)
@@ -223,6 +247,11 @@ else if (InitialTreeItems.Count == 0)
         List<RubricNestedModel> rubrics = await RequestRubrics();
         InitialTreeItems = [.. ConvertRubrics(rubrics).Select(x => new TreeItemDataRubricModel(x))];
         StateHasChanged();
+        if (_treeRef is not null)
+        {
+            await _treeRef.ExpandAllAsync();
+            IsStarted = true;
+        }
     }
 
     /// <inheritdoc/>

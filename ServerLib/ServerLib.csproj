@@ -17,8 +17,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="MimeKit" Version="4.14.0" />
-		<PackageReference Include="MailKit" Version="4.14.1" />
+		<PackageReference Include="MimeKit" Version="4.15.0" />
+		<PackageReference Include="MailKit" Version="4.15.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
 		<PackageReference Include="NLog" Version="6.1.0" />
 		<PackageReference Include="NLog.Web.AspNetCore" Version="6.1.1" />

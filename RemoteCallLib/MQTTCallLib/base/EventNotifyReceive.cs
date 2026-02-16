@@ -2,19 +2,20 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using static SharedLib.GlobalStaticConstantsRoutes;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Threading;
+using MQTTnet;
+using MQTTnet.Exceptions;
 using MQTTnet.Packets;
 using Newtonsoft.Json;
+using SharedLib;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using SharedLib;
-using MQTTnet;
-using System;
+using System.Threading;
+using System.Threading.Tasks;
+using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace RemoteCallLib;
 
@@ -128,7 +129,27 @@ public class EventNotifyReceive<T> : IEventNotifyReceive<T>, IAsyncDisposable
             };
 
             if (mqttClient.IsConnected)
-                await mqttClient.UnsubscribeAsync(unsubscribeOptions, stoppingToken);
+            {
+                try
+                {
+                    await mqttClient.UnsubscribeAsync(unsubscribeOptions, stoppingToken);
+                }
+                catch (MqttClientDisconnectedException)
+                {
+                    mqttClient?.Dispose();
+                    return;
+                }
+                catch (TaskCanceledException)
+                {
+                    mqttClient?.Dispose();
+                    return;
+                }
+                catch (OperationCanceledException)
+                {
+                    mqttClient?.Dispose();
+                    return;
+                }
+            }
             else
             {
                 mqttClient?.Dispose();

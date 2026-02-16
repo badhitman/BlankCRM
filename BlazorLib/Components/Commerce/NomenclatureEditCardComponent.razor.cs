@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using BlazorLib.Components.Rubrics;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Options;
 using MudBlazor;
@@ -34,9 +35,10 @@ public partial class NomenclatureEditCardComponent : BlazorBusyComponentBaseAuth
     public string? ViewMode { get; set; }
 
 
-    bool _isLoad;
+    bool _isLoad, _isInitialized;
     MudTabs? panelRef;
     string? activePrefixName;
+    RubricsManageComponent<RubricNodeBodyComponent>? rmRef;
 
     int _activeIndexWrapper;
     int WrapperActiveIndex
@@ -46,6 +48,7 @@ public partial class NomenclatureEditCardComponent : BlazorBusyComponentBaseAuth
         {
             _activeIndexWrapper = value;
             _isLoad = false;
+            // _isInitialized = false;
         }
     }
 
@@ -55,11 +58,11 @@ public partial class NomenclatureEditCardComponent : BlazorBusyComponentBaseAuth
         get => _activeIndexGoodsRubrics;
         set
         {
-            _activeIndexGoodsRubrics = value;            
+            _activeIndexGoodsRubrics = value;
             activePrefixName = panelRef?.ActivePanel?.ID?.ToString();
         }
     }
-    
+
     NomenclatureModelDB? originNomenclature, editNomenclature;
 
     OffersListModesEnum GetMode => string.IsNullOrWhiteSpace(ViewMode) || !Enum.TryParse(typeof(OffersListModesEnum), ViewMode, out object? pvm) ? OffersListModesEnum.Goods : (OffersListModesEnum)pvm;
@@ -67,13 +70,14 @@ public partial class NomenclatureEditCardComponent : BlazorBusyComponentBaseAuth
 
     async void SelectedRubricsChange(IReadOnlyCollection<RubricNestedModel?> req)
     {
-        if (CurrentUserSession is null)
+        if (CurrentUserSession is null || !_isInitialized)
             return;
         if (!_isLoad)
         {
             _isLoad = true;
             return;
         }
+        //rmRef?.IsStarted = true;
 
         if (editNomenclature?.RubricsJoins is not null && !req.Any(x => !editNomenclature!.RubricsJoins.Any(y => y.RubricId == x?.Id)) && !editNomenclature.RubricsJoins.Any(x => !req.Any(y => y?.Id == x.RubricId)))
             return;
@@ -98,8 +102,9 @@ public partial class NomenclatureEditCardComponent : BlazorBusyComponentBaseAuth
     {
         await base.OnInitializedAsync();
         await LoadNomenclatureData();
+        _isInitialized = true;
     }
-    
+
     async Task LoadNomenclatureData()
     {
         if (CurrentUserSession is null)
@@ -107,7 +112,7 @@ public partial class NomenclatureEditCardComponent : BlazorBusyComponentBaseAuth
 
         await SetBusyAsync();
         TResponseModel<List<NomenclatureModelDB>> res = await CommerceRepo.NomenclaturesReadAsync(new() { SenderActionUserId = CurrentUserSession.UserId, Payload = [NomenclatureId] });
-        await SetBusyAsync(false);
+
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         if (res.Response is null)
             throw new Exception($"res.Response is null > {nameof(LoadNomenclatureData)}");
