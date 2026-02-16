@@ -2,8 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Microsoft.AspNetCore.Components;
-using MudBlazor;
 using SharedLib;
 
 namespace BlazorLib.Components.Rubrics;
@@ -13,7 +11,6 @@ namespace BlazorLib.Components.Rubrics;
 /// </summary>
 public partial class RubricNodeBodyNomenclatureComponent : RubricNodeBodyComponent
 {
-
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
@@ -42,7 +39,7 @@ public partial class RubricNodeBodyNomenclatureComponent : RubricNodeBodyCompone
                 PrefixPropertyName = GlobalStaticConstantsRoutes.Routes.ABOUT_CONTROLLER_NAME,
             }
         };
-        
+
         await SetBusyAsync(false);
     }
 }

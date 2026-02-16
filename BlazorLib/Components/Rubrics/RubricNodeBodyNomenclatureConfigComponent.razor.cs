@@ -13,7 +13,6 @@ namespace BlazorLib.Components.Rubrics;
 /// </summary>
 public partial class RubricNodeBodyNomenclatureConfigComponent : RubricNodeBodyComponent
 {
-
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
@@ -42,7 +41,7 @@ public partial class RubricNodeBodyNomenclatureConfigComponent : RubricNodeBodyC
                 PrefixPropertyName = GlobalStaticConstantsRoutes.Routes.ABOUT_CONTROLLER_NAME,
             }
         };
-        
+
         await SetBusyAsync(false);
     }
 }
