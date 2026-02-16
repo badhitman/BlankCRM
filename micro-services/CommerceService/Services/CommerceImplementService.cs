@@ -483,23 +483,26 @@ public partial class CommerceImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> RubricsForNomenclaturesSetAsync(RubricsSetModel req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> RubricsForNomenclaturesSetAsync(TAuthRequestStandardModel<RubricsSetModel> req, CancellationToken token = default)
     {
+        if (req.Payload is null)
+            return ResponseBaseModel.CreateError($"req.Payload is null > {nameof(RubricsForNomenclaturesSetAsync)}");
+
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         int resChanges;
-        if (req.RubricsIds.Length == 0)
+        if (req.Payload.RubricsIds.Length == 0)
         {
-            resChanges = await context.NomenclaturesRubricsJoins.Where(x => x.NomenclatureId == req.OwnerId).ExecuteDeleteAsync(cancellationToken: token);
+            resChanges = await context.NomenclaturesRubricsJoins.Where(x => x.NomenclatureId == req.Payload.OwnerId).ExecuteDeleteAsync(cancellationToken: token);
             return resChanges == 0
-                ? ResponseBaseModel.CreateInfo("У статьи нет рубрик")
-                : ResponseBaseModel.CreateSuccess("Удалены все рубрики для статьи");
+                ? ResponseBaseModel.CreateInfo("У номенклатуры нет рубрик")
+                : ResponseBaseModel.CreateSuccess("Удалены все рубрики для номенклатуры");
         }
         NomenclatureRubricJoinModelDB[] rubrics_db = await context
             .NomenclaturesRubricsJoins
-            .Where(x => x.NomenclatureId == req.OwnerId)
+            .Where(x => x.NomenclatureId == req.Payload.OwnerId)
             .ToArrayAsync(cancellationToken: token);
         ResponseBaseModel res = new();
-        int[] _ids = [.. rubrics_db.Where(x => !req.RubricsIds.Contains(x.RubricId)).Select(x => x.Id)];
+        int[] _ids = [.. rubrics_db.Where(x => !req.Payload.RubricsIds.Contains(x.RubricId)).Select(x => x.Id)];
         if (_ids.Length != 0)
         {
             resChanges = await context.NomenclaturesRubricsJoins
@@ -509,10 +512,10 @@ public partial class CommerceImplementService(
             res.AddInfo($"Удалено рубрик: {resChanges}");
         }
 
-        _ids = [.. req.RubricsIds.Where(x => !rubrics_db.Any(y => y.RubricId == x))];
+        _ids = [.. req.Payload.RubricsIds.Where(x => !rubrics_db.Any(y => y.RubricId == x))];
         if (_ids.Length != 0)
         {
-            await context.NomenclaturesRubricsJoins.AddRangeAsync(_ids.Select(x => new NomenclatureRubricJoinModelDB() { NomenclatureId = req.OwnerId, RubricId = x }), token);
+            await context.NomenclaturesRubricsJoins.AddRangeAsync(_ids.Select(x => new NomenclatureRubricJoinModelDB() { NomenclatureId = req.Payload.OwnerId, RubricId = x }), token);
             resChanges = await context.SaveChangesAsync(token);
             res.AddSuccess($"Добавлено рубрик: {resChanges}");
         }
@@ -536,6 +539,7 @@ public partial class CommerceImplementService(
             .Nomenclatures
             .Where(x => req.Payload.Any(y => x.Id == y))
             .Include(x => x.Offers)
+            .Include(x => x.RubricsJoins)
             .ToListAsync(cancellationToken: token)
         };
     }

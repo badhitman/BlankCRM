@@ -11,13 +11,13 @@ namespace Transmission.Receives.commerce;
 /// RubricsForNomenclaturesSet
 /// </summary>
 public class RubricsForNomenclaturesSetReceive(ICommerceService commerceRepo, ITracesIndexing indexingRepo)
-    : IResponseReceive<RubricsSetModel?, ResponseBaseModel?>
+    : IResponseReceive<TAuthRequestStandardModel<RubricsSetModel>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.NomenclatureRubricsSetCommerceReceive;
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(RubricsSetModel? req, CancellationToken token = default)
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestStandardModel<RubricsSetModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, null, req);

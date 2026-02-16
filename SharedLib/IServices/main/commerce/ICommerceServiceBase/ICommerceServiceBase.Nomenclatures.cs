@@ -25,5 +25,5 @@ public partial interface ICommerceServiceBase
     /// <summary>
     /// Установит рубрики для номенклатуры
     /// </summary>
-    public Task<ResponseBaseModel> RubricsForNomenclaturesSetAsync(RubricsSetModel req, CancellationToken token = default);
+    public Task<ResponseBaseModel> RubricsForNomenclaturesSetAsync(TAuthRequestStandardModel<RubricsSetModel> req, CancellationToken token = default);
 }
