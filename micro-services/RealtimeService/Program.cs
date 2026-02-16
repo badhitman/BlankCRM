@@ -109,11 +109,11 @@ public class Program
         builder.WebHost.ConfigureKestrel((b, o) =>
         {
             // This will allow MQTT connections based on TCP port 1883.
-            o.ListenAnyIP(1883, l => l.UseMqtt());
+            o.ListenAnyIP(_conf.Port, l => l.UseMqtt());
 
             // This will allow MQTT connections based on HTTP WebSockets with URI "localhost:5000/mqtt"
             // See code below for URI configuration.
-            o.ListenAnyIP(3883); // Default HTTP pipeline
+            //o.ListenAnyIP(3883); // Default HTTP pipeline
         });
         builder.AddServiceDefaults();
 
