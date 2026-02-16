@@ -5,9 +5,7 @@
     <span class="font-monospace">@Node.Text</span>
     @if (IsBusyProgress)
     {
-        <div class="spinner-border spinner-border-sm mx-1" role="status">
-            <span class="visually-hidden">Loading...</span>
-        </div>
+        <span class="loader"></span>
     }
     @if (TagsCollection.Response is not null && TagsCollection.Response.Count != 0)
     {

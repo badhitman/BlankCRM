@@ -154,6 +154,7 @@ else if (InitialTreeItems.Count == 0)
 
     async void ReloadNodeAction(int parent_id)
     {
+        await SetBusyAsync();
         List<UniversalBaseModel> rubrics = await RequestRubrics(parent_id);
         if (parent_id > 0)
         {
@@ -210,7 +211,7 @@ else if (InitialTreeItems.Count == 0)
     {
         List<UniversalBaseModel> rubrics = await RequestRubrics();
         InitialTreeItems = [.. ConvertRubrics(rubrics).Select(x => new TreeItemDataRubricModel(x))];
-        await SetBusyAsync(false);
+        StateHasChanged();
     }
 
     /// <inheritdoc/>
@@ -236,6 +237,7 @@ else if (InitialTreeItems.Count == 0)
         if (SelectedValuesChanged is null)
             rest.Add(new UniversalBaseModel() { Name = "", SortIndex = uint.MaxValue, ParentId = parent_id });
 
+        await SetBusyAsync(false);
         return rest;
     }
 }
