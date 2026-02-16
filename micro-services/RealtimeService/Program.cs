@@ -105,12 +105,12 @@ public class Program
             .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
         ;
         _conf.Reload(builder.Configuration.GetSection("RealtimeConfig").Get<MQTTClientConfigModel>()!);
+        logger.Warn($"mqtt port: {_conf.Port}");
 
         builder.WebHost.ConfigureKestrel((b, o) =>
         {
             // This will allow MQTT connections based on TCP port 1883.
             o.ListenAnyIP(_conf.Port, l => l.UseMqtt());
-            logger.Warn($"mqtt port: {_conf.Port}");
             // This will allow MQTT connections based on HTTP WebSockets with URI "localhost:5000/mqtt"
             // See code below for URI configuration.
             //o.ListenAnyIP(3883); // Default HTTP pipeline
