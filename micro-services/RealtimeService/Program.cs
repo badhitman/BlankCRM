@@ -106,11 +106,11 @@ public class Program
             .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
         ;
         _conf.Reload(builder.Configuration.GetSection("RealtimeConfig").Get<MQTTClientConfigModel>()!);
-        logger.Warn($"mqtt config: {JsonConvert.SerializeObject(_conf)}");
-        foreach (KeyValuePair<string, string?> _kvp in builder.Configuration.AsEnumerable())
-        {
-            logger.Warn($"global config: {JsonConvert.SerializeObject(_kvp)}");
-        }
+        //logger.Warn($"mqtt config: {JsonConvert.SerializeObject(_conf)}");
+        //foreach (KeyValuePair<string, string?> _kvp in builder.Configuration.AsEnumerable())
+        //{
+        //    logger.Warn($"global config: {JsonConvert.SerializeObject(_kvp)}");
+        //}
 
         builder.WebHost.ConfigureKestrel((b, o) =>
         {
