@@ -5,6 +5,7 @@
 using BlazorLib.Components.Commerce.Attendances;
 using BlazorLib.Components.Commerce;
 using System.ComponentModel;
+using BlazorLib.Components.Commerce.Offers;
 
 namespace BlazorLib;
 

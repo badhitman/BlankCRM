@@ -8,7 +8,7 @@ using Microsoft.Extensions.Options;
 using MudBlazor;
 using SharedLib;
 
-namespace BlazorLib.Components.Commerce;
+namespace BlazorLib.Components.Commerce.Nomenclature;
 
 /// <summary>
 /// NomenclatureEditCardComponent

@@ -3,13 +3,12 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
-using BlazorLib;
 using SharedLib;
 using System.Reflection;
 using BlazorLib.Components.Commerce.Attendances;
 using static SharedLib.GlobalStaticConstantsRoutes;
 
-namespace BlazorLib.Components.Commerce;
+namespace BlazorLib.Components.Commerce.Nomenclature;
 
 /// <summary>
 /// NomenclatureEditComponent

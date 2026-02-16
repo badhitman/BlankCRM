@@ -7,7 +7,7 @@ using BlazorLib;
 using SharedLib;
 using MudBlazor;
 
-namespace BlazorLib.Components.Commerce;
+namespace BlazorLib.Components.Commerce.Offers;
 
 /// <summary>
 /// OffersGoodsListComponent

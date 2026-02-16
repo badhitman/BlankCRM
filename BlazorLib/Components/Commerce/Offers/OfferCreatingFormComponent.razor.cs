@@ -5,7 +5,7 @@
 using Microsoft.AspNetCore.Components;
 using SharedLib;
 
-namespace BlazorLib.Components.Commerce;
+namespace BlazorLib.Components.Commerce.Offers;
 
 /// <summary>
 /// OfferCreatingFormComponent

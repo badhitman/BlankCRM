@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components;
 using SharedLib;
 using static SharedLib.GlobalStaticConstantsRoutes;
 
-namespace BlazorLib.Components.Commerce;
+namespace BlazorLib.Components.Commerce.Offers;
 
 /// <summary>
 /// OfferCardEditComponent
