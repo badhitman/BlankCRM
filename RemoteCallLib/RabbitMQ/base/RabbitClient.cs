@@ -114,7 +114,7 @@ public class RabbitClient : IRabbitClient
             properties.ReplyTo = response_topic;
             try
             {
-                await _channel.QueueDeclareAsync(queue: response_topic, durable: false, exclusive: false, autoDelete: true, arguments: null, cancellationToken: tokenOuter);
+                await _channel.QueueDeclareAsync(queue: response_topic, durable: false, exclusive: false, autoDelete: true, arguments: new Dictionary<string, object>(ResponseQueueArguments!.Where(x => x.Key != "x-queue-type"))!, cancellationToken: tokenOuter);
             }
             catch (TaskCanceledException)
             {
@@ -130,7 +130,7 @@ public class RabbitClient : IRabbitClient
 
                 return default;
             }
-            catch(OperationInterruptedException ex)
+            catch (OperationInterruptedException ex)
             {
                 msg = $"exception basic ask for [queue: {response_topic}]. error 56AA49DF-E8F8-489F-A2AB-591511EE7B33";
                 loggerRepo.LogError(ex, msg);
