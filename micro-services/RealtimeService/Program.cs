@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using MQTTnet.AspNetCore;
 using MQTTnet.Server;
+using Newtonsoft.Json;
 using NLog;
 using NLog.Extensions.Logging;
 using NLog.Web;
@@ -105,7 +106,8 @@ public class Program
             .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
         ;
         _conf.Reload(builder.Configuration.GetSection("RealtimeConfig").Get<MQTTClientConfigModel>()!);
-        logger.Warn($"mqtt port: {_conf.Port}");
+        logger.Warn($"mqtt config: {JsonConvert.SerializeObject(_conf)}");
+        logger.Warn($"global config: {JsonConvert.SerializeObject(builder.Configuration.Sources)}");
 
         builder.WebHost.ConfigureKestrel((b, o) =>
         {
