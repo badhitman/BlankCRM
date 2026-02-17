@@ -4,7 +4,6 @@
 
 @inherits BlazorBusyComponentBaseModel
 
-@rendermode @(new InteractiveServerRenderMode(prerender: false))
 @if (IsBusyProgress)
 {
     <MudProgressLinear Color="Color.Primary" Indeterminate Class="my-7" />
