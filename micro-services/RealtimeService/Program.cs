@@ -24,7 +24,7 @@ namespace RealtimeService;
 public class Program
 {
     static Logger logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
-    static MQTTClientConfigModel _conf = MQTTClientConfigModel.BuildEmpty();
+    static MQTTClientConfigModel _confMQTT = MQTTClientConfigModel.BuildEmpty();
     public static async Task Main(string[] args)
     {
         Console.OutputEncoding = Encoding.UTF8;
@@ -105,8 +105,8 @@ public class Program
         builder.Services
             .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
         ;
-        _conf.Reload(builder.Configuration.GetSection("RealtimeConfig").Get<MQTTClientConfigModel>()!);
-        //logger.Warn($"mqtt config: {JsonConvert.SerializeObject(_conf)}");
+        _confMQTT.Reload(builder.Configuration.GetSection("RealtimeConfig").Get<MQTTClientConfigModel>()!);
+        logger.Warn($"mqtt config: {JsonConvert.SerializeObject(_confMQTT)}");
         //foreach (KeyValuePair<string, string?> _kvp in builder.Configuration.AsEnumerable())
         //{
         //    logger.Warn($"global config: {JsonConvert.SerializeObject(_kvp)}");
@@ -115,7 +115,7 @@ public class Program
         builder.WebHost.ConfigureKestrel((b, o) =>
         {
             // This will allow MQTT connections based on TCP port 1883.
-            o.ListenAnyIP(_conf.Port, l => l.UseMqtt());
+            o.ListenAnyIP(_confMQTT.Port, l => l.UseMqtt());
             // This will allow MQTT connections based on HTTP WebSockets with URI "localhost:5000/mqtt"
             // See code below for URI configuration.
             //o.ListenAnyIP(3883); // Default HTTP pipeline
@@ -139,7 +139,7 @@ public class Program
         })
         .AddSingleton<IManualCustomCacheService, ManualCustomCacheService>();
 
-        builder.Services.AddSingleton(sp => _conf);
+        builder.Services.AddSingleton(sp => _confMQTT);
 
         builder.Services.AddHttpContextAccessor();
 

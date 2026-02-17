@@ -25,11 +25,12 @@ using BlazorLib;
 using NLog.Web;
 using DbcLib;
 using NLog;
+using Newtonsoft.Json;
 #if !DEBUG
 using System.Reflection;
 #endif
 
-MQTTClientConfigModel _conf = MQTTClientConfigModel.BuildEmpty();
+MQTTClientConfigModel _confMQTT = MQTTClientConfigModel.BuildEmpty();
 Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 Console.OutputEncoding = Encoding.UTF8;
 // Early init of NLog to allow startup and exception logging, before host is built
@@ -131,8 +132,9 @@ if (!string.IsNullOrWhiteSpace(_modePrefix))
 builder.Configuration.AddEnvironmentVariables();
 builder.Configuration.AddCommandLine(args);
 
-_conf.Reload(builder.Configuration.GetSection("RealtimeConfig").Get<MQTTClientConfigModel>()!);
-builder.Services.AddSingleton(sp => _conf);
+_confMQTT.Reload(builder.Configuration.GetSection("RealtimeConfig").Get<MQTTClientConfigModel>()!);
+logger.Warn($"mqtt config: {JsonConvert.SerializeObject(_confMQTT)}");
+builder.Services.AddSingleton(sp => _confMQTT);
 
 builder.Services.AddIdleCircuitHandler(options =>
     options.IdleTimeout = TimeSpan.FromMinutes(5));
