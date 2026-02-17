@@ -100,8 +100,7 @@
                         <MudAvatar>@(position == ChatBubblePosition.Start ? "Вы" : "US")</MudAvatar>
                         <MudChatHeader Name="@(position == ChatBubblePosition.Start ? "Вы" : senderUser?.UserName ?? message.SenderUserIdentityId)"
                                        Time="@message.CreatedAtUTC.GetCustomTime().ToString()" />
-                        <MudChatBubble OnClick="@((args) => ClickMessage(args, message))"
-                                       OnContextClick="@((args) => RightClickMessage(args, message))">
+                        <MudChatBubble>
                             @message.Text
                         </MudChatBubble>
                         @if (message.AttachesFiles is not null && message.AttachesFiles.Count != 0)
@@ -134,14 +133,6 @@
                     </figure>
                 </EmptyContent>
             </Virtualize>
-            <MudMenu PositionAtCursor @ref="_contextMenu" id="_contextMenu">
-                <MudMenuItem Icon="@Icons.Material.Filled.Block" OnClick="@BanUser">
-                    Ban
-                </MudMenuItem>
-                <MudMenuItem Icon="@Icons.Material.Filled.Info" OnClick="@ShowHiddenInfo">
-                    View Details for
-                </MudMenuItem>
-            </MudMenu>
         </div>
         @if (string.IsNullOrWhiteSpace(dialogSession.InitiatorContacts) && string.IsNullOrWhiteSpace(dialogSession.InitiatorIdentityId))
         {

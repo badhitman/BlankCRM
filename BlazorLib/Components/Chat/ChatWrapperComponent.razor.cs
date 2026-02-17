@@ -46,9 +46,7 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
 
 
     bool muteSound;
-    MessageWebChatModelDB? _selectedMessage;
     AboutUserAgentModel? UserAgent;
-    MudMenu? _contextMenu;
     DialogWebChatModelDB? dialogSession, dialogSessionEdit;
     string? lastUserId;
     Virtualize<MessageWebChatModelDB>? virtualizeComponent;
@@ -287,36 +285,6 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
         NewMessageWebChatEventRepo.UnregisterAction();
         StateGetWebChatEventRepo.UnregisterAction(isMute: true);
         StateSetWebChatEventRepo.UnregisterAction(isMute: true);
-    }
-
-    void ShowHiddenInfo()
-    {
-        if (_selectedMessage is not null)
-        {
-            SnackBarRepo.Add($"Hidden information for ``", Severity.Info);
-        }
-    }
-
-    void BanUser()
-    {
-        if (_selectedMessage is not null)
-        {
-            SnackBarRepo.Add($"`` has been banned!", Severity.Error);
-        }
-    }
-
-    async Task RightClickMessage(MouseEventArgs args, MessageWebChatModelDB message)
-    {
-        _selectedMessage = message;
-        if (_contextMenu != null)
-            await _contextMenu.OpenMenuAsync(args);
-    }
-
-    async Task ClickMessage(MouseEventArgs args, MessageWebChatModelDB message)
-    {
-        _selectedMessage = message;
-        SnackBarRepo.Add("Message clicked: " + message.Text, Severity.Info);
-        await Task.CompletedTask;
     }
 
     /// <inheritdoc/>
