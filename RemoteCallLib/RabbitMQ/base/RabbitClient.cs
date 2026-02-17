@@ -157,6 +157,7 @@ public class RabbitClient : IRabbitClient
 
         CancellationTokenSource cts = new();
         CancellationToken token = cts.Token;
+        tokenOuter.Register(cts.Cancel);
         ManualResetEventSlim mres = new(false);
         TResponseMQModel<T?>? res_io = null;
         async Task MessageReceivedEvent(object? sender, BasicDeliverEventArgs e)
@@ -198,7 +199,7 @@ public class RabbitClient : IRabbitClient
 
             try
             {
-                await _channel.BasicAckAsync(e.DeliveryTag, false, tokenOuter);
+                await _channel.BasicAckAsync(e.DeliveryTag, false, token);
             }
             catch (TaskCanceledException)
             {
@@ -227,7 +228,7 @@ public class RabbitClient : IRabbitClient
         {
             try
             {
-                await _channel.BasicConsumeAsync(response_topic, false, consumer, cancellationToken: tokenOuter);
+                await _channel.BasicConsumeAsync(response_topic, false, consumer, cancellationToken: token);
             }
             catch (TaskCanceledException)
             {
@@ -256,7 +257,7 @@ public class RabbitClient : IRabbitClient
 
         try
         {
-            await _channel!.QueueDeclareAsync(queue: queue, durable: true, exclusive: false, autoDelete: false, arguments: ResponseQueueArguments!, cancellationToken: tokenOuter);
+            await _channel!.QueueDeclareAsync(queue: queue, durable: true, exclusive: false, autoDelete: false, arguments: ResponseQueueArguments!, cancellationToken: token);
         }
         catch (TaskCanceledException)
         {
@@ -309,7 +310,7 @@ public class RabbitClient : IRabbitClient
                             mandatory: true,
                             basicProperties: properties,
                             body: body,
-                            cancellationToken: tokenOuter);
+                            cancellationToken: token);
         }
         catch (TaskCanceledException)
         {
@@ -339,9 +340,9 @@ public class RabbitClient : IRabbitClient
             stopwatch.Start();
             _ = Task.Run(async () =>
             {
-                await Task.Delay(RabbitConfigRepo.RemoteCallTimeoutMs);
+                await Task.Delay(RabbitConfigRepo.RemoteCallTimeoutMs, token);
                 cts.Cancel();
-            }, tokenOuter);
+            }, token);
             try
             {
                 mres.Wait(token);
@@ -351,14 +352,16 @@ public class RabbitClient : IRabbitClient
                 loggerRepo.LogDebug($"response for {response_topic}");
                 _connection.Dispose();
                 _channel.Dispose();
-
+                stopwatch.Stop();
                 return default;
             }
             catch (OperationCanceledException)
             {
+                stopwatch.Stop();
                 loggerRepo.LogDebug($"response for {response_topic}");
                 _connection.Dispose();
                 _channel.Dispose();
+                return default;
             }
             catch (Exception ex)
             {
@@ -374,7 +377,7 @@ public class RabbitClient : IRabbitClient
 
             if (stopwatch.IsRunning)
             {
-                msg = $"Elapsed for `{queue}` -> `{response_topic}`: {stopwatch.Elapsed} > {TimeSpan.FromMilliseconds(RabbitConfigRepo.RemoteCallTimeoutMs)}";
+                msg = $"Elapsed for `{queue}` -> `{response_topic}`: {stopwatch.Elapsed} > {TimeSpan.FromMilliseconds(RabbitConfigRepo.RemoteCallTimeoutMs)}\n{request_payload_json}";
                 loggerRepo.LogError(msg);
                 stopwatch.Stop();
             }
