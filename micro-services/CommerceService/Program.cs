@@ -84,7 +84,7 @@ void ReadSecrets(string dirName)
         }
     }
     else
-        logger.Warn($"Секреты `{dirName}` не найдены (совсем)");
+        logger.Debug($"Секреты `{dirName}` не найдены (совсем)");
 }
 ReadSecrets("secrets");
 if (!string.IsNullOrWhiteSpace(_modePrefix))

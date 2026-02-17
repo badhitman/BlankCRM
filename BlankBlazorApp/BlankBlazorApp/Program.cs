@@ -133,7 +133,7 @@ builder.Configuration.AddEnvironmentVariables();
 builder.Configuration.AddCommandLine(args);
 
 _confMQTT.Reload(builder.Configuration.GetSection("RealtimeConfig").Get<MQTTClientConfigModel>()!);
-logger.Debug($"mqtt config: {JsonConvert.SerializeObject(_confMQTT)}");
+logger.Warn($"mqtt config: {JsonConvert.SerializeObject(_confMQTT)}");
 builder.Services.AddSingleton(sp => _confMQTT);
 
 builder.Services.AddIdleCircuitHandler(options =>

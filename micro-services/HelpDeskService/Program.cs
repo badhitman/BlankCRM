@@ -83,7 +83,7 @@ public class Program
                 }
             }
             else
-                logger.Warn($"Секреты `{dirName}` не найдены (совсем)");
+                logger.Debug($"Секреты `{dirName}` не найдены (совсем)");
         }
         ReadSecrets("secrets");
         if (!string.IsNullOrWhiteSpace(_modePrefix))
@@ -92,12 +92,11 @@ public class Program
         builder.Configuration.AddEnvironmentVariables();
         builder.Configuration.AddCommandLine(args);
 
-
         builder.Services
             .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
             .Configure<HelpDeskConfigModel>(builder.Configuration.GetSection(HelpDeskConfigModel.Configuration))
         ;
-        // 
+
         builder.Services
             .AddScoped<IArticlesService, ArticlesService>()
             .AddScoped<IFilesIndexing, FileIndexingTransmission>()
