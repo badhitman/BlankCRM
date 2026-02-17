@@ -336,14 +336,14 @@ public class RabbitClient : IRabbitClient
 
         if (waitResponse)
         {
-            tokenOuter.Register(cts.Cancel);
+            //tokenOuter.Register(cts.Cancel);
             stopwatch.Start();
             _ = Task.Run(async () =>
             {
                 await Task.Delay(RabbitConfigRepo.RemoteCallTimeoutMs, token);
                 cts.Cancel();
-                cts.Dispose();
-            }, tokenOuter);
+                //cts.Dispose();
+            }, token);
             try
             {
                 mres.Wait(token);
