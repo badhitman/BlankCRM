@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////
-// © https://github.com/badhitman - @FakeGov 
+// Â© https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
@@ -64,7 +64,7 @@ public partial class WebChatsManageComponent : BlazorBusyComponentUsersCachedMod
             if (!string.IsNullOrWhiteSpace(req.UserIdentityId))
             {
                 await CacheUsersUpdate([req.UserIdentityId]);
-                await JsRuntime.InvokeVoidAsync("effects.Toast", "Ïîëüçîâàòåëü âîø¸ë â ÷àò", UsersCache.FirstOrDefault(x => x.UserId == req.UserIdentityId)?.ToString() ?? req.UserIdentityId ?? "íå àâòîðèçîâàí", "info", true, "#9EC600");
+                await JsRuntime.InvokeVoidAsync("effects.Toast", "ÐŸÐ¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÐµÐ»ÑŒ Ð²Ð¾ÑˆÑ‘Ð» Ð² Ñ‡Ð°Ñ‚", UsersCache.FirstOrDefault(x => x.UserId == req.UserIdentityId)?.ToString() ?? req.UserIdentityId ?? "Ð½Ðµ Ð°Ð²Ñ‚Ð¾Ñ€Ð¸Ð·Ð¾Ð²Ð°Ð½", "info", true, "#9EC600");
             }
         }
     }
