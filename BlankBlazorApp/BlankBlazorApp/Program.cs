@@ -57,9 +57,9 @@ string _modePrefix = Environment.GetEnvironmentVariable(nameof(GlobalStaticConst
 if (!string.IsNullOrWhiteSpace(_modePrefix) && !GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix.EndsWith(_modePrefix))
 {
     GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix += _modePrefix.Trim();
-    logger.Warn($"actual [{nameof(GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix)}: `{_modePrefix}`]");
+    logger.Debug($"actual [{nameof(GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix)}: `{_modePrefix}`]");
     GlobalStaticConstantsTransmission.TransmissionQueueNamePrefixMQTT += _modePrefix.Trim();
-    logger.Warn($"actual [{nameof(GlobalStaticConstantsTransmission.TransmissionQueueNamePrefixMQTT)}: `{_modePrefix}`]");
+    logger.Debug($"actual [{nameof(GlobalStaticConstantsTransmission.TransmissionQueueNamePrefixMQTT)}: `{_modePrefix}`]");
 }
 
 string curr_dir = Directory.GetCurrentDirectory();
@@ -68,38 +68,38 @@ builder.Configuration.SetBasePath(curr_dir);
 string path_load = Path.Combine(curr_dir, "appsettings.json");
 if (Path.Exists(path_load))
 {
-    logger.Warn($"config load: {path_load}\n{File.ReadAllText(path_load)}");
+    logger.Debug($"config load: {path_load}\n{File.ReadAllText(path_load)}");
     builder.Configuration.AddJsonFile(path_load, optional: true, reloadOnChange: false);
 }
 else
-    logger.Warn($"отсутствует: {path_load}");
+    logger.Debug($"отсутствует: {path_load}");
 
 path_load = Path.Combine(curr_dir, $"appsettings.{_environmentName}.json");
 if (Path.Exists(path_load))
 {
-    logger.Warn($"config load: {path_load}\n{File.ReadAllText(path_load)}");
+    logger.Debug($"config load: {path_load}\n{File.ReadAllText(path_load)}");
     builder.Configuration.AddJsonFile(path_load, optional: true, reloadOnChange: false);
 }
 else
-    logger.Warn($"отсутствует: {path_load}");
+    logger.Debug($"отсутствует: {path_load}");
 
 path_load = Path.Combine(curr_dir, $"bottom-menu.json");
 if (Path.Exists(path_load))
 {
-    logger.Warn($"config load: {path_load}\n{File.ReadAllText(path_load)}");
+    logger.Debug($"config load: {path_load}\n{File.ReadAllText(path_load)}");
     builder.Configuration.AddJsonFile(path_load, optional: true, reloadOnChange: false);
 }
 else
-    logger.Warn($"отсутствует: {path_load}");
+    logger.Debug($"отсутствует: {path_load}");
 
 path_load = Path.Combine(curr_dir, $"bottom-menu.{_environmentName}.json");
 if (Path.Exists(path_load))
 {
-    logger.Warn($"config load: {path_load}\n{File.ReadAllText(path_load)}");
+    logger.Debug($"config load: {path_load}\n{File.ReadAllText(path_load)}");
     builder.Configuration.AddJsonFile(path_load, optional: true, reloadOnChange: false);
 }
 else
-    logger.Warn($"отсутствует: {path_load}");
+    logger.Debug($"отсутствует: {path_load}");
 
 // Secrets
 void ReadSecrets(string dirName)
@@ -108,7 +108,7 @@ void ReadSecrets(string dirName)
     DirectoryInfo di = new(secretPath);
     for (int i = 0; i < 5 && !di.Exists; i++)
     {
-        logger.Warn($"файл секретов не найден (продолжение следует...): {di.FullName}");
+        logger.Debug($"файл секретов не найден (продолжение следует...): {di.FullName}");
         secretPath = Path.Combine("..", secretPath);
         di = new(secretPath);
     }
@@ -118,12 +118,12 @@ void ReadSecrets(string dirName)
         foreach (string secret in Directory.GetFiles(secretPath, $"*.json"))
         {
             path_load = Path.GetFullPath(secret);
-            logger.Warn($"!secret load: {path_load}");
+            logger.Debug($"!secret load: {path_load}");
             builder.Configuration.AddJsonFile(path_load, optional: true, reloadOnChange: false);
         }
     }
     else
-        logger.Warn($"Секреты `{dirName}` не найдены (совсем)");
+        logger.Debug($"Секреты `{dirName}` не найдены (совсем)");
 }
 ReadSecrets("secrets");
 if (!string.IsNullOrWhiteSpace(_modePrefix))
@@ -133,7 +133,7 @@ builder.Configuration.AddEnvironmentVariables();
 builder.Configuration.AddCommandLine(args);
 
 _confMQTT.Reload(builder.Configuration.GetSection("RealtimeConfig").Get<MQTTClientConfigModel>()!);
-logger.Warn($"mqtt config: {JsonConvert.SerializeObject(_confMQTT)}");
+logger.Debug($"mqtt config: {JsonConvert.SerializeObject(_confMQTT)}");
 builder.Services.AddSingleton(sp => _confMQTT);
 
 builder.Services.AddIdleCircuitHandler(options =>

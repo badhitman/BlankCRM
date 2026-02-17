@@ -56,20 +56,20 @@ public class Program
         string path_load = Path.Combine(curr_dir, "appsettings.json");
         if (Path.Exists(path_load))
         {
-            logger.Warn($"config load: {path_load}\n{File.ReadAllText(path_load)}");
+            logger.Debug($"config load: {path_load}\n{File.ReadAllText(path_load)}");
             builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: false);
         }
         else
-            logger.Warn($"отсутствует: {path_load}");
+            logger.Debug($"отсутствует: {path_load}");
 
         path_load = Path.Combine(curr_dir, $"appsettings.{_environmentName}.json");
         if (Path.Exists(path_load))
         {
-            logger.Warn($"config load: {path_load}\n{File.ReadAllText(path_load)}");
+            logger.Debug($"config load: {path_load}\n{File.ReadAllText(path_load)}");
             builder.Configuration.AddJsonFile(path_load, optional: true, reloadOnChange: false);
         }
         else
-            logger.Warn($"отсутствует: {path_load}");
+            logger.Debug($"отсутствует: {path_load}");
 
         // Secrets
         void ReadSecrets(string dirName)
@@ -78,7 +78,7 @@ public class Program
             DirectoryInfo di = new(secretPath);
             for (int i = 0; i < 5 && !di.Exists; i++)
             {
-                logger.Warn($"файл секретов не найден (продолжение следует...): {di.FullName}");
+                logger.Debug($"файл секретов не найден (продолжение следует...): {di.FullName}");
                 secretPath = Path.Combine("..", secretPath);
                 di = new(secretPath);
             }
@@ -88,7 +88,7 @@ public class Program
                 foreach (string secret in Directory.GetFiles(secretPath, $"*.json"))
                 {
                     path_load = Path.GetFullPath(secret);
-                    logger.Warn($"!secret load: {path_load}");
+                    logger.Debug($"!secret load: {path_load}");
                     builder.Configuration.AddJsonFile(path_load, optional: true, reloadOnChange: false);
                 }
             }
