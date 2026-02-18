@@ -19,7 +19,7 @@ public partial class RetailService : IRetailService
     public async Task<TResponseModel<int>> CreateRetailDocumentAsync(TAuthRequestStandardModel<CreateDocumentRetailRequestModel> req, CancellationToken token = default)
     {
         TResponseModel<int> res = new();
-        if(req.Payload is null)
+        if (req.Payload is null)
         {
             res.AddError("req.Payload is null");
             return res;
@@ -74,6 +74,7 @@ public partial class RetailService : IRetailService
         req.Payload.Description = req.Payload.Description?.Trim();
         req.Payload.CreatedAtUTC = DateTime.UtcNow;
         req.Payload.DateDocument = req.Payload.DateDocument.SetKindUtc();
+        req.Payload.Rows?.ForEach(x => x.Version = Guid.NewGuid());
 
         using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
 
