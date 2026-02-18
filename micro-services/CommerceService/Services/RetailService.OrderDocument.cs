@@ -326,7 +326,7 @@ public partial class RetailService : IRetailService
 
         await transaction.CommitAsync(token);
 
-        return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Success, Text = "Документ/заказ обновлён" }] };
+        return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Success, Text = "Документ/заказ обновлён" }], Response = _ver };
     }
 
     /// <inheritdoc/>

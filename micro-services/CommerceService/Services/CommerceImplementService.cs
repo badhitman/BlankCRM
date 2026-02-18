@@ -890,7 +890,7 @@ public partial class CommerceImplementService(
                     OfferAvailabilityModelDB rowReg = registersOffersDb.First(x => x.OfferId == rowDoc.OfferId && x.WarehouseId == tabAddr.WarehouseId);
                     //OfferModelDB offerInfo = allOffersReq.First(x => x?.Id == rowDoc.OfferId)!;
                     rowReg.Quantity -= rowDoc.Quantity;
-                    context.Update(rowReg);
+                    context.OffersAvailability.Update(rowReg);
                 }
             }
 
@@ -1147,7 +1147,7 @@ public partial class CommerceImplementService(
             {
                 regOfferAvStorno.Quantity += row.Quantity;
                 if (regOfferAvStorno.Id > 0)
-                    context.Update(regOfferAvStorno);
+                    context.OffersAvailability.Update(regOfferAvStorno);
             }
 
             if (!res.Success())
@@ -1180,12 +1180,12 @@ public partial class CommerceImplementService(
             {
                 regOfferAv.Quantity += _delta;
                 if (regOfferAv.Id > 0)
-                    context.Update(regOfferAv);
+                    context.OffersAvailability.Update(regOfferAv);
 
                 if (regOfferAvStorno is not null)
                 {
                     regOfferAvStorno.Quantity -= _delta;
-                    context.Update(regOfferAvStorno);
+                    context.OffersAvailability.Update(regOfferAvStorno);
                 }
             }
 
@@ -1294,7 +1294,7 @@ public partial class CommerceImplementService(
             if (offerRegister is not null)
             {
                 offerRegister.Quantity += rowOfOrderElementRecord.Quantity;
-                context.Update(offerRegister);
+                context.OffersAvailability.Update(offerRegister);
             }
             else
             {

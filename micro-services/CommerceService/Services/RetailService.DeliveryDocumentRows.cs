@@ -448,7 +448,7 @@ public partial class RetailService : IRetailService
             if (row.WeightOffer <= 0)
                 row.WeightOffer = row.Quantity * row.Offer!.Weight;
 
-            context.Update(row);
+            context.RowsDeliveryDocumentsRetail.Update(row);
             await context.SaveChangesAsync(token);
         }
 

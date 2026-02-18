@@ -178,7 +178,7 @@ public partial class RetailService : IRetailService
                     TypeMessage = MessagesTypesEnum.Error,
                     Text = $"Строку документа уже кто-то изменил. Обновите документ и попробуйте изменить его снова" }]
             };
-
+        
         if (offOrdersStatuses.Contains(retailOrderDb.StatusDocument))
         {
             await context.RowsOrdersRetails

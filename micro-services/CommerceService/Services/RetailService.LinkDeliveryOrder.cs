@@ -100,7 +100,7 @@ public partial class RetailService : IRetailService
 
                 if (row.WeightShipping != 0)
                 {
-                    context.Update(row);
+                    context.OrdersDeliveriesLinks.Update(row);
                     await context.SaveChangesAsync(token);
                 }
             }

@@ -112,7 +112,7 @@ public partial class RetailService : IRetailService
 
                 if (row.AmountPayment != 0)
                 {
-                    context.Update(row);
+                    context.ConversionsOrdersLinksRetail.Update(row);
                     await context.SaveChangesAsync(token);
                 }
             }

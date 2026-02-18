@@ -6,7 +6,6 @@ services:
     environment:
       - RABBITMQ_DEFAULT_USER=debug
       - RABBITMQ_DEFAULT_PASS=debug
-      - RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS=-rabbit log_levels [{connection,error},{default,error}] disk_free_limit 2147483648
     volumes:
       - ./docker-volumes/rabbitmq:/var/lib/rabbitmq
     ports:
