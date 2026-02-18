@@ -74,7 +74,7 @@ public partial class RetailService : IRetailService
         req.Payload.Description = req.Payload.Description?.Trim();
         req.Payload.CreatedAtUTC = DateTime.UtcNow;
         req.Payload.DateDocument = req.Payload.DateDocument.SetKindUtc();
-        req.Payload.Rows?.ForEach(x => x.Version = Guid.NewGuid());
+        // req.Payload.Rows?.ForEach(x => x.Version = Guid.NewGuid());
 
         using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
 

@@ -24,7 +24,7 @@ namespace RealtimeService;
 public class Program
 {
     static Logger logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
-    static MQTTClientConfigModel _confMQTT = MQTTClientConfigModel.BuildEmpty();
+    static readonly MQTTClientConfigModel _confMQTT = MQTTClientConfigModel.BuildEmpty();
     public static async Task Main(string[] args)
     {
         Console.OutputEncoding = Encoding.UTF8;
@@ -219,8 +219,10 @@ public class Program
             {
                 endpoints.MapConnectionHandler<MqttConnectionHandler>(
                     "/mqtt",
-                    httpConnectionDispatcherOptions => httpConnectionDispatcherOptions.WebSockets.SubProtocolSelector =
-                        protocolList => protocolList.FirstOrDefault() ?? string.Empty);
+                    httpConnectionDispatcherOptions => 
+                    {
+                        httpConnectionDispatcherOptions.WebSockets.SubProtocolSelector = protocolList => protocolList.FirstOrDefault() ?? string.Empty;
+                    });
             });
 #pragma warning restore ASP0014 // Suggest using top level route registrations
 
