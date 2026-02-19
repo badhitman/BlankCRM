@@ -2,19 +2,18 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Microsoft.Extensions.Logging;
-using MQTTnet;
-using Newtonsoft.Json;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Diagnostics.Metrics;
-using System.Text;
-using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Threading;
+using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Threading.Tasks;
+using System.Diagnostics;
+using System.Text.Json;
+using System.Threading;
+using Newtonsoft.Json;
+using System.Text;
+using MQTTnet;
+using System;
 
 namespace SharedLib;
 
@@ -39,7 +38,8 @@ public class MQttClient(MQTTClientConfigModel mqConf, ILogger<MQttClient> _logge
     {
         queue = queue.Replace("\\", "/");
         using IMqttClient mqttClient = mqttFactory.CreateMqttClient();
-        using IMqttClient responseClient = mqttFactory.CreateMqttClient();
+        //using IMqttClient? responseClient = waitResponse ? mqttFactory.CreateMqttClient() : null;
+
         string _sc = MQConfigRepo.ToString();
 
         Meter greeterMeter = new($"OTel.{AppName}", "1.0.0");
@@ -65,7 +65,7 @@ public class MQttClient(MQTTClientConfigModel mqConf, ILogger<MQttClient> _logge
 
         Task ResponseClient_ApplicationMessageReceivedAsync(MqttApplicationMessageReceivedEventArgs eMsg)
         {
-            responseClient.ApplicationMessageReceivedAsync -= ResponseClient_ApplicationMessageReceivedAsync;
+            mqttClient.ApplicationMessageReceivedAsync -= ResponseClient_ApplicationMessageReceivedAsync;
             string msg;
             string content = Encoding.UTF8.GetString(eMsg.ApplicationMessage.Payload);
 
@@ -91,10 +91,10 @@ public class MQttClient(MQTTClientConfigModel mqConf, ILogger<MQttClient> _logge
 
             return Task.CompletedTask;
         }
-        responseClient.ApplicationMessageReceivedAsync += ResponseClient_ApplicationMessageReceivedAsync;
+        mqttClient?.ApplicationMessageReceivedAsync += ResponseClient_ApplicationMessageReceivedAsync;
         loggerRepo.LogTrace($"Sending message into queue [{queue}]", request_payload_json);
 
-        MqttClientConnectResult res = await mqttClient.ConnectAsync(GetMqttClientOptionsBuilder(queue, propertyValue), tokenOuter);
+        MqttClientConnectResult res = await mqttClient!.ConnectAsync(GetMqttClientOptionsBuilder(queue, propertyValue), tokenOuter);
 
         MqttApplicationMessage applicationMessage = new MqttApplicationMessageBuilder()
             .WithTopic(queue)
@@ -114,8 +114,8 @@ public class MQttClient(MQTTClientConfigModel mqConf, ILogger<MQttClient> _logge
             stopwatch.Start();
             try
             {
-                await responseClient.ConnectAsync(GetMqttClientOptionsBuilder(queue, propertyValue), tokenOuter);
-                await responseClient.SubscribeAsync(response_topic, cancellationToken: tokenOuter);
+                await mqttClient.ConnectAsync(GetMqttClientOptionsBuilder(queue, propertyValue), tokenOuter);
+                await mqttClient.SubscribeAsync(response_topic, cancellationToken: tokenOuter);
                 await mqttClient.PublishAsync(applicationMessage, tokenOuter);
             }
             catch (Exception ex)
@@ -124,7 +124,7 @@ public class MQttClient(MQTTClientConfigModel mqConf, ILogger<MQttClient> _logge
                 _msg = $"Request MQ/IO error [{queue}]";
                 loggerRepo.LogError(ex, _msg);
 
-                await responseClient.DisconnectAsync(dq, tokenOuter);
+                await mqttClient.DisconnectAsync(dq, tokenOuter);
                 return default;
             }
 
@@ -163,7 +163,8 @@ public class MQttClient(MQTTClientConfigModel mqConf, ILogger<MQttClient> _logge
         {
             await mqttClient.PublishAsync(applicationMessage, tokenOuter);
             await mqttClient.DisconnectAsync(dq, tokenOuter);
-            await responseClient.DisconnectAsync(dq, tokenOuter);
+            if (mqttClient?.IsConnected == true)
+                await mqttClient.DisconnectAsync(dq, tokenOuter);
             return default;
         }
 
@@ -172,19 +173,19 @@ public class MQttClient(MQTTClientConfigModel mqConf, ILogger<MQttClient> _logge
             _msg = $"Response MQ/IO is null [{queue}]: {stopwatch.Elapsed} > {TimeSpan.FromMilliseconds(MQConfigRepo.RemoteCallTimeoutMs)}";
             loggerRepo.LogError(_msg);
             await mqttClient.DisconnectAsync(dq, tokenOuter);
-            await responseClient.DisconnectAsync(dq, tokenOuter);
+            await mqttClient.DisconnectAsync(dq, tokenOuter);
             return default;
         }
         else if (res_io is null)
         {
 
             await mqttClient.DisconnectAsync(dq, tokenOuter);
-            await responseClient.DisconnectAsync(dq, tokenOuter);
+            await mqttClient.DisconnectAsync(dq, tokenOuter);
             return default;
         }
 
         await mqttClient.DisconnectAsync(dq, tokenOuter);
-        await responseClient.DisconnectAsync(dq, tokenOuter);
+        await mqttClient.DisconnectAsync(dq, tokenOuter);
         return res_io.Response;
     }
 

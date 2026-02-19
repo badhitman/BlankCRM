@@ -4,12 +4,14 @@
 }
 else
 {
-    <code @onclick="() => showId = !showId">@segments[0]</code>
-    <text>&nbsp;</text>
-    <span @onclick="() => showId = !showId">@segments[1]</span>
-    <text>&nbsp;</text>
-    @if (showId)
-    {
-        <small @onclick="() => showId = !showId">@segments[2]</small>
-    }
+    <div class="@(segments[2] == CurrentLayoutContainerId ? "bg-primary text-white" : "")">
+        <code @onclick="() => showId = !showId">@segments[0]</code>
+        <text>&nbsp;</text>
+        <span @onclick="() => showId = !showId">@segments[1]</span>
+        <text>&nbsp;</text>
+        @if (showId)
+        {
+            <small @onclick="() => showId = !showId">@segments[2]</small>
+        }
+    </div>
 }

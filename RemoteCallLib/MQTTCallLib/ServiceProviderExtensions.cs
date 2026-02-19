@@ -16,7 +16,7 @@ public static class ServiceProviderExtensions
     /// <summary>
     /// Register Mq Listener
     /// </summary>
-    public static IServiceCollection RegisterMqListener<TQueue, TRequest, TResponse>(this IServiceCollection sc)
+    public static IServiceCollection RegisterListenerMQTT<TQueue, TRequest, TResponse>(this IServiceCollection sc)
         where TQueue : class, IMQTTReceive<TRequest?, TResponse?>
         where TResponse : class, new()
     {

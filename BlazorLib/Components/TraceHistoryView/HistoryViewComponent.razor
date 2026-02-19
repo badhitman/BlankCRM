@@ -2,7 +2,11 @@
 
 @inherits HistoryViewBaseComponent
 
-<MudTable ServerData="ServerReload" Dense Hover Loading="IsBusyProgress" @ref="tableRef">
+<MudTable ServerData="ServerReload"
+          Dense Hover
+          Loading="IsBusyProgress"
+          @ref="tableRef"
+          id="history-view-table">
     <ToolBarContent>
         @if (IsBusyProgress)
         {
@@ -50,12 +54,12 @@
             </div>
         </MudTd>
         <MudTd DataLabel="Запрос">
-            <pre style="max-height: 250px; max-width: 550px;">
+            <pre class="cell-payload">
             <code class="language-json">@context.RequestBody</code>
             </pre>
         </MudTd>
         <MudTd DataLabel="Ответ">
-            <pre style="max-height: 250px; max-width: 550px;">
+            <pre class="cell-payload">
             <code class="language-json">@context.ResponseBody</code>
             </pre>
         </MudTd>

@@ -5,12 +5,14 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MQTTnet;
+using MQTTnet.Diagnostics.Logger;
 using MQTTnet.Exceptions;
 using MQTTnet.Packets;
 using Newtonsoft.Json;
 using SharedLib;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -89,7 +91,7 @@ public class EventNotifyReceive<T> : IEventNotifyReceive<T>, IAsyncDisposable
             }
             return Task.CompletedTask;
         }
-        mqttClient = mqttFactory.CreateMqttClient();
+        mqttClient ??= mqttFactory.CreateMqttClient(new ConsoleLogger(LoggerRepo));
         mqttClient.ApplicationMessageReceivedAsync += ApplicationMessageReceived;
 
         try
@@ -176,7 +178,7 @@ public class EventNotifyReceive<T> : IEventNotifyReceive<T>, IAsyncDisposable
         MqttClientOptionsBuilder builder = new MqttClientOptionsBuilder()
                .WithTcpServer(MQConfigRepo.Host, MQConfigRepo.Port)
                .WithProtocolVersion(MQTTnet.Formatter.MqttProtocolVersion.V500)
-               .WithClientId($"{queueName} [{nameof(EventNotifyReceive<>)}.{typeof(T).Name}] {Guid.NewGuid()}")
+               .WithClientId($"{queueName} [{nameof(EventNotifyReceive<>)}.{typeof(T).Name}] {LayoutContainerId}")
                .WithUserProperty(Routes.USER_CONTROLLER_NAME, _userInfoBytes ?? Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(null)));
 
         if (isMute)
@@ -193,5 +195,32 @@ public class EventNotifyReceive<T> : IEventNotifyReceive<T>, IAsyncDisposable
     public async ValueTask DisposeAsync()
     {
         await UnregisterAction();
+    }
+
+    sealed class ConsoleLogger(ILogger<EventNotifyReceive<T>> LoggerRepo) : IMqttNetLogger
+    {
+        public bool IsEnabled => true;
+
+        public void Publish(MqttNetLogLevel logLevel, string source, string message, object[]? parameters, Exception? exception)
+        {
+            switch (logLevel)
+            {
+                case MqttNetLogLevel.Verbose:
+                    //LoggerRepo.LogDebug(message);
+                    break;
+
+                case MqttNetLogLevel.Info:
+                    //LoggerRepo.LogInformation(message);
+                    break;
+
+                case MqttNetLogLevel.Warning:
+                    LoggerRepo.LogWarning(message);
+                    break;
+
+                case MqttNetLogLevel.Error:
+                    LoggerRepo.LogError(message);
+                    break;
+            }            
+        }
     }
 }

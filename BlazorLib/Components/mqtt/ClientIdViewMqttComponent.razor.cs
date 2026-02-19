@@ -15,6 +15,11 @@ public partial class ClientIdViewMqttComponent
     [Parameter, EditorRequired]
     public required string ClientId { get; set; }
 
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required string CurrentLayoutContainerId { get; set; }
+
+
     string[]? segments;
     bool showId;
 

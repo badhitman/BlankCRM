@@ -1,8 +1,8 @@
 ﻿@using MudBlazor
 @inherits BlazorBusyComponentBaseAuthModel
 
-<MudTable Items="@clients" 
-    Dense Hover Bordered Striped Filter="new Func<MqttClientModel, bool>(FilterFunc1)">
+<MudTable Items="@clients"
+          Dense Hover Bordered Striped Filter="new Func<MqttClientModel, bool>(FilterFunc1)">
     <ToolBarContent>
         <MudText Typo="Typo.h6">
             Подключения
@@ -42,7 +42,10 @@
         <MudTh>Protocol Version</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Id"><ClientIdViewMqttComponent ClientId="@context.Id" /></MudTd>
+        <MudTd DataLabel="Id">
+            <ClientIdViewMqttComponent ClientId="@context.Id"
+                                       CurrentLayoutContainerId="@LayoutContainerId" />
+        </MudTd>
         <MudTd DataLabel="Sent">
             <span style="display: block;">
                 @context.BytesSent&nbsp;(@GlobalToolsStandard.SizeDataAsString(context.SentPacketsCount).Replace(" ", "_"))
