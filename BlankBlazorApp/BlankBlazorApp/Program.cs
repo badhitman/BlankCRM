@@ -30,7 +30,7 @@ using Newtonsoft.Json;
 using System.Reflection;
 #endif
 
-MQTTClientConfigModel _confMQTT = MQTTClientConfigModel.BuildEmpty();
+RealtimeMQTTClientConfigModel _confMQTT = RealtimeMQTTClientConfigModel.BuildEmpty();
 Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 Console.OutputEncoding = Encoding.UTF8;
 // Early init of NLog to allow startup and exception logging, before host is built
@@ -132,7 +132,7 @@ if (!string.IsNullOrWhiteSpace(_modePrefix))
 builder.Configuration.AddEnvironmentVariables();
 builder.Configuration.AddCommandLine(args);
 
-_confMQTT.Reload(builder.Configuration.GetSection("RealtimeConfig").Get<MQTTClientConfigModel>()!);
+_confMQTT.Reload(builder.Configuration.GetSection(RealtimeMQTTClientConfigModel.Configuration).Get<RealtimeMQTTClientConfigModel>()!);
 logger.Warn($"mqtt config: {JsonConvert.SerializeObject(_confMQTT)}");
 builder.Services.AddSingleton(sp => _confMQTT);
 
@@ -140,7 +140,9 @@ builder.Services.AddIdleCircuitHandler(options =>
     options.IdleTimeout = TimeSpan.FromMinutes(5));
 
 builder.Services.AddOptions();
+
 builder.Services
+    .Configure<TraceNetMQConfigModel>(builder.Configuration.GetSection(TraceNetMQConfigModel.Configuration))
     .Configure<UserManageConfigModel>(builder.Configuration.GetSection("UserManage"))
     .Configure<ServerConfigModel>(builder.Configuration.GetSection("ServerConfig"))
     .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
@@ -239,7 +241,7 @@ builder.Services.AddSingleton<IRabbitClient>(x =>
                 x.GetRequiredService<ILogger<RabbitClient>>(),
                 appName));
 builder.Services
-            .AddSingleton<IMQTTClient>(x => new MQttClient(x.GetRequiredService<MQTTClientConfigModel>(), x.GetRequiredService<ILogger<MQttClient>>(), appName))
+            .AddSingleton<IMQTTClient>(x => new MQttClient(x.GetRequiredService<RealtimeMQTTClientConfigModel>(), x.GetRequiredService<ILogger<MQttClient>>(), appName))
             ;
 
 builder.Services

@@ -3,7 +3,6 @@
 ////////////////////////////////////////////////
 
 using Microsoft.Extensions.Options;
-using IndexingService;
 using Newtonsoft.Json.Linq;
 using MongoDB.Driver.Linq;
 using Newtonsoft.Json;
@@ -11,7 +10,7 @@ using MongoDB.Driver;
 using MongoDB.Bson;
 using SharedLib;
 
-namespace FileIndexingService;
+namespace IndexingService;
 
 /// <summary>
 /// TracesImpl

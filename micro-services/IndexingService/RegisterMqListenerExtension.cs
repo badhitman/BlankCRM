@@ -15,7 +15,7 @@ public static class RegisterMqListenerExtension
     /// <summary>
     /// RegisterMqListeners
     /// </summary>
-    public static IServiceCollection FileIndexingRegisterMqListeners(this IServiceCollection services)
+    public static IServiceCollection IndexingServiceRegisterMqListeners(this IServiceCollection services)
     {
         return services
             .RegisterMqListener<IndexingFileReceive, StorageFileMiddleModel, ResponseBaseModel>()

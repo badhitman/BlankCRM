@@ -1,3 +1,7 @@
+////////////////////////////////////////////////
+// © https://github.com/badhitman - @FakeGov 
+////////////////////////////////////////////////
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System.Diagnostics.Metrics;
@@ -19,6 +23,7 @@ namespace TelegramBotService;
 /// </summary>
 public class Program
 {
+    TraceNetMQConfigModel _netMQ = TraceNetMQConfigModel.BuildEmpty();
     /// <summary>
     /// Main
     /// </summary>
@@ -92,8 +97,9 @@ public class Program
         builder.Configuration.AddCommandLine(args);
 
         builder.Services
-       .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
-       .Configure<BotConfiguration>(builder.Configuration.GetSection(BotConfiguration.Configuration))
+           .Configure<TraceNetMQConfigModel>(builder.Configuration.GetSection(TraceNetMQConfigModel.Configuration))
+           .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
+           .Configure<BotConfiguration>(builder.Configuration.GetSection(BotConfiguration.Configuration))
        ;
         builder.Services.AddHttpClient(HttpClientsNamesEnum.Wappi.ToString(), cc =>
         {
@@ -135,7 +141,7 @@ public class Program
         .AddScoped<IIndexingServive, IndexingTransmission>()
         .AddScoped<ITracesIndexing, TracesTransmission>()
         .AddScoped<ReceiverService>();
-        
+
         builder.Services.AddHostedService<PollingService>();
 
         #region Telegram dialog - handlers answer to incoming messages

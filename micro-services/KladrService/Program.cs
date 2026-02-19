@@ -86,6 +86,7 @@ public class Program
         builder.Configuration.AddCommandLine(args);
 
         builder.Services
+            .Configure<TraceNetMQConfigModel>(builder.Configuration.GetSection(TraceNetMQConfigModel.Configuration))
             .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
             ;
 

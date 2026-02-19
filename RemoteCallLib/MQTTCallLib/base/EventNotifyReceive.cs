@@ -34,7 +34,7 @@ public class EventNotifyReceive<T> : IEventNotifyReceive<T>, IAsyncDisposable
     IMqttClient? mqttClient;
     MqttClientFactory mqttFactory = new();
 
-    readonly MQTTClientConfigModel MQConfigRepo;
+    readonly RealtimeMQTTClientConfigModel MQConfigRepo;
     readonly ILogger<EventNotifyReceive<T>> LoggerRepo;
     byte[]? _userInfoBytes;
     string? LayoutContainerId;
@@ -45,7 +45,7 @@ public class EventNotifyReceive<T> : IEventNotifyReceive<T>, IAsyncDisposable
     /// EventNotifyReceive
     /// </summary>
     public EventNotifyReceive(
-        MQTTClientConfigModel rabbitConf,
+        RealtimeMQTTClientConfigModel rabbitConf,
         IServiceProvider servicesProvider,
         ILogger<EventNotifyReceive<T>> loggerRepo)
     {

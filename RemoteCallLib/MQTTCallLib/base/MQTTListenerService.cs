@@ -28,7 +28,7 @@ public class MQTTListenerService<TQueue, TRequest, TResponse>
     where TQueue : IMQTTReceive<TRequest?, TResponse>
     where TResponse : new()
 {
-    readonly MQTTClientConfigModel MQConfigRepo;
+    readonly RealtimeMQTTClientConfigModel MQConfigRepo;
     readonly ILogger<MQTTListenerService<TQueue, TRequest, TResponse>> LoggerRepo;
     readonly IMQTTReceive<TRequest?, TResponse> receiveService;
 
@@ -56,7 +56,7 @@ public class MQTTListenerService<TQueue, TRequest, TResponse>
 
     /// <inheritdoc/>
     public MQTTListenerService(
-        MQTTClientConfigModel rabbitConf,
+        RealtimeMQTTClientConfigModel rabbitConf,
         IServiceProvider servicesProvider,
         ILogger<MQTTListenerService<TQueue, TRequest, TResponse>> loggerRepo)
     {

@@ -2,29 +2,29 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using DbcLib;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using MQTTnet.AspNetCore;
-using MQTTnet.Server;
-using Newtonsoft.Json;
-using NLog;
+using System.Diagnostics.Metrics;
 using NLog.Extensions.Logging;
-using NLog.Web;
-using OpenTelemetry;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
+using MQTTnet.AspNetCore;
+using Newtonsoft.Json;
+using MQTTnet.Server;
+using OpenTelemetry;
 using RemoteCallLib;
-using SharedLib;
-using System.Diagnostics.Metrics;
 using System.Text;
+using SharedLib;
+using NLog.Web;
+using DbcLib;
+using NLog;
 
 namespace RealtimeService;
 
 public class Program
 {
     static Logger logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
-    static readonly MQTTClientConfigModel _confMQTT = MQTTClientConfigModel.BuildEmpty();
+    static readonly RealtimeMQTTClientConfigModel _confMQTT = RealtimeMQTTClientConfigModel.BuildEmpty();
     public static async Task Main(string[] args)
     {
         Console.OutputEncoding = Encoding.UTF8;
@@ -103,9 +103,10 @@ public class Program
         builder.Configuration.AddCommandLine(args);
 
         builder.Services
+            .Configure<TraceNetMQConfigModel>(builder.Configuration.GetSection(TraceNetMQConfigModel.Configuration))
             .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
         ;
-        _confMQTT.Reload(builder.Configuration.GetSection("RealtimeConfig").Get<MQTTClientConfigModel>()!);
+        _confMQTT.Reload(builder.Configuration.GetSection(RealtimeMQTTClientConfigModel.Configuration).Get<RealtimeMQTTClientConfigModel>()!);
         logger.Warn($"mqtt config: {JsonConvert.SerializeObject(_confMQTT)}");
         //foreach (KeyValuePair<string, string?> _kvp in builder.Configuration.AsEnumerable())
         //{
@@ -157,14 +158,14 @@ public class Program
         builder.Services
            .AddScoped<IWebChatService, WebChatService>()
            ;
-
+        builder.Services.AddHostedService<NetMqBackgroundService>();
         builder.Services.AddTransient<MqttController>();
 
         string appName = typeof(Program).Assembly.GetName().Name ?? "AssemblyName";
         #region MQ Transmission (remote methods call)
 
         builder.Services
-            .AddSingleton<IMQTTClient>(x => new MQttClient(x.GetRequiredService<MQTTClientConfigModel>(), x.GetRequiredService<ILogger<MQttClient>>(), appName))
+            .AddSingleton<IMQTTClient>(x => new MQttClient(x.GetRequiredService<RealtimeMQTTClientConfigModel>(), x.GetRequiredService<ILogger<MQttClient>>(), appName))
             ;
 
         builder.Services.AddSingleton<IRabbitClient>(x => new RabbitClient(x.GetRequiredService<IOptions<RabbitMQConfigModel>>(), x.GetRequiredService<ILogger<RabbitClient>>(), appName));
@@ -219,7 +220,7 @@ public class Program
             {
                 endpoints.MapConnectionHandler<MqttConnectionHandler>(
                     "/mqtt",
-                    httpConnectionDispatcherOptions => 
+                    httpConnectionDispatcherOptions =>
                     {
                         httpConnectionDispatcherOptions.WebSockets.SubProtocolSelector = protocolList => protocolList.FirstOrDefault() ?? string.Empty;
                     });

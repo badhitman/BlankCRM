@@ -5,9 +5,9 @@
 namespace SharedLib;
 
 /// <summary>
-/// StockSharpClientConfig
+/// RealtimeMQTTClientConfig
 /// </summary>
-public class MQTTClientConfigModel : HostConfigModel
+public class RealtimeMQTTClientConfigModel : HostConfigModel
 {
     /// <summary>
     /// Таймаут ожидания ответа на удалённый вызов
@@ -21,19 +21,21 @@ public class MQTTClientConfigModel : HostConfigModel
 
 
     /// <inheritdoc/>
-    public static MQTTClientConfigModel BuildEmpty()
+    public static RealtimeMQTTClientConfigModel BuildEmpty()
     {
-        return new MQTTClientConfigModel() { Scheme = "mqtt", Port = 1883 };
+        return new RealtimeMQTTClientConfigModel() { Scheme = "mqtt", Port = 1883 };
     }
 
     /// <inheritdoc/>
-    public void Reload(MQTTClientConfigModel other)
+    public void Reload(RealtimeMQTTClientConfigModel other)
     {
-        Port = other.Port;
         QueueMqNamePrefixForResponse = other.QueueMqNamePrefixForResponse;
         RemoteCallTimeoutMs = other.RemoteCallTimeoutMs;
         Scheme = other.Scheme;
         Host = other.Host;
         Port = other.Port;
     }
-} 
+
+    /// <inheritdoc/>
+    public static readonly string Configuration = "RealtimeMQTTClientConfig";
+}

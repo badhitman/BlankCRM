@@ -8,6 +8,7 @@ using System.Diagnostics.Metrics;
 using NLog.Extensions.Logging;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
+using FileIndexingService;
 using OpenTelemetry;
 using RemoteCallLib;
 using System.Text;
@@ -16,7 +17,7 @@ using NLog.Web;
 using DbcLib;
 using NLog;
 
-namespace FileIndexingService;
+namespace IndexingService;
 
 /// <summary>
 /// Program
@@ -96,6 +97,7 @@ public class Program
         builder.Configuration.AddCommandLine(args);
 
         builder.Services
+            .Configure<TraceNetMQConfigModel>(builder.Configuration.GetSection(TraceNetMQConfigModel.Configuration))
             .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
             .Configure<MongoConfigModel>(builder.Configuration.GetSection(MongoConfigModel.Configuration))
             ;
@@ -124,12 +126,12 @@ public class Program
         //    .AddScoped<ICommerceTransmission, CommerceTransmission>()
             .AddScoped<IStorageTransmission, StorageTransmission>()
             ;
-        //
-        builder.Services.FileIndexingRegisterMqListeners();
+        
+        builder.Services.IndexingServiceRegisterMqListeners();
         #endregion
 
         builder.Services
-            .AddScoped<IIndexingServive, IndexingFilesImpl>()
+            .AddScoped<IIndexingServive, IndexingServiceImpl>()
             .AddScoped<ITracesIndexing, TracesImpl>()
             ;
         // Custom metrics for the application

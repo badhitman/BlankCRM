@@ -2,23 +2,23 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Options;
+using System.Diagnostics.Metrics;
 using NLog.Extensions.Logging;
+using OpenTelemetry.Metrics;
+using System.Globalization;
+using OpenTelemetry.Trace;
+using OpenTelemetry;
 using RemoteCallLib;
 using IdentityLib;
+using System.Text;
 using ServerLib;
 using SharedLib;
 using NLog;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Localization;
-using System.Globalization;
-using OpenTelemetry;
-using System.Diagnostics.Metrics;
-using OpenTelemetry.Metrics;
-using OpenTelemetry.Trace;
-using Microsoft.Extensions.Options;
-using System.Text;
 
 namespace IdentityService;
 
@@ -102,6 +102,7 @@ public class Program
         builder.Configuration.AddCommandLine(args);
 
         builder.Services
+            .Configure<TraceNetMQConfigModel>(builder.Configuration.GetSection(TraceNetMQConfigModel.Configuration))
             .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
             .Configure<SmtpConfigModel>(builder.Configuration.GetSection(SmtpConfigModel.Configuration))
             ;
@@ -177,7 +178,7 @@ public class Program
             .AddScoped<IIndexingServive, IndexingTransmission>()
             .AddScoped<ITracesIndexing, TracesTransmission>()
             ;
-
+        
         string appName = typeof(Program).Assembly.GetName().Name ?? "AssemblyName";
         #region MQ Transmission (remote methods call)
         builder.Services.AddSingleton<IRabbitClient>(x => new RabbitClient(x.GetRequiredService<IOptions<RabbitMQConfigModel>>(), x.GetRequiredService<ILogger<RabbitClient>>(), appName));

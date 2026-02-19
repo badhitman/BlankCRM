@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// MQTTClientConfigMainModel
 /// </summary>
-public partial class MQTTClientConfigMainModel : MQTTClientConfigModel
+public partial class MQTTClientConfigMainModel : RealtimeMQTTClientConfigModel
 {
     /// <inheritdoc/>
     public new static MQTTClientConfigMainModel BuildEmpty()

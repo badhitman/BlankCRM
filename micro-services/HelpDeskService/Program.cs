@@ -1,17 +1,21 @@
+////////////////////////////////////////////////
+// © https://github.com/badhitman - @FakeGov 
+////////////////////////////////////////////////
+
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Hosting;
+using System.Diagnostics.Metrics;
 using NLog.Extensions.Logging;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Trace;
 using RemoteCallLib;
+using OpenTelemetry;
+using System.Text;
 using SharedLib;
 using NLog.Web;
 using DbcLib;
 using NLog;
-using Microsoft.Extensions.Options;
-using Microsoft.AspNetCore.Hosting;
-using OpenTelemetry;
-using System.Diagnostics.Metrics;
-using OpenTelemetry.Trace;
-using OpenTelemetry.Metrics;
-using System.Text;
 
 namespace HelpDeskService;
 
@@ -93,6 +97,7 @@ public class Program
         builder.Configuration.AddCommandLine(args);
 
         builder.Services
+            .Configure<TraceNetMQConfigModel>(builder.Configuration.GetSection(TraceNetMQConfigModel.Configuration))
             .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
             .Configure<HelpDeskConfigModel>(builder.Configuration.GetSection(HelpDeskConfigModel.Configuration))
         ;

@@ -11,6 +11,7 @@ using NLog.Extensions.Logging;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
 using System.Reflection;
+using Microsoft.OpenApi;
 using ApiRestService;
 using OpenTelemetry;
 using RemoteCallLib;
@@ -19,11 +20,11 @@ using SharedLib;
 using NLog.Web;
 using NLog;
 using DbcLib;
-using Microsoft.OpenApi;
 
 Console.OutputEncoding = Encoding.UTF8;
 Logger logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 
+TraceNetMQConfigModel _netMQ = TraceNetMQConfigModel.BuildEmpty();
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
@@ -99,15 +100,16 @@ if (!string.IsNullOrWhiteSpace(_modePrefix))
 
 builder.Configuration.AddEnvironmentVariables();
 builder.Configuration.AddCommandLine(args);
+builder.Services.AddOptions();
 
 builder.Services
+    .Configure<TraceNetMQConfigModel>(builder.Configuration.GetSection(TraceNetMQConfigModel.Configuration))
     .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
     .Configure<RestApiConfigBaseModel>(builder.Configuration.GetSection(RestApiConfigBaseModel.Configuration))
     .Configure<PartUploadSessionConfigModel>(builder.Configuration.GetSection(PartUploadSessionConfigModel.Configuration))
 ;
 
 builder.Services.AddOpenApi();
-builder.Services.AddOptions();
 builder.Services.AddMemoryCache();
 
 string connectionNLogsString = builder.Configuration.GetConnectionString($"NLogsConnection{_modePrefix}") ?? throw new InvalidOperationException($"Connection string 'NLogsConnection{_modePrefix}' not found.");
