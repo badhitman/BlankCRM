@@ -1,6 +1,6 @@
-﻿@using Microsoft.Extensions.Options
+﻿@using static SharedLib.GlobalStaticConstantsRoutes
+@using Microsoft.Extensions.Options
 @using MudBlazor
-@using static SharedLib.GlobalStaticConstantsRoutes
 
 @if (CommerceConf.Value.NomenclaturesRubricsPrefixes?.Any(x => !string.IsNullOrWhiteSpace(x)) != true)
 {

@@ -17,8 +17,18 @@
                     {
                         <a class="navbar-brand">List elements</a>
                         <div class="d-flex">
-                            <input @bind-value="createNewElementForDict.Name" @bind-value:event="oninput" class="form-control me-2" type="text" placeholder="Item name" size="40">
-                            <button @onclick="AddElementIntoDirectory" disabled="@(string.IsNullOrWhiteSpace(createNewElementForDict.Name))" class="btn btn-outline-primary" type="button">Add</button>
+                            <input @bind-value="createNewElementForDict.Name"
+                                   @bind-value:event="oninput"
+                                   class="form-control me-2"
+                                   type="text"
+                                   placeholder="Item name"
+                                   size="40">
+                            <button @onclick="AddElementIntoDirectory"
+                                    disabled="@(string.IsNullOrWhiteSpace(createNewElementForDict.Name))"
+                                    class="btn btn-outline-primary"
+                                    type="button">
+                                Add
+                            </button>
                         </div>
                     }
                     else

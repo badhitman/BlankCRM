@@ -29,10 +29,19 @@ else
             {
                 @if (SelectedDirectoryId > 0)
                 {
-                    <button type="button" class="btn btn-outline-secondary bi bi-pen-fill" @onclick="InitRenameDirectory" title="Edit the selected directory"></button>
-                    <button type="button" class="btn btn-outline-secondary bi bi-trash-fill" @onclick="() => { DirectoryNavState = DirectoryNavStatesEnum.Delete; }" title="Deleting the selected directory along with its elements"></button>
+                    <button type="button"
+                            class="btn btn-outline-primary bi bi-pen-fill"
+                            @onclick="InitRenameDirectory"
+                            title="Edit the selected directory"></button>
+                    <button type="button"
+                            class="btn btn-outline-danger bi bi-trash-fill"
+                            @onclick="() => { DirectoryNavState = DirectoryNavStatesEnum.Delete; }"
+                            title="Deleting the selected directory along with its elements"></button>
                 }
-                <button type="button" class="btn btn-outline-secondary bi bi-plus-square-fill" @onclick="() => { Description = default; DirectoryNavState = DirectoryNavStatesEnum.Create; }" title="Create a new directory"></button>
+                <button type="button"
+                        class="btn btn-outline-success bi bi-plus-square-fill"
+                        @onclick="() => { Description = default; DirectoryNavState = DirectoryNavStatesEnum.Create; }"
+                        title="Create a new directory"></button>
             }
         </div>
     }
@@ -43,9 +52,23 @@ else
         <div class="vstack gap-3">
             <div class="input-group">
                 <span class="input-group-text">new directory/list:</span>
-                <input @bind-value="directoryObject.Name" @bind-value:event="oninput" type="text" class="form-control" size="100" placeholder="Directory name" disabled="@IsBusyProgress">
-                <button disabled="@( !ValidateReport.IsValid)" @onclick="CreateDirectory" class="btn btn-outline-success" type="button">@GetTitleForButtonCreate</button>
-                <button @onclick="CancelCreatingDirectory" class="btn btn-outline-secondary" type="button">Отмена</button>
+                <input @bind-value="directoryObject.Name"
+                       @bind-value:event="oninput"
+                       type="text"
+                       class="form-control"
+                       size="100"
+                       placeholder="Directory name"
+                       disabled="@IsBusyProgress">
+                <button disabled="@( !ValidateReport.IsValid)"
+                        @onclick="CreateDirectory"
+                        class="btn btn-outline-success"
+                        type="button">
+                    @GetTitleForButtonCreate
+                </button>
+                <button @onclick="CancelCreatingDirectory"
+                        class="btn btn-outline-secondary" type="button">
+                    Отмена
+                </button>
             </div>
             <TinyMCE.Blazor.Editor @bind-Value="@Description" ScriptSrc="@GlobalStaticConstants.TinyMCEditorScriptSrc" Conf="@editorConf" />
         </div>
@@ -63,7 +86,13 @@ else
     {
         <div class="input-group pb-1">
             <span class="input-group-text">editing directory/list:</span>
-            <input @bind-value="directoryObject.Name" @bind-value:event="oninput" type="text" class="form-control" size="100" placeholder="Directory name" disabled="@IsBusyProgress">
+            <input @bind-value="directoryObject.Name"
+                   @bind-value:event="oninput"
+                   type="text"
+                   class="form-control"
+                   size="100"
+                   placeholder="Directory name"
+                   disabled="@IsBusyProgress">
             <button @onclick="SaveRenameDirectory" disabled="@( !GlobalTools.ValidateObject(directoryObject).IsValid)" class="btn btn-outline-secondary" type="button">Save</button>
             <button @onclick="() => ResetNavForm()" class="btn btn-outline-secondary" type="button">Cancel</button>
         </div>
