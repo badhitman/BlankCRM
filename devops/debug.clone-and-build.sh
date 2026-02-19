@@ -11,7 +11,7 @@ dotnet tool install -g Microsoft.Web.LibraryManager.Cli
 libman restore
 dotnet publish -c Debug --output /srv/git/builds/ApiRestService /srv/git/BlankCRM/micro-services/ApiRestService/ApiRestService.csproj
 dotnet publish -c Debug --output /srv/git/builds/StorageService /srv/git/BlankCRM/micro-services/StorageService/StorageService.csproj
-dotnet publish -c Debug --output /srv/git/builds/FilesIndexingService /srv/git/BlankCRM/micro-services/FilesIndexingService/FilesIndexingService.csproj
+dotnet publish -c Debug --output /srv/git/builds/IndexingService /srv/git/BlankCRM/micro-services/IndexingService/IndexingService.csproj
 dotnet publish -c Debug --output /srv/git/builds/RealtimeService /srv/git/BlankCRM/micro-services/RealtimeService/RealtimeService.csproj
 dotnet publish -c Debug --output /srv/git/builds/CommerceService /srv/git/BlankCRM/micro-services/CommerceService/CommerceService.csproj
 dotnet publish -c Debug --output /srv/git/builds/BankService /srv/git/BlankCRM/micro-services/BankService/BankService.csproj

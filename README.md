@@ -57,7 +57,7 @@ dotnet run --project BlankCRM.AppHost/BlankCRM.AppHost.csproj --publisher manife
 - Тэги. Общая система тегов для прикладных объектов.
 - Обслуживает [функционал хранения файлов](#хранение-файлов): MongoDB.Driver.GridFS
 
-#### [FilesIndexingService](https://github.com/badhitman/BlankCRM/tree/main/micro-services/FilesIndexingService)
+#### [IndexingService](https://github.com/badhitman/BlankCRM/tree/main/micro-services/IndexingService)
 Индексация файлов.
 - извлечение текстовых данных из Excel (.xlsx)
 - извлечение текстовых данных из Word (.docx)

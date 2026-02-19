@@ -130,7 +130,7 @@ public class Program
             .AddScoped<IIdentityTransmission, IdentityTransmission>()
             .AddScoped<ICommerceTransmission, CommerceTransmission>()
             .AddScoped<IWebTransmission, WebTransmission>()
-            .AddScoped<IFilesIndexing, FileIndexingTransmission>()
+            .AddScoped<IIndexingServive, IndexingTransmission>()
             .AddScoped<ITracesIndexing, TracesTransmission>()
             ;
         //

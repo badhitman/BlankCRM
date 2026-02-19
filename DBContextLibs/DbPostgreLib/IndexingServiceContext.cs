@@ -9,7 +9,7 @@ namespace DbcLib;
 /// <summary>
 /// Промежуточный/общий слой контекста базы данных
 /// </summary>
-public partial class FilesIndexingContext(DbContextOptions<FilesIndexingContext> options) : FilesIndexingLayerContext(options)
+public partial class IndexingServiceContext(DbContextOptions<IndexingServiceContext> options) : IndexingServiceLayerContext(options)
 {
 
 }

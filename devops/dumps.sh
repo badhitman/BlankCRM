@@ -7,7 +7,7 @@ docker exec -t srv-postgres-1 pg_dump -c -U dev BankContext --format=p --encodin
 docker exec -t srv-postgres-1 pg_dump -c -U dev HelpDeskContext --format=p --encoding=UTF-8 --inserts --column-inserts | gzip > /srv/tmp/dumps/dump_HelpDesk_`date +%Y-%m-%d"_"%H_%M_%S`.sql.gz
 docker exec -t srv-postgres-1 pg_dump -c -U dev RealtimeContext --format=p --encoding=UTF-8 --inserts --column-inserts | gzip > /srv/tmp/dumps/dump_Realtime_`date +%Y-%m-%d"_"%H_%M_%S`.sql.gz
 docker exec -t srv-postgres-1 pg_dump -c -U dev StorageContext --format=p --encoding=UTF-8 --inserts --column-inserts | gzip > /srv/tmp/dumps/dump_Storage_`date +%Y-%m-%d"_"%H_%M_%S`.sql.gz
-docker exec -t srv-postgres-1 pg_dump -c -U dev FilesIndexingContext --format=p --encoding=UTF-8 --inserts --column-inserts | gzip > /srv/tmp/dumps/dump_FilesIndexing_`date +%Y-%m-%d"_"%H_%M_%S`.sql.gz
+docker exec -t srv-postgres-1 pg_dump -c -U dev IndexingServiceContext --format=p --encoding=UTF-8 --inserts --column-inserts | gzip > /srv/tmp/dumps/dump_IndexingService_`date +%Y-%m-%d"_"%H_%M_%S`.sql.gz
 docker exec -t srv-postgres-1 pg_dump -c -U dev TelegramBotContext --format=p --encoding=UTF-8 --inserts --column-inserts | gzip > /srv/tmp/dumps/dump_TelegramBot_`date +%Y-%m-%d"_"%H_%M_%S`.sql.gz
 docker exec -t srv-postgres-1 pg_dump -c -U dev IdentityContext --format=p --encoding=UTF-8 --inserts --column-inserts | gzip > /srv/tmp/dumps/dump_Identity_`date +%Y-%m-%d"_"%H_%M_%S`.sql.gz
 docker exec -t srv-postgres-1 pg_dump -c -U dev ConstructorContext --format=p --encoding=UTF-8 --inserts --column-inserts | gzip > /srv/tmp/dumps/dump_Constructor_`date +%Y-%m-%d"_"%H_%M_%S`.sql.gz

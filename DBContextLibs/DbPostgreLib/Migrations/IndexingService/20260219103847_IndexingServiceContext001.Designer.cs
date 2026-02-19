@@ -8,18 +8,18 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace DbPostgreLib.Migrations.FilesIndexing
+namespace DbPostgreLib.Migrations.IndexingService
 {
-    [DbContext(typeof(FilesIndexingContext))]
-    [Migration("20251116142156_FilesIndexingContext001")]
-    partial class FilesIndexingContext001
+    [DbContext(typeof(IndexingServiceContext))]
+    [Migration("20260219103847_IndexingServiceContext001")]
+    partial class IndexingServiceContext001
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.10")
+                .HasAnnotation("ProductVersion", "10.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);

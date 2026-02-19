@@ -6,7 +6,7 @@ using MongoDB.Bson.Serialization.Attributes;
 using System.Runtime.Serialization;
 using SharedLib;
 
-namespace FilesIndexingService;
+namespace IndexingService;
 
 /// <summary>
 /// TraceReceive

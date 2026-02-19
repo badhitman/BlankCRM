@@ -10,7 +10,7 @@ namespace Transmission.Receives.indexing;
 /// <summary>
 /// Indexing file
 /// </summary>
-public class IndexingFileReceive(IFilesIndexing indexingFileRepo)
+public class IndexingFileReceive(IIndexingServive indexingFileRepo)
     : IResponseReceive<StorageFileMiddleModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>

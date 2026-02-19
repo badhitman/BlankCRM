@@ -3,10 +3,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace DbPostgreLib.Migrations.FilesIndexing
+namespace DbPostgreLib.Migrations.IndexingService
 {
     /// <inheritdoc />
-    public partial class FilesIndexingContext001 : Migration
+    public partial class IndexingServiceContext001 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

@@ -100,7 +100,7 @@ builder.Services
 builder.Services
     .AddScoped<ICommerceService, CommerceImplementService>()
     .AddScoped<IRetailService, RetailService>()
-    .AddScoped<IFilesIndexing, FileIndexingTransmission>()
+    .AddScoped<IIndexingServive, IndexingTransmission>()
     .AddScoped<ITracesIndexing, TracesTransmission>()
     ;
 

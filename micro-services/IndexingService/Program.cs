@@ -104,8 +104,8 @@ public class Program
 
         builder.Services.AddOptions();
 
-        string connectionStorage = builder.Configuration.GetConnectionString($"FilesIndexingConnection{_modePrefix}") ?? throw new InvalidOperationException($"Connection string 'FilesIndexingConnection{_modePrefix}' not found.");
-        builder.Services.AddDbContextFactory<FilesIndexingContext>(opt =>
+        string connectionStorage = builder.Configuration.GetConnectionString($"IndexingServiceConnection{_modePrefix}") ?? throw new InvalidOperationException($"Connection string 'IndexingServiceConnection{_modePrefix}' not found.");
+        builder.Services.AddDbContextFactory<IndexingServiceContext>(opt =>
             opt.UseNpgsql(connectionStorage));
 
         string connectionNlogsString = builder.Configuration.GetConnectionString($"NLogsConnection{_modePrefix}") ?? throw new InvalidOperationException($"Connection string 'NLogsConnection{_modePrefix}' not found.");
@@ -129,7 +129,7 @@ public class Program
         #endregion
 
         builder.Services
-            .AddScoped<IFilesIndexing, IndexingFilesImpl>()
+            .AddScoped<IIndexingServive, IndexingFilesImpl>()
             .AddScoped<ITracesIndexing, TracesImpl>()
             ;
         // Custom metrics for the application

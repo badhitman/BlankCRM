@@ -41,7 +41,7 @@
 		<ProjectReference Include="..\micro-services\KladrService\KladrService.csproj" />
 		<ProjectReference Include="..\micro-services\LdapService\LdapService.csproj" />
 		<ProjectReference Include="..\micro-services\StorageService\StorageService.csproj" />
-		<ProjectReference Include="..\micro-services\FilesIndexingService\FilesIndexingService.csproj" />
+		<ProjectReference Include="..\micro-services\IndexingService\IndexingService.csproj" />
 		<ProjectReference Include="..\micro-services\TelegramBotService\TelegramBotService.csproj" />
 	</ItemGroup>
 

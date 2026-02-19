@@ -7,7 +7,7 @@ using SharedLib;
 namespace RemoteCallLib;
 
 /// <inheritdoc/>
-public class FileIndexingTransmission(IRabbitClient rabbitClient) : IFilesIndexing
+public class IndexingTransmission(IRabbitClient rabbitClient) : IIndexingServive
 {
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> IndexingFileAsync(StorageFileMiddleModel req, CancellationToken token = default)

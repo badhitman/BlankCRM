@@ -14,7 +14,7 @@ public class FilesIndexingViewBase : BlazorBusyComponentBaseAuthModel
 {
     /// <inheritdoc/>
     [Inject]
-    protected IFilesIndexing FilesIndexingRepo { get; set; } = default!;
+    protected IIndexingServive FilesIndexingRepo { get; set; } = default!;
 
 
     /// <inheritdoc/>

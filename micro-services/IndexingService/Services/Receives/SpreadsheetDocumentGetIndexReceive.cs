@@ -10,7 +10,7 @@ namespace Transmission.Receives.indexing;
 /// <summary>
 /// SpreadsheetDocumentGetIndexReceive
 /// </summary>
-public class SpreadsheetDocumentGetIndexReceive( IFilesIndexing indexingFileRepo)
+public class SpreadsheetDocumentGetIndexReceive( IIndexingServive indexingFileRepo)
     : IResponseReceive<TAuthRequestStandardModel<int>?, TResponseModel<SpreadsheetDocumentIndexingFileResponseModel>?>
 {
     /// <inheritdoc/>

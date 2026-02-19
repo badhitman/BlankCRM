@@ -174,7 +174,7 @@ public class Program
         // Scoped
         builder.Services
             .AddScoped<IIdentityTools, IdentityTools>()
-            .AddScoped<IFilesIndexing, FileIndexingTransmission>()
+            .AddScoped<IIndexingServive, IndexingTransmission>()
             .AddScoped<ITracesIndexing, TracesTransmission>()
             ;
 

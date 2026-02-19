@@ -39,8 +39,8 @@ Update-Database -Context StorageContext -Project DbPostgreLib -StartupProject St
 ```
 
 ```
-Add-Migration FilesIndexingContext001 -Context FilesIndexingContext -Project DbPostgreLib -StartupProject FilesIndexingService
-Update-Database -Context FilesIndexingContext -Project DbPostgreLib -StartupProject FilesIndexingService
+Add-Migration IndexingServiceContext001 -Context IndexingServiceContext -Project DbPostgreLib -StartupProject IndexingService
+Update-Database -Context IndexingServiceContext -Project DbPostgreLib -StartupProject IndexingService
 ```
 
 ```

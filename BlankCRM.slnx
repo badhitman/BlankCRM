@@ -37,7 +37,7 @@
     <Project Path="micro-services/BankService/BankService.csproj" />
     <Project Path="micro-services/CommerceService/CommerceService.csproj" />
     <Project Path="micro-services/ConstructorService/ConstructorService.csproj" />
-    <Project Path="micro-services/FilesIndexingService/FilesIndexingService.csproj" />
+    <Project Path="micro-services/IndexingService/IndexingService.csproj" />
     <Project Path="micro-services/HelpDeskService/HelpDeskService.csproj" />
     <Project Path="micro-services/IdentityService/IdentityService.csproj" />
     <Project Path="micro-services/KladrService/KladrService.csproj" />
@@ -103,9 +103,9 @@
     <File Path="devops/etc/systemd/system/bus.app.stage.service" />
     <File Path="devops/etc/systemd/system/comm.app.stage.service" />
     <File Path="devops/etc/systemd/system/constructor.app.stage.service" />
-    <File Path="devops/etc/systemd/system/filesindexing.app.stage.service" />
     <File Path="devops/etc/systemd/system/hd.app.stage.service" />
     <File Path="devops/etc/systemd/system/identity.app.stage.service" />
+    <File Path="devops/etc/systemd/system/indexing.app.stage.service" />
     <File Path="devops/etc/systemd/system/kladr.app.stage.service" />
     <File Path="devops/etc/systemd/system/ldap.app.stage.service" />
     <File Path="devops/etc/systemd/system/realtime.app.stage.service" />

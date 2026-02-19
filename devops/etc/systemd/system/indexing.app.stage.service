@@ -1,13 +1,13 @@
 [Unit]
-Description=filesindexing.app.stage.service
+Description=indexing.app.stage.service
 
 [Service]
-WorkingDirectory=/srv/services.stage/FilesIndexingService
-ExecStart=/usr/bin/dotnet /srv/services.stage/FilesIndexingService/FilesIndexingService.dll
+WorkingDirectory=/srv/services.stage/IndexingService
+ExecStart=/usr/bin/dotnet /srv/services.stage/IndexingService/IndexingService.dll
 Restart=always
 RestartSec=10
 KillSignal=SIGINT
-SyslogIdentifier=dotnet-filesindexing-app.stage
+SyslogIdentifier=dotnet-indexing-app.stage
 User=www-data
 Environment=DOTNET_ENVIRONMENT=Staging
 Environment=DOTNET_PRINT_TELEMETRY_MESSAGE=false

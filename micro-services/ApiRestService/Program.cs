@@ -125,7 +125,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddTransient<UnhandledExceptionAttribute>();
 builder.Services
     .AddScoped<RolesAuthorizationFilter>()
-    .AddScoped<IFilesIndexing, FileIndexingTransmission>()
+    .AddScoped<IIndexingServive, IndexingTransmission>()
     .AddScoped<ITracesIndexing, TracesTransmission>()
     ;
 

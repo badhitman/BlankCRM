@@ -273,7 +273,7 @@ builder.Services
     .AddScoped<IRusklimatComApiTransmission, RusklimatComTransmission>()
     .AddScoped<IFeedsHaierProffRuService, HaierProffRuTransmission>()
     .AddScoped<IBreezRuApiTransmission, BreezRuTransmission>()
-    .AddScoped<IFilesIndexing, FileIndexingTransmission>()
+    .AddScoped<IIndexingServive, IndexingTransmission>()
     .AddScoped<ITracesIndexing, TracesTransmission>()
     .AddScoped<IKladrService, KladrServiceTransmission>()
     .AddScoped<IKladrParseService, ParseImplementDBF>()

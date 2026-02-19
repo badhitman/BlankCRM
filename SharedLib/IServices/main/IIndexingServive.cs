@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// Индексирование данных
 /// </summary>
-public interface IFilesIndexing
+public interface IIndexingServive
 {
     /// <inheritdoc/>
     public Task<ResponseBaseModel> IndexingFileAsync(StorageFileMiddleModel req, CancellationToken token = default);

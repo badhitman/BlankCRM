@@ -104,7 +104,7 @@ builder.Services
 builder.Services
     .AddScoped<IBankService, BankImplementService>()
     .AddScoped<IMerchantService, MerchantImplementService>()
-    .AddScoped<IFilesIndexing, FileIndexingTransmission>()
+    .AddScoped<IIndexingServive, IndexingTransmission>()
     .AddScoped<ITracesIndexing, TracesTransmission>()
     ;
 

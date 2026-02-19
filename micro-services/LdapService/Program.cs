@@ -13,7 +13,7 @@ public class Program
         builder.Services.AddHostedService<Worker>();
 
         builder.Services
-            .AddScoped<IFilesIndexing, FileIndexingTransmission>()
+            .AddScoped<IIndexingServive, IndexingTransmission>()
             .AddScoped<ITracesIndexing, TracesTransmission>()
             ;
 

@@ -99,7 +99,7 @@ public class Program
 
         builder.Services
             .AddScoped<IArticlesService, ArticlesService>()
-            .AddScoped<IFilesIndexing, FileIndexingTransmission>()
+            .AddScoped<IIndexingServive, IndexingTransmission>()
             .AddScoped<ITracesIndexing, TracesTransmission>()
             ;
 

@@ -166,10 +166,10 @@ public class Program
             .WithReference(builder.AddConnectionString($"RealtimeConnection{_modePrefix}"))
             ;
 
-        IResourceBuilder<ProjectResource> filesIndexingService = builder.AddProject<Projects.FilesIndexingService>("filesindexingservice")
+        IResourceBuilder<ProjectResource> indexingService = builder.AddProject<Projects.IndexingService>("indexingservice")
             .WithEnvironment(act => rabbitConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
             .WithEnvironment(act => mongoConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
-            .WithReference(builder.AddConnectionString($"FilesIndexingConnection{_modePrefix}"))
+            .WithReference(builder.AddConnectionString($"IndexingServiceConnection{_modePrefix}"))
             ;
 
         IResourceBuilder<ProjectResource> kladrService = builder.AddProject<Projects.KladrService>("kladreservice")
@@ -213,8 +213,8 @@ public class Program
             .WithReference(realtimeService)
             .WaitFor(realtimeService)
 
-            .WithReference(filesIndexingService)
-            .WaitFor(filesIndexingService)
+            .WithReference(indexingService)
+            .WaitFor(indexingService)
 
             //.WithReference(storageService)
             //.WaitFor(storageService)

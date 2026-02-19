@@ -11,7 +11,7 @@ namespace Transmission.Receives.indexing;
 /// <summary>
 /// WordprocessingDocumentGetIndexReceive
 /// </summary>
-public class WordprocessingDocumentGetIndexReceive(IFilesIndexing indexingFileRepo)
+public class WordprocessingDocumentGetIndexReceive(IIndexingServive indexingFileRepo)
     : IResponseReceive<TAuthRequestStandardModel<int>?, TResponseModel<WordprocessingDocumentIndexingFileResponseModel>?>
 {
     /// <inheritdoc/>

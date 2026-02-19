@@ -3,8 +3,7 @@
 ////////////////////////////////////////////////
 
 using Microsoft.Extensions.Options;
-using MongoDB.Bson.Serialization;
-using FilesIndexingService;
+using IndexingService;
 using Newtonsoft.Json.Linq;
 using MongoDB.Driver.Linq;
 using Newtonsoft.Json;
@@ -186,7 +185,7 @@ public class TracesImpl(IOptions<MongoConfigModel> mongoConf) : ITracesIndexing
 
         List<BsonDocument> records = await filteredSource.Skip(req.PageNum * req.PageSize).Limit(req.PageSize).ToListAsync(cancellationToken: token);
         long count = await collection.CountDocumentsAsync(filter, cancellationToken: token);
-        List<TraceReceive> recordsPoco = [.. records.Select(x => BsonSerializer.Deserialize<TraceReceive>(x))];
+        List<TraceReceive> recordsPoco = [.. records.Select(x => MongoDB.Bson.Serialization.BsonSerializer.Deserialize<TraceReceive>(x))];
 
         return new()
         {
@@ -279,7 +278,7 @@ public class TracesImpl(IOptions<MongoConfigModel> mongoConf) : ITracesIndexing
 
         List<BsonDocument> records = await filteredSource.Skip(req.PageNum * req.PageSize).Limit(req.PageSize).ToListAsync(cancellationToken: token);
         long count = await collection.CountDocumentsAsync(filter, cancellationToken: token);
-        List<TraceReceive> recordsPoco = [.. records.Select(x => BsonSerializer.Deserialize<TraceReceive>(x))];
+        List<TraceReceive> recordsPoco = [.. records.Select(x => MongoDB.Bson.Serialization.BsonSerializer.Deserialize<TraceReceive>(x))];
 
         return new()
         {
@@ -357,7 +356,7 @@ public class TracesImpl(IOptions<MongoConfigModel> mongoConf) : ITracesIndexing
 
         List<BsonDocument> records = await filteredSource.Skip(req.PageNum * req.PageSize).Limit(req.PageSize).ToListAsync(cancellationToken: token);
         long count = await collection.CountDocumentsAsync(filter, cancellationToken: token);
-        List<TraceReceive> recordsPoco = [.. records.Select(x => BsonSerializer.Deserialize<TraceReceive>(x))];
+        List<TraceReceive> recordsPoco = [.. records.Select(x => MongoDB.Bson.Serialization.BsonSerializer.Deserialize<TraceReceive>(x))];
 
         return new()
         {
@@ -432,7 +431,7 @@ public class TracesImpl(IOptions<MongoConfigModel> mongoConf) : ITracesIndexing
 
         List<BsonDocument> records = await filteredSource.Skip(req.PageNum * req.PageSize).Limit(req.PageSize).ToListAsync(cancellationToken: token);
         long count = await collection.CountDocumentsAsync(filter, cancellationToken: token);
-        List<TraceReceive> recordsPoco = [.. records.Select(x => BsonSerializer.Deserialize<TraceReceive>(x))];
+        List<TraceReceive> recordsPoco = [.. records.Select(x => MongoDB.Bson.Serialization.BsonSerializer.Deserialize<TraceReceive>(x))];
 
         return new()
         {

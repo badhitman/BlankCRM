@@ -8,10 +8,10 @@ using SharedLib;
 namespace DbcLib;
 
 /// <inheritdoc/>
-public partial class FilesIndexingLayerContext : DbContext
+public partial class IndexingServiceLayerContext : DbContext
 {
     /// <inheritdoc/>
-    public FilesIndexingLayerContext(DbContextOptions options)
+    public IndexingServiceLayerContext(DbContextOptions options)
         : base(options)
     {
         //#if DEBUG

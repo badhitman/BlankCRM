@@ -18,9 +18,9 @@ namespace FileIndexingService;
 /// Индексирование файлов приложений
 /// </summary>
 public class IndexingFilesImpl(
-    IDbContextFactory<FilesIndexingContext> fileIndexingDbFactory,
+    IDbContextFactory<IndexingServiceContext> fileIndexingDbFactory,
     IOptions<MongoConfigModel> mongoConf,
-    IStorageTransmission storageRepo) : IFilesIndexing
+    IStorageTransmission storageRepo) : IIndexingServive
 {
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> IndexingFileAsync(StorageFileMiddleModel req, CancellationToken token = default)
@@ -53,7 +53,7 @@ public class IndexingFilesImpl(
         if (!res.Success())
             return res;
 
-        FilesIndexingContext context = await fileIndexingDbFactory.CreateDbContextAsync(token);
+        IndexingServiceContext context = await fileIndexingDbFactory.CreateDbContextAsync(token);
         res.Response = new()
         {
             Sheets = await context.SheetsExcelIndexesFiles
@@ -87,7 +87,7 @@ public class IndexingFilesImpl(
         if (!res.Success())
             return res;
 
-        FilesIndexingContext context = await fileIndexingDbFactory.CreateDbContextAsync(token);
+        IndexingServiceContext context = await fileIndexingDbFactory.CreateDbContextAsync(token);
         res.Response = new()
         {
             Paragraphs = await context.ParagraphsWordIndexesFiles.Where(x => x.StoreFileId == req.Payload).ToListAsync(cancellationToken: token),
@@ -98,7 +98,7 @@ public class IndexingFilesImpl(
 
     async Task<ResponseBaseModel> SpreadsheetDocumentHandle(StorageFileMiddleModel file_db, CancellationToken token = default)
     {
-        FilesIndexingContext context = await fileIndexingDbFactory.CreateDbContextAsync(token);
+        IndexingServiceContext context = await fileIndexingDbFactory.CreateDbContextAsync(token);
 
         if (await context.SheetsExcelIndexesFiles.AnyAsync(x => x.StoreFileId == file_db.Id, cancellationToken: token))
             return ResponseBaseModel.CreateInfo("the file is already indexed");
@@ -193,7 +193,7 @@ public class IndexingFilesImpl(
 
     async Task<ResponseBaseModel> WordprocessingDocumentHandle(StorageFileMiddleModel file_db, CancellationToken token = default)
     {
-        FilesIndexingContext context = await fileIndexingDbFactory.CreateDbContextAsync(token);
+        IndexingServiceContext context = await fileIndexingDbFactory.CreateDbContextAsync(token);
 
         if (await context.TablesWordIndexesFiles.AnyAsync(x => x.StoreFileId == file_db.Id, cancellationToken: token) || await context.ParagraphsWordIndexesFiles.AnyAsync(x => x.StoreFileId == file_db.Id, cancellationToken: token))
             return ResponseBaseModel.CreateInfo("the file is already indexed");

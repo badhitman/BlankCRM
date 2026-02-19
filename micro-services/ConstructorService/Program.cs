@@ -112,7 +112,7 @@ builder.Services.AddDbContextFactory<ConstructorContext>(opt =>
 builder.Services.AddMemoryCache();
 builder.Services
     .AddScoped<IConstructorService, FormsConstructorService>()
-    .AddScoped<IFilesIndexing, FileIndexingTransmission>()
+    .AddScoped<IIndexingServive, IndexingTransmission>()
     .AddScoped<ITracesIndexing, TracesTransmission>()
     ;
 
