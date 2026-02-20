@@ -4,6 +4,7 @@
 
 using SharedLib;
 using Transmission.Receives.indexing;
+using Transmission.Receives.realtime;
 
 namespace FileIndexingService;
 
@@ -27,6 +28,8 @@ public static class RegisterMqListenerExtension
             .RegisterListenerRabbitMQ<TracesSelectForDeliveriesRetailReceive, TPaginationRequestStandardModel<SelectTraceElementsRequestModel>, TPaginationResponseStandardModel<TraceReceiverRecord>>()
             .RegisterListenerRabbitMQ<TracesSelectForConversionsRetailReceive, TPaginationRequestStandardModel<SelectTraceElementsRequestModel>, TPaginationResponseStandardModel<TraceReceiverRecord>>()
             .RegisterListenerRabbitMQ<TracesSelectForPaymentsRetailReceive, TPaginationRequestStandardModel<SelectTraceElementsRequestModel>, TPaginationResponseStandardModel<TraceReceiverRecord>>()
+
+            .RegisterListenerNetMQ<TraceRabbitActionReceive, MessageWebChatModelDB, TResponseModel<int>>()
             ;
     }
 }

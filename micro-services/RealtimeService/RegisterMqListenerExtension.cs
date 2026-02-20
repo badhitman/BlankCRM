@@ -33,8 +33,6 @@ public static class RegisterMqListenerExtension
             .RegisterListenerRabbitMQ<SelectMessagesForRoomWebChatReceive, TPaginationRequestAuthModel<SelectMessagesForWebChatRoomRequestModel>, TPaginationResponseStandardModel<MessageWebChatModelDB>>()
             .RegisterListenerRabbitMQ<SelectDialogsWebChatsReceive, TPaginationRequestStandardModel<SelectDialogsWebChatsRequestModel>, TPaginationResponseStandardModel<DialogWebChatModelDB>>()
             .RegisterListenerRabbitMQ<GetClientsConnectionsReceive, GetClientsRequestModel, TResponseModel<List<MqttClientModel>>>()
-            
-            
             ;
     }
 }

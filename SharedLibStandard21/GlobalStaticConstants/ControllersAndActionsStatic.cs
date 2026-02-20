@@ -1064,6 +1064,11 @@ public static partial class GlobalStaticConstantsRoutes
         public const string WEB_CONTROLLER_NAME = "web";
 
         /// <summary>
+        /// Rabbit
+        /// </summary>
+        public const string RABBIT_CONTROLLER_NAME = "rabbit";
+
+        /// <summary>
         /// MQTT
         /// </summary>
         public const string MQTT_CONTROLLER_NAME = "mqtt";
@@ -1362,6 +1367,11 @@ public static partial class GlobalStaticConstantsRoutes
         /// Chats
         /// </summary>
         public const string CHATS_CONTROLLER_NAME = "chats";
+
+        /// <summary>
+        /// Action
+        /// </summary>
+        public const string ACTION_CONTROLLER_NAME = "action";
 
         /// <summary>
         /// Dialog
@@ -1835,6 +1845,11 @@ public static partial class GlobalStaticConstantsRoutes
         /// Toggle
         /// </summary>
         public const string TOGGLE_ACTION_NAME = "toggle";
+
+        /// <summary>
+        /// Trace
+        /// </summary>
+        public const string TRACE_ACTION_NAME = "trace";
 
         /// <summary>
         /// Calculate

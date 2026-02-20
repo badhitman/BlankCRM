@@ -37,6 +37,11 @@ public static partial class GlobalStaticConstantsTransmission
     /// </summary>
     public static string TransmissionQueueNamePrefixMQTT { get; set; } = "MQTT.Receives";
 
+    /// <summary>
+    /// Префикс имени MQ очереди
+    /// </summary>
+    public static string TransmissionQueueNamePrefixNetMQ { get; set; } = "NetMQ.Receives";
+
     /// <inheritdoc/>
     public static string WithoutTransmissionQueueNamePrefix(this string _receiverPrefixName)
     {
@@ -1413,6 +1418,9 @@ public static partial class GlobalStaticConstantsTransmission
         /// <inheritdoc/>
         public static readonly string DeleteToggleMessageWebChatReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, $"{Routes.WEB_CONTROLLER_NAME}-{Routes.CHATS_CONTROLLER_NAME}", Routes.MESSAGE_CONTROLLER_NAME, Routes.DELETE_ACTION_NAME, Routes.TOGGLE_ACTION_NAME);
         #endregion
+
+        /// <inheritdoc/>
+        public static readonly string TraceRabbitActionSystemsReceive = Path.Combine(TransmissionQueueNamePrefixNetMQ, $"{Routes.RABBIT_CONTROLLER_NAME}-{Routes.ACTION_CONTROLLER_NAME}", $"{Routes.SYSTEM_CONTROLLER_NAME}-{Routes.TRACE_ACTION_NAME}");
 
         #region stock-sharp
         /// <inheritdoc/>
