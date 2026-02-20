@@ -10,9 +10,9 @@ using NetMQ;
 namespace RealtimeService;
 
 /// <summary>
-/// NetMqBackgroundService
+/// ProxyBackgroundServiceNetMQ
 /// </summary>
-public class NetMqBackgroundService(IOptions<ProxyNetMQConfigModel> _conf) : BackgroundService
+public class ProxyBackgroundServiceNetMQ(IOptions<ProxyNetMQConfigModel> _conf) : BackgroundService
 {
     /// <inheritdoc/>
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)

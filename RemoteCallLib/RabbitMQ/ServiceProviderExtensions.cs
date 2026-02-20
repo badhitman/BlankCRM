@@ -38,4 +38,17 @@ public static class ServiceProviderExtensions
 
         return sc;
     }
+
+    /// <summary>
+    /// Register Mq Listener
+    /// </summary>
+    public static IServiceCollection RegisterListenerNetMQ<TQueue, TRequest, TResponse>(this IServiceCollection sc)
+        where TQueue : class, IMQReceive<TRequest?, TResponse?>
+        where TResponse : class, new()
+    {
+        sc.AddScoped<IMQReceive<TRequest?, TResponse?>, TQueue>();
+        sc.AddHostedService<NetMQListenerService<TQueue, TRequest?, TResponse?>>();
+
+        return sc;
+    }
 }

@@ -15,7 +15,7 @@ public static class RegisterMqListenerExtension
     /// <summary>
     /// RegisterMqListeners
     /// </summary>
-    public static IServiceCollection RealtimeRegisterListenersMQ(this IServiceCollection services)
+    public static IServiceCollection RealtimeRegisterListenersRabbitMQ(this IServiceCollection services)
     {
         return services
             .RegisterListenerRabbitMQ<CreateMessageWebChatReceive, MessageWebChatModelDB, TResponseModel<int>>()
