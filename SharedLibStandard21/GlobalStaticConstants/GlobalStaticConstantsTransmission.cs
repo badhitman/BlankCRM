@@ -725,7 +725,7 @@ public static partial class GlobalStaticConstantsTransmission
         public readonly static string OrderUpdateOrCreateCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, Routes.ORDER_CONTROLLER_NAME, $"{Routes.UPDATE_ACTION_NAME}-or-{Routes.CREATE_ACTION_NAME}");
 
         /// <inheritdoc/>
-        public readonly static string WarehouseDocumentUpdateOrCreateCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, Routes.WAREHOUSE_CONTROLLER_NAME, $"{Routes.UPDATE_ACTION_NAME}-or-{Routes.CREATE_ACTION_NAME}");
+        public readonly static string WarehouseDocumentUpdateOrCreateCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, $"{Routes.WAREHOUSE_CONTROLLER_NAME}-{Routes.DOCUMENT_CONTROLLER_NAME}", $"{Routes.UPDATE_ACTION_NAME}-or-{Routes.CREATE_ACTION_NAME}");
 
         /// <summary>
         /// Прикрепить файл к заказу (счёт, акт и т.п.)
@@ -739,7 +739,7 @@ public static partial class GlobalStaticConstantsTransmission
         public readonly static string RowForOrderUpdateOrCreateCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, Routes.ORDER_CONTROLLER_NAME, Routes.ROW_CONTROLLER_NAME, $"{Routes.UPDATE_ACTION_NAME}-or-{Routes.CREATE_ACTION_NAME}");
 
         /// <inheritdoc/>
-        public readonly static string RowForWarehouseDocumentUpdateOrCreateCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, Routes.WAREHOUSE_CONTROLLER_NAME, Routes.ROW_CONTROLLER_NAME, $"{Routes.UPDATE_ACTION_NAME}-or-{Routes.CREATE_ACTION_NAME}");
+        public readonly static string RowForWarehouseDocumentUpdateOrCreateCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, $"{Routes.WAREHOUSE_CONTROLLER_NAME}-{Routes.DOCUMENT_CONTROLLER_NAME}", Routes.ROW_CONTROLLER_NAME, $"{Routes.UPDATE_ACTION_NAME}-or-{Routes.CREATE_ACTION_NAME}");
 
         /// <inheritdoc/>
         public readonly static string PaymentDocumentUpdateOrCreateCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, Routes.ORDER_CONTROLLER_NAME, Routes.PAYMENT_CONTROLLER_NAME, $"{Routes.UPDATE_ACTION_NAME}-or-{Routes.CREATE_ACTION_NAME}");
@@ -751,7 +751,7 @@ public static partial class GlobalStaticConstantsTransmission
         public readonly static string RowsDeleteFromOrderCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, Routes.ORDER_CONTROLLER_NAME, Routes.ROWS_CONTROLLER_NAME, Routes.DELETE_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string RowsDeleteFromWarehouseDocumentCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, Routes.WAREHOUSE_CONTROLLER_NAME, Routes.ROWS_CONTROLLER_NAME, Routes.DELETE_ACTION_NAME);
+        public readonly static string RowsDeleteFromWarehouseDocumentCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, $"{Routes.WAREHOUSE_CONTROLLER_NAME}-{Routes.DOCUMENT_CONTROLLER_NAME}", Routes.ROWS_CONTROLLER_NAME, Routes.DELETE_ACTION_NAME);
 
         /// <inheritdoc/>
         public readonly static string OfferUpdateOrCreateCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, Routes.GOODS_CONTROLLER_NAME, Routes.OFFER_CONTROLLER_NAME, $"{Routes.UPDATE_ACTION_NAME}-or-{Routes.CREATE_ACTION_NAME}");

@@ -2,6 +2,9 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using System.Threading;
+using System.Threading.Tasks;
+
 namespace RemoteCallLib;
 
 /// <summary>
