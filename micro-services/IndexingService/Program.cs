@@ -119,6 +119,7 @@ public class Program
         IMQStandardClientRPC rabbitImplement(IServiceProvider provider, object arg2)
         {
             return new RabbitClient(
+                provider.GetRequiredService<IOptions<ProxyNetMQConfigModel>>(),
                 provider.GetRequiredService<IOptions<RabbitMQConfigModel>>(),
                 provider.GetRequiredService<ILogger<RabbitClient>>(),
                 provider.GetRequiredService<ITraceRabbitActionsServiceTransmission>(),
@@ -139,7 +140,7 @@ public class Program
         //  .AddScoped<IIdentityTransmission, IdentityTransmission>()
         //  .AddScoped<ICommerceTransmission, CommerceTransmission>()
             .AddScoped<IStorageTransmission, StorageTransmission>()
-            .AddScoped<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
+            .AddSingleton<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
             ;
 
         builder.Services.IndexingServiceRegisterMqListeners();

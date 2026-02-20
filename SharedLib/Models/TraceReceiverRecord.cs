@@ -21,6 +21,9 @@ public class TraceReceiverRecord : TraceReceiverBaseRecord
     /// </summary>
     public string? SenderActionUserId { get; set; }
 
+    /// <inheritdoc/>
+    public object? ResponseBody { get; set; }
+
     /// <summary>
     /// TraceReceiverRecord 
     /// </summary>
@@ -36,7 +39,7 @@ public class TraceReceiverRecord : TraceReceiverBaseRecord
     }
 
     /// <inheritdoc/>
-    public new TraceReceiverRecord SetResponse(object responseBody)
+    public TraceReceiverRecord SetResponse(object responseBody)
     {
         UTCTimestampFinalReceive = DateTime.UtcNow;
         ResponseBody = responseBody;

@@ -26,9 +26,6 @@ public class TraceReceiverBaseRecord
     /// </summary>
     public object? RequestBody { get; set; }
 
-    /// <inheritdoc/>
-    public object? ResponseBody { get; set; }
-
     /// <summary>
     /// TraceReceiverBaseRecord 
     /// </summary>
@@ -40,12 +37,5 @@ public class TraceReceiverBaseRecord
             RequestBody = _requestBody is null ? null : JObject.FromObject(_requestBody),
             ReceiverName = _receiverName.WithoutTransmissionQueueNamePrefix(),
         };
-    }
-
-    /// <inheritdoc/>
-    public TraceReceiverBaseRecord SetResponse(object responseBody)
-    {
-        ResponseBody = responseBody;
-        return this;
     }
 }

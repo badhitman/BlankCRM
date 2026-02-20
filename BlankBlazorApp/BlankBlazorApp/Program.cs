@@ -239,6 +239,7 @@ string appName = typeof(Program).Assembly.GetName().Name ?? "AssemblyName";
 IMQStandardClientRPC rabbitImplement(IServiceProvider provider, object arg2)
 {
     return new RabbitClient(
+        provider.GetRequiredService<IOptions<ProxyNetMQConfigModel>>(),
         provider.GetRequiredService<IOptions<RabbitMQConfigModel>>(),
         provider.GetRequiredService<ILogger<RabbitClient>>(),
         provider.GetRequiredService<ITraceRabbitActionsServiceTransmission>(),
@@ -269,7 +270,7 @@ builder.Services
           ;
 
 builder.Services
-    .AddScoped<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
+    .AddSingleton<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
     .AddScoped<IBankService, BankTransmission>()
     .AddScoped<IWebChatService, WebChatTransmission>()
     .AddScoped<ICommerceTransmission, CommerceTransmission>()

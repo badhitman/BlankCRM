@@ -34,6 +34,8 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
     IChannel _channel = default!;
     readonly IResponseReceive<TRequest?, TResponse> receiveService;
     readonly ConnectionFactory factory;
+    readonly ITraceRabbitActionsServiceTransmission _traceRepo;
+    readonly IOptions<ProxyNetMQConfigModel> _proxyNetMQConf;
 
     static Dictionary<string, object>? ResponseQueueArguments;
 
@@ -50,8 +52,15 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
     public string QueueName { get { _queueName ??= TQueue.QueueName.Replace("\\", "/"); return _queueName; } }
 
     /// <inheritdoc/>
-    public RabbitMqListenerService(IOptions<RabbitMQConfigModel> rabbitConf, IServiceProvider servicesProvider, ILogger<RabbitMqListenerService<TQueue, TRequest, TResponse>> loggerRepo)
+    public RabbitMqListenerService(
+        IServiceProvider servicesProvider,
+        IOptions<RabbitMQConfigModel> rabbitConf,
+        IOptions<ProxyNetMQConfigModel> proxyNetMQConf,
+        ITraceRabbitActionsServiceTransmission traceRepo,
+        ILogger<RabbitMqListenerService<TQueue, TRequest, TResponse>> loggerRepo)
     {
+        _proxyNetMQConf = proxyNetMQConf;
+        _traceRepo = traceRepo;
         LoggerRepo = loggerRepo;
         ResponseQueueArguments ??= new()
         {
@@ -62,6 +71,7 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
         };
 
         using IServiceScope scope = servicesProvider.CreateScope();
+        //ITraceRabbitActionsServiceTransmission traceRepo
         receiveService = scope.ServiceProvider.GetServices<IResponseReceive<TRequest?, TResponse>>().First(o => o.GetType() == QueueType);
         LoggerRepo.LogTrace($"factory: host:{rabbitConf.Value.HostName}; username:{rabbitConf.Value.UserName};");
         factory = new()
