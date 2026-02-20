@@ -19,4 +19,12 @@ public class HostConfigModel : HostConfigBaseModel
     /// </summary>
     /// <returns></returns>
     public override string ToString() => $"{Scheme}://{Host}{(Port == 80 ? string.Empty : $":{Port}")}";
+
+    /// <inheritdoc/>
+    public void Reload(HostConfigModel other)
+    {
+        Scheme = other.Scheme;
+        Host = other.Host;
+        Port = other.Port;
+    }
 }

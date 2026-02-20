@@ -142,7 +142,7 @@ builder.Services.AddIdleCircuitHandler(options =>
 builder.Services.AddOptions();
 
 builder.Services
-    .Configure<TraceNetMQConfigModel>(builder.Configuration.GetSection(TraceNetMQConfigModel.Configuration))
+    .Configure<ProxyNetMQConfigModel>(builder.Configuration.GetSection(ProxyNetMQConfigModel.Configuration))
     .Configure<UserManageConfigModel>(builder.Configuration.GetSection("UserManage"))
     .Configure<ServerConfigModel>(builder.Configuration.GetSection("ServerConfig"))
     .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))

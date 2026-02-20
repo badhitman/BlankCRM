@@ -24,7 +24,7 @@ using DbcLib;
 Console.OutputEncoding = Encoding.UTF8;
 Logger logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 
-TraceNetMQConfigModel _netMQ = TraceNetMQConfigModel.BuildEmpty();
+ProxyNetMQConfigModel _netMQ = ProxyNetMQConfigModel.BuildEmpty();
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
@@ -103,7 +103,7 @@ builder.Configuration.AddCommandLine(args);
 builder.Services.AddOptions();
 
 builder.Services
-    .Configure<TraceNetMQConfigModel>(builder.Configuration.GetSection(TraceNetMQConfigModel.Configuration))
+    .Configure<ProxyNetMQConfigModel>(builder.Configuration.GetSection(ProxyNetMQConfigModel.Configuration))
     .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
     .Configure<RestApiConfigBaseModel>(builder.Configuration.GetSection(RestApiConfigBaseModel.Configuration))
     .Configure<PartUploadSessionConfigModel>(builder.Configuration.GetSection(PartUploadSessionConfigModel.Configuration))

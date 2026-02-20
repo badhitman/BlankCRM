@@ -103,7 +103,7 @@ public class Program
         builder.Configuration.AddCommandLine(args);
 
         builder.Services
-            .Configure<TraceNetMQConfigModel>(builder.Configuration.GetSection(TraceNetMQConfigModel.Configuration))
+            .Configure<ProxyNetMQConfigModel>(builder.Configuration.GetSection(ProxyNetMQConfigModel.Configuration))
             .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
         ;
         _confMQTT.Reload(builder.Configuration.GetSection(RealtimeMQTTClientConfigModel.Configuration).Get<RealtimeMQTTClientConfigModel>()!);

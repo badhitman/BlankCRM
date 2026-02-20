@@ -23,7 +23,7 @@ namespace TelegramBotService;
 /// </summary>
 public class Program
 {
-    TraceNetMQConfigModel _netMQ = TraceNetMQConfigModel.BuildEmpty();
+    ProxyNetMQConfigModel _netMQ = ProxyNetMQConfigModel.BuildEmpty();
     /// <summary>
     /// Main
     /// </summary>
@@ -97,7 +97,7 @@ public class Program
         builder.Configuration.AddCommandLine(args);
 
         builder.Services
-           .Configure<TraceNetMQConfigModel>(builder.Configuration.GetSection(TraceNetMQConfigModel.Configuration))
+           .Configure<ProxyNetMQConfigModel>(builder.Configuration.GetSection(ProxyNetMQConfigModel.Configuration))
            .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
            .Configure<BotConfiguration>(builder.Configuration.GetSection(BotConfiguration.Configuration))
        ;

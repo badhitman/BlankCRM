@@ -95,7 +95,7 @@ builder.Configuration.AddCommandLine(args);
 builder.Services.AddOptions();
 
 builder.Services
-   .Configure<TraceNetMQConfigModel>(builder.Configuration.GetSection(TraceNetMQConfigModel.Configuration))
+   .Configure<ProxyNetMQConfigModel>(builder.Configuration.GetSection(ProxyNetMQConfigModel.Configuration))
    .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
    .Configure<ConstructorConfigModel>(builder.Configuration.GetSection("ConstructorConfig"));
 
