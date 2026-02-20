@@ -238,7 +238,11 @@ builder.Services.AddScoped<IUsersAuthenticateService, UsersAuthenticateService>(
 string appName = typeof(Program).Assembly.GetName().Name ?? "AssemblyName";
 IMQStandardClientRPC rabbitImplement(IServiceProvider provider, object arg2)
 {
-    return new RabbitClient(provider.GetRequiredService<IOptions<RabbitMQConfigModel>>(), provider.GetRequiredService<ILogger<RabbitClient>>(), appName);
+    return new RabbitClient(
+        provider.GetRequiredService<IOptions<RabbitMQConfigModel>>(),
+        provider.GetRequiredService<ILogger<RabbitClient>>(),
+        provider.GetRequiredService<ITraceRabbitActionsServiceTransmission>(),
+        appName);
 }
 IMQStandardClientRPC zeroImplement(IServiceProvider provider, object arg2)
 {

@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// TraceRabbitActionRequestModel
 /// </summary>
-public class TraceRabbitActionRequestModel
+public class TraceRabbitActionRequestModel : TraceReceiverBaseRecord
 {
 
 }

@@ -9,9 +9,9 @@ using SharedLib;
 namespace IndexingService;
 
 /// <summary>
-/// TraceReceive
+/// HistoryReceive
 /// </summary>
-public class TraceReceive : TraceReceiverBaseRecord
+public class HistoryReceive : TraceReceiverRecord
 {
     /// <summary>
     /// _id
@@ -20,13 +20,15 @@ public class TraceReceive : TraceReceiverBaseRecord
     public MongoDB.Bson.ObjectId _id { get; set; }
 
     /// <inheritdoc/>
-    public static TraceReceive Build(TraceReceiverBaseRecord sender)
+    public static HistoryReceive Build(TraceReceiverRecord sender)
     {
         return new()
         {
+            SenderActionUserId = sender.SenderActionUserId,
             ReceiverName = sender.ReceiverName,
             RequestBody = sender.RequestBody,
             ResponseBody = sender.ResponseBody,
+            UTCTimestampFinalReceive = sender.UTCTimestampFinalReceive,
             UTCTimestampInitReceive = sender.UTCTimestampInitReceive,
         };
     }

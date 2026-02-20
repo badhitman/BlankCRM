@@ -26,33 +26,33 @@ public class HistoryImpl(IOptions<MongoConfigModel> mongoConf) : IHistoryIndexin
         if (req.ResponseBody is not null)
             req.ResponseBody = MongoDB.Bson.Serialization.BsonSerializer.Deserialize<BsonDocument>(JsonConvert.SerializeObject(req.ResponseBody));
 
-        IMongoDatabase mongoFs = new MongoClient(mongoConf.Value.ToString()).GetDatabase($"{mongoConf.Value.BusTracesSystemName}{GlobalStaticConstantsTransmission.GetModePrefix}");
-        IMongoCollection<TraceReceive> traceReceiverRecords = mongoFs.GetCollection<TraceReceive>(nameof(TraceReceive));
+        IMongoDatabase mongoFs = new MongoClient(mongoConf.Value.ToString()).GetDatabase($"{mongoConf.Value.BusHistorySystemName}{GlobalStaticConstantsTransmission.GetModePrefix}");
+        IMongoCollection<HistoryReceive> traceReceiverRecords = mongoFs.GetCollection<HistoryReceive>(nameof(HistoryReceive));
 
         CreateIndexOptions indexOptions = new();
-        IndexKeysDefinition<TraceReceive> indexKeys = Builders<TraceReceive>.IndexKeys.Ascending(x => x.ReceiverName);
-        CreateIndexModel<TraceReceive> indexModel = new(indexKeys, indexOptions);
+        IndexKeysDefinition<HistoryReceive> indexKeys = Builders<HistoryReceive>.IndexKeys.Ascending(x => x.ReceiverName);
+        CreateIndexModel<HistoryReceive> indexModel = new(indexKeys, indexOptions);
         await traceReceiverRecords.Indexes.CreateOneAsync(indexModel, cancellationToken: token);
 
-        indexKeys = Builders<TraceReceive>.IndexKeys.Ascending(x => x.UTCTimestampInitReceive);
+        indexKeys = Builders<HistoryReceive>.IndexKeys.Ascending(x => x.UTCTimestampInitReceive);
         indexModel = new(indexKeys, indexOptions);
         await traceReceiverRecords.Indexes.CreateOneAsync(indexModel, cancellationToken: token);
 
-        indexKeys = Builders<TraceReceive>.IndexKeys.Ascending(x => x.SenderActionUserId);
+        indexKeys = Builders<HistoryReceive>.IndexKeys.Ascending(x => x.SenderActionUserId);
         indexModel = new(indexKeys, indexOptions);
         await traceReceiverRecords.Indexes.CreateOneAsync(indexModel, cancellationToken: token);
 
-        await traceReceiverRecords.InsertOneAsync(TraceReceive.Build(req), cancellationToken: token);
+        await traceReceiverRecords.InsertOneAsync(HistoryReceive.Build(req), cancellationToken: token);
         return ResponseBaseModel.CreateSuccess("Ok");
     }
 
     /// <inheritdoc/>
     public async Task<TPaginationResponseStandardModel<TraceReceiverRecord>> SelectHistoryBaseAsync(TPaginationRequestStandardModel<SelectHistoryReceivesRequestModel> req, CancellationToken token = default)
     {
-        IMongoDatabase mongoFs = new MongoClient(mongoConf.Value.ToString()).GetDatabase($"{mongoConf.Value.BusTracesSystemName}{GlobalStaticConstantsTransmission.GetModePrefix}");
-        IMongoCollection<TraceReceive> traceReceiverRecords = mongoFs.GetCollection<TraceReceive>(nameof(TraceReceive));
+        IMongoDatabase mongoFs = new MongoClient(mongoConf.Value.ToString()).GetDatabase($"{mongoConf.Value.BusHistorySystemName}{GlobalStaticConstantsTransmission.GetModePrefix}");
+        IMongoCollection<HistoryReceive> traceReceiverRecords = mongoFs.GetCollection<HistoryReceive>(nameof(HistoryReceive));
 
-        IMongoQueryable<TraceReceive> query = traceReceiverRecords
+        IMongoQueryable<HistoryReceive> query = traceReceiverRecords
             .AsQueryable()
             .Where(x => req.Payload == null || req.Payload.ReceiversNames == null || req.Payload.ReceiversNames.Contains(x.ReceiverName))
             ;
@@ -63,7 +63,7 @@ public class HistoryImpl(IOptions<MongoConfigModel> mongoConf) : IHistoryIndexin
         if (req.Payload?.End.HasValue == true)
             query = query.Where(x => x.UTCTimestampInitReceive <= req.Payload.End.Value.Date.AddHours(23).AddMinutes(59).AddSeconds(59));
 
-        IOrderedMongoQueryable<TraceReceive> oQuery = req.SortingDirection switch
+        IOrderedMongoQueryable<HistoryReceive> oQuery = req.SortingDirection switch
         {
             DirectionsEnum.Up => query.OrderBy(x => x.UTCTimestampInitReceive),
             DirectionsEnum.Down => query.OrderByDescending(x => x.UTCTimestampInitReceive),
@@ -72,7 +72,7 @@ public class HistoryImpl(IOptions<MongoConfigModel> mongoConf) : IHistoryIndexin
         };
 
         Task<int> totalTask = query.CountAsync(cancellationToken: token);
-        Task<List<TraceReceive>> itemsTask = oQuery.Skip(req.PageNum * req.PageSize).Take(req.PageSize).ToListAsync(cancellationToken: token);
+        Task<List<HistoryReceive>> itemsTask = oQuery.Skip(req.PageNum * req.PageSize).Take(req.PageSize).ToListAsync(cancellationToken: token);
         await Task.WhenAll(totalTask, itemsTask);
 
         return new()
@@ -80,7 +80,7 @@ public class HistoryImpl(IOptions<MongoConfigModel> mongoConf) : IHistoryIndexin
             PageNum = req.PageNum,
             PageSize = req.PageSize,
             TotalRowsCount = totalTask.Result,
-            Response = [..itemsTask.Result.Select(x => new TraceReceive()
+            Response = [..itemsTask.Result.Select(x => new HistoryReceive()
             {
                 UTCTimestampFinalReceive = x.UTCTimestampFinalReceive,
                 UTCTimestampInitReceive = x.UTCTimestampInitReceive,
@@ -112,8 +112,8 @@ public class HistoryImpl(IOptions<MongoConfigModel> mongoConf) : IHistoryIndexin
                 }
             };
 
-        IMongoDatabase mongoFs = new MongoClient(mongoConf.Value.ToString()).GetDatabase($"{mongoConf.Value.BusTracesSystemName}{GlobalStaticConstantsTransmission.GetModePrefix}");
-        IMongoCollection<BsonDocument> collection = mongoFs.GetCollection<BsonDocument>(nameof(TraceReceive));
+        IMongoDatabase mongoFs = new MongoClient(mongoConf.Value.ToString()).GetDatabase($"{mongoConf.Value.BusHistorySystemName}{GlobalStaticConstantsTransmission.GetModePrefix}");
+        IMongoCollection<BsonDocument> collection = mongoFs.GetCollection<BsonDocument>(nameof(HistoryReceive));
 
         FilterDefinitionBuilder<BsonDocument> filterBuilder = Builders<BsonDocument>.Filter;
         FilterDefinition<BsonDocument> filter = filterBuilder.Empty;
@@ -184,7 +184,7 @@ public class HistoryImpl(IOptions<MongoConfigModel> mongoConf) : IHistoryIndexin
 
         List<BsonDocument> records = await filteredSource.Skip(req.PageNum * req.PageSize).Limit(req.PageSize).ToListAsync(cancellationToken: token);
         long count = await collection.CountDocumentsAsync(filter, cancellationToken: token);
-        List<TraceReceive> recordsPoco = [.. records.Select(x => MongoDB.Bson.Serialization.BsonSerializer.Deserialize<TraceReceive>(x))];
+        List<HistoryReceive> recordsPoco = [.. records.Select(x => MongoDB.Bson.Serialization.BsonSerializer.Deserialize<HistoryReceive>(x))];
 
         return new()
         {
@@ -193,7 +193,7 @@ public class HistoryImpl(IOptions<MongoConfigModel> mongoConf) : IHistoryIndexin
             TotalRowsCount = (int)await collection.CountDocumentsAsync(filter, cancellationToken: token),
             SortingDirection = req.SortingDirection,
             SortBy = req.SortBy,
-            Response = [.. recordsPoco.Select(x => new TraceReceive()
+            Response = [.. recordsPoco.Select(x => new HistoryReceive()
             {
                 UTCTimestampFinalReceive = x.UTCTimestampFinalReceive,
                 UTCTimestampInitReceive = x.UTCTimestampInitReceive,
@@ -223,8 +223,8 @@ public class HistoryImpl(IOptions<MongoConfigModel> mongoConf) : IHistoryIndexin
                 }
             };
 
-        IMongoDatabase mongoFs = new MongoClient(mongoConf.Value.ToString()).GetDatabase($"{mongoConf.Value.BusTracesSystemName}{GlobalStaticConstantsTransmission.GetModePrefix}");
-        IMongoCollection<BsonDocument> collection = mongoFs.GetCollection<BsonDocument>(nameof(TraceReceive));
+        IMongoDatabase mongoFs = new MongoClient(mongoConf.Value.ToString()).GetDatabase($"{mongoConf.Value.BusHistorySystemName}{GlobalStaticConstantsTransmission.GetModePrefix}");
+        IMongoCollection<BsonDocument> collection = mongoFs.GetCollection<BsonDocument>(nameof(HistoryReceive));
 
         FilterDefinitionBuilder<BsonDocument> filterBuilder = Builders<BsonDocument>.Filter;
         FilterDefinition<BsonDocument> filter = filterBuilder.Empty;
@@ -277,7 +277,7 @@ public class HistoryImpl(IOptions<MongoConfigModel> mongoConf) : IHistoryIndexin
 
         List<BsonDocument> records = await filteredSource.Skip(req.PageNum * req.PageSize).Limit(req.PageSize).ToListAsync(cancellationToken: token);
         long count = await collection.CountDocumentsAsync(filter, cancellationToken: token);
-        List<TraceReceive> recordsPoco = [.. records.Select(x => MongoDB.Bson.Serialization.BsonSerializer.Deserialize<TraceReceive>(x))];
+        List<HistoryReceive> recordsPoco = [.. records.Select(x => MongoDB.Bson.Serialization.BsonSerializer.Deserialize<HistoryReceive>(x))];
 
         return new()
         {
@@ -286,7 +286,7 @@ public class HistoryImpl(IOptions<MongoConfigModel> mongoConf) : IHistoryIndexin
             TotalRowsCount = (int)await collection.CountDocumentsAsync(filter, cancellationToken: token),
             SortingDirection = req.SortingDirection,
             SortBy = req.SortBy,
-            Response = [.. recordsPoco.Select(x => new TraceReceive()
+            Response = [.. recordsPoco.Select(x => new HistoryReceive()
             {
                 UTCTimestampFinalReceive = x.UTCTimestampFinalReceive,
                 UTCTimestampInitReceive = x.UTCTimestampInitReceive,
@@ -316,8 +316,8 @@ public class HistoryImpl(IOptions<MongoConfigModel> mongoConf) : IHistoryIndexin
                 }
             };
 
-        IMongoDatabase mongoFs = new MongoClient(mongoConf.Value.ToString()).GetDatabase($"{mongoConf.Value.BusTracesSystemName}{GlobalStaticConstantsTransmission.GetModePrefix}");
-        IMongoCollection<BsonDocument> collection = mongoFs.GetCollection<BsonDocument>(nameof(TraceReceive));
+        IMongoDatabase mongoFs = new MongoClient(mongoConf.Value.ToString()).GetDatabase($"{mongoConf.Value.BusHistorySystemName}{GlobalStaticConstantsTransmission.GetModePrefix}");
+        IMongoCollection<BsonDocument> collection = mongoFs.GetCollection<BsonDocument>(nameof(HistoryReceive));
 
         FilterDefinitionBuilder<BsonDocument> filterBuilder = Builders<BsonDocument>.Filter;
         FilterDefinition<BsonDocument> filter = filterBuilder.Empty;
@@ -355,7 +355,7 @@ public class HistoryImpl(IOptions<MongoConfigModel> mongoConf) : IHistoryIndexin
 
         List<BsonDocument> records = await filteredSource.Skip(req.PageNum * req.PageSize).Limit(req.PageSize).ToListAsync(cancellationToken: token);
         long count = await collection.CountDocumentsAsync(filter, cancellationToken: token);
-        List<TraceReceive> recordsPoco = [.. records.Select(x => MongoDB.Bson.Serialization.BsonSerializer.Deserialize<TraceReceive>(x))];
+        List<HistoryReceive> recordsPoco = [.. records.Select(x => MongoDB.Bson.Serialization.BsonSerializer.Deserialize<HistoryReceive>(x))];
 
         return new()
         {
@@ -364,7 +364,7 @@ public class HistoryImpl(IOptions<MongoConfigModel> mongoConf) : IHistoryIndexin
             TotalRowsCount = (int)await collection.CountDocumentsAsync(filter, cancellationToken: token),
             SortingDirection = req.SortingDirection,
             SortBy = req.SortBy,
-            Response = [.. recordsPoco.Select(x => new TraceReceive()
+            Response = [.. recordsPoco.Select(x => new HistoryReceive()
             {
                 UTCTimestampFinalReceive = x.UTCTimestampFinalReceive,
                 UTCTimestampInitReceive = x.UTCTimestampInitReceive,
@@ -394,8 +394,8 @@ public class HistoryImpl(IOptions<MongoConfigModel> mongoConf) : IHistoryIndexin
                 }
             };
 
-        IMongoDatabase mongoFs = new MongoClient(mongoConf.Value.ToString()).GetDatabase($"{mongoConf.Value.BusTracesSystemName}{GlobalStaticConstantsTransmission.GetModePrefix}");
-        IMongoCollection<BsonDocument> collection = mongoFs.GetCollection<BsonDocument>(nameof(TraceReceive));
+        IMongoDatabase mongoFs = new MongoClient(mongoConf.Value.ToString()).GetDatabase($"{mongoConf.Value.BusHistorySystemName}{GlobalStaticConstantsTransmission.GetModePrefix}");
+        IMongoCollection<BsonDocument> collection = mongoFs.GetCollection<BsonDocument>(nameof(HistoryReceive));
 
         FilterDefinitionBuilder<BsonDocument> filterBuilder = Builders<BsonDocument>.Filter;
         FilterDefinition<BsonDocument> filter = filterBuilder.Empty;
@@ -430,7 +430,7 @@ public class HistoryImpl(IOptions<MongoConfigModel> mongoConf) : IHistoryIndexin
 
         List<BsonDocument> records = await filteredSource.Skip(req.PageNum * req.PageSize).Limit(req.PageSize).ToListAsync(cancellationToken: token);
         long count = await collection.CountDocumentsAsync(filter, cancellationToken: token);
-        List<TraceReceive> recordsPoco = [.. records.Select(x => MongoDB.Bson.Serialization.BsonSerializer.Deserialize<TraceReceive>(x))];
+        List<HistoryReceive> recordsPoco = [.. records.Select(x => MongoDB.Bson.Serialization.BsonSerializer.Deserialize<HistoryReceive>(x))];
 
         return new()
         {
@@ -439,7 +439,7 @@ public class HistoryImpl(IOptions<MongoConfigModel> mongoConf) : IHistoryIndexin
             TotalRowsCount = (int)await collection.CountDocumentsAsync(filter, cancellationToken: token),
             SortingDirection = req.SortingDirection,
             SortBy = req.SortBy,
-            Response = [.. recordsPoco.Select(x => new TraceReceive()
+            Response = [.. recordsPoco.Select(x => new HistoryReceive()
             {
                 UTCTimestampFinalReceive = x.UTCTimestampFinalReceive,
                 UTCTimestampInitReceive = x.UTCTimestampInitReceive,

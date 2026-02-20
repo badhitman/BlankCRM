@@ -7,40 +7,45 @@ using Newtonsoft.Json.Linq;
 namespace SharedLib;
 
 /// <summary>
-/// TraceReceiverRecord
+/// TraceReceiverBaseRecord
 /// </summary>
-public class TraceReceiverRecord : TraceReceiverBaseRecord
+public class TraceReceiverBaseRecord
 {
     /// <summary>
-    /// Завершение обработчика
+    /// Инициализация обработчика
     /// </summary>
-    public DateTime UTCTimestampFinalReceive { get; set; }
+    public DateTime UTCTimestampInitReceive { get; set; }
 
     /// <summary>
-    /// AuthorIdentity
+    /// Имя обработчика
     /// </summary>
-    public string? SenderActionUserId { get; set; }
+    public required string ReceiverName { get; set; }
 
     /// <summary>
-    /// TraceReceiverRecord 
+    /// Тело входящего запроса
     /// </summary>
-    public static new TraceReceiverRecord Build<T>(string _receiverName, string? _authorId, T? _requestBody = null) where T : class
+    public object? RequestBody { get; set; }
+
+    /// <inheritdoc/>
+    public object? ResponseBody { get; set; }
+
+    /// <summary>
+    /// TraceReceiverBaseRecord 
+    /// </summary>
+    public static TraceReceiverBaseRecord Build<T>(string _receiverName, string? _authorId, T? _requestBody = null) where T : class
     {
         return new()
         {
             UTCTimestampInitReceive = DateTime.UtcNow,
             RequestBody = _requestBody is null ? null : JObject.FromObject(_requestBody),
             ReceiverName = _receiverName.WithoutTransmissionQueueNamePrefix(),
-            SenderActionUserId = _authorId,
         };
     }
 
     /// <inheritdoc/>
-    public new TraceReceiverRecord SetResponse(object responseBody)
+    public TraceReceiverBaseRecord SetResponse(object responseBody)
     {
-        UTCTimestampFinalReceive = DateTime.UtcNow;
         ResponseBody = responseBody;
-
         return this;
     }
 }

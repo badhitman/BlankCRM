@@ -137,7 +137,11 @@ string appName = typeof(Program).Assembly.GetName().Name ?? "AssemblyName";
 #region MQ Transmission (remote methods call)
 IMQStandardClientRPC rabbitImplement(IServiceProvider provider, object arg2)
 {
-    return new RabbitClient(provider.GetRequiredService<IOptions<RabbitMQConfigModel>>(), provider.GetRequiredService<ILogger<RabbitClient>>(), appName);
+    return new RabbitClient(
+        provider.GetRequiredService<IOptions<RabbitMQConfigModel>>(), 
+        provider.GetRequiredService<ILogger<RabbitClient>>(),
+        provider.GetRequiredService< ITraceRabbitActionsServiceTransmission>(),
+        appName);
 }
 IMQStandardClientRPC zeroImplement(IServiceProvider provider, object arg2)
 {

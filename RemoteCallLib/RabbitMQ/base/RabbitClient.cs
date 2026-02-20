@@ -35,7 +35,7 @@ public class RabbitClient : IMQStandardClientRPC
     /// <summary>
     /// Удалённый вызов команд (RabbitMq client)
     /// </summary>
-    public RabbitClient(IOptions<RabbitMQConfigModel> rabbitConf, ILogger<RabbitClient> _loggerRepo, string appName)
+    public RabbitClient(IOptions<RabbitMQConfigModel> rabbitConf, ILogger<RabbitClient> _loggerRepo, ITraceRabbitActionsServiceTransmission traceRabbitActionsServiceTransmission, string appName)
     {
         AppName = appName;
         loggerRepo = _loggerRepo;
