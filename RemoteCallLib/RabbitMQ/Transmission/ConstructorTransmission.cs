@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
+using Microsoft.Extensions.DependencyInjection;
 using SharedLib;
 
 namespace RemoteCallLib;
@@ -9,7 +10,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// TransmissionConstructorService
 /// </summary>
-public class ConstructorTransmission(IMQStandardClientRPC rabbitClient) : IConstructorTransmission
+public class ConstructorTransmission([FromKeyedServices(nameof(RabbitClient))] IMQStandardClientRPC rabbitClient) : IConstructorTransmission
 {
     #region public
     /// <inheritdoc/>

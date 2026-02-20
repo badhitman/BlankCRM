@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using SharedLib;
 
@@ -10,7 +11,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// StorageBaseTransmission
 /// </summary>
-public class ParametersStorageTransmission(IMQStandardClientRPC rabbitClient) : IParametersStorageTransmission
+public class ParametersStorageTransmission([FromKeyedServices(nameof(RabbitClient))] IMQStandardClientRPC rabbitClient) : IParametersStorageTransmission
 {
     #region tag`s
     /// <inheritdoc/> tags

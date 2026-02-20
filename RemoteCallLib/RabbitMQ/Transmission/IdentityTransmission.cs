@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////
 
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.DependencyInjection;
 using SharedLib;
 
 namespace RemoteCallLib;
@@ -10,7 +11,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// [remote]: Identity
 /// </summary>
-public class IdentityTransmission(IMQStandardClientRPC rabbitClient, IMemoryCache cache) : IIdentityTransmission
+public class IdentityTransmission([FromKeyedServices(nameof(RabbitClient))] IMQStandardClientRPC rabbitClient, IMemoryCache cache) : IIdentityTransmission
 {
     static readonly TimeSpan _ts = TimeSpan.FromSeconds(2);
 

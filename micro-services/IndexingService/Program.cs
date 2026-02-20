@@ -116,8 +116,15 @@ public class Program
 
         string appName = typeof(Program).Assembly.GetName().Name ?? "AssemblyName";
         #region MQ Transmission (remote methods call)
+        IMQStandardClientRPC rabbitImplement(IServiceProvider provider, object arg2)
+        {
+            return new RabbitClient(provider.GetRequiredService<IOptions<RabbitMQConfigModel>>(), provider.GetRequiredService<ILogger<RabbitClient>>(), appName);
+        }
+        /*[FromKeyedServices(nameof(RabbitClient))]*/
         builder.Services
-            .AddSingleton<IMQStandardClientRPC>(x => new RabbitClient(x.GetRequiredService<IOptions<RabbitMQConfigModel>>(), x.GetRequiredService<ILogger<RabbitClient>>(), appName));
+            .AddKeyedSingleton(nameof(RabbitClient), rabbitImplement)
+            .AddKeyedSingleton<IMQStandardClientRPC, NetMQClient>(nameof(NetMQClient))
+            ;
 
         builder.Services
         //    .AddScoped<IHelpDeskTransmission, HelpDeskTransmission>()
@@ -126,13 +133,14 @@ public class Program
         //    .AddScoped<ICommerceTransmission, CommerceTransmission>()
             .AddScoped<IStorageTransmission, StorageTransmission>()
             ;
-        
+
         builder.Services.IndexingServiceRegisterMqListeners();
         #endregion
 
         builder.Services
             .AddScoped<IIndexingServive, IndexingServiceImpl>()
             .AddScoped<IHistoryIndexing, HistoryImpl>()
+            .AddScoped<ITraceRabbitActionsService, TraceRabbitActionsService>()
             ;
         // Custom metrics for the application
         Meter greeterMeter = new($"OTel.{appName}", "1.0.0");

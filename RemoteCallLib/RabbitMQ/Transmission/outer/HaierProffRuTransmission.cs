@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
+using Microsoft.Extensions.DependencyInjection;
 using SharedLib;
 
 namespace RemoteCallLib;
@@ -9,7 +10,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// HaierProffRuTransmission
 /// </summary>
-public class HaierProffRuTransmission(IMQStandardClientRPC rabbitClient) : IFeedsHaierProffRuService
+public class HaierProffRuTransmission([FromKeyedServices(nameof(RabbitClient))] IMQStandardClientRPC rabbitClient) : IFeedsHaierProffRuService
 {
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> DownloadAndSaveAsync(CancellationToken token = default)

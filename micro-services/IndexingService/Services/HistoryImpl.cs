@@ -13,10 +13,10 @@ using SharedLib;
 namespace IndexingService;
 
 /// <summary>
-/// TracesImpl
+/// HistoryImpl
 /// </summary>
 public class HistoryImpl(IOptions<MongoConfigModel> mongoConf) : IHistoryIndexing
-{
+{//ITraceRabbitActionsService
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> SaveHistoryForReceiverAsync(TraceReceiverRecord req, CancellationToken token = default)
     {

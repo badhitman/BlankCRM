@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
+using Microsoft.Extensions.DependencyInjection;
 using SharedLib;
 
 namespace RemoteCallLib;
@@ -9,7 +10,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// BankTransmission
 /// </summary>
-public partial class BankTransmission(IMQStandardClientRPC rabbitClient) : IBankService
+public partial class BankTransmission([FromKeyedServices(nameof(RabbitClient))] IMQStandardClientRPC rabbitClient) : IBankService
 {
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> BankConnectionCreateOrUpdateAsync(TAuthRequestStandardModel<BankConnectionModelDB> bank, CancellationToken token = default)

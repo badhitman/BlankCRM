@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
+using Microsoft.Extensions.DependencyInjection;
 using SharedLib;
 using static SharedLib.GlobalStaticConstantsTransmission;
 
@@ -10,7 +11,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// RusklimatComTransmission
 /// </summary>
-public class RusklimatComTransmission(IMQStandardClientRPC rabbitClient) : IRusklimatComApiTransmission
+public class RusklimatComTransmission([FromKeyedServices(nameof(RabbitClient))] IMQStandardClientRPC rabbitClient) : IRusklimatComApiTransmission
 {
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> DownloadAndSaveAsync(CancellationToken token = default)

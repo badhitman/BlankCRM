@@ -2,12 +2,13 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
+using Microsoft.Extensions.DependencyInjection;
 using SharedLib;
 
 namespace RemoteCallLib;
 
 /// <inheritdoc/>
-public class HelpDeskTransmission(IMQStandardClientRPC rabbitClient) : IHelpDeskTransmission
+public class HelpDeskTransmission([FromKeyedServices(nameof(RabbitClient))] IMQStandardClientRPC rabbitClient) : IHelpDeskTransmission
 {
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> TelegramMessageIncomingAsync(TelegramIncomingMessageModel req, CancellationToken token = default)

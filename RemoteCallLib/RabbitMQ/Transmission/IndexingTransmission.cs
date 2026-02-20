@@ -2,12 +2,13 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
+using Microsoft.Extensions.DependencyInjection;
 using SharedLib;
 
 namespace RemoteCallLib;
 
 /// <inheritdoc/>
-public class IndexingTransmission(IMQStandardClientRPC rabbitClient) : IIndexingServive
+public class IndexingTransmission([FromKeyedServices(nameof(RabbitClient))] IMQStandardClientRPC rabbitClient) : IIndexingServive
 {
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> IndexingFileAsync(StorageFileMiddleModel req, CancellationToken token = default)

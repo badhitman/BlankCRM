@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
+using Microsoft.Extensions.DependencyInjection;
 using SharedLib;
 
 namespace RemoteCallLib;
@@ -9,7 +10,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// CommerceTransmission
 /// </summary>
-public partial class CommerceTransmission(IMQStandardClientRPC rabbitClient) : ICommerceTransmission
+public partial class CommerceTransmission([FromKeyedServices(nameof(RabbitClient))] IMQStandardClientRPC rabbitClient) : ICommerceTransmission
 {
     /// <inheritdoc/>
     public async Task<TPaginationResponseStandardModel<RecordsAttendanceModelDB>> RecordsAttendancesSelectAsync(TPaginationRequestAuthModel<RecordsAttendancesRequestModel> req, CancellationToken token = default)

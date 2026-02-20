@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
+using Microsoft.Extensions.DependencyInjection;
 using SharedLib;
 
 namespace RemoteCallLib;
@@ -9,7 +10,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// Удалённый вызов команд в TelegramBot службе
 /// </summary>
-public class TelegramTransmission(IMQStandardClientRPC rabbitClient) : ITelegramTransmission
+public class TelegramTransmission([FromKeyedServices(nameof(RabbitClient))] IMQStandardClientRPC rabbitClient) : ITelegramTransmission
 {
     /// <inheritdoc/>
     public async Task<List<ChatTelegramStandardModel>> ChatsFindForUserTelegramAsync(long[] usersTelegramIds, CancellationToken token = default)

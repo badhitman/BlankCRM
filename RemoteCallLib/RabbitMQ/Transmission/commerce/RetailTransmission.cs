@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
+using Microsoft.Extensions.DependencyInjection;
 using SharedLib;
 using static SharedLib.GlobalStaticConstantsTransmission;
 
@@ -10,7 +11,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// Розница
 /// </summary>
-public class RetailTransmission(IMQStandardClientRPC rabbitClient) : IRetailService
+public class RetailTransmission([FromKeyedServices(nameof(RabbitClient))] IMQStandardClientRPC rabbitClient) : IRetailService
 {
     #region Order`s (document retail)
     /// <inheritdoc/>

@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Linq;
 using SharedLib;
 
@@ -10,7 +11,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// WebChatTransmission
 /// </summary>
-public class WebChatTransmission(IMQStandardClientRPC rabbitClient) : IWebChatService
+public class WebChatTransmission([FromKeyedServices(nameof(RabbitClient))] IMQStandardClientRPC rabbitClient) : IWebChatService
 {
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> CreateMessageWebChatAsync(MessageWebChatModelDB req, CancellationToken token = default)

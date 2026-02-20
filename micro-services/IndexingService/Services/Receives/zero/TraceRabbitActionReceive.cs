@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
-using RemoteCallLib;
 using SharedLib;
 
 namespace Transmission.Receives.realtime;
@@ -10,16 +9,16 @@ namespace Transmission.Receives.realtime;
 /// <summary>
 /// TraceRabbitAction
 /// </summary>
-public class TraceRabbitActionReceive(IWebChatService webChatRepo)
-    : IMQStandardReceive<MessageWebChatModelDB?, TResponseModel<int>?>
+public class TraceRabbitActionReceive(ITraceRabbitActionsService webChatRepo)
+    : IMQStandardReceive<TraceRabbitActionRequestModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.TraceRabbitActionSystemsReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>?> ResponseHandleActionAsync(MessageWebChatModelDB? req, CancellationToken token = default)
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TraceRabbitActionRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await webChatRepo.CreateMessageWebChatAsync(req, token);
+        return await webChatRepo.SaveActionAsync(req, token);
     }
 }

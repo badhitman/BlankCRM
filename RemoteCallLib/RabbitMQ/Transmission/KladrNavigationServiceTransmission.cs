@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Linq;
 using SharedLib;
 
@@ -10,7 +11,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// KladrNavigationServiceTransmission
 /// </summary>
-public class KladrNavigationServiceTransmission(IMQStandardClientRPC rabbitClient) : IKladrNavigationService
+public class KladrNavigationServiceTransmission([FromKeyedServices(nameof(RabbitClient))] IMQStandardClientRPC rabbitClient) : IKladrNavigationService
 {
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> ChildsContainsAsync(string codeLike, CancellationToken token = default)

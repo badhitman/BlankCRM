@@ -2,12 +2,13 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
+using Microsoft.Extensions.DependencyInjection;
 using SharedLib;
 
 namespace RemoteCallLib;
 
 /// <inheritdoc/>
-public class RubricsTransmission(IMQStandardClientRPC rabbitClient) : IRubricsTransmission
+public class RubricsTransmission([FromKeyedServices(nameof(RabbitClient))] IMQStandardClientRPC rabbitClient) : IRubricsTransmission
 {
     /// <inheritdoc/>
     public async Task<TResponseModel<List<RubricStandardModel>>> RubricsGetAsync(int[] rubricsIds, CancellationToken token = default)

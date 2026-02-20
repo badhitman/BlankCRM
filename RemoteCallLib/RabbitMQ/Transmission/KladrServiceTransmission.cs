@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
+using Microsoft.Extensions.DependencyInjection;
 using SharedLib;
 
 namespace RemoteCallLib;
@@ -9,7 +10,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// KladrServiceTransmission
 /// </summary>
-public class KladrServiceTransmission(IMQStandardClientRPC rabbitClient) : IKladrService
+public class KladrServiceTransmission([FromKeyedServices(nameof(RabbitClient))] IMQStandardClientRPC rabbitClient) : IKladrService
 {
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> ClearTempKladrAsync(CancellationToken token = default)

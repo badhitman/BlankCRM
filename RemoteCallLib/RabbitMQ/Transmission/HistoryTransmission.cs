@@ -2,12 +2,15 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
+using Microsoft.Extensions.DependencyInjection;
 using SharedLib;
 
 namespace RemoteCallLib;
 
-/// <inheritdoc/>
-public class HistoryTransmission(IMQStandardClientRPC rabbitClient) : IHistoryIndexing
+/// <summary>
+/// HistoryTransmission
+/// </summary>
+public class HistoryTransmission([FromKeyedServices(nameof(RabbitClient))] IMQStandardClientRPC rabbitClient) : IHistoryIndexing
 {
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> SaveHistoryForReceiverAsync(TraceReceiverRecord req, CancellationToken token = default)

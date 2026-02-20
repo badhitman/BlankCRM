@@ -5,10 +5,10 @@
 namespace SharedLib;
 
 /// <summary>
-/// SelectHistoryElementsRequestModel
+/// ITraceRabbitActionsService
 /// </summary>
-public class SelectHistoryElementsRequestModel : PeriodBaseModel
+public interface ITraceRabbitActionsService
 {
     /// <inheritdoc/>
-    public int FilterId { get; set; }
+    public Task<ResponseBaseModel> SaveActionAsync(TraceRabbitActionRequestModel req, CancellationToken token = default);
 }

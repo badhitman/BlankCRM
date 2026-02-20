@@ -168,7 +168,15 @@ public class Program
             .AddSingleton<IMQStandardClientExtRPC>(x => new MQttClient(x.GetRequiredService<RealtimeMQTTClientConfigModel>(), x.GetRequiredService<ILogger<MQttClient>>(), appName))
             ;
 
-        builder.Services.AddSingleton<IMQStandardClientRPC>(x => new RabbitClient(x.GetRequiredService<IOptions<RabbitMQConfigModel>>(), x.GetRequiredService<ILogger<RabbitClient>>(), appName));
+        IMQStandardClientRPC rabbitImplement(IServiceProvider provider, object arg2)
+        {
+            return new RabbitClient(provider.GetRequiredService<IOptions<RabbitMQConfigModel>>(), provider.GetRequiredService<ILogger<RabbitClient>>(), appName);
+        }
+        /*[FromKeyedServices(nameof(RabbitClient))]*/
+        builder.Services
+            .AddKeyedSingleton(nameof(RabbitClient), rabbitImplement)
+            .AddKeyedSingleton<IMQStandardClientRPC, NetMQClient>(nameof(NetMQClient))
+            ;
         //
         builder.Services
             .AddScoped<IEventsWebChatsNotifies, EventsWebChatsNotifiesTransmissionMQTT>()

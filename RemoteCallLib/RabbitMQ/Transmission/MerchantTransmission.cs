@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Linq;
 using SharedLib;
 
@@ -10,7 +11,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// MerchantTransmission
 /// </summary>
-public partial class MerchantTransmission(IMQStandardClientRPC rabbitClient) : IMerchantService
+public partial class MerchantTransmission([FromKeyedServices(nameof(RabbitClient))] IMQStandardClientRPC rabbitClient) : IMerchantService
 {
     /// <inheritdoc/>
     public async Task<TResponseModel<UserInfoModel>> BindCustomerTBankAsync(BindCustomerTBankRequestModel req, CancellationToken token = default)

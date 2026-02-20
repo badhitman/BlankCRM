@@ -5,10 +5,9 @@
 namespace SharedLib;
 
 /// <summary>
-/// SelectHistoryElementsRequestModel
+/// TraceRabbitActionRequestModel
 /// </summary>
-public class SelectHistoryElementsRequestModel : PeriodBaseModel
+public class TraceRabbitActionRequestModel
 {
-    /// <inheritdoc/>
-    public int FilterId { get; set; }
+
 }

@@ -130,7 +130,15 @@ public class Program
 
         string appName = typeof(Program).Assembly.GetName().Name ?? "AssemblyName";
         #region MQ Transmission (remote methods call)
-        builder.Services.AddSingleton<IMQStandardClientRPC>(x => new RabbitClient(x.GetRequiredService<IOptions<RabbitMQConfigModel>>(), x.GetRequiredService<ILogger<RabbitClient>>(), appName));
+        IMQStandardClientRPC rabbitImplement(IServiceProvider provider, object arg2)
+        {
+            return new RabbitClient(provider.GetRequiredService<IOptions<RabbitMQConfigModel>>(), provider.GetRequiredService<ILogger<RabbitClient>>(), appName);
+        }
+        /*[FromKeyedServices(nameof(RabbitClient))]*/
+        builder.Services
+            .AddKeyedSingleton(nameof(RabbitClient), rabbitImplement)
+            .AddKeyedSingleton<IMQStandardClientRPC, NetMQClient>(nameof(NetMQClient))
+            ;
         //
         builder.Services.AddScoped<IHelpDeskTransmission, HelpDeskTransmission>()
             .AddScoped<IWebTransmission, WebTransmission>()

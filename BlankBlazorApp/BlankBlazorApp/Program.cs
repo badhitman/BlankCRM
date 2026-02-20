@@ -236,10 +236,15 @@ builder.Services.AddScoped<IUsersAuthenticateService, UsersAuthenticateService>(
 
 #region MQ Transmission (remote methods call)
 string appName = typeof(Program).Assembly.GetName().Name ?? "AssemblyName";
-builder.Services.AddSingleton<IMQStandardClientRPC>(x =>
-    new RabbitClient(x.GetRequiredService<IOptions<RabbitMQConfigModel>>(),
-                x.GetRequiredService<ILogger<RabbitClient>>(),
-                appName));
+IMQStandardClientRPC rabbitImplement(IServiceProvider provider, object arg2)
+{
+    return new RabbitClient(provider.GetRequiredService<IOptions<RabbitMQConfigModel>>(), provider.GetRequiredService<ILogger<RabbitClient>>(), appName);
+}
+/*[FromKeyedServices(nameof(RabbitClient))]*/
+builder.Services
+    .AddKeyedSingleton(nameof(RabbitClient), rabbitImplement)
+    .AddKeyedSingleton<IMQStandardClientRPC, NetMQClient>(nameof(NetMQClient))
+    ;
 builder.Services
             .AddSingleton<IMQStandardClientExtRPC>(x => new MQttClient(x.GetRequiredService<RealtimeMQTTClientConfigModel>(), x.GetRequiredService<ILogger<MQttClient>>(), appName))
             ;
@@ -351,7 +356,7 @@ app.MapControllerRoute(
 app.MapStaticAssets();
 app.Map("/cloud-fs/read", ma => ma.UseMiddleware<ReadCloudFileMiddleware>());
 
-app.MapRazorComponents<App>()    
+app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(BlankBlazorApp.Client._Imports).Assembly, typeof(BlazorWebLib._Imports).Assembly, typeof(BlazorLib._Imports).Assembly);
