@@ -7,7 +7,7 @@ using SharedLib;
 namespace RemoteCallLib;
 
 /// <inheritdoc/>
-public class HelpDeskTransmission(IRabbitClient rabbitClient) : IHelpDeskTransmission
+public class HelpDeskTransmission(IMQClientRPC rabbitClient) : IHelpDeskTransmission
 {
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> TelegramMessageIncomingAsync(TelegramIncomingMessageModel req, CancellationToken token = default)

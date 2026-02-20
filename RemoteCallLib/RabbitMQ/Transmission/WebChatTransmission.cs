@@ -10,7 +10,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// WebChatTransmission
 /// </summary>
-public class WebChatTransmission(IRabbitClient rabbitClient) : IWebChatService
+public class WebChatTransmission(IMQClientRPC rabbitClient) : IWebChatService
 {
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> CreateMessageWebChatAsync(MessageWebChatModelDB req, CancellationToken token = default)

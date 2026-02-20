@@ -3,15 +3,15 @@
 ////////////////////////////////////////////////
 
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace SharedLib;
 
 /// <summary>
 /// Удалённый вызов команд (MQTT client)
 /// </summary>
-public interface IMQTTClient
+public interface IMQClientExtRPC
 {
     /// <summary>
     /// Удалённый вызов метода через MQTT

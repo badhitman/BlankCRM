@@ -10,7 +10,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// DaichiBusinessTransmission
 /// </summary>
-public class DaichiBusinessTransmission(IRabbitClient rabbitClient) : IDaichiBusinessApiTransmission
+public class DaichiBusinessTransmission(IMQClientRPC rabbitClient) : IDaichiBusinessApiTransmission
 {
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> DownloadAndSaveAsync(CancellationToken token = default)

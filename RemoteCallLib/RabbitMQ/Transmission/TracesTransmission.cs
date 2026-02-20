@@ -7,7 +7,7 @@ using SharedLib;
 namespace RemoteCallLib;
 
 /// <inheritdoc/>
-public class TracesTransmission(IRabbitClient rabbitClient) : ITracesIndexing
+public class TracesTransmission(IMQClientRPC rabbitClient) : ITracesIndexing
 {
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> SaveTraceForReceiverAsync(TraceReceiverRecord req, CancellationToken token = default)

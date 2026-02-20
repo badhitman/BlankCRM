@@ -9,7 +9,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// HaierProffRuTransmission
 /// </summary>
-public class HaierProffRuTransmission(IRabbitClient rabbitClient) : IFeedsHaierProffRuService
+public class HaierProffRuTransmission(IMQClientRPC rabbitClient) : IFeedsHaierProffRuService
 {
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> DownloadAndSaveAsync(CancellationToken token = default)

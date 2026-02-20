@@ -236,12 +236,12 @@ builder.Services.AddScoped<IUsersAuthenticateService, UsersAuthenticateService>(
 
 #region MQ Transmission (remote methods call)
 string appName = typeof(Program).Assembly.GetName().Name ?? "AssemblyName";
-builder.Services.AddSingleton<IRabbitClient>(x =>
+builder.Services.AddSingleton<IMQClientRPC>(x =>
     new RabbitClient(x.GetRequiredService<IOptions<RabbitMQConfigModel>>(),
                 x.GetRequiredService<ILogger<RabbitClient>>(),
                 appName));
 builder.Services
-            .AddSingleton<IMQTTClient>(x => new MQttClient(x.GetRequiredService<RealtimeMQTTClientConfigModel>(), x.GetRequiredService<ILogger<MQttClient>>(), appName))
+            .AddSingleton<IMQClientExtRPC>(x => new MQttClient(x.GetRequiredService<RealtimeMQTTClientConfigModel>(), x.GetRequiredService<ILogger<MQttClient>>(), appName))
             ;
 
 builder.Services

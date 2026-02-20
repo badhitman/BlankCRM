@@ -11,7 +11,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// ManageStockSharpTransmission
 /// </summary>
-public partial class ManageStockSharpTransmissionMQTT(IMQTTClient mqClient) : IManageStockSharpService
+public partial class ManageStockSharpTransmissionMQTT(IMQClientExtRPC mqClient) : IManageStockSharpService
 {
     /// <inheritdoc/>
     public async Task<AboutDatabasesResponseModel> AboutDatabases(CancellationToken cancellationToken = default)

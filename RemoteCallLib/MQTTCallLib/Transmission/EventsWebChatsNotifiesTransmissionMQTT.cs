@@ -13,7 +13,7 @@ namespace RemoteCallLib;
 /// EventsWebChatsNotifiesTransmissionMQTT
 /// </summary>
 /// <param name="mqClient"></param>
-public partial class EventsWebChatsNotifiesTransmissionMQTT(IMQTTClient mqClient) : IEventsWebChatsNotifies
+public partial class EventsWebChatsNotifiesTransmissionMQTT(IMQClientExtRPC mqClient) : IEventsWebChatsNotifies
 {
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> NewMessageWebChatAsync(NewMessageWebChatEventModel req, CancellationToken cancellationToken = default)

@@ -10,7 +10,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// MerchantTransmission
 /// </summary>
-public partial class MerchantTransmission(IRabbitClient rabbitClient) : IMerchantService
+public partial class MerchantTransmission(IMQClientRPC rabbitClient) : IMerchantService
 {
     /// <inheritdoc/>
     public async Task<TResponseModel<UserInfoModel>> BindCustomerTBankAsync(BindCustomerTBankRequestModel req, CancellationToken token = default)

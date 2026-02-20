@@ -7,7 +7,7 @@ using SharedLib;
 namespace RemoteCallLib;
 
 /// <inheritdoc/>
-public class RubricsTransmission(IRabbitClient rabbitClient) : IRubricsTransmission
+public class RubricsTransmission(IMQClientRPC rabbitClient) : IRubricsTransmission
 {
     /// <inheritdoc/>
     public async Task<TResponseModel<List<RubricStandardModel>>> RubricsGetAsync(int[] rubricsIds, CancellationToken token = default)

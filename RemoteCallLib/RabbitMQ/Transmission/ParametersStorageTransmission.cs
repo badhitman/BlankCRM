@@ -10,7 +10,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// StorageBaseTransmission
 /// </summary>
-public class ParametersStorageTransmission(IRabbitClient rabbitClient) : IParametersStorageTransmission
+public class ParametersStorageTransmission(IMQClientRPC rabbitClient) : IParametersStorageTransmission
 {
     #region tag`s
     /// <inheritdoc/> tags

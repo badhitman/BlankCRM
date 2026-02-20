@@ -165,10 +165,10 @@ public class Program
         #region MQ Transmission (remote methods call)
 
         builder.Services
-            .AddSingleton<IMQTTClient>(x => new MQttClient(x.GetRequiredService<RealtimeMQTTClientConfigModel>(), x.GetRequiredService<ILogger<MQttClient>>(), appName))
+            .AddSingleton<IMQClientExtRPC>(x => new MQttClient(x.GetRequiredService<RealtimeMQTTClientConfigModel>(), x.GetRequiredService<ILogger<MQttClient>>(), appName))
             ;
 
-        builder.Services.AddSingleton<IRabbitClient>(x => new RabbitClient(x.GetRequiredService<IOptions<RabbitMQConfigModel>>(), x.GetRequiredService<ILogger<RabbitClient>>(), appName));
+        builder.Services.AddSingleton<IMQClientRPC>(x => new RabbitClient(x.GetRequiredService<IOptions<RabbitMQConfigModel>>(), x.GetRequiredService<ILogger<RabbitClient>>(), appName));
         //
         builder.Services
             .AddScoped<IEventsWebChatsNotifies, EventsWebChatsNotifiesTransmissionMQTT>()

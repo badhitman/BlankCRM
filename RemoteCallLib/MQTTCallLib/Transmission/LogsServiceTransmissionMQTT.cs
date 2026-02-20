@@ -11,7 +11,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// LogsServiceTransmission
 /// </summary>
-public partial class LogsServiceTransmissionMQTT(IMQTTClient mqClient) : ILogsService
+public partial class LogsServiceTransmissionMQTT(IMQClientExtRPC mqClient) : ILogsService
 {
     /// <inheritdoc/>
     public async Task<TPaginationResponseStandardModel<NLogRecordModelDB>> GoToPageForRowLogsAsync(TPaginationRequestStandardModel<GoToPageForRowLogsRequestModel> req, CancellationToken token = default)

@@ -9,7 +9,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// KladrServiceTransmission
 /// </summary>
-public class KladrServiceTransmission(IRabbitClient rabbitClient) : IKladrService
+public class KladrServiceTransmission(IMQClientRPC rabbitClient) : IKladrService
 {
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> ClearTempKladrAsync(CancellationToken token = default)

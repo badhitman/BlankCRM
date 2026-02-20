@@ -9,7 +9,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// Serialize Storage Remote Transmission Service
 /// </summary>
-public class StorageTransmission(IRabbitClient rabbitClient) : IStorageTransmission
+public class StorageTransmission(IMQClientRPC rabbitClient) : IStorageTransmission
 {
     /// <inheritdoc/>
     public async Task<TPaginationResponseStandardModel<NLogRecordModelDB>> GoToPageForRowLogsAsync(TPaginationRequestStandardModel<GoToPageForRowLogsRequestModel> req, CancellationToken token = default)

@@ -20,7 +20,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// Удалённый вызов команд (RabbitMq client)
 /// </summary>
-public class RabbitClient : IRabbitClient
+public class RabbitClient : IMQClientRPC
 {
     readonly RabbitMQConfigModel RabbitConfigRepo;
     readonly ConnectionFactory factory;

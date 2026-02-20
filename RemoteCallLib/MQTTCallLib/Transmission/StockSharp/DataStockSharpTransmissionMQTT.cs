@@ -12,7 +12,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// DataStockSharpTransmission
 /// </summary>
-public partial class DataStockSharpTransmissionMQTT(IMQTTClient mqClient) : IDataStockSharpService
+public partial class DataStockSharpTransmissionMQTT(IMQClientExtRPC mqClient) : IDataStockSharpService
 {
     /// <inheritdoc/>
     public async Task<TResponseModel<List<OrderStockSharpModel>>> GetOrdersAsync(int[]? req = null, CancellationToken cancellationToken = default)

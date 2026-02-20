@@ -2,15 +2,15 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using System.Threading;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace RemoteCallLib;
 
 /// <summary>
-/// Удалённый вызов команд (RabbitMq client)
+/// Удалённый вызов команд (MQ client)
 /// </summary>
-public interface IRabbitClient
+public interface IMQClientRPC
 {
     /// <summary>
     /// Удалённый вызов метода через MQ
