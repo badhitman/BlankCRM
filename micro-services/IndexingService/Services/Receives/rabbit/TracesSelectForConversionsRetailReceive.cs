@@ -10,7 +10,7 @@ namespace Transmission.Receives.indexing;
 /// <summary>
 /// TracesSelectForConversionsRetail
 /// </summary>
-public class TracesSelectForConversionsRetailReceive(ITracesIndexing indexingFileRepo)
+public class TracesSelectForConversionsRetailReceive(IHistoryIndexing indexingFileRepo)
     : IResponseReceive<TPaginationRequestStandardModel<SelectTraceElementsRequestModel>?, TPaginationResponseStandardModel<TraceReceiverRecord>?>
 {
     /// <inheritdoc/>

@@ -10,7 +10,7 @@ namespace Transmission.Receives.Identity;
 /// <summary>
 /// Вкл/Выкл двухфакторную аутентификацию для указанного userId
 /// </summary>
-public class SetTwoFactorEnabledReceive(IIdentityTools idRepo, ITracesIndexing indexingRepo)
+public class SetTwoFactorEnabledReceive(IIdentityTools idRepo, IHistoryIndexing indexingRepo)
     : IResponseReceive<SetTwoFactorEnabledRequestModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>

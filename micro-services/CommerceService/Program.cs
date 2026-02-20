@@ -102,7 +102,7 @@ builder.Services
     .AddScoped<ICommerceService, CommerceImplementService>()
     .AddScoped<IRetailService, RetailService>()
     .AddScoped<IIndexingServive, IndexingTransmission>()
-    .AddScoped<ITracesIndexing, TracesTransmission>()
+    .AddScoped<IHistoryIndexing, HistoryTransmission>()
     ;
 
 builder.Services.AddSingleton<WebConfigModel>();

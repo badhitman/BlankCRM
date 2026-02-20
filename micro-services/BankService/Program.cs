@@ -106,7 +106,7 @@ builder.Services
     .AddScoped<IBankService, BankImplementService>()
     .AddScoped<IMerchantService, MerchantImplementService>()
     .AddScoped<IIndexingServive, IndexingTransmission>()
-    .AddScoped<ITracesIndexing, TracesTransmission>()
+    .AddScoped<IHistoryIndexing, HistoryTransmission>()
     ;
 
 builder.Services.AddSingleton<WebConfigModel>();

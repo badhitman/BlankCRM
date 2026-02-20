@@ -10,7 +10,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// CreateConversionOrderLinkDocument
 /// </summary>
-public class CreateConversionOrderLinkDocumentReceive(IRetailService commRepo, ITracesIndexing indexingRepo)
+public class CreateConversionOrderLinkDocumentReceive(IRetailService commRepo, IHistoryIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<OrderConversionAmountModel>?, TResponseModel<int>?>
 {
     /// <inheritdoc/>

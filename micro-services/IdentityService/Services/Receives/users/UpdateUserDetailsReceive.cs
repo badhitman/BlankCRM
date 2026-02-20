@@ -10,7 +10,7 @@ namespace Transmission.Receives.Identity;
 /// <summary>
 /// Обновить пользователю поля: FirstName и LastName
 /// </summary>
-public class UpdateUserDetailsReceive(IIdentityTools idRepo, ITracesIndexing indexingRepo)
+public class UpdateUserDetailsReceive(IIdentityTools idRepo, IHistoryIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<IdentityDetailsModel>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>

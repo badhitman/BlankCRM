@@ -10,7 +10,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// BankDetailsForOrganizationDelete
 /// </summary>
-public class BankDetailsForOrganizationDeleteReceive(ICommerceService commerceRepo, ITracesIndexing indexingRepo)
+public class BankDetailsForOrganizationDeleteReceive(ICommerceService commerceRepo, IHistoryIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<BankDetailsForOrganizationDeleteRequestModel>?, TResponseModel<BankDetailsModelDB>?>
 {
     /// <inheritdoc/>

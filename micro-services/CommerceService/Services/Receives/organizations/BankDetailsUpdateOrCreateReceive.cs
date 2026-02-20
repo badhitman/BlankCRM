@@ -10,7 +10,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// BankDetailsUpdateOrCreate
 /// </summary>
-public class BankDetailsUpdateOrCreateReceive(ICommerceService commerceRepo, ITracesIndexing indexingRepo)
+public class BankDetailsUpdateOrCreateReceive(ICommerceService commerceRepo, IHistoryIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<BankDetailsModelDB>?, TResponseModel<int>?>
 {
     /// <inheritdoc/>

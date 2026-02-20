@@ -10,7 +10,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// CreateWallet
 /// </summary>
-public class CreateWalletReceive(IRetailService commRepo, ITracesIndexing indexingRepo)
+public class CreateWalletReceive(IRetailService commRepo, IHistoryIndexing indexingRepo)
     : IResponseReceive<WalletRetailModelDB?, TResponseModel<int>?>
 {
     /// <inheritdoc/>

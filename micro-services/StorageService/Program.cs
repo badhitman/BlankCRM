@@ -135,7 +135,7 @@ public class Program
             .AddScoped<ICommerceTransmission, CommerceTransmission>()
             .AddScoped<IWebTransmission, WebTransmission>()
             .AddScoped<IIndexingServive, IndexingTransmission>()
-            .AddScoped<ITracesIndexing, TracesTransmission>()
+            .AddScoped<IHistoryIndexing, HistoryTransmission>()
             ;
         //
         builder.Services.StorageRegisterMqListeners();

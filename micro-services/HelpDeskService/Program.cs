@@ -105,7 +105,7 @@ public class Program
         builder.Services
             .AddScoped<IArticlesService, ArticlesService>()
             .AddScoped<IIndexingServive, IndexingTransmission>()
-            .AddScoped<ITracesIndexing, TracesTransmission>()
+            .AddScoped<IHistoryIndexing, HistoryTransmission>()
             ;
 
         builder.Services.AddStackExchangeRedisCache(options =>

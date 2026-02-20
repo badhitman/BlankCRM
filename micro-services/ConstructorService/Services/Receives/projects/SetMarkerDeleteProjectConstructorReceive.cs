@@ -10,7 +10,7 @@ namespace Transmission.Receives.constructor;
 /// <summary>
 /// SetMarkerDeleteProjectReceive
 /// </summary>
-public class SetMarkerDeleteProjectConstructorReceive(IConstructorService conService, ITracesIndexing indexingRepo)
+public class SetMarkerDeleteProjectConstructorReceive(IConstructorService conService, IHistoryIndexing indexingRepo)
     : IResponseReceive<SetMarkerProjectRequestModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>

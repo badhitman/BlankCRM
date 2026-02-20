@@ -10,7 +10,7 @@ namespace Transmission.Receives.helpdesk;
 /// <summary>
 /// MessageVote Receive
 /// </summary>
-public class MessageVoteReceive(IHelpDeskService hdRepo, ITracesIndexing indexingRepo)
+public class MessageVoteReceive(IHelpDeskService hdRepo, IHistoryIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<VoteIssueRequestModel>?, TResponseModel<bool?>?>
 {
     /// <inheritdoc/>

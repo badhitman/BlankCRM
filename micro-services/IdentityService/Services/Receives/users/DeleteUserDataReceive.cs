@@ -10,7 +10,7 @@ namespace Transmission.Receives.Identity;
 /// <summary>
 /// Удалить Identity данные пользователя
 /// </summary>
-public class DeleteUserDataReceive(IIdentityTools idRepo, ITracesIndexing indexingRepo)
+public class DeleteUserDataReceive(IIdentityTools idRepo, IHistoryIndexing indexingRepo)
     : IResponseReceive<DeleteUserDataRequestModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>

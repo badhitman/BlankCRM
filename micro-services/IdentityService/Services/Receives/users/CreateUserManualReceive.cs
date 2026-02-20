@@ -10,7 +10,7 @@ namespace Transmission.Receives.Identity;
 /// <summary>
 /// CreateUserManual
 /// </summary>
-public class CreateUserManualReceive(IIdentityTools idRepo, ITracesIndexing indexingRepo)
+public class CreateUserManualReceive(IIdentityTools idRepo, IHistoryIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<UserInfoBaseModel>?, TResponseModel<string>?>
 {
     /// <inheritdoc/>

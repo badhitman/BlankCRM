@@ -10,7 +10,7 @@ namespace Transmission.Receives.constructor;
 /// <summary>
 /// Обновить (или создать) сессию опроса/анкеты
 /// </summary>
-public class UpdateOrCreateSessionDocumentConstructorReceive(IConstructorService conService, ITracesIndexing indexingRepo)
+public class UpdateOrCreateSessionDocumentConstructorReceive(IConstructorService conService, IHistoryIndexing indexingRepo)
     : IResponseReceive<SessionOfDocumentDataModelDB?, TResponseModel<SessionOfDocumentDataModelDB?>?>
 {
     /// <inheritdoc/>

@@ -11,7 +11,7 @@ namespace Transmission.Receives.Identity;
 /// Получить состояние процедуры привязки аккаунта Telegram к учётной записи сайта (если есть).
 /// Если userId не указан, то команда выполняется для текущего пользователя (запрос/сессия)
 /// </summary>
-public class TelegramJoinAccountStateReceive(IIdentityTools idRepo, ITracesIndexing indexingRepo)
+public class TelegramJoinAccountStateReceive(IIdentityTools idRepo, IHistoryIndexing indexingRepo)
     : IResponseReceive<TelegramJoinAccountStateRequestModel?, TResponseModel<TelegramJoinAccountModelDb>?>
 {
     /// <inheritdoc/>

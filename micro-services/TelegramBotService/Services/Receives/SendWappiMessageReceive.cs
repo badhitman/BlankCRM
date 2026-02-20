@@ -15,7 +15,7 @@ namespace Transmission.Receives.telegram;
 public class SendWappiMessageReceive(
     ILogger<SendWappiMessageReceive> _logger,
     IHttpClientFactory HttpClientFactory,
-    ITracesIndexing indexingRepo,
+    IHistoryIndexing indexingRepo,
     IParametersStorageTransmission StorageTransmissionRepo) : IResponseReceive<EntryAltExtModel?, TResponseModel<SendMessageResponseModel?>?>
 {
     /// <inheritdoc/>

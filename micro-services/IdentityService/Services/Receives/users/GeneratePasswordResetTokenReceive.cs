@@ -11,7 +11,7 @@ namespace Transmission.Receives.Identity;
 /// Создает токен сброса пароля для указанного "userId", используя настроенного поставщика токенов сброса пароля.
 /// Если "userId" не указан, то команда выполняется для текущего пользователя (запрос/сессия)
 /// </summary>
-public class GeneratePasswordResetTokenReceive(IIdentityTools idRepo, ITracesIndexing indexingRepo)
+public class GeneratePasswordResetTokenReceive(IIdentityTools idRepo, IHistoryIndexing indexingRepo)
     : IResponseReceive<string?, TResponseModel<string?>?>
 {
     /// <inheritdoc/>

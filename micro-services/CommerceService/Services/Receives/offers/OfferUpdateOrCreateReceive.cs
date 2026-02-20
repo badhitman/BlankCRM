@@ -10,7 +10,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// OfferUpdateOrCreate
 /// </summary>
-public class OfferUpdateOrCreateReceive(ICommerceService commerceRepo, ITracesIndexing indexingRepo)
+public class OfferUpdateOrCreateReceive(ICommerceService commerceRepo, IHistoryIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<OfferModelDB>?, TResponseModel<int>?>
 {
     /// <inheritdoc/>

@@ -19,8 +19,8 @@ public class ProxyBackgroundServiceNetMQ(IOptions<ProxyNetMQConfigModel> _conf) 
     {
         using XPublisherSocket xpubSocket = new();
         using XSubscriberSocket xsubSocket = new();
-        xpubSocket.Bind(_conf.Value.PublisherSocketEndpoint.ToString());
-        xsubSocket.Bind(_conf.Value.SubscriberSocketEndpoint.ToString());
+        xpubSocket.Bind(_conf.Value.SubscriberSocketEndpoint.ToString());
+        xsubSocket.Bind(_conf.Value.PublisherSocketEndpoint.ToString());
         //Console.WriteLine("Intermediary started, and waiting for messages");
         // proxy messages between frontend / backend
         Proxy proxy = new(xsubSocket, xpubSocket);

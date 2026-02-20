@@ -15,7 +15,7 @@ namespace IndexingService;
 /// <summary>
 /// TracesImpl
 /// </summary>
-public class TracesImpl(IOptions<MongoConfigModel> mongoConf) : ITracesIndexing
+public class HistoryImpl(IOptions<MongoConfigModel> mongoConf) : IHistoryIndexing
 {
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> SaveTraceForReceiverAsync(TraceReceiverRecord req, CancellationToken token = default)

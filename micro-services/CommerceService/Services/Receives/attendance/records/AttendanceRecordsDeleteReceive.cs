@@ -10,7 +10,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// AttendanceRecordsDelete
 /// </summary>
-public class AttendanceRecordsDeleteReceive(ICommerceService commerceRepo, ITracesIndexing indexingRepo)
+public class AttendanceRecordsDeleteReceive(ICommerceService commerceRepo, IHistoryIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<int[]>?, TResponseModel<RecordsAttendanceModelDB[]>?>
 {
     /// <inheritdoc/>

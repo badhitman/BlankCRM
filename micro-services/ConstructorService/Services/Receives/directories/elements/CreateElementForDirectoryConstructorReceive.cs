@@ -10,7 +10,7 @@ namespace Transmission.Receives.constructor;
 /// <summary>
 /// Создать элемент справочника
 /// </summary>
-public class CreateElementForDirectoryConstructorReceive(IConstructorService conService, ITracesIndexing indexingRepo)
+public class CreateElementForDirectoryConstructorReceive(IConstructorService conService, IHistoryIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<OwnedNameModel>?, TResponseModel<int>?>
 {
     /// <inheritdoc/>

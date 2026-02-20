@@ -14,7 +14,7 @@ namespace CommerceService;
 public partial class RetailService(IIdentityTransmission identityRepo,
     ILogger<RetailService> loggerRepo,
     IKladrNavigationService kladrRepo,
-    ITracesIndexing indexingRepo,
+    IHistoryIndexing indexingRepo,
     IParametersStorageTransmission StorageTransmissionRepo,
     IDbContextFactory<CommerceContext> commerceDbFactory) : IRetailService
 {

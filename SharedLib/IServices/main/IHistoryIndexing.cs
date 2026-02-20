@@ -5,9 +5,9 @@
 namespace SharedLib;
 
 /// <summary>
-/// ITracesIndexing
+/// IHistoryIndexing
 /// </summary>
-public interface ITracesIndexing
+public interface IHistoryIndexing
 {
     /// <inheritdoc/>
     public Task<ResponseBaseModel> SaveTraceForReceiverAsync(TraceReceiverRecord req, CancellationToken token = default);

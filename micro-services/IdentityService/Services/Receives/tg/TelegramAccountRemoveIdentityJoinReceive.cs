@@ -10,7 +10,7 @@ namespace Transmission.Receives.web;
 /// <summary>
 /// Удалить связь Telegram аккаунта с учётной записью сайта
 /// </summary>
-public class TelegramAccountRemoveIdentityJoinReceive(IIdentityTools identityRepo, ITracesIndexing indexingRepo)
+public class TelegramAccountRemoveIdentityJoinReceive(IIdentityTools identityRepo, IHistoryIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<TelegramAccountRemoveJoinRequestIdentityModel>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>

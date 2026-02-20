@@ -10,7 +10,7 @@ namespace Transmission.Receives.Identity;
 /// <summary>
 /// Удалить роль (если у роли нет пользователей).
 /// </summary>
-public class DeleteRoleReceive(IIdentityTools idRepo, ITracesIndexing indexingRepo)
+public class DeleteRoleReceive(IIdentityTools idRepo, IHistoryIndexing indexingRepo)
     : IResponseReceive<string?, ResponseBaseModel?>
 {
     /// <inheritdoc/>

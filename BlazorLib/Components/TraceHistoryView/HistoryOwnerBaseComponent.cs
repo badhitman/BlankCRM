@@ -15,7 +15,7 @@ public abstract class HistoryOwnerBaseComponent : BlazorBusyComponentUsersCached
 {
     /// <inheritdoc/>
     [Inject]
-    protected ITracesIndexing IndexingRepo { get; set; } = default!;
+    protected IHistoryIndexing IndexingRepo { get; set; } = default!;
 
 
     /// <inheritdoc/>

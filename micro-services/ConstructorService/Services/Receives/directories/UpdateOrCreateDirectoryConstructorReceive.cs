@@ -10,7 +10,7 @@ namespace Transmission.Receives.constructor;
 /// <summary>
 /// UpdateOrCreateDirectoryReceive
 /// </summary>
-public class UpdateOrCreateDirectoryConstructorReceive(IConstructorService conService, ITracesIndexing indexingRepo)
+public class UpdateOrCreateDirectoryConstructorReceive(IConstructorService conService, IHistoryIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<EntryConstructedModel>?, TResponseModel<int>?>
 {
     /// <inheritdoc/>

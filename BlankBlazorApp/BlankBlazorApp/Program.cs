@@ -276,7 +276,7 @@ builder.Services
     .AddScoped<IFeedsHaierProffRuService, HaierProffRuTransmission>()
     .AddScoped<IBreezRuApiTransmission, BreezRuTransmission>()
     .AddScoped<IIndexingServive, IndexingTransmission>()
-    .AddScoped<ITracesIndexing, TracesTransmission>()
+    .AddScoped<IHistoryIndexing, HistoryTransmission>()
     .AddScoped<IKladrService, KladrServiceTransmission>()
     .AddScoped<IKladrParseService, ParseImplementDBF>()
     ;

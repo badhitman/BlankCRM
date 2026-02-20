@@ -176,7 +176,7 @@ public class Program
         builder.Services
             .AddScoped<IIdentityTools, IdentityTools>()
             .AddScoped<IIndexingServive, IndexingTransmission>()
-            .AddScoped<ITracesIndexing, TracesTransmission>()
+            .AddScoped<IHistoryIndexing, HistoryTransmission>()
             ;
         
         string appName = typeof(Program).Assembly.GetName().Name ?? "AssemblyName";

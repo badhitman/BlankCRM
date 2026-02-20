@@ -10,7 +10,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// FileForGoodUpdate
 /// </summary>
-public class FileForGoodUpdateReceive(ICommerceService commerceRepo, ITracesIndexing indexingRepo)
+public class FileForGoodUpdateReceive(ICommerceService commerceRepo, IHistoryIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<FileGoodsConfigModelDB>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>

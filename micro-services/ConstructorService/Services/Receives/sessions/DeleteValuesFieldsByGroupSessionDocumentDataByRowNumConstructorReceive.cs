@@ -11,7 +11,7 @@ namespace Transmission.Receives.constructor;
 /// Удалить набор значений сессии опроса/анкеты по номеру строки [GroupByRowNum].
 /// Если индекс ниже нуля - удаляются все значения для указанной JoinForm (полная очистка таблицы или очистка всех значений всех полей стандартной формы)
 /// </summary>
-public class DeleteValuesFieldsByGroupSessionDocumentDataByRowNumConstructorReceive(IConstructorService conService, ITracesIndexing indexingRepo)
+public class DeleteValuesFieldsByGroupSessionDocumentDataByRowNumConstructorReceive(IConstructorService conService, IHistoryIndexing indexingRepo)
     : IResponseReceive<ValueFieldSessionDocumentDataBaseModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>

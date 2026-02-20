@@ -10,7 +10,7 @@ namespace Transmission.Receives.Identity;
 /// <summary>
 /// Claim: Update or create
 /// </summary>
-public class ClaimUpdateOrCreateReceive(IIdentityTools idRepo, ITracesIndexing indexingRepo)
+public class ClaimUpdateOrCreateReceive(IIdentityTools idRepo, IHistoryIndexing indexingRepo)
     : IResponseReceive<ClaimUpdateModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>

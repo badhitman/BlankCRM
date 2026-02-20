@@ -10,7 +10,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// Обновление расписания на конкретную дату
 /// </summary>
-public class CalendarScheduleUpdateOrCreateReceive(ICommerceService commerceRepo, ITracesIndexing indexingRepo)
+public class CalendarScheduleUpdateOrCreateReceive(ICommerceService commerceRepo, IHistoryIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<CalendarScheduleModelDB>?, TResponseModel<int>?>
 {
     /// <inheritdoc/>

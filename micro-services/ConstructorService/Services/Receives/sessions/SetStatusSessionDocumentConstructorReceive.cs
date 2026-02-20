@@ -10,7 +10,7 @@ namespace Transmission.Receives.constructor;
 /// <summary>
 /// Установить статус сессии (от менеджера)
 /// </summary>
-public class SetStatusSessionDocumentConstructorReceive(IConstructorService conService, ITracesIndexing indexingRepo)
+public class SetStatusSessionDocumentConstructorReceive(IConstructorService conService, IHistoryIndexing indexingRepo)
     : IResponseReceive<SessionStatusModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>

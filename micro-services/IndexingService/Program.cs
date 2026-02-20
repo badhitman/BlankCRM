@@ -132,7 +132,7 @@ public class Program
 
         builder.Services
             .AddScoped<IIndexingServive, IndexingServiceImpl>()
-            .AddScoped<ITracesIndexing, TracesImpl>()
+            .AddScoped<IHistoryIndexing, HistoryImpl>()
             ;
         // Custom metrics for the application
         Meter greeterMeter = new($"OTel.{appName}", "1.0.0");

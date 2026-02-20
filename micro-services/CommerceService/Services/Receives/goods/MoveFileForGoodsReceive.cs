@@ -10,7 +10,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// MoveFileForGoods
 /// </summary>
-public class MoveFileForGoodsReceive(ICommerceService commerceRepo, ITracesIndexing indexingRepo)
+public class MoveFileForGoodsReceive(ICommerceService commerceRepo, IHistoryIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<MoveMetaObjectModel>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>

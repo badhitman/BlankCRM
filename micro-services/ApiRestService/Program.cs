@@ -128,7 +128,7 @@ builder.Services.AddTransient<UnhandledExceptionAttribute>();
 builder.Services
     .AddScoped<RolesAuthorizationFilter>()
     .AddScoped<IIndexingServive, IndexingTransmission>()
-    .AddScoped<ITracesIndexing, TracesTransmission>()
+    .AddScoped<IHistoryIndexing, HistoryTransmission>()
     ;
 
 builder.Services.AddScoped<ExpressUserPermissionModel>();

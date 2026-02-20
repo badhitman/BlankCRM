@@ -14,7 +14,7 @@ public class Program
 
         builder.Services
             .AddScoped<IIndexingServive, IndexingTransmission>()
-            .AddScoped<ITracesIndexing, TracesTransmission>()
+            .AddScoped<IHistoryIndexing, HistoryTransmission>()
             ;
 
         var host = builder.Build();

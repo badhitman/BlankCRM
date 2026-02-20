@@ -10,7 +10,7 @@ namespace Transmission.Receives.Identity;
 /// <summary>
 /// Отправка Email - receive
 /// </summary>
-public class SendEmailReceive(IMailProviderService mailRepo, ITracesIndexing indexingRepo)
+public class SendEmailReceive(IMailProviderService mailRepo, IHistoryIndexing indexingRepo)
     : IResponseReceive<SendEmailRequestModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>

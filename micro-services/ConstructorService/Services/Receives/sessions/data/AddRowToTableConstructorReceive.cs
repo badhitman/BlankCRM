@@ -11,7 +11,7 @@ namespace Transmission.Receives.constructor;
 /// Добавить новую строку в таблицу значений
 /// </summary>
 /// <returns>Номер п/п (начиная с 1) созданной строки</returns>
-public class AddRowToTableConstructorReceive(IConstructorService conService, ITracesIndexing indexingRepo)
+public class AddRowToTableConstructorReceive(IConstructorService conService, IHistoryIndexing indexingRepo)
     : IResponseReceive<FieldSessionDocumentDataBaseModel?, TResponseModel<int>?>
 {
     /// <inheritdoc/>

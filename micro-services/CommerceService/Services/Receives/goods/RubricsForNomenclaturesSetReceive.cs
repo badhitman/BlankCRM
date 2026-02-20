@@ -10,7 +10,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// RubricsForNomenclaturesSet
 /// </summary>
-public class RubricsForNomenclaturesSetReceive(ICommerceService commerceRepo, ITracesIndexing indexingRepo)
+public class RubricsForNomenclaturesSetReceive(ICommerceService commerceRepo, IHistoryIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<RubricsSetModel>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>

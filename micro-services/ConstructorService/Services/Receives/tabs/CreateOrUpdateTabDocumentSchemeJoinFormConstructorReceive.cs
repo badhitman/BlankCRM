@@ -10,7 +10,7 @@ namespace Transmission.Receives.constructor;
 /// <summary>
 /// Обновить/создать связь [таба/вкладки схемы документа] с [формой]
 /// </summary>
-public class CreateOrUpdateTabDocumentSchemeJoinFormConstructorReceive(IConstructorService conService, ITracesIndexing indexingRepo)
+public class CreateOrUpdateTabDocumentSchemeJoinFormConstructorReceive(IConstructorService conService, IHistoryIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<FormToTabJoinConstructorModelDB>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>

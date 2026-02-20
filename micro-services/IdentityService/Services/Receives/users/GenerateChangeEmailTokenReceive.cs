@@ -10,7 +10,7 @@ namespace Transmission.Receives.Identity;
 /// <summary>
 /// Создает (и отправляет) токен изменения адреса электронной почты для указанного пользователя.
 /// </summary>
-public class GenerateChangeEmailTokenReceive(IIdentityTools idRepo, ITracesIndexing indexingRepo)
+public class GenerateChangeEmailTokenReceive(IIdentityTools idRepo, IHistoryIndexing indexingRepo)
     : IResponseReceive<GenerateChangeEmailTokenRequestModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>

@@ -11,7 +11,7 @@ namespace Transmission.Receives.Identity;
 /// Пытается удалить предоставленную внешнюю информацию для входа из указанного userId
 /// и возвращает флаг, указывающий, удалось ли удаление или нет
 /// </summary>
-public class RemoveLoginReceive(IIdentityTools idRepo, ITracesIndexing indexingRepo)
+public class RemoveLoginReceive(IIdentityTools idRepo, IHistoryIndexing indexingRepo)
     : IResponseReceive<RemoveLoginRequestModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>

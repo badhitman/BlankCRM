@@ -139,7 +139,7 @@ public class Program
         .AddScoped<StoreTelegramService>()
         .AddScoped<UpdateHandler>()
         .AddScoped<IIndexingServive, IndexingTransmission>()
-        .AddScoped<ITracesIndexing, TracesTransmission>()
+        .AddScoped<IHistoryIndexing, HistoryTransmission>()
         .AddScoped<ReceiverService>();
 
         builder.Services.AddHostedService<PollingService>();

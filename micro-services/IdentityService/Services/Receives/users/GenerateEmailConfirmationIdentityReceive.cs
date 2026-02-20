@@ -14,7 +14,7 @@ namespace Transmission.Receives.Identity;
 /// Этот API поддерживает инфраструктуру ASP.NET Core Identity и не предназначен для использования в качестве абстракции электронной почты общего назначения.
 /// Он должен быть реализован в приложении, чтобы  Identity инфраструктура могла отправлять электронные письма с подтверждением.
 /// </remarks>
-public class GenerateEmailConfirmationIdentityReceive(IIdentityTools IdentityRepo, ITracesIndexing indexingRepo)
+public class GenerateEmailConfirmationIdentityReceive(IIdentityTools IdentityRepo, IHistoryIndexing indexingRepo)
     : IResponseReceive<SimpleUserIdentityModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>

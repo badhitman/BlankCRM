@@ -10,7 +10,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// <see cref="WarehouseDocumentUpdateOrCreateReceive"/>
 /// </summary>
-public class WarehouseDocumentUpdateOrCreateReceive(ICommerceService commRepo, ITracesIndexing indexingRepo)
+public class WarehouseDocumentUpdateOrCreateReceive(ICommerceService commRepo, IHistoryIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<WarehouseDocumentModelDB>?, DocumentNewVersionResponseModel?>
 {
     /// <inheritdoc/>

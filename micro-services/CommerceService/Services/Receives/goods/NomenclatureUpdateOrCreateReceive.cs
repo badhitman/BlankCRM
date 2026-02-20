@@ -10,7 +10,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// Обновление/создание номенклатуры
 /// </summary>
-public class NomenclatureUpdateOrCreateReceive(ICommerceService commerceRepo, ITracesIndexing indexingRepo)
+public class NomenclatureUpdateOrCreateReceive(ICommerceService commerceRepo, IHistoryIndexing indexingRepo)
     : IResponseReceive<NomenclatureModelDB?, TResponseModel<int>?>
 {
     /// <inheritdoc/>

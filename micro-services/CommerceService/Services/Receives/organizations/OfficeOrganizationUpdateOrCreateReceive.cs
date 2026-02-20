@@ -10,7 +10,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// OfficeOrganizationUpdateOrCreate
 /// </summary>
-public class OfficeOrganizationUpdateOrCreateReceive(ICommerceService commerceRepo, ITracesIndexing indexingRepo)
+public class OfficeOrganizationUpdateOrCreateReceive(ICommerceService commerceRepo, IHistoryIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<AddressOrganizationBaseModel>?, TResponseModel<int>?>
 {
     /// <inheritdoc/>

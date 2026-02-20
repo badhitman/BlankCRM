@@ -114,7 +114,7 @@ builder.Services.AddMemoryCache();
 builder.Services
     .AddScoped<IConstructorService, FormsConstructorService>()
     .AddScoped<IIndexingServive, IndexingTransmission>()
-    .AddScoped<ITracesIndexing, TracesTransmission>()
+    .AddScoped<IHistoryIndexing, HistoryTransmission>()
     ;
 
 string appName = typeof(Program).Assembly.GetName().Name ?? "AssemblyName";

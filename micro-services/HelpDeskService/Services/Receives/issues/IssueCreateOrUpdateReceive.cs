@@ -10,7 +10,7 @@ namespace Transmission.Receives.helpdesk;
 /// <summary>
 /// Create (or update) Issue: Рубрика, тема и описание
 /// </summary>
-public class IssueCreateOrUpdateReceive(IHelpDeskService hdRepo, ITracesIndexing indexingRepo)
+public class IssueCreateOrUpdateReceive(IHelpDeskService hdRepo, IHistoryIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<UniversalUpdateRequestModel>?, TResponseModel<int>?>
 {
     /// <inheritdoc/>

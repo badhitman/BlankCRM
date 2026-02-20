@@ -10,7 +10,7 @@ namespace Transmission.Receives.constructor;
 /// <summary>
 /// Обновить/создать поле формы (тип: справочник/список)
 /// </summary>
-public class FormFieldDirectoryUpdateOrCreateConstructorReceive(IConstructorService conService, ITracesIndexing indexingRepo)
+public class FormFieldDirectoryUpdateOrCreateConstructorReceive(IConstructorService conService, IHistoryIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<FieldFormAkaDirectoryConstructorModelDB>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>

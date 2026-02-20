@@ -10,7 +10,7 @@ namespace Transmission.Receives.indexing;
 /// <summary>
 /// SaveTraceForReceiverHandle
 /// </summary>
-public class SaveTraceForReceiver(ITracesIndexing indexingFileRepo)
+public class SaveTraceForReceiver(IHistoryIndexing indexingFileRepo)
     : IResponseReceive<TraceReceiverRecord?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
