@@ -14,6 +14,25 @@ public class ProxyNetMQConfigModel
     /// <inheritdoc/>
     public required HostConfigModel SubscriberSocketEndpoint { get; set; }
 
+    /// <inheritdoc/>
+    public List<string>? TracesNamesPatterns { get; set; }
+
+    /// <inheritdoc/>
+    public void Reload(ProxyNetMQConfigModel other)
+    {
+        PublisherSocketEndpoint.Reload(other.PublisherSocketEndpoint);
+        SubscriberSocketEndpoint.Reload(other.SubscriberSocketEndpoint);
+
+        if (TracesNamesPatterns is null)
+            TracesNamesPatterns = other.TracesNamesPatterns;
+        else
+        {
+            TracesNamesPatterns.Clear();
+            if (other.TracesNamesPatterns is not null)
+                TracesNamesPatterns.AddRange(other.TracesNamesPatterns);
+        }
+    }
+
     /// <summary>
     /// Шаблоны MQ очередей для трассировки
     /// </summary>
@@ -35,18 +54,6 @@ public class ProxyNetMQConfigModel
                 Host = "127.0.0.1"
             },
         };
-    }
-
-    /// <inheritdoc/>
-    public List<string>? TracesNamesPatterns { get; set; }
-
-    /// <inheritdoc/>
-    public void Reload(ProxyNetMQConfigModel other)
-    {
-        PublisherSocketEndpoint.Reload(other.PublisherSocketEndpoint);
-        SubscriberSocketEndpoint.Reload(other.SubscriberSocketEndpoint);
-        //Host = other.Host;
-        //Port = other.Port;
     }
 
     /// <inheritdoc/>
