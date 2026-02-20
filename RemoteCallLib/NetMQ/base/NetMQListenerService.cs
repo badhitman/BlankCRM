@@ -6,13 +6,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using NetMQ;
-using NetMQ.Sockets;
 using Newtonsoft.Json;
+using NetMQ.Sockets;
 using SharedLib;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
+using NetMQ;
 
 namespace RemoteCallLib;
 
@@ -31,9 +28,7 @@ public class NetMQListenerService<TQueue, TRequest, TResponse>
     readonly ILogger<NetMQListenerService<TQueue, TRequest, TResponse>> LoggerRepo;
     readonly IMQReceive<TRequest?, TResponse> receiveService;
 
-    SubscriberSocket subSocket;
-    //IMqttClient mqttClient;
-    //MqttClientFactory mqttFactoryCLI = new();
+    readonly SubscriberSocket subSocket;
 
     Type? _queueType;
     /// <summary>
@@ -56,12 +51,12 @@ public class NetMQListenerService<TQueue, TRequest, TResponse>
 
     /// <inheritdoc/>
     public NetMQListenerService(
-        IOptions<ProxyNetMQConfigModel> rabbitConf,
+        IOptions<ProxyNetMQConfigModel> mqConf,
         IServiceProvider servicesProvider,
         ILogger<NetMQListenerService<TQueue, TRequest, TResponse>> loggerRepo)
     {
         LoggerRepo = loggerRepo;
-        MQConfigRepo = rabbitConf;
+        MQConfigRepo = mqConf;
 
         using IServiceScope scope = servicesProvider.CreateScope();
         receiveService = scope.ServiceProvider.GetServices<IMQReceive<TRequest?, TResponse>>().First(o => o.GetType() == QueueType);
@@ -76,8 +71,7 @@ public class NetMQListenerService<TQueue, TRequest, TResponse>
         stoppingToken.ThrowIfCancellationRequested();
         TResponseMQModel<TResponse> answer = new() { StartedServer = DateTime.UtcNow, };
 
-        //using SubscriberSocket subSocket = new();
-        subSocket.Connect("tcp://127.0.0.1:1234");
+        subSocket.Connect(MQConfigRepo.Value.SubscriberSocketEndpoint.ToString());
         subSocket.Options.ReceiveHighWatermark = 1000;
         subSocket.Subscribe(QueueName);
         Console.WriteLine("Subscriber socket connecting...");
@@ -119,43 +113,12 @@ public class NetMQListenerService<TQueue, TRequest, TResponse>
             }
 
             answer.FinalizedServer = DateTime.UtcNow;
-            if (!string.IsNullOrWhiteSpace(_msgParts[0]))
-            {
-                //            using IMqttClient mqttResponseClient = mqttFactoryCLI.CreateMqttClient();
-                //            await mqttResponseClient.ConnectAsync(GetMqttClientOptionsBuilder(new(GlobalStaticConstantsRoutes.Routes.MUTE_CONTROLLER_NAME, [1])), stoppingToken);
-
-                //            MqttApplicationMessage applicationMessage;
-                //            try
-                //            {
-                //                applicationMessage = new MqttApplicationMessageBuilder()
-                //                    .WithTopic(_msgParts[0])
-                //                    .WithPayload(JsonConvert.SerializeObject(answer, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings))
-                //                    .Build();
-                //            }
-                //            catch (Exception ex)
-                //            {
-                //                answer.Response = default;
-                //                LoggerRepo.LogError(ex, $"Ошибка `{ex.GetType().Name}` отправки ответа для топика {QueueName}");
-                //                answer.Messages.InjectException(ex);
-
-                //                applicationMessage = new MqttApplicationMessageBuilder()
-                //                    .WithTopic(_msgParts[0])
-                //                    .WithPayload(JsonConvert.SerializeObject(answer, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings))
-                //                    .Build();
-                //            }
-                //            await mqttResponseClient.PublishAsync(applicationMessage, stoppingToken);
-                //        }
-            }
-            ;
-
-            //    await mqttClient.ConnectAsync(GetMqttClientOptionsBuilder(new(GlobalStaticConstantsRoutes.Routes.MUTE_CONTROLLER_NAME, [1])), stoppingToken);
-            //    await mqttClient.SubscribeAsync(QueueName, cancellationToken: stoppingToken);
         }
     }
     /// <inheritdoc/>
     public override void Dispose()
     {
-        //    mqttClient.DisconnectAsync(new() { UserProperties = [new(GlobalStaticConstantsRoutes.Routes.MUTE_CONTROLLER_NAME, new ReadOnlyMemory<byte>([1]))] });
+        subSocket.Dispose();
         base.Dispose();
         GC.SuppressFinalize(this);
     }

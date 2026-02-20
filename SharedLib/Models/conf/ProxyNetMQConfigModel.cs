@@ -16,6 +16,16 @@ public class ProxyNetMQConfigModel
 
     /// <inheritdoc/>
     public List<string>? TracesNamesPatterns { get; set; }
+    
+    /// <summary>
+    /// Префикс имён очередей для ответов на удалённые команды
+    /// </summary>
+    public string QueueMqNamePrefixForResponse { get; set; } = "netmq.bus-";
+
+    /// <summary>
+    /// Таймаут ожидания ответа на удалённый вызов
+    /// </summary>
+    public int RemoteCallTimeoutMs { get; set; } = 3600000;
 
     /// <inheritdoc/>
     public void Reload(ProxyNetMQConfigModel other)

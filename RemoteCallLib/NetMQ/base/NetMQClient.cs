@@ -2,45 +2,34 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
+using Microsoft.Extensions.Options;
 using System.Diagnostics.Metrics;
-using System.Threading.Tasks;
 using System.Diagnostics;
-using System.Text.Json;
-using System.Threading;
 using Newtonsoft.Json;
-using System.Text;
-using MQTTnet;
-using System;
+using NetMQ.Sockets;
+using SharedLib;
+using NetMQ;
 
-namespace SharedLib;
+namespace RemoteCallLib;
 
 /// <summary>
-/// Удалённый вызов команд (RabbitMq client)
+/// Удалённый вызов команд (NetMq client)
 /// </summary>
 /// <inheritdoc/>
-public class MQttClient(RealtimeMQTTClientConfigModel mqConf, ILogger<MQttClient> _loggerRepo, string appName) : IMQClientExtRPC
+public class NetMQClient(IOptions<ProxyNetMQConfigModel> mqConf, ILogger<NetMQClient> _loggerRepo, string appName) : IMQClientRPC
 {
-    readonly RealtimeMQTTClientConfigModel MQConfigRepo = mqConf;
-    MqttClientFactory mqttFactory = new();
-
-    readonly ILogger<MQttClient> loggerRepo = _loggerRepo;
-
+    readonly ProxyNetMQConfigModel MQConfigRepo = mqConf.Value;
+    readonly PublisherSocket pubSocket = new();
+    readonly ILogger<NetMQClient> loggerRepo = _loggerRepo;
     readonly string AppName = appName;
 
     /// <inheritdoc/>
-    public static readonly JsonSerializerOptions SerializerOptions = new() { ReferenceHandler = ReferenceHandler.IgnoreCycles, WriteIndented = true };
-
-    /// <inheritdoc/>
-    public async Task<T?> MqRemoteCallAsync<T>(string queue, object? request = null, bool waitResponse = true, KeyValuePair<string, byte[]>? propertyValue = null, CancellationToken tokenOuter = default) where T : class
+    public async Task<T?> MqRemoteCallAsync<T>(string queue, object? request = null, bool waitResponse = true, CancellationToken tokenOuter = default)
     {
         queue = queue.Replace("\\", "/");
-        using IMqttClient mqttClient = mqttFactory.CreateMqttClient();
-        //using IMqttClient? responseClient = waitResponse ? mqttFactory.CreateMqttClient() : null;
-
-        string _sc = MQConfigRepo.ToString();
+        pubSocket.Connect(MQConfigRepo.PublisherSocketEndpoint.ToString());
+        pubSocket.Options.SendHighWatermark = 1000;
 
         Meter greeterMeter = new($"OTel.{AppName}", "1.0.0");
         Counter<long> countGreetings = greeterMeter.CreateCounter<long>(GlobalStaticConstantsRoutes.Routes.DURATION_ACTION_NAME, description: "Длительность в мс.");
@@ -63,16 +52,15 @@ public class MQttClient(RealtimeMQTTClientConfigModel mqConf, ILogger<MQttClient
 
         string response_topic = waitResponse ? $"{MQConfigRepo.QueueMqNamePrefixForResponse}{queue}_{Guid.NewGuid()}" : "";
 
-        Task ResponseClient_ApplicationMessageReceivedAsync(MqttApplicationMessageReceivedEventArgs eMsg)
+        async Task ResponseClient_ApplicationMessageReceivedAsync(List<string> eMsg)
         {
-            mqttClient.ApplicationMessageReceivedAsync -= ResponseClient_ApplicationMessageReceivedAsync;
             string msg;
-            string content = Encoding.UTF8.GetString(eMsg.ApplicationMessage.Payload);
+            string content = string.Join("", eMsg);
 
             try
             {
                 res_io = JsonConvert.DeserializeObject<TResponseMQModel<T?>>(content, GlobalStaticConstants.JsonSerializerSettings)
-                    ?? throw new Exception("parse error {0CBCCD44-63C8-4E93-8349-11A8BE63B235}");
+                    ?? throw new Exception("parse error {03D3DB2E-5682-4D70-8EF7-278B8B8A9D44}");
 
                 if (!res_io.Success())
                     loggerRepo.LogError(res_io.Message());
@@ -88,35 +76,21 @@ public class MQttClient(RealtimeMQTTClientConfigModel mqConf, ILogger<MQttClient
             stopwatch.Stop();
             cts.Cancel();
             cts.Dispose();
-
-            return Task.CompletedTask;
         }
-        mqttClient?.ApplicationMessageReceivedAsync += ResponseClient_ApplicationMessageReceivedAsync;
+
         loggerRepo.LogTrace($"Sending message into queue [{queue}]", request_payload_json);
 
-        MqttClientConnectResult res = await mqttClient!.ConnectAsync(GetMqttClientOptionsBuilder(queue, propertyValue), tokenOuter);
-
-        MqttApplicationMessage applicationMessage = new MqttApplicationMessageBuilder()
-            .WithTopic(queue)
-            .WithPayload(request_payload_json)
-            .WithResponseTopic(response_topic)
-            .Build();
-
-        MqttClientDisconnectOptions dq = new();
-        if (propertyValue is not null)
-        {
-            dq.UserProperties ??= [];
-            dq.UserProperties.Add(new(propertyValue.Value.Key, propertyValue.Value.Value));
-        }
-
+        using SubscriberSocket subSocket = new();
         if (waitResponse)
         {
             stopwatch.Start();
             try
             {
-                await mqttClient.ConnectAsync(GetMqttClientOptionsBuilder(queue, propertyValue), tokenOuter);
-                await mqttClient.SubscribeAsync(response_topic, cancellationToken: tokenOuter);
-                await mqttClient.PublishAsync(applicationMessage, tokenOuter);
+                subSocket.Connect(MQConfigRepo.SubscriberSocketEndpoint.ToString());
+                subSocket.Options.ReceiveHighWatermark = 1000;
+                subSocket.Subscribe(response_topic);
+
+                pubSocket.SendMoreFrame(response_topic).SendFrame(request_payload_json);
             }
             catch (Exception ex)
             {
@@ -124,12 +98,24 @@ public class MQttClient(RealtimeMQTTClientConfigModel mqConf, ILogger<MQttClient
                 _msg = $"Request MQ/IO error [{queue}]";
                 loggerRepo.LogError(ex, _msg);
 
-                await mqttClient.DisconnectAsync(dq, tokenOuter);
                 return default;
             }
 
+            List<string> resMsg = [];
             List<Task> tasks = [
-                Task.Run(async () => { await Task.Delay(MQConfigRepo.RemoteCallTimeoutMs); cts.Cancel(); }, tokenOuter),
+                Task.Run(async () => { await Task.Delay(MQConfigRepo.RemoteCallTimeoutMs, token); cts.Cancel(); }, tokenOuter),
+                Task.Run(async () =>
+                {
+                    (string, bool) messageTopicReceived = await subSocket.ReceiveFrameStringAsync(token);
+                    resMsg.Add(messageTopicReceived.Item1);
+                    while(messageTopicReceived.Item2)
+                    {
+                        messageTopicReceived = await subSocket.ReceiveFrameStringAsync(token);
+                        resMsg.Add(messageTopicReceived.Item1);
+                    }
+                    // string messageReceived = subSocket.ReceiveString();           
+                    cts.Cancel();
+                }, tokenOuter),
                 Task.Run(() => {
                     try
                     {
@@ -145,10 +131,11 @@ public class MQttClient(RealtimeMQTTClientConfigModel mqConf, ILogger<MQttClient
                         loggerRepo.LogError(ex, _msg);
                         stopwatch.Stop();
                     }
-                }, tokenOuter)
-                ];
+                }, tokenOuter)];
 
             await Task.WhenAny(tasks);
+            if (resMsg.Count != 0)
+                await ResponseClient_ApplicationMessageReceivedAsync(resMsg);
 
             if (stopwatch.IsRunning)
             {
@@ -161,9 +148,7 @@ public class MQttClient(RealtimeMQTTClientConfigModel mqConf, ILogger<MQttClient
         }
         else
         {
-            await mqttClient.PublishAsync(applicationMessage, tokenOuter);
-            if (mqttClient?.IsConnected == true)
-                await mqttClient.DisconnectAsync(dq, tokenOuter);
+            pubSocket.SendFrame(request_payload_json);
             return default;
         }
 
@@ -171,29 +156,11 @@ public class MQttClient(RealtimeMQTTClientConfigModel mqConf, ILogger<MQttClient
         {
             _msg = $"Response MQ/IO is null [{queue}]: {stopwatch.Elapsed} > {TimeSpan.FromMilliseconds(MQConfigRepo.RemoteCallTimeoutMs)}";
             loggerRepo.LogError(_msg);
-            await mqttClient.DisconnectAsync(dq, tokenOuter);
             return default;
         }
         else if (res_io is null)
-        {
-            await mqttClient.DisconnectAsync(dq, tokenOuter);
             return default;
-        }
 
-        await mqttClient.DisconnectAsync(dq, tokenOuter);
         return res_io.Response;
-    }
-
-    MqttClientOptions GetMqttClientOptionsBuilder(string queue, KeyValuePair<string, byte[]>? propertyValue)
-    {
-        MqttClientOptionsBuilder res = new MqttClientOptionsBuilder()
-               .WithTcpServer(MQConfigRepo.Host, MQConfigRepo.Port)
-               .WithProtocolVersion(MQTTnet.Formatter.MqttProtocolVersion.V500)
-               .WithClientId($"{queue} [{GetType().Name}] {Guid.NewGuid()}");
-
-        if (propertyValue is not null)
-            res.WithUserProperty(propertyValue.Value.Key, propertyValue.Value.Value);
-
-        return res.Build();
     }
 }

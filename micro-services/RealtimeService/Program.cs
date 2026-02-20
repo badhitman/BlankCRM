@@ -158,7 +158,7 @@ public class Program
         builder.Services
            .AddScoped<IWebChatService, WebChatService>()
            ;
-        builder.Services.AddHostedService<NetMqBackgroundService>();
+        
         builder.Services.AddTransient<MqttController>();
 
         string appName = typeof(Program).Assembly.GetName().Name ?? "AssemblyName";
