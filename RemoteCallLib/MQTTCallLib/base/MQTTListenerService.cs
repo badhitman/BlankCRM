@@ -5,15 +5,15 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using MQTTnet;
-using Newtonsoft.Json;
-using SharedLib;
-using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Threading;
+using Newtonsoft.Json;
 using System.Linq;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+using SharedLib;
+using MQTTnet;
+using System;
 
 namespace RemoteCallLib;
 
@@ -25,12 +25,12 @@ namespace RemoteCallLib;
 /// <typeparam name="TResponse">Ответ</typeparam>
 public class MQTTListenerService<TQueue, TRequest, TResponse>
     : BackgroundService
-    where TQueue : IMQTTReceive<TRequest?, TResponse>
+    where TQueue : IMQReceive<TRequest?, TResponse>
     where TResponse : new()
 {
     readonly RealtimeMQTTClientConfigModel MQConfigRepo;
     readonly ILogger<MQTTListenerService<TQueue, TRequest, TResponse>> LoggerRepo;
-    readonly IMQTTReceive<TRequest?, TResponse> receiveService;
+    readonly IMQReceive<TRequest?, TResponse> receiveService;
 
     IMqttClient mqttClient;
     MqttClientFactory mqttFactoryCLI = new();
@@ -64,7 +64,7 @@ public class MQTTListenerService<TQueue, TRequest, TResponse>
         MQConfigRepo = rabbitConf;
 
         using IServiceScope scope = servicesProvider.CreateScope();
-        receiveService = scope.ServiceProvider.GetServices<IMQTTReceive<TRequest?, TResponse>>().First(o => o.GetType() == QueueType);
+        receiveService = scope.ServiceProvider.GetServices<IMQReceive<TRequest?, TResponse>>().First(o => o.GetType() == QueueType);
         mqttClient = mqttFactoryCLI.CreateMqttClient();
         loggerRepo.LogInformation($"Subscriber [{QueueName}] socket ready...");
     }
@@ -100,9 +100,6 @@ public class MQTTListenerService<TQueue, TRequest, TResponse>
             answer.FinalizedServer = DateTime.UtcNow;
             if (!string.IsNullOrWhiteSpace(e.ApplicationMessage.ResponseTopic))
             {
-                using IMqttClient mqttResponseClient = mqttFactoryCLI.CreateMqttClient();
-                await mqttResponseClient.ConnectAsync(GetMqttClientOptionsBuilder(new(GlobalStaticConstantsRoutes.Routes.MUTE_CONTROLLER_NAME, [1])), stoppingToken);
-
                 MqttApplicationMessage applicationMessage;
                 try
                 {
@@ -122,7 +119,7 @@ public class MQTTListenerService<TQueue, TRequest, TResponse>
                         .WithPayload(JsonConvert.SerializeObject(answer, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings))
                         .Build();
                 }
-                await mqttResponseClient.PublishAsync(applicationMessage, stoppingToken);
+                await mqttClient.PublishAsync(applicationMessage, stoppingToken);
             }
         };
 
