@@ -172,10 +172,13 @@ public class Program
         {
             return new RabbitClient(provider.GetRequiredService<IOptions<RabbitMQConfigModel>>(), provider.GetRequiredService<ILogger<RabbitClient>>(), appName);
         }
-        /*[FromKeyedServices(nameof(RabbitClient))]*/
+        IMQStandardClientRPC zeroImplement(IServiceProvider provider, object arg2)
+        {
+            return new NetMQClient(provider.GetRequiredService<IOptions<ProxyNetMQConfigModel>>(), provider.GetRequiredService<ILogger<NetMQClient>>(), appName);
+        }
         builder.Services
             .AddKeyedSingleton(nameof(RabbitClient), rabbitImplement)
-            .AddKeyedSingleton<IMQStandardClientRPC, NetMQClient>(nameof(NetMQClient))
+            .AddKeyedSingleton(nameof(NetMQClient), zeroImplement)
             ;
         //
         builder.Services

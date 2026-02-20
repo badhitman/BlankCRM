@@ -75,7 +75,7 @@ public class NetMQListenerService<TQueue, TRequest, TResponse>
         subSocket.Options.ReceiveHighWatermark = 1000;
         subSocket.Subscribe(QueueName);
         Console.WriteLine("Subscriber socket connecting...");
-
+        using NetMQRuntime runtime = new();
         while (!stoppingToken.IsCancellationRequested)
         {
             List<string> _rawParts = [];
