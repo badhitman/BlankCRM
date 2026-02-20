@@ -23,11 +23,11 @@ public static class RegisterMqListenerExtension
             .RegisterListenerRabbitMQ<SpreadsheetDocumentGetIndexReceive, TAuthRequestStandardModel<int>, TResponseModel<SpreadsheetDocumentIndexingFileResponseModel>>()
             .RegisterListenerRabbitMQ<WordprocessingDocumentGetIndexReceive, TAuthRequestStandardModel<int>, TResponseModel<WordprocessingDocumentIndexingFileResponseModel>>()
             .RegisterListenerRabbitMQ<SaveTraceForReceiver, TraceReceiverRecord, ResponseBaseModel>()
-            .RegisterListenerRabbitMQ<TracesSelectReceive, TPaginationRequestStandardModel<SelectTraceReceivesRequestModel>, TPaginationResponseStandardModel<TraceReceiverRecord>>()
-            .RegisterListenerRabbitMQ<TracesSelectForOrdersRetailReceive, TPaginationRequestStandardModel<SelectTraceElementsRequestModel>, TPaginationResponseStandardModel<TraceReceiverRecord>>()
-            .RegisterListenerRabbitMQ<TracesSelectForDeliveriesRetailReceive, TPaginationRequestStandardModel<SelectTraceElementsRequestModel>, TPaginationResponseStandardModel<TraceReceiverRecord>>()
-            .RegisterListenerRabbitMQ<TracesSelectForConversionsRetailReceive, TPaginationRequestStandardModel<SelectTraceElementsRequestModel>, TPaginationResponseStandardModel<TraceReceiverRecord>>()
-            .RegisterListenerRabbitMQ<TracesSelectForPaymentsRetailReceive, TPaginationRequestStandardModel<SelectTraceElementsRequestModel>, TPaginationResponseStandardModel<TraceReceiverRecord>>()
+            .RegisterListenerRabbitMQ<TracesSelectReceive, TPaginationRequestStandardModel<SelectHistoryReceivesRequestModel>, TPaginationResponseStandardModel<TraceReceiverRecord>>()
+            .RegisterListenerRabbitMQ<TracesSelectForOrdersRetailReceive, TPaginationRequestStandardModel<SelectHistoryElementsRequestModel>, TPaginationResponseStandardModel<TraceReceiverRecord>>()
+            .RegisterListenerRabbitMQ<TracesSelectForDeliveriesRetailReceive, TPaginationRequestStandardModel<SelectHistoryElementsRequestModel>, TPaginationResponseStandardModel<TraceReceiverRecord>>()
+            .RegisterListenerRabbitMQ<TracesSelectForConversionsRetailReceive, TPaginationRequestStandardModel<SelectHistoryElementsRequestModel>, TPaginationResponseStandardModel<TraceReceiverRecord>>()
+            .RegisterListenerRabbitMQ<TracesSelectForPaymentsRetailReceive, TPaginationRequestStandardModel<SelectHistoryElementsRequestModel>, TPaginationResponseStandardModel<TraceReceiverRecord>>()
 
             .RegisterListenerNetMQ<TraceRabbitActionReceive, MessageWebChatModelDB, TResponseModel<int>>()
             ;

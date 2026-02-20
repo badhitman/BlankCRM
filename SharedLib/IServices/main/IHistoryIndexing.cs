@@ -13,17 +13,17 @@ public interface IHistoryIndexing
     public Task<ResponseBaseModel> SaveHistoryForReceiverAsync(TraceReceiverRecord req, CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<TPaginationResponseStandardModel<TraceReceiverRecord>> SelectHistoryBaseAsync(TPaginationRequestStandardModel<SelectTraceReceivesRequestModel> req, CancellationToken token = default);
+    public Task<TPaginationResponseStandardModel<TraceReceiverRecord>> SelectHistoryBaseAsync(TPaginationRequestStandardModel<SelectHistoryReceivesRequestModel> req, CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<TPaginationResponseStandardModel<TraceReceiverRecord>> SelectHistoryForOrdersRetailAsync(TPaginationRequestStandardModel<SelectTraceElementsRequestModel> req, CancellationToken token = default);
+    public Task<TPaginationResponseStandardModel<TraceReceiverRecord>> SelectHistoryForOrdersRetailAsync(TPaginationRequestStandardModel<SelectHistoryElementsRequestModel> req, CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<TPaginationResponseStandardModel<TraceReceiverRecord>> SelectHistoryForDeliveriesRetailAsync(TPaginationRequestStandardModel<SelectTraceElementsRequestModel> req, CancellationToken token = default);
+    public Task<TPaginationResponseStandardModel<TraceReceiverRecord>> SelectHistoryForDeliveriesRetailAsync(TPaginationRequestStandardModel<SelectHistoryElementsRequestModel> req, CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<TPaginationResponseStandardModel<TraceReceiverRecord>> SelectHistoryForConversionsRetailAsync(TPaginationRequestStandardModel<SelectTraceElementsRequestModel> req, CancellationToken token = default);
+    public Task<TPaginationResponseStandardModel<TraceReceiverRecord>> SelectHistoryForConversionsRetailAsync(TPaginationRequestStandardModel<SelectHistoryElementsRequestModel> req, CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<TPaginationResponseStandardModel<TraceReceiverRecord>> SelectHistoryForPaymentsRetailAsync(TPaginationRequestStandardModel<SelectTraceElementsRequestModel> req, CancellationToken token = default);
+    public Task<TPaginationResponseStandardModel<TraceReceiverRecord>> SelectHistoryForPaymentsRetailAsync(TPaginationRequestStandardModel<SelectHistoryElementsRequestModel> req, CancellationToken token = default);
 }

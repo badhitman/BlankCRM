@@ -47,7 +47,7 @@ public class HistoryImpl(IOptions<MongoConfigModel> mongoConf) : IHistoryIndexin
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseStandardModel<TraceReceiverRecord>> SelectHistoryBaseAsync(TPaginationRequestStandardModel<SelectTraceReceivesRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<TraceReceiverRecord>> SelectHistoryBaseAsync(TPaginationRequestStandardModel<SelectHistoryReceivesRequestModel> req, CancellationToken token = default)
     {
         IMongoDatabase mongoFs = new MongoClient(mongoConf.Value.ToString()).GetDatabase($"{mongoConf.Value.BusTracesSystemName}{GlobalStaticConstantsTransmission.GetModePrefix}");
         IMongoCollection<TraceReceive> traceReceiverRecords = mongoFs.GetCollection<TraceReceive>(nameof(TraceReceive));
@@ -97,7 +97,7 @@ public class HistoryImpl(IOptions<MongoConfigModel> mongoConf) : IHistoryIndexin
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseStandardModel<TraceReceiverRecord>> SelectHistoryForOrdersRetailAsync(TPaginationRequestStandardModel<SelectTraceElementsRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<TraceReceiverRecord>> SelectHistoryForOrdersRetailAsync(TPaginationRequestStandardModel<SelectHistoryElementsRequestModel> req, CancellationToken token = default)
     {
         if (req.Payload is null)
             return new()
@@ -208,7 +208,7 @@ public class HistoryImpl(IOptions<MongoConfigModel> mongoConf) : IHistoryIndexin
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseStandardModel<TraceReceiverRecord>> SelectHistoryForDeliveriesRetailAsync(TPaginationRequestStandardModel<SelectTraceElementsRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<TraceReceiverRecord>> SelectHistoryForDeliveriesRetailAsync(TPaginationRequestStandardModel<SelectHistoryElementsRequestModel> req, CancellationToken token = default)
     {
         if (req.Payload is null)
             return new()
@@ -301,7 +301,7 @@ public class HistoryImpl(IOptions<MongoConfigModel> mongoConf) : IHistoryIndexin
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseStandardModel<TraceReceiverRecord>> SelectHistoryForConversionsRetailAsync(TPaginationRequestStandardModel<SelectTraceElementsRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<TraceReceiverRecord>> SelectHistoryForConversionsRetailAsync(TPaginationRequestStandardModel<SelectHistoryElementsRequestModel> req, CancellationToken token = default)
     {
         if (req.Payload is null)
             return new()
@@ -379,7 +379,7 @@ public class HistoryImpl(IOptions<MongoConfigModel> mongoConf) : IHistoryIndexin
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseStandardModel<TraceReceiverRecord>> SelectHistoryForPaymentsRetailAsync(TPaginationRequestStandardModel<SelectTraceElementsRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<TraceReceiverRecord>> SelectHistoryForPaymentsRetailAsync(TPaginationRequestStandardModel<SelectHistoryElementsRequestModel> req, CancellationToken token = default)
     {
         if (req.Payload is null)
             return new()

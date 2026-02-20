@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// SelectTraceElementsRequestModel
 /// </summary>
-public class SelectTraceElementsRequestModel : PeriodBaseModel
+public class SelectHistoryElementsRequestModel : PeriodBaseModel
 {
     /// <inheritdoc/>
     public int FilterId { get; set; }

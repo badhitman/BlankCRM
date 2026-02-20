@@ -5,9 +5,9 @@
 namespace SharedLib;
 
 /// <summary>
-/// SelectTraceReceivesRequestModel
+/// SelectHistoryReceivesRequestModel
 /// </summary>
-public class SelectTraceReceivesRequestModel : PeriodBaseModel
+public class SelectHistoryReceivesRequestModel : PeriodBaseModel
 {
     /// <inheritdoc/>
     public string[]? ReceiversNames { get; set; }

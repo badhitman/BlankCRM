@@ -15,7 +15,7 @@ public partial class HistoryMainWrapperComponent : HistoryOwnerBaseComponent
     /// <inheritdoc/>
     public override async Task<TableData<TraceReceiverRecord>> ServerReload(DateRange? dateRangePeriod, TableState state, CancellationToken token)
     {
-        TPaginationRequestStandardModel<SelectTraceReceivesRequestModel> req = new()
+        TPaginationRequestStandardModel<SelectHistoryReceivesRequestModel> req = new()
         {
             PageNum = state.Page,
             PageSize = state.PageSize,
