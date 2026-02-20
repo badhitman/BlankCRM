@@ -115,6 +115,9 @@ public class Program
             ;
 
         builder.Services.KladrRegisterMqListeners();
+
+        builder.Services
+            .AddScoped<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>();
         #endregion
         builder.Services
             .AddScoped<IKladrService, KladrServiceImpl>()

@@ -139,6 +139,7 @@ public class Program
             ;
 
         builder.Services
+            .AddScoped<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
             .AddScoped<IHelpDeskTransmission, HelpDeskTransmission>()
             .AddScoped<ITelegramTransmission, TelegramTransmission>()
             .AddScoped<IIdentityTransmission, IdentityTransmission>()

@@ -10,9 +10,9 @@ namespace RemoteCallLib;
 /// <summary>
 /// TraceRabbitActionsTransmission
 /// </summary>
-public class TraceRabbitActionsTransmission([FromKeyedServices(nameof(RabbitClient))] IMQStandardClientRPC rabbitClient) : ITraceRabbitActionsService
+public class TraceRabbitActionsTransmission([FromKeyedServices(nameof(NetMQClient))] IMQStandardClientRPC zeroClient) : ITraceRabbitActionsServiceTransmission
 {
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> SaveActionAsync(TraceRabbitActionRequestModel req, CancellationToken token = default)
-       => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.TraceRabbitActionSystemsReceive, req, waitResponse: false, token: token) ?? new();
+       => await zeroClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.TraceRabbitActionSystemsReceive, req, waitResponse: false, token: token) ?? new();
 }

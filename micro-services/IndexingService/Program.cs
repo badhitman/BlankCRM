@@ -130,11 +130,12 @@ public class Program
             ;
 
         builder.Services
-        //    .AddScoped<IHelpDeskTransmission, HelpDeskTransmission>()
-        //    .AddScoped<ITelegramTransmission, TelegramTransmission>()
-        //    .AddScoped<IIdentityTransmission, IdentityTransmission>()
-        //    .AddScoped<ICommerceTransmission, CommerceTransmission>()
+        //  .AddScoped<IHelpDeskTransmission, HelpDeskTransmission>()
+        //  .AddScoped<ITelegramTransmission, TelegramTransmission>()
+        //  .AddScoped<IIdentityTransmission, IdentityTransmission>()
+        //  .AddScoped<ICommerceTransmission, CommerceTransmission>()
             .AddScoped<IStorageTransmission, StorageTransmission>()
+            .AddScoped<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
             ;
 
         builder.Services.IndexingServiceRegisterMqListeners();

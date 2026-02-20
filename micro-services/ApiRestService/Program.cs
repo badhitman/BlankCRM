@@ -149,6 +149,7 @@ builder.Services
     ;
 //
 builder.Services
+    .AddScoped<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
     .AddScoped<IWebChatService, WebChatTransmission>()
     .AddScoped<IWebTransmission, WebTransmission>()
     .AddScoped<ITelegramTransmission, TelegramTransmission>()

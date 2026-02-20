@@ -265,6 +265,7 @@ builder.Services
           ;
 
 builder.Services
+    .AddScoped<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
     .AddScoped<IBankService, BankTransmission>()
     .AddScoped<IWebChatService, WebChatTransmission>()
     .AddScoped<ICommerceTransmission, CommerceTransmission>()

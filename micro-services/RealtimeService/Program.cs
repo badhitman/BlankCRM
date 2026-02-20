@@ -182,6 +182,7 @@ public class Program
             ;
         //
         builder.Services
+            .AddScoped<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
             .AddScoped<IEventsWebChatsNotifies, EventsWebChatsNotifiesTransmissionMQTT>()
             .AddScoped<IWebTransmission, WebTransmission>()
             .AddScoped<IIdentityTransmission, IdentityTransmission>()

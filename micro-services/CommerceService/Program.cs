@@ -136,7 +136,9 @@ builder.Services
     .AddKeyedSingleton(nameof(NetMQClient), zeroImplement)
     ;
 //
-builder.Services.AddScoped<IWebTransmission, WebTransmission>()
+builder.Services
+    .AddScoped<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
+    .AddScoped<IWebTransmission, WebTransmission>()
     .AddScoped<IWebChatService, WebChatTransmission>()
     .AddScoped<ITelegramTransmission, TelegramTransmission>()
     .AddScoped<IHelpDeskTransmission, HelpDeskTransmission>()

@@ -195,6 +195,7 @@ public class Program
             ;
 
         builder.Services
+            .AddScoped<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
             .AddScoped<ITelegramTransmission, TelegramTransmission>()
             .AddScoped<IHelpDeskTransmission, HelpDeskTransmission>()
             .AddScoped<IWebTransmission, WebTransmission>()

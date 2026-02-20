@@ -135,12 +135,11 @@ public class Program
                 });
 
         builder.Services
-        .AddScoped<ITelegramBotService, TelegramBotServiceImplement>()
-        .AddScoped<StoreTelegramService>()
-        .AddScoped<UpdateHandler>()
-        .AddScoped<IIndexingServive, IndexingTransmission>()
-        .AddScoped<IHistoryIndexing, HistoryTransmission>()
-        .AddScoped<ReceiverService>();
+            .AddScoped<ITelegramBotService, TelegramBotServiceImplement>()
+            .AddScoped<StoreTelegramService>()
+            .AddScoped<UpdateHandler>()
+            .AddScoped<ReceiverService>()
+            ;
 
         builder.Services.AddHostedService<PollingService>();
 
@@ -164,6 +163,9 @@ public class Program
             ;
 
         builder.Services
+            .AddScoped<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
+            .AddScoped<IIndexingServive, IndexingTransmission>()
+            .AddScoped<IHistoryIndexing, HistoryTransmission>()
             .AddScoped<IWebTransmission, WebTransmission>()
             .AddScoped<IHelpDeskTransmission, HelpDeskTransmission>()
             .AddScoped<IStorageTransmission, StorageTransmission>()

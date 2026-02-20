@@ -143,7 +143,9 @@ public class Program
             .AddKeyedSingleton(nameof(NetMQClient), zeroImplement)
             ;
         //
-        builder.Services.AddScoped<IHelpDeskTransmission, HelpDeskTransmission>()
+        builder.Services
+            .AddScoped<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
+            .AddScoped<IHelpDeskTransmission, HelpDeskTransmission>()
             .AddScoped<IWebTransmission, WebTransmission>()
             .AddScoped<ITelegramTransmission, TelegramTransmission>()
             .AddScoped<ICommerceTransmission, CommerceTransmission>()

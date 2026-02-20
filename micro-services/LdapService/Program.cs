@@ -15,6 +15,7 @@ public class Program
         builder.Services
             .AddScoped<IIndexingServive, IndexingTransmission>()
             .AddScoped<IHistoryIndexing, HistoryTransmission>()
+            .AddScoped<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
             ;
 
         var host = builder.Build();
