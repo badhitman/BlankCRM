@@ -10,7 +10,7 @@ namespace SharedLib;
 /// <summary>
 /// Обработчик входящего сообщения
 /// </summary>
-public interface IMQTTReceive<TRequest, TResponse> : IBaseReceive
+public interface IMQReceive<TRequest, TResponse> : IBaseReceive
 {
     /// <summary>
     /// Обработчик ответа на запрос

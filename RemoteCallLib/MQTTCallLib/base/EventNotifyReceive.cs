@@ -2,22 +2,21 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using static SharedLib.GlobalStaticConstantsRoutes;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using MQTTnet;
+using System.Collections.Generic;
 using MQTTnet.Diagnostics.Logger;
+using System.Threading.Tasks;
 using MQTTnet.Exceptions;
+using System.Threading;
 using MQTTnet.Packets;
 using Newtonsoft.Json;
-using SharedLib;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using static SharedLib.GlobalStaticConstantsRoutes;
+using SharedLib;
+using MQTTnet;
+using System;
 
 namespace RemoteCallLib;
 
@@ -34,12 +33,14 @@ public class EventNotifyReceive<T> : IEventNotifyReceive<T>, IAsyncDisposable
     IMqttClient? mqttClient;
     MqttClientFactory mqttFactory = new();
 
+    string?
+        LayoutContainerId, queueName;
+
+    byte[]? _userInfoBytes;
     readonly RealtimeMQTTClientConfigModel MQConfigRepo;
     readonly ILogger<EventNotifyReceive<T>> LoggerRepo;
-    byte[]? _userInfoBytes;
-    string? LayoutContainerId;
+
     List<KeyValuePair<string, byte[]>>? _propertiesValues;
-    string? queueName;
 
     /// <summary>
     /// EventNotifyReceive
@@ -220,7 +221,7 @@ public class EventNotifyReceive<T> : IEventNotifyReceive<T>, IAsyncDisposable
                 case MqttNetLogLevel.Error:
                     LoggerRepo.LogError(message);
                     break;
-            }            
+            }
         }
     }
 }
