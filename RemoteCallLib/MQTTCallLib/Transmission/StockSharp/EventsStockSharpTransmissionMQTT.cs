@@ -1,5 +1,5 @@
 ﻿////////////////////////////////////////////////
-// © https://github.com/badhitman - @FakeGov 
+// © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
 using System.Threading.Tasks;
@@ -11,7 +11,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// StockSharpEventsServiceTransmission
 /// </summary>
-public partial class EventsStockSharpTransmissionMQTT(IMQClientExtRPC mqClient, IEventsNotify notifyTgRepo) : IEventsStockSharp
+public partial class EventsStockSharpTransmissionMQTT(IMQStandardClientExtRPC mqClient, IEventsNotify notifyTgRepo) : IEventsStockSharp
 {
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> BoardReceived(BoardStockSharpModel req, CancellationToken cancellationToken = default)

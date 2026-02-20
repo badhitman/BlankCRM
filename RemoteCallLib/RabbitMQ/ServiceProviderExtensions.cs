@@ -1,5 +1,5 @@
 ﻿////////////////////////////////////////////////
-// © https://github.com/badhitman - @FakeGov 
+// © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
 using Microsoft.Extensions.Options;
@@ -43,10 +43,10 @@ public static class ServiceProviderExtensions
     /// Register Mq Listener
     /// </summary>
     public static IServiceCollection RegisterListenerNetMQ<TQueue, TRequest, TResponse>(this IServiceCollection sc)
-        where TQueue : class, IMQReceive<TRequest?, TResponse?>
+        where TQueue : class, IMQStandardReceive<TRequest?, TResponse?>
         where TResponse : class, new()
     {
-        sc.AddScoped<IMQReceive<TRequest?, TResponse?>, TQueue>();
+        sc.AddScoped<IMQStandardReceive<TRequest?, TResponse?>, TQueue>();
         sc.AddHostedService<NetMQListenerService<TQueue, TRequest?, TResponse?>>();
 
         return sc;

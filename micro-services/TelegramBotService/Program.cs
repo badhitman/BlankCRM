@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////
-// © https://github.com/badhitman - @FakeGov 
+// © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
 using Microsoft.EntityFrameworkCore;
@@ -150,7 +150,7 @@ public class Program
 
         string appName = typeof(Program).Assembly.GetName().Name ?? "AssemblyName";
         #region MQ Transmission (remote methods call)
-        builder.Services.AddSingleton<IMQClientRPC>(x => new RabbitClient(x.GetRequiredService<IOptions<RabbitMQConfigModel>>(), x.GetRequiredService<ILogger<RabbitClient>>(), appName));
+        builder.Services.AddSingleton<IMQStandardClientRPC>(x => new RabbitClient(x.GetRequiredService<IOptions<RabbitMQConfigModel>>(), x.GetRequiredService<ILogger<RabbitClient>>(), appName));
 
         builder.Services
             .AddScoped<IWebTransmission, WebTransmission>()

@@ -1,5 +1,5 @@
 ﻿////////////////////////////////////////////////
-// © https://github.com/badhitman - @FakeGov 
+// © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
 using SharedLib;
@@ -9,7 +9,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// Удалённый вызов команд в Web службе
 /// </summary>
-public class WebTransmission(IMQClientRPC rabbitClient) : IWebTransmission
+public class WebTransmission(IMQStandardClientRPC rabbitClient) : IWebTransmission
 {
     /// <inheritdoc/>
     public async Task<TelegramBotConfigModel> GetWebConfigAsync(CancellationToken token = default)

@@ -1,5 +1,5 @@
 ﻿////////////////////////////////////////////////
-// © https://github.com/badhitman - @FakeGov 
+// © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
 using System.Threading.Tasks;
@@ -10,7 +10,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// Удалённый вызов команд (MQ client)
 /// </summary>
-public interface IMQClientRPC
+public interface IMQStandardClientRPC
 {
     /// <summary>
     /// Удалённый вызов метода через MQ

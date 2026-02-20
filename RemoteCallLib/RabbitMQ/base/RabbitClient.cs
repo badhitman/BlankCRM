@@ -1,5 +1,5 @@
 ﻿////////////////////////////////////////////////
-// © https://github.com/badhitman - @FakeGov 
+// © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
 using Microsoft.Extensions.Logging;
@@ -20,7 +20,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// Удалённый вызов команд (RabbitMq client)
 /// </summary>
-public class RabbitClient : IMQClientRPC
+public class RabbitClient : IMQStandardClientRPC
 {
     readonly RabbitMQConfigModel RabbitConfigRepo;
     readonly ConnectionFactory factory;

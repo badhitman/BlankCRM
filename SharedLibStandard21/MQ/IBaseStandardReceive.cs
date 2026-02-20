@@ -1,5 +1,5 @@
 ﻿////////////////////////////////////////////////
-// © https://github.com/badhitman - @FakeGov 
+// © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
 namespace SharedLib;
@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// Обработчик входящего сообщения
 /// </summary>
-public interface IBaseReceive
+public interface IBaseStandardReceive
 {
     /// <summary>
     /// Имя очереди

@@ -1,5 +1,5 @@
 ﻿////////////////////////////////////////////////
-// © https://github.com/badhitman - @FakeGov 
+// © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// DataStockSharpTransmission
 /// </summary>
-public partial class DataStockSharpTransmissionMQTT(IMQClientExtRPC mqClient) : IDataStockSharpService
+public partial class DataStockSharpTransmissionMQTT(IMQStandardClientExtRPC mqClient) : IDataStockSharpService
 {
     /// <inheritdoc/>
     public async Task<TResponseModel<List<OrderStockSharpModel>>> GetOrdersAsync(int[]? req = null, CancellationToken cancellationToken = default)

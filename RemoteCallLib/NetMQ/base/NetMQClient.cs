@@ -1,5 +1,5 @@
 ﻿////////////////////////////////////////////////
-// © https://github.com/badhitman - @FakeGov 
+// © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
 using Microsoft.Extensions.Logging;
@@ -17,7 +17,7 @@ namespace RemoteCallLib;
 /// Удалённый вызов команд (NetMq client)
 /// </summary>
 /// <inheritdoc/>
-public class NetMQClient(IOptions<ProxyNetMQConfigModel> mqConf, ILogger<NetMQClient> _loggerRepo, string appName) : IMQClientRPC
+public class NetMQClient(IOptions<ProxyNetMQConfigModel> mqConf, ILogger<NetMQClient> _loggerRepo, string appName) : IMQStandardClientRPC
 {
     readonly ProxyNetMQConfigModel MQConfigRepo = mqConf.Value;
     readonly PublisherSocket pubSocket = new();

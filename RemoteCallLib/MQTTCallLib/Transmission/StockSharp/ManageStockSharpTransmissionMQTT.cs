@@ -1,5 +1,5 @@
 ﻿////////////////////////////////////////////////
-// © https://github.com/badhitman - @FakeGov 
+// © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
 using System.Threading.Tasks;
@@ -11,7 +11,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// ManageStockSharpTransmission
 /// </summary>
-public partial class ManageStockSharpTransmissionMQTT(IMQClientExtRPC mqClient) : IManageStockSharpService
+public partial class ManageStockSharpTransmissionMQTT(IMQStandardClientExtRPC mqClient) : IManageStockSharpService
 {
     /// <inheritdoc/>
     public async Task<AboutDatabasesResponseModel> AboutDatabases(CancellationToken cancellationToken = default)

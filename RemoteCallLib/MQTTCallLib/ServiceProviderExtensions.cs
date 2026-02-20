@@ -1,5 +1,5 @@
 ﻿////////////////////////////////////////////////
-// © https://github.com/badhitman - @FakeGov 
+// © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
 using Microsoft.Extensions.DependencyInjection;
@@ -17,11 +17,11 @@ public static class ServiceProviderExtensions
     /// Register Mq Listener
     /// </summary>
     public static IServiceCollection RegisterListenerMQTT<TQueue, TRequest, TResponse>(this IServiceCollection sc)
-        where TQueue : class, IMQReceive<TRequest?, TResponse?>
+        where TQueue : class, IMQStandardReceive<TRequest?, TResponse?>
         where TResponse : class, new()
     {
         
-        sc.AddScoped<IMQReceive<TRequest?, TResponse?>, TQueue>();
+        sc.AddScoped<IMQStandardReceive<TRequest?, TResponse?>, TQueue>();
         sc.AddHostedService<MQTTListenerService<TQueue, TRequest?, TResponse?>>();
 
         return sc;

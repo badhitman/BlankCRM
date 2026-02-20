@@ -1,5 +1,5 @@
 ﻿////////////////////////////////////////////////
-// © https://github.com/badhitman - @FakeGov 
+// © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
 using SharedLib;
@@ -9,7 +9,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// KladrServiceTransmission
 /// </summary>
-public class KladrServiceTransmission(IMQClientRPC rabbitClient) : IKladrService
+public class KladrServiceTransmission(IMQStandardClientRPC rabbitClient) : IKladrService
 {
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> ClearTempKladrAsync(CancellationToken token = default)

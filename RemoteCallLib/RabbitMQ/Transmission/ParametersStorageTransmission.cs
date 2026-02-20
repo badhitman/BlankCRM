@@ -1,5 +1,5 @@
 ﻿////////////////////////////////////////////////
-// © https://github.com/badhitman - @FakeGov 
+// © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
 using Newtonsoft.Json;
@@ -10,7 +10,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// StorageBaseTransmission
 /// </summary>
-public class ParametersStorageTransmission(IMQClientRPC rabbitClient) : IParametersStorageTransmission
+public class ParametersStorageTransmission(IMQStandardClientRPC rabbitClient) : IParametersStorageTransmission
 {
     #region tag`s
     /// <inheritdoc/> tags

@@ -1,5 +1,5 @@
 ﻿////////////////////////////////////////////////
-// © https://github.com/badhitman - @FakeGov 
+// © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
 using System.Threading.Tasks;
@@ -10,7 +10,7 @@ namespace SharedLib;
 /// <summary>
 /// Обработчик входящего сообщения
 /// </summary>
-public interface IMQReceive<TRequest, TResponse> : IBaseReceive
+public interface IMQStandardReceive<TRequest, TResponse> : IBaseStandardReceive
 {
     /// <summary>
     /// Обработчик ответа на запрос

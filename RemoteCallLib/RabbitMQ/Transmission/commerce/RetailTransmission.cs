@@ -1,5 +1,5 @@
 ﻿////////////////////////////////////////////////
-// © https://github.com/badhitman - @FakeGov 
+// © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
 using SharedLib;
@@ -10,7 +10,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// Розница
 /// </summary>
-public class RetailTransmission(IMQClientRPC rabbitClient) : IRetailService
+public class RetailTransmission(IMQStandardClientRPC rabbitClient) : IRetailService
 {
     #region Order`s (document retail)
     /// <inheritdoc/>

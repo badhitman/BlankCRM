@@ -1,5 +1,5 @@
 ﻿////////////////////////////////////////////////
-// © https://github.com/badhitman - @FakeGov 
+// © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
 using SharedLib;
@@ -9,7 +9,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// BreezRuTransmission
 /// </summary>
-public class BreezRuTransmission(IMQClientRPC rabbitClient) : IBreezRuApiTransmission
+public class BreezRuTransmission(IMQStandardClientRPC rabbitClient) : IBreezRuApiTransmission
 {
     /// <inheritdoc/>
     public async Task<TResponseModel<List<BrandRealBreezRuModel>>> GetBrandsAsync(CancellationToken token = default)

@@ -1,5 +1,5 @@
 ﻿////////////////////////////////////////////////
-// © https://github.com/badhitman - @FakeGov 
+// © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
 using SharedLib;
@@ -9,7 +9,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// Serialize Storage Remote Transmission Service
 /// </summary>
-public class StorageTransmission(IMQClientRPC rabbitClient) : IStorageTransmission
+public class StorageTransmission(IMQStandardClientRPC rabbitClient) : IStorageTransmission
 {
     /// <inheritdoc/>
     public async Task<TPaginationResponseStandardModel<NLogRecordModelDB>> GoToPageForRowLogsAsync(TPaginationRequestStandardModel<GoToPageForRowLogsRequestModel> req, CancellationToken token = default)

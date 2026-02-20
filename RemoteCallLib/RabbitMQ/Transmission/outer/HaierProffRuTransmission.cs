@@ -1,5 +1,5 @@
 ﻿////////////////////////////////////////////////
-// © https://github.com/badhitman - @FakeGov 
+// © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
 using SharedLib;
@@ -9,7 +9,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// HaierProffRuTransmission
 /// </summary>
-public class HaierProffRuTransmission(IMQClientRPC rabbitClient) : IFeedsHaierProffRuService
+public class HaierProffRuTransmission(IMQStandardClientRPC rabbitClient) : IFeedsHaierProffRuService
 {
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> DownloadAndSaveAsync(CancellationToken token = default)

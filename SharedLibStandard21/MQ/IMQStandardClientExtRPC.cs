@@ -1,5 +1,5 @@
 ﻿////////////////////////////////////////////////
-// © https://github.com/badhitman - @FakeGov 
+// © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
 using System.Collections.Generic;
@@ -11,7 +11,7 @@ namespace SharedLib;
 /// <summary>
 /// Удалённый вызов команд (MQTT client)
 /// </summary>
-public interface IMQClientExtRPC
+public interface IMQStandardClientExtRPC
 {
     /// <summary>
     /// Удалённый вызов метода через MQTT

@@ -1,5 +1,5 @@
 ﻿////////////////////////////////////////////////
-// © https://github.com/badhitman - @FakeGov 
+// © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
 using SharedLib;
@@ -10,7 +10,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// RusklimatComTransmission
 /// </summary>
-public class RusklimatComTransmission(IMQClientRPC rabbitClient) : IRusklimatComApiTransmission
+public class RusklimatComTransmission(IMQStandardClientRPC rabbitClient) : IRusklimatComApiTransmission
 {
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> DownloadAndSaveAsync(CancellationToken token = default)

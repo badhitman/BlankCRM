@@ -1,5 +1,5 @@
 ﻿////////////////////////////////////////////////
-// © https://github.com/badhitman - @FakeGov 
+// © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
 using SharedLib;
@@ -9,7 +9,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// TransmissionConstructorService
 /// </summary>
-public class ConstructorTransmission(IMQClientRPC rabbitClient) : IConstructorTransmission
+public class ConstructorTransmission(IMQStandardClientRPC rabbitClient) : IConstructorTransmission
 {
     #region public
     /// <inheritdoc/>

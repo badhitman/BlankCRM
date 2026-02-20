@@ -1,5 +1,5 @@
 ﻿////////////////////////////////////////////////
-// © https://github.com/badhitman - @FakeGov 
+// © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
 using System.Threading.Tasks;
@@ -11,7 +11,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// LogsServiceTransmission
 /// </summary>
-public partial class LogsServiceTransmissionMQTT(IMQClientExtRPC mqClient) : ILogsService
+public partial class LogsServiceTransmissionMQTT(IMQStandardClientExtRPC mqClient) : ILogsService
 {
     /// <inheritdoc/>
     public async Task<TPaginationResponseStandardModel<NLogRecordModelDB>> GoToPageForRowLogsAsync(TPaginationRequestStandardModel<GoToPageForRowLogsRequestModel> req, CancellationToken token = default)

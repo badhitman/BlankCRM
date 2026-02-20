@@ -1,5 +1,5 @@
 ﻿////////////////////////////////////////////////
-// © https://github.com/badhitman - @FakeGov 
+// © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
 using System.Text.Json.Serialization;
@@ -21,7 +21,7 @@ namespace SharedLib;
 /// Удалённый вызов команд (RabbitMq client)
 /// </summary>
 /// <inheritdoc/>
-public class MQttClient(RealtimeMQTTClientConfigModel mqConf, ILogger<MQttClient> _loggerRepo, string appName) : IMQClientExtRPC
+public class MQttClient(RealtimeMQTTClientConfigModel mqConf, ILogger<MQttClient> _loggerRepo, string appName) : IMQStandardClientExtRPC
 {
     readonly RealtimeMQTTClientConfigModel MQConfigRepo = mqConf;
     MqttClientFactory mqttFactory = new();

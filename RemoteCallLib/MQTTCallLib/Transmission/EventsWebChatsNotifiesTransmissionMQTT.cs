@@ -1,5 +1,5 @@
 ﻿////////////////////////////////////////////////
-// © https://github.com/badhitman - @FakeGov 
+// © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
 using System.Threading.Tasks;
@@ -13,7 +13,7 @@ namespace RemoteCallLib;
 /// EventsWebChatsNotifiesTransmissionMQTT
 /// </summary>
 /// <param name="mqClient"></param>
-public partial class EventsWebChatsNotifiesTransmissionMQTT(IMQClientExtRPC mqClient) : IEventsWebChatsNotifies
+public partial class EventsWebChatsNotifiesTransmissionMQTT(IMQStandardClientExtRPC mqClient) : IEventsWebChatsNotifies
 {
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> NewMessageWebChatAsync(NewMessageWebChatEventModel req, CancellationToken cancellationToken = default)

@@ -1,5 +1,5 @@
 ﻿////////////////////////////////////////////////
-// © https://github.com/badhitman - @FakeGov 
+// © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
 using System.Threading.Tasks;
@@ -15,7 +15,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// ParametersStorageTransmission
 /// </summary>
-public class ParametersStorageTransmissionMQTT(IMQClientExtRPC rabbitClient) : IParametersStorageTransmission
+public class ParametersStorageTransmissionMQTT(IMQStandardClientExtRPC rabbitClient) : IParametersStorageTransmission
 {
     #region tag`s
     /// <inheritdoc/>

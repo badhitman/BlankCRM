@@ -1,5 +1,5 @@
 ﻿////////////////////////////////////////////////
-// © https://github.com/badhitman - @FakeGov 
+// © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
 using SharedLib;
@@ -9,7 +9,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// CommerceTransmission
 /// </summary>
-public partial class CommerceTransmission(IMQClientRPC rabbitClient) : ICommerceTransmission
+public partial class CommerceTransmission(IMQStandardClientRPC rabbitClient) : ICommerceTransmission
 {
     /// <inheritdoc/>
     public async Task<TPaginationResponseStandardModel<RecordsAttendanceModelDB>> RecordsAttendancesSelectAsync(TPaginationRequestAuthModel<RecordsAttendancesRequestModel> req, CancellationToken token = default)

@@ -1,5 +1,5 @@
 ﻿////////////////////////////////////////////////
-// © https://github.com/badhitman - @FakeGov 
+// © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ using SharedLib;
 namespace RemoteCallLib;
 
 /// <inheritdoc/>
-public class RubricsTransmissionMQTT(IMQClientExtRPC rabbitClient) : IRubricsTransmission
+public class RubricsTransmissionMQTT(IMQStandardClientExtRPC rabbitClient) : IRubricsTransmission
 {
     /// <inheritdoc/>
     public async Task<TResponseModel<List<RubricStandardModel>>> RubricsGetAsync(IEnumerable<int> rubricsIds, CancellationToken token = default)

@@ -1,5 +1,5 @@
 ﻿////////////////////////////////////////////////
-// © https://github.com/badhitman - @FakeGov 
+// © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
 using SharedLib;
@@ -10,7 +10,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// DaichiBusinessTransmission
 /// </summary>
-public class DaichiBusinessTransmission(IMQClientRPC rabbitClient) : IDaichiBusinessApiTransmission
+public class DaichiBusinessTransmission(IMQStandardClientRPC rabbitClient) : IDaichiBusinessApiTransmission
 {
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> DownloadAndSaveAsync(CancellationToken token = default)

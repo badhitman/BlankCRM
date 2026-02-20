@@ -1,5 +1,5 @@
 ﻿////////////////////////////////////////////////
-// © https://github.com/badhitman - @FakeGov 
+// © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
 using Microsoft.Extensions.DependencyInjection;
@@ -25,12 +25,12 @@ namespace RemoteCallLib;
 /// <typeparam name="TResponse">Ответ</typeparam>
 public class MQTTListenerService<TQueue, TRequest, TResponse>
     : BackgroundService
-    where TQueue : IMQReceive<TRequest?, TResponse>
+    where TQueue : IMQStandardReceive<TRequest?, TResponse>
     where TResponse : new()
 {
     readonly RealtimeMQTTClientConfigModel MQConfigRepo;
     readonly ILogger<MQTTListenerService<TQueue, TRequest, TResponse>> LoggerRepo;
-    readonly IMQReceive<TRequest?, TResponse> receiveService;
+    readonly IMQStandardReceive<TRequest?, TResponse> receiveService;
 
     IMqttClient mqttClient;
     MqttClientFactory mqttFactoryCLI = new();
@@ -49,7 +49,7 @@ public class MQTTListenerService<TQueue, TRequest, TResponse>
     {
         get
         {
-            _queueName ??= QueueType.GetProperties().First(x => x.Name.Equals(nameof(IBaseReceive.QueueName))).GetValue(null)!.ToString()!.Replace("\\", "/");
+            _queueName ??= QueueType.GetProperties().First(x => x.Name.Equals(nameof(IBaseStandardReceive.QueueName))).GetValue(null)!.ToString()!.Replace("\\", "/");
             return _queueName;
         }
     }
@@ -64,7 +64,7 @@ public class MQTTListenerService<TQueue, TRequest, TResponse>
         MQConfigRepo = rabbitConf;
 
         using IServiceScope scope = servicesProvider.CreateScope();
-        receiveService = scope.ServiceProvider.GetServices<IMQReceive<TRequest?, TResponse>>().First(o => o.GetType() == QueueType);
+        receiveService = scope.ServiceProvider.GetServices<IMQStandardReceive<TRequest?, TResponse>>().First(o => o.GetType() == QueueType);
         mqttClient = mqttFactoryCLI.CreateMqttClient();
         loggerRepo.LogInformation($"Subscriber [{QueueName}] socket ready...");
     }

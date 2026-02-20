@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////
-// © https://github.com/badhitman - @FakeGov 
+// © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components.Authorization;
@@ -236,12 +236,12 @@ builder.Services.AddScoped<IUsersAuthenticateService, UsersAuthenticateService>(
 
 #region MQ Transmission (remote methods call)
 string appName = typeof(Program).Assembly.GetName().Name ?? "AssemblyName";
-builder.Services.AddSingleton<IMQClientRPC>(x =>
+builder.Services.AddSingleton<IMQStandardClientRPC>(x =>
     new RabbitClient(x.GetRequiredService<IOptions<RabbitMQConfigModel>>(),
                 x.GetRequiredService<ILogger<RabbitClient>>(),
                 appName));
 builder.Services
-            .AddSingleton<IMQClientExtRPC>(x => new MQttClient(x.GetRequiredService<RealtimeMQTTClientConfigModel>(), x.GetRequiredService<ILogger<MQttClient>>(), appName))
+            .AddSingleton<IMQStandardClientExtRPC>(x => new MQttClient(x.GetRequiredService<RealtimeMQTTClientConfigModel>(), x.GetRequiredService<ILogger<MQttClient>>(), appName))
             ;
 
 builder.Services

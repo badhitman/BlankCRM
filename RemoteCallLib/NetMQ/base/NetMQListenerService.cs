@@ -1,5 +1,5 @@
 ﻿////////////////////////////////////////////////
-// © https://github.com/badhitman - @FakeGov 
+// © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
 using Microsoft.Extensions.DependencyInjection;
@@ -21,12 +21,12 @@ namespace RemoteCallLib;
 /// <typeparam name="TResponse">Ответ</typeparam>
 public class NetMQListenerService<TQueue, TRequest, TResponse>
     : BackgroundService
-    where TQueue : IMQReceive<TRequest?, TResponse>
+    where TQueue : IMQStandardReceive<TRequest?, TResponse>
     where TResponse : new()
 {
     readonly IOptions<ProxyNetMQConfigModel> MQConfigRepo;
     readonly ILogger<NetMQListenerService<TQueue, TRequest, TResponse>> LoggerRepo;
-    readonly IMQReceive<TRequest?, TResponse> receiveService;
+    readonly IMQStandardReceive<TRequest?, TResponse> receiveService;
 
     readonly SubscriberSocket subSocket;
 
@@ -44,7 +44,7 @@ public class NetMQListenerService<TQueue, TRequest, TResponse>
     {
         get
         {
-            _queueName ??= QueueType.GetProperties().First(x => x.Name.Equals(nameof(IBaseReceive.QueueName))).GetValue(null)!.ToString()!.Replace("\\", "/");
+            _queueName ??= QueueType.GetProperties().First(x => x.Name.Equals(nameof(IBaseStandardReceive.QueueName))).GetValue(null)!.ToString()!.Replace("\\", "/");
             return _queueName;
         }
     }
@@ -59,7 +59,7 @@ public class NetMQListenerService<TQueue, TRequest, TResponse>
         MQConfigRepo = mqConf;
 
         using IServiceScope scope = servicesProvider.CreateScope();
-        receiveService = scope.ServiceProvider.GetServices<IMQReceive<TRequest?, TResponse>>().First(o => o.GetType() == QueueType);
+        receiveService = scope.ServiceProvider.GetServices<IMQStandardReceive<TRequest?, TResponse>>().First(o => o.GetType() == QueueType);
         subSocket = new();
 
         loggerRepo.LogInformation($"Subscriber [{QueueName}] socket ready...");

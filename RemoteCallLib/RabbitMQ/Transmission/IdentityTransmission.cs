@@ -1,5 +1,5 @@
 ﻿////////////////////////////////////////////////
-// © https://github.com/badhitman - @FakeGov 
+// © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
 using Microsoft.Extensions.Caching.Memory;
@@ -10,7 +10,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// [remote]: Identity
 /// </summary>
-public class IdentityTransmission(IMQClientRPC rabbitClient, IMemoryCache cache) : IIdentityTransmission
+public class IdentityTransmission(IMQStandardClientRPC rabbitClient, IMemoryCache cache) : IIdentityTransmission
 {
     static readonly TimeSpan _ts = TimeSpan.FromSeconds(2);
 

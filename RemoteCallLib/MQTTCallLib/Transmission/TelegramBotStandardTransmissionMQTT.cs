@@ -1,5 +1,5 @@
 ﻿////////////////////////////////////////////////
-// © https://github.com/badhitman - @FakeGov 
+// © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// TelegramBotStandardTransmission
 /// </summary>
-public partial class TelegramBotStandardTransmissionMQTT(IMQClientExtRPC mqClient) : ITelegramBotStandardTransmission
+public partial class TelegramBotStandardTransmissionMQTT(IMQStandardClientExtRPC mqClient) : ITelegramBotStandardTransmission
 {
     /// <inheritdoc/>
     public async Task<TResponseModel<UserTelegramBaseModel>> AboutBotAsync(CancellationToken token = default)

@@ -1,5 +1,5 @@
 ﻿////////////////////////////////////////////////
-// © https://github.com/badhitman - @FakeGov 
+// © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
 using System.Threading.Tasks;
@@ -12,7 +12,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// DriverStockSharpTransmission
 /// </summary>
-public partial class DriverStockSharpTransmissionMQTT(IMQClientExtRPC mqClient) : IDriverStockSharpService
+public partial class DriverStockSharpTransmissionMQTT(IMQStandardClientExtRPC mqClient) : IDriverStockSharpService
 {
     /// <inheritdoc/>
     public async Task<AboutConnectResponseModel> AboutConnection(AboutConnectionRequestModel? req = default, CancellationToken cancellationToken = default)
