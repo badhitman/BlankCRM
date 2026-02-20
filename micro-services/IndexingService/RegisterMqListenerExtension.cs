@@ -18,15 +18,15 @@ public static class RegisterMqListenerExtension
     public static IServiceCollection IndexingServiceRegisterMqListeners(this IServiceCollection services)
     {
         return services
-            .RegisterMqListener<IndexingFileReceive, StorageFileMiddleModel, ResponseBaseModel>()
-            .RegisterMqListener<SpreadsheetDocumentGetIndexReceive, TAuthRequestStandardModel<int>, TResponseModel<SpreadsheetDocumentIndexingFileResponseModel>>()
-            .RegisterMqListener<WordprocessingDocumentGetIndexReceive, TAuthRequestStandardModel<int>, TResponseModel<WordprocessingDocumentIndexingFileResponseModel>>()
-            .RegisterMqListener<SaveTraceForReceiver, TraceReceiverRecord, ResponseBaseModel>()
-            .RegisterMqListener<TracesSelectReceive, TPaginationRequestStandardModel<SelectTraceReceivesRequestModel>, TPaginationResponseStandardModel<TraceReceiverRecord>>()
-            .RegisterMqListener<TracesSelectForOrdersRetailReceive, TPaginationRequestStandardModel<SelectTraceElementsRequestModel>, TPaginationResponseStandardModel<TraceReceiverRecord>>()
-            .RegisterMqListener<TracesSelectForDeliveriesRetailReceive, TPaginationRequestStandardModel<SelectTraceElementsRequestModel>, TPaginationResponseStandardModel<TraceReceiverRecord>>()
-            .RegisterMqListener<TracesSelectForConversionsRetailReceive, TPaginationRequestStandardModel<SelectTraceElementsRequestModel>, TPaginationResponseStandardModel<TraceReceiverRecord>>()
-            .RegisterMqListener<TracesSelectForPaymentsRetailReceive, TPaginationRequestStandardModel<SelectTraceElementsRequestModel>, TPaginationResponseStandardModel<TraceReceiverRecord>>()
+            .RegisterListenerRabbitMQ<IndexingFileReceive, StorageFileMiddleModel, ResponseBaseModel>()
+            .RegisterListenerRabbitMQ<SpreadsheetDocumentGetIndexReceive, TAuthRequestStandardModel<int>, TResponseModel<SpreadsheetDocumentIndexingFileResponseModel>>()
+            .RegisterListenerRabbitMQ<WordprocessingDocumentGetIndexReceive, TAuthRequestStandardModel<int>, TResponseModel<WordprocessingDocumentIndexingFileResponseModel>>()
+            .RegisterListenerRabbitMQ<SaveTraceForReceiver, TraceReceiverRecord, ResponseBaseModel>()
+            .RegisterListenerRabbitMQ<TracesSelectReceive, TPaginationRequestStandardModel<SelectTraceReceivesRequestModel>, TPaginationResponseStandardModel<TraceReceiverRecord>>()
+            .RegisterListenerRabbitMQ<TracesSelectForOrdersRetailReceive, TPaginationRequestStandardModel<SelectTraceElementsRequestModel>, TPaginationResponseStandardModel<TraceReceiverRecord>>()
+            .RegisterListenerRabbitMQ<TracesSelectForDeliveriesRetailReceive, TPaginationRequestStandardModel<SelectTraceElementsRequestModel>, TPaginationResponseStandardModel<TraceReceiverRecord>>()
+            .RegisterListenerRabbitMQ<TracesSelectForConversionsRetailReceive, TPaginationRequestStandardModel<SelectTraceElementsRequestModel>, TPaginationResponseStandardModel<TraceReceiverRecord>>()
+            .RegisterListenerRabbitMQ<TracesSelectForPaymentsRetailReceive, TPaginationRequestStandardModel<SelectTraceElementsRequestModel>, TPaginationResponseStandardModel<TraceReceiverRecord>>()
             ;
     }
 }

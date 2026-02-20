@@ -19,15 +19,15 @@ public static class RegisterMqListenerExtension
     public static IServiceCollection KladrRegisterMqListeners(this IServiceCollection services)
     {
         return services
-            .RegisterMqListener<KladrNavigationListReceive, KladrsRequestBaseModel, Dictionary<KladrChainTypesEnum, JObject[]>>()
-            .RegisterMqListener<UploadPartTempKladrReceive, UploadPartTableDataModel, ResponseBaseModel>()
-            .RegisterMqListener<GetMetadataKladrReceive, GetMetadataKladrRequestModel, MetadataKladrModel>()
-            .RegisterMqListener<ClearTempKladrReceive, object, ResponseBaseModel>()
-            .RegisterMqListener<FlushTempKladrReceive, object, ResponseBaseModel>()
-            .RegisterMqListener<ChildsContainsReceive, string, ResponseBaseModel>()
-            .RegisterMqListener<ObjectGetReceive, KladrsRequestBaseModel, TResponseModel<KladrResponseModel>>()
-            .RegisterMqListener<KladrSelectReceive, KladrSelectRequestModel, TPaginationResponseStandardModel<KladrResponseModel>>()
-            .RegisterMqListener<KladrFindReceive, KladrFindRequestModel, TPaginationResponseStandardModel<KladrResponseModel>>()
+            .RegisterListenerRabbitMQ<KladrNavigationListReceive, KladrsRequestBaseModel, Dictionary<KladrChainTypesEnum, JObject[]>>()
+            .RegisterListenerRabbitMQ<UploadPartTempKladrReceive, UploadPartTableDataModel, ResponseBaseModel>()
+            .RegisterListenerRabbitMQ<GetMetadataKladrReceive, GetMetadataKladrRequestModel, MetadataKladrModel>()
+            .RegisterListenerRabbitMQ<ClearTempKladrReceive, object, ResponseBaseModel>()
+            .RegisterListenerRabbitMQ<FlushTempKladrReceive, object, ResponseBaseModel>()
+            .RegisterListenerRabbitMQ<ChildsContainsReceive, string, ResponseBaseModel>()
+            .RegisterListenerRabbitMQ<ObjectGetReceive, KladrsRequestBaseModel, TResponseModel<KladrResponseModel>>()
+            .RegisterListenerRabbitMQ<KladrSelectReceive, KladrSelectRequestModel, TPaginationResponseStandardModel<KladrResponseModel>>()
+            .RegisterListenerRabbitMQ<KladrFindReceive, KladrFindRequestModel, TPaginationResponseStandardModel<KladrResponseModel>>()
             ;
     }
 }

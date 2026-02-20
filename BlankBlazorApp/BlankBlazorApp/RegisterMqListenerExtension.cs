@@ -18,7 +18,7 @@ public static class RegisterMqListenerExtension
     public static IServiceCollection WebAppRegisterMqListeners(this IServiceCollection services)
     {
         return services
-            .RegisterMqListener<GetWebConfigReceive, object, TelegramBotConfigModel>()           
+            .RegisterListenerRabbitMQ<GetWebConfigReceive, object, TelegramBotConfigModel>()           
             ;
     }
 }

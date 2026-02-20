@@ -29,7 +29,7 @@ public static class ServiceProviderExtensions
     /// <summary>
     /// Register Mq Listener
     /// </summary>
-    public static IServiceCollection RegisterMqListener<TQueue, TRequest, TResponse>(this IServiceCollection sc)
+    public static IServiceCollection RegisterListenerRabbitMQ<TQueue, TRequest, TResponse>(this IServiceCollection sc)
         where TQueue : class, IResponseReceive<TRequest?, TResponse?>
         where TResponse : class, new()
     {

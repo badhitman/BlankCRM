@@ -18,25 +18,25 @@ public static class RegisterMqListenerExtension
     public static IServiceCollection StorageRegisterMqListeners(this IServiceCollection services)
     {
         return services
-            .RegisterMqListener<SaveParameterReceive, StorageCloudParameterPayloadModel, TResponseModel<int?>>()
-            .RegisterMqListener<ReadParameterReceive, StorageMetadataModel, TResponseModel<StorageCloudParameterPayloadModel>>()
-            .RegisterMqListener<ReadParametersReceive, StorageMetadataModel[], TResponseModel<List<StorageCloudParameterPayloadModel>>>()
-            .RegisterMqListener<FindParametersReceive, FindStorageBaseModel, TResponseModel<FoundParameterModel[]>>()
+            .RegisterListenerRabbitMQ<SaveParameterReceive, StorageCloudParameterPayloadModel, TResponseModel<int?>>()
+            .RegisterListenerRabbitMQ<ReadParameterReceive, StorageMetadataModel, TResponseModel<StorageCloudParameterPayloadModel>>()
+            .RegisterListenerRabbitMQ<ReadParametersReceive, StorageMetadataModel[], TResponseModel<List<StorageCloudParameterPayloadModel>>>()
+            .RegisterListenerRabbitMQ<FindParametersReceive, FindStorageBaseModel, TResponseModel<FoundParameterModel[]>>()
 
-            .RegisterMqListener<TagSetReceive, TagSetModel, ResponseBaseModel>()
-            .RegisterMqListener<TagsSelectReceive, TPaginationRequestStandardModel<SelectMetadataRequestModel>, TPaginationResponseStandardModel<TagViewModel>>()
+            .RegisterListenerRabbitMQ<TagSetReceive, TagSetModel, ResponseBaseModel>()
+            .RegisterListenerRabbitMQ<TagsSelectReceive, TPaginationRequestStandardModel<SelectMetadataRequestModel>, TPaginationResponseStandardModel<TagViewModel>>()
 
-            .RegisterMqListener<GoToPageForRowReceive, TPaginationRequestStandardModel<GoToPageForRowLogsRequestModel>, TPaginationResponseStandardModel<NLogRecordModelDB>>()
-            .RegisterMqListener<MetadataLogsReceive, PeriodDatesTimesModel, TResponseModel<LogsMetadataResponseModel>>()
-            .RegisterMqListener<LogsSelectReceive, TPaginationRequestStandardModel<LogsSelectRequestModel>, TPaginationResponseStandardModel<NLogRecordModelDB>>()
-            .RegisterMqListener<SetWebConfigReceive, WebConfigModel, ResponseBaseModel>()
+            .RegisterListenerRabbitMQ<GoToPageForRowReceive, TPaginationRequestStandardModel<GoToPageForRowLogsRequestModel>, TPaginationResponseStandardModel<NLogRecordModelDB>>()
+            .RegisterListenerRabbitMQ<MetadataLogsReceive, PeriodDatesTimesModel, TResponseModel<LogsMetadataResponseModel>>()
+            .RegisterListenerRabbitMQ<LogsSelectReceive, TPaginationRequestStandardModel<LogsSelectRequestModel>, TPaginationResponseStandardModel<NLogRecordModelDB>>()
+            .RegisterListenerRabbitMQ<SetWebConfigReceive, WebConfigModel, ResponseBaseModel>()
 
-            .RegisterMqListener<SaveFileReceive, TAuthRequestStandardModel<StorageFileMetadataModel>, TResponseModel<StorageFileModelDB>>()
-            .RegisterMqListener<ReadFileReceive, TAuthRequestStandardModel<RequestFileReadModel>, TResponseModel<FileContentModel>>()
-            .RegisterMqListener<FilesAreaGetMetadataReceive, FilesAreaMetadataRequestModel, TResponseModel<FilesAreaMetadataModel[]>>()
-            .RegisterMqListener<FilesSelectReceive, TPaginationRequestStandardModel<SelectMetadataRequestModel>, TPaginationResponseStandardModel<StorageFileModelDB>>()
-            .RegisterMqListener<GetDirectoryInfoReceive, DirectoryReadRequestModel, TResponseModel<DirectoryReadResponseModel>>()
-            .RegisterMqListener<ReadFileDataAboutPositionReceive, ReadFileDataAboutPositionRequestModel, TResponseModel<Dictionary<DirectionsEnum, byte[]>>>()
+            .RegisterListenerRabbitMQ<SaveFileReceive, TAuthRequestStandardModel<StorageFileMetadataModel>, TResponseModel<StorageFileModelDB>>()
+            .RegisterListenerRabbitMQ<ReadFileReceive, TAuthRequestStandardModel<RequestFileReadModel>, TResponseModel<FileContentModel>>()
+            .RegisterListenerRabbitMQ<FilesAreaGetMetadataReceive, FilesAreaMetadataRequestModel, TResponseModel<FilesAreaMetadataModel[]>>()
+            .RegisterListenerRabbitMQ<FilesSelectReceive, TPaginationRequestStandardModel<SelectMetadataRequestModel>, TPaginationResponseStandardModel<StorageFileModelDB>>()
+            .RegisterListenerRabbitMQ<GetDirectoryInfoReceive, DirectoryReadRequestModel, TResponseModel<DirectoryReadResponseModel>>()
+            .RegisterListenerRabbitMQ<ReadFileDataAboutPositionReceive, ReadFileDataAboutPositionRequestModel, TResponseModel<Dictionary<DirectionsEnum, byte[]>>>()
             ;
     }
 }

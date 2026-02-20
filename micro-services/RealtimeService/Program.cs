@@ -186,7 +186,7 @@ public class Program
             .AddScoped<IMerchantService, MerchantTransmission>()
             ;
         #endregion
-        builder.Services.RealtimeRegisterMqListeners();
+        builder.Services.RealtimeRegisterListenersMQ();
         // Custom metrics for the application
         Meter greeterMeter = new($"OTel.{appName}", "1.0.0");
         OpenTelemetryBuilder otel = builder.Services.AddOpenTelemetry();

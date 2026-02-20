@@ -15,24 +15,26 @@ public static class RegisterMqListenerExtension
     /// <summary>
     /// RegisterMqListeners
     /// </summary>
-    public static IServiceCollection RealtimeRegisterMqListeners(this IServiceCollection services)
+    public static IServiceCollection RealtimeRegisterListenersMQ(this IServiceCollection services)
     {
         return services
-            .RegisterMqListener<CreateMessageWebChatReceive, MessageWebChatModelDB, TResponseModel<int>>()
-            .RegisterMqListener<UserInjectDialogWebChatReceive, TAuthRequestStandardModel<UserInjectDialogWebChatRequestModel>, ResponseBaseModel>()
-            .RegisterMqListener<UpdateMessageWebChatReceive, TAuthRequestStandardModel<MessageWebChatModelDB>, ResponseBaseModel>()
-            .RegisterMqListener<UpdateDialogWebChatInitiatorReceive, TAuthRequestStandardModel<DialogWebChatBaseModel>, ResponseBaseModel>()
-            .RegisterMqListener<UpdateDialogWebChatAdminReceive, TAuthRequestStandardModel<DialogWebChatBaseModel>, ResponseBaseModel>()
-            .RegisterMqListener<DeleteToggleDialogWebChatReceive, TAuthRequestStandardModel<int>, ResponseBaseModel>()
-            .RegisterMqListener<SelectUsersJoinsDialogsWebChatsReceive, TPaginationRequestStandardModel<SelectUsersJoinsDialogsWebChatsRequestModel>, TPaginationResponseStandardModel<UserJoinDialogWebChatModelDB>>()
-            .RegisterMqListener<DeleteToggleMessageWebChatReceive, TAuthRequestStandardModel<int>, ResponseBaseModel>()
-            .RegisterMqListener<DeleteUserJoinDialogWebChatReceive, TAuthRequestStandardModel<int>, ResponseBaseModel>()
-            .RegisterMqListener<SelectMessagesWebChatReceive, SelectMessagesForWebChatRequestModel, TResponseModel<SelectMessagesForWebChatResponseModel>>()
-            .RegisterMqListener<DialogsWebChatsReadReceive, TAuthRequestStandardModel<int[]>, TResponseModel<List<DialogWebChatModelDB>>>()
-            .RegisterMqListener<InitWebChatSessionReceive, InitWebChatSessionRequestModel, TResponseModel<DialogWebChatModelDB>>()
-            .RegisterMqListener<SelectMessagesForRoomWebChatReceive, TPaginationRequestAuthModel<SelectMessagesForWebChatRoomRequestModel>, TPaginationResponseStandardModel<MessageWebChatModelDB>>()
-            .RegisterMqListener<SelectDialogsWebChatsReceive, TPaginationRequestStandardModel<SelectDialogsWebChatsRequestModel>, TPaginationResponseStandardModel<DialogWebChatModelDB>>()
-            .RegisterMqListener<GetClientsConnectionsReceive, GetClientsRequestModel, TResponseModel<List<MqttClientModel>>>()
+            .RegisterListenerRabbitMQ<CreateMessageWebChatReceive, MessageWebChatModelDB, TResponseModel<int>>()
+            .RegisterListenerRabbitMQ<UserInjectDialogWebChatReceive, TAuthRequestStandardModel<UserInjectDialogWebChatRequestModel>, ResponseBaseModel>()
+            .RegisterListenerRabbitMQ<UpdateMessageWebChatReceive, TAuthRequestStandardModel<MessageWebChatModelDB>, ResponseBaseModel>()
+            .RegisterListenerRabbitMQ<UpdateDialogWebChatInitiatorReceive, TAuthRequestStandardModel<DialogWebChatBaseModel>, ResponseBaseModel>()
+            .RegisterListenerRabbitMQ<UpdateDialogWebChatAdminReceive, TAuthRequestStandardModel<DialogWebChatBaseModel>, ResponseBaseModel>()
+            .RegisterListenerRabbitMQ<DeleteToggleDialogWebChatReceive, TAuthRequestStandardModel<int>, ResponseBaseModel>()
+            .RegisterListenerRabbitMQ<SelectUsersJoinsDialogsWebChatsReceive, TPaginationRequestStandardModel<SelectUsersJoinsDialogsWebChatsRequestModel>, TPaginationResponseStandardModel<UserJoinDialogWebChatModelDB>>()
+            .RegisterListenerRabbitMQ<DeleteToggleMessageWebChatReceive, TAuthRequestStandardModel<int>, ResponseBaseModel>()
+            .RegisterListenerRabbitMQ<DeleteUserJoinDialogWebChatReceive, TAuthRequestStandardModel<int>, ResponseBaseModel>()
+            .RegisterListenerRabbitMQ<SelectMessagesWebChatReceive, SelectMessagesForWebChatRequestModel, TResponseModel<SelectMessagesForWebChatResponseModel>>()
+            .RegisterListenerRabbitMQ<DialogsWebChatsReadReceive, TAuthRequestStandardModel<int[]>, TResponseModel<List<DialogWebChatModelDB>>>()
+            .RegisterListenerRabbitMQ<InitWebChatSessionReceive, InitWebChatSessionRequestModel, TResponseModel<DialogWebChatModelDB>>()
+            .RegisterListenerRabbitMQ<SelectMessagesForRoomWebChatReceive, TPaginationRequestAuthModel<SelectMessagesForWebChatRoomRequestModel>, TPaginationResponseStandardModel<MessageWebChatModelDB>>()
+            .RegisterListenerRabbitMQ<SelectDialogsWebChatsReceive, TPaginationRequestStandardModel<SelectDialogsWebChatsRequestModel>, TPaginationResponseStandardModel<DialogWebChatModelDB>>()
+            .RegisterListenerRabbitMQ<GetClientsConnectionsReceive, GetClientsRequestModel, TResponseModel<List<MqttClientModel>>>()
+            
+            
             ;
     }
 }
