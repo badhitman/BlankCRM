@@ -22,7 +22,7 @@ public class CreateDeliveryStatusDocumentReceive(IRetailService commRepo, IHisto
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.SenderActionUserId, req.Payload);
         DocumentNewVersionResponseModel res = await commRepo.CreateDeliveryStatusDocumentAsync(req, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        await indexingRepo.SaveHistoryForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }
 }

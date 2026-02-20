@@ -22,7 +22,7 @@ public class BankTransferCreateOrUpdateReceive(IBankService bankRepo, IHistoryIn
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.SenderActionUserId, req.Payload);
         TResponseModel<int> res = await bankRepo.BankTransferCreateOrUpdateAsync(req, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        await indexingRepo.SaveHistoryForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }
 }

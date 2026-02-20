@@ -25,7 +25,7 @@ public class PulseIssueReceive(IHelpDeskService hdRepo, IHistoryIndexing indexin
         ArgumentNullException.ThrowIfNull(req?.Payload?.Payload);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, null, req);
         TResponseModel<bool> res = await hdRepo.PulsePushAsync(req, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        await indexingRepo.SaveHistoryForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }
 }

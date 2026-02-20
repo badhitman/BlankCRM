@@ -25,7 +25,7 @@ public class CreateNewUserReceive(IIdentityTools idRepo, IHistoryIndexing indexi
 
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, null, req);
         RegistrationNewUserResponseModel res = await idRepo.CreateNewUserEmailAsync(req, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        await indexingRepo.SaveHistoryForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }
 }

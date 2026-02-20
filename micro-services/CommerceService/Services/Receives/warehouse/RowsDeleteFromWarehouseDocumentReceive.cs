@@ -22,7 +22,7 @@ public class RowsDeleteFromWarehouseDocumentReceive(ICommerceService commRepo, I
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.SenderActionUserId, req.Payload);
         TResponseModel<Dictionary<int, DeliveryDocumentMetadataModel>> res = await commRepo.RowsDeleteFromWarehouseDocumentAsync(req, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        await indexingRepo.SaveHistoryForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }
 }

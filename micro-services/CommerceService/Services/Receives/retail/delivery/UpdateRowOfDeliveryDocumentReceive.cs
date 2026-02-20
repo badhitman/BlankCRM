@@ -22,7 +22,7 @@ public class UpdateRowOfDeliveryDocumentReceive(IRetailService commRepo, IHistor
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.SenderActionUserId, req.Payload);
         TResponseModel<Guid?> res = await commRepo.UpdateRowOfDeliveryDocumentAsync(req, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        await indexingRepo.SaveHistoryForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }
 }

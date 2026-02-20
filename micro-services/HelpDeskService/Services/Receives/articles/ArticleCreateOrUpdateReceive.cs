@@ -24,7 +24,7 @@ public class ArticleCreateOrUpdateReceive(IArticlesService artRepo, IHistoryInde
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, null, req);
         TResponseModel<int> res = await artRepo.ArticleCreateOrUpdateAsync(req, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        await indexingRepo.SaveHistoryForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }
 }

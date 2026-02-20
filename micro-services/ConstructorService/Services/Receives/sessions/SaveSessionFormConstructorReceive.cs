@@ -22,7 +22,7 @@ public class SaveSessionFormConstructorReceive(IConstructorService conService, I
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, null, req);
         TResponseModel<ValueDataForSessionOfDocumentModelDB[]> res = await conService.SaveSessionFormAsync(req, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        await indexingRepo.SaveHistoryForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }
 }

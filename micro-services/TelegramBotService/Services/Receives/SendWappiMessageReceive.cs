@@ -79,7 +79,7 @@ public class SendWappiMessageReceive(
             res.AddSuccess($"Сообщение успешно отправлено: {res.Response?.Status}");
         }
 
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        await indexingRepo.SaveHistoryForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }
 }

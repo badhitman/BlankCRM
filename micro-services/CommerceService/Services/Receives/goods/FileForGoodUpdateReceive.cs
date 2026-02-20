@@ -22,7 +22,7 @@ public class FileForGoodUpdateReceive(ICommerceService commerceRepo, IHistoryInd
         ArgumentNullException.ThrowIfNull(req?.Payload);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.SenderActionUserId, req);
         ResponseBaseModel res = await commerceRepo.FileForGoodUpdateAsync(req, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        await indexingRepo.SaveHistoryForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }
 }

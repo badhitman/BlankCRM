@@ -26,7 +26,7 @@ public class GeneratePasswordResetTokenReceive(IIdentityTools idRepo, IHistoryIn
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, null, req);
         TResponseModel<string?> res = await idRepo.GeneratePasswordResetTokenAsync(req, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        await indexingRepo.SaveHistoryForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }
 }

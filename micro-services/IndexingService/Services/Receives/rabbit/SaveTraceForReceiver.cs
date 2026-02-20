@@ -20,6 +20,6 @@ public class SaveTraceForReceiver(IHistoryIndexing indexingFileRepo)
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TraceReceiverRecord? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await indexingFileRepo.SaveTraceForReceiverAsync(req, token);
+        return await indexingFileRepo.SaveHistoryForReceiverAsync(req, token);
     }
 }

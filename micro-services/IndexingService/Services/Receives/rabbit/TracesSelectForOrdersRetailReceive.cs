@@ -20,7 +20,7 @@ public class TracesSelectForOrdersRetailReceive(IHistoryIndexing indexingFileRep
     public async Task<TPaginationResponseStandardModel<TraceReceiverRecord>?> ResponseHandleActionAsync(TPaginationRequestStandardModel<SelectTraceElementsRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        TPaginationResponseStandardModel<TraceReceiverRecord> res = await indexingFileRepo.TracesSelectForOrdersRetailAsync(req, token);
+        TPaginationResponseStandardModel<TraceReceiverRecord> res = await indexingFileRepo.SelectHistoryForOrdersRetailAsync(req, token);
         return res;
     }
 }

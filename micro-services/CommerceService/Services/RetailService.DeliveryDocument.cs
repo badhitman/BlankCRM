@@ -79,7 +79,7 @@ public partial class RetailService : IRetailService
             await context.OrdersDeliveriesLinks.AddAsync(_retailOrderDeliveryLink, token);
             await context.SaveChangesAsync(token);
             res.AddInfo($"Добавлена связь документа отгрузки/доставки #{docDb.Id} с заказом #{req.Payload.InjectToOrderId}");
-            await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(new TResponseModel<int>()
+            await indexingRepo.SaveHistoryForReceiverAsync(trace.SetResponse(new TResponseModel<int>()
             {
                 Response = _retailOrderDeliveryLink.Id,
             }), token);

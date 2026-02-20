@@ -113,7 +113,7 @@ public partial class RetailService : IRetailService
             };
             await context.ConversionsOrdersLinksRetail.AddAsync(_conversionOrderRetailLinkDb, token);
             await context.SaveChangesAsync(token);
-            await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(new TResponseModel<int>()
+            await indexingRepo.SaveHistoryForReceiverAsync(trace.SetResponse(new TResponseModel<int>()
             {
                 Response = _conversionOrderRetailLinkDb.Id,
             }), token);

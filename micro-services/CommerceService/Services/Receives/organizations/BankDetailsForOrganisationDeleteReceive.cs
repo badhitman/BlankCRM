@@ -22,7 +22,7 @@ public class BankDetailsForOrganizationDeleteReceive(ICommerceService commerceRe
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.SenderActionUserId, req.Payload);
         TResponseModel<BankDetailsModelDB> res = await commerceRepo.BankDetailsForOrganizationDeleteAsync(req, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        await indexingRepo.SaveHistoryForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }
 }

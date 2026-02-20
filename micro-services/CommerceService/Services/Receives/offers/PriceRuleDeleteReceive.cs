@@ -22,7 +22,7 @@ public class PriceRuleDeleteReceive(ICommerceService commerceRepo, IHistoryIndex
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.SenderActionUserId, req.Payload);
         TResponseModel<PriceRuleForOfferModelDB> res = await commerceRepo.PriceRuleDeleteAsync(req, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        await indexingRepo.SaveHistoryForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }
 }

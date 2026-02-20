@@ -24,7 +24,7 @@ public class DeleteSessionDocumentConstructorReceive(IConstructorService conServ
 
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, null, payload);
         ResponseBaseModel res = await conService.DeleteSessionDocumentAsync(payload, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        await indexingRepo.SaveHistoryForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }
 }
