@@ -86,7 +86,7 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
     {
         _connection = await factory.CreateConnectionAsync(stoppingToken);
         _channel = await _connection.CreateChannelAsync(cancellationToken: stoppingToken);
-        await _channel.QueueDeclareAsync(queue: QueueName, durable: true, exclusive: false, autoDelete: false, arguments: ResponseQueueArguments!, cancellationToken: stoppingToken);
+        await _channel.QueueDeclareAsync(queue: QueueName, durable: true, exclusive: false, autoDelete: false, arguments: new Dictionary<string, object>(ResponseQueueArguments!.Where(x => x.Key != "x-expires"))!, cancellationToken: stoppingToken);
 
         stoppingToken.ThrowIfCancellationRequested();
         TResponseMQModel<TResponse> answer = new()
@@ -145,7 +145,7 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
                         UTCTimestampInitReceive = DateTime.UtcNow,
                     }, stoppingToken);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
                 }

@@ -414,7 +414,7 @@ public class RabbitClient : IMQStandardClientRPC
 
         try
         {
-            await _channel!.QueueDeclareAsync(queue: queue, durable: true, exclusive: false, autoDelete: false, arguments: ResponseQueueArguments!, cancellationToken: tokenOuter);
+            await _channel!.QueueDeclareAsync(queue: queue, durable: true, exclusive: false, autoDelete: false, arguments: new Dictionary<string, object>(ResponseQueueArguments!.Where(x => x.Key != "x-expires"))!, cancellationToken: tokenOuter);
         }
         catch (TaskCanceledException ex)
         {

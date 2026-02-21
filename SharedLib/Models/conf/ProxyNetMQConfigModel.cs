@@ -25,7 +25,7 @@ public class ProxyNetMQConfigModel
     /// <summary>
     /// Таймаут ожидания ответа на удалённый вызов
     /// </summary>
-    public int RemoteCallTimeoutMs { get; set; } = 3600000;
+    public int RemoteCallTimeoutMs { get; set; } = 300000;
 
     /// <inheritdoc/>
     public void Reload(ProxyNetMQConfigModel other)

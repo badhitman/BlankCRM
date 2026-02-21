@@ -12,7 +12,7 @@ public class RealtimeMQTTClientConfigModel : HostConfigModel
     /// <summary>
     /// Таймаут ожидания ответа на удалённый вызов
     /// </summary>
-    public int RemoteCallTimeoutMs { get; set; } = 3600000;
+    public int RemoteCallTimeoutMs { get; set; } = 300000;
 
     /// <summary>
     /// Префикс имён очередей для ответов на удалённые команды
