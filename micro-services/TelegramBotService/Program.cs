@@ -52,8 +52,9 @@ public class Program
             GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix += _modePrefix.Trim();
             GlobalStaticConstantsTransmission.TransmissionQueueNamePrefixMQTT += _modePrefix.Trim();
         }
-        string curr_dir = Directory.GetCurrentDirectory();
+        logger.Warn($"{nameof(GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix)}: {Environment.GetEnvironmentVariable(nameof(GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix))}");
 
+        string curr_dir = Directory.GetCurrentDirectory();
 
         builder.Configuration.SetBasePath(curr_dir);
         string path_load = Path.Combine(curr_dir, "appsettings.json");

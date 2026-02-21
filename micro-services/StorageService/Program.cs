@@ -53,6 +53,7 @@ public class Program
             GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix += _modePrefix.Trim();
             GlobalStaticConstantsTransmission.TransmissionQueueNamePrefixMQTT += _modePrefix.Trim();
         }
+        logger.Warn($"{nameof(GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix)}: {Environment.GetEnvironmentVariable(nameof(GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix))}");
 
         string curr_dir = Directory.GetCurrentDirectory();
 

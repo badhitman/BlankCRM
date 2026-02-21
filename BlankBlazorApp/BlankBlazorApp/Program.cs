@@ -51,8 +51,6 @@ builder.Host.UseNLog();
 string _environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? builder.Environment.EnvironmentName;
 logger.Warn($"init main: {_environmentName}");
 
-logger.Warn($"{nameof(GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix)}: {Environment.GetEnvironmentVariable(nameof(GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix))}");
-
 string _modePrefix = Environment.GetEnvironmentVariable(nameof(GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix)) ?? "";
 if (!string.IsNullOrWhiteSpace(_modePrefix) && !GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix.EndsWith(_modePrefix))
 {
@@ -61,6 +59,8 @@ if (!string.IsNullOrWhiteSpace(_modePrefix) && !GlobalStaticConstantsTransmissio
     GlobalStaticConstantsTransmission.TransmissionQueueNamePrefixMQTT += _modePrefix.Trim();
     logger.Debug($"actual [{nameof(GlobalStaticConstantsTransmission.TransmissionQueueNamePrefixMQTT)}: `{_modePrefix}`]");
 }
+
+logger.Warn($"{nameof(GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix)}: {Environment.GetEnvironmentVariable(nameof(GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix))}");
 
 string curr_dir = Directory.GetCurrentDirectory();
 builder.Configuration.SetBasePath(curr_dir);
