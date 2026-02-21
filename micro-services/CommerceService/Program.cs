@@ -17,7 +17,9 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
 using Microsoft.Extensions.Options;
 using System.Text;
+using Newtonsoft.Json;
 
+RealtimeMQTTClientConfigModel _confMQTT = RealtimeMQTTClientConfigModel.BuildEmpty();
 Console.OutputEncoding = Encoding.UTF8;
 // Early init of NLog to allow startup and exception logging, before host is built
 Logger logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
@@ -93,12 +95,16 @@ if (!string.IsNullOrWhiteSpace(_modePrefix))
 builder.Configuration.AddEnvironmentVariables();
 builder.Configuration.AddCommandLine(args);
 
+_confMQTT.Reload(builder.Configuration.GetSection(RealtimeMQTTClientConfigModel.Configuration).Get<RealtimeMQTTClientConfigModel>()!);
+logger.Warn($"mqtt config: {JsonConvert.SerializeObject(_confMQTT)}");
+builder.Services.AddSingleton(sp => _confMQTT);
+
 builder.Services
     .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
 ;
 
 builder.Services
-    .AddScoped<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
+    .AddSingleton<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
     .AddScoped<ICommerceService, CommerceImplementService>()
     .AddScoped<IIndexingServive, IndexingTransmission>()
     .AddScoped<IHistoryIndexing, HistoryTransmission>()
@@ -122,6 +128,10 @@ builder.Services.AddDbContextFactory<CommerceContext>(opt =>
 builder.Services.AddMemoryCache();
 
 string appName = typeof(Program).Assembly.GetName().Name ?? "AssemblyName";
+builder.Services
+            .AddSingleton<IMQStandardClientExtRPC>(x => new ClientMQTT(x.GetRequiredService<RealtimeMQTTClientConfigModel>(), x.GetRequiredService<ILogger<ClientMQTT>>(), appName))
+            ;
+
 #region MQ Transmission (remote methods call)
 IMQStandardClientRPC rabbitImplement(IServiceProvider provider, object arg2)
 {

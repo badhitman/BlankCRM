@@ -16,6 +16,7 @@ using SharedLib;
 using NLog.Web;
 using DbcLib;
 using NLog;
+using Newtonsoft.Json;
 
 namespace StorageService;
 
@@ -24,6 +25,7 @@ namespace StorageService;
 /// </summary>
 public class Program
 {
+    static readonly RealtimeMQTTClientConfigModel _confMQTT = RealtimeMQTTClientConfigModel.BuildEmpty();
     /// <summary>
     /// Main
     /// </summary>
@@ -96,6 +98,10 @@ public class Program
         builder.Configuration.AddEnvironmentVariables();
         builder.Configuration.AddCommandLine(args);
 
+        _confMQTT.Reload(builder.Configuration.GetSection(RealtimeMQTTClientConfigModel.Configuration).Get<RealtimeMQTTClientConfigModel>()!);
+        logger.Warn($"mqtt config: {JsonConvert.SerializeObject(_confMQTT)}");
+        builder.Services.AddSingleton(sp => _confMQTT);
+
         builder.Services
             .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
             .Configure<MongoConfigModel>(builder.Configuration.GetSection(MongoConfigModel.Configuration))
@@ -138,7 +144,7 @@ public class Program
             ;
 
         builder.Services
-            .AddScoped<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
+            .AddSingleton<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
             .AddScoped<IHelpDeskTransmission, HelpDeskTransmission>()
             .AddScoped<ITelegramTransmission, TelegramTransmission>()
             .AddScoped<IIdentityTransmission, IdentityTransmission>()
@@ -150,7 +156,9 @@ public class Program
         //
         builder.Services.StorageRegisterMqListeners();
         #endregion
-
+        builder.Services
+            .AddSingleton<IMQStandardClientExtRPC>(x => new ClientMQTT(x.GetRequiredService<RealtimeMQTTClientConfigModel>(), x.GetRequiredService<ILogger<ClientMQTT>>(), appName))
+            ;
         builder.Services
             .AddScoped<IParametersStorage, ParametersStorage>()
             .AddScoped<IFilesStorage, StorageFilesImpl>()
@@ -179,7 +187,6 @@ public class Program
             tracing.AddHttpClientInstrumentation();
             tracing.AddSource($"OTel.{appName}");
         });
-
 
         IHost app = builder.Build();
 

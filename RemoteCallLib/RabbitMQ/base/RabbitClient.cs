@@ -78,12 +78,19 @@ public class RabbitClient : IMQStandardClientRPC
         activity?.Start();
         string guidRequest = Guid.NewGuid().ToString();
 
-        await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
-        {
-            ReceiverName = queue,
-            RequestBody = request,
-            UTCTimestampInitReceive = DateTime.UtcNow,
-        }, tokenOuter);
+        //try
+        //{
+        //    await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
+        //    {
+        //        ReceiverName = queue,
+        //        RequestBody = request,
+        //        UTCTimestampInitReceive = DateTime.UtcNow,
+        //    }, tokenOuter);
+        //}
+        //catch
+        //{
+
+        //}
 
         string response_topic = waitResponse ? $"{AppName}.{RabbitConfigRepo.QueueMqNamePrefixForResponse.Replace("\\", "/")}{queue}_{guidRequest}" : "";
         activity?.SetTag(nameof(response_topic), response_topic);

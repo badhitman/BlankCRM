@@ -170,36 +170,46 @@ public class Program
             .WithEnvironment(act => rabbitConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
             .WithEnvironment(act => mongoConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
             .WithReference(builder.AddConnectionString($"IndexingServiceConnection{_modePrefix}"))
+            
+            .WithReference(realtimeService)
+            .WaitFor(realtimeService)
+            //.WithHttpHealthCheck(() => realtimeService.GetEndpoint("https"), path: "/health")
             ;
 
         IResourceBuilder<ProjectResource> kladrService = builder.AddProject<Projects.KladrService>("kladreservice")
             .WithEnvironment(act => rabbitConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
             .WithEnvironment(act => mongoConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
             .WithReference(builder.AddConnectionString($"KladrConnection{_modePrefix}"))
-            ;
 
-        IResourceBuilder<ProjectResource> helpdeskService = builder.AddProject<Projects.HelpDeskService>("helpdeskservice")
-            .WithEnvironment(act => rabbitConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
-            .WithReference(builder.AddConnectionString($"HelpDeskConnection{_modePrefix}"))
-            .WithReference(redisConnectionStr)
+            .WithReference(realtimeService)
+            .WaitFor(realtimeService)
             ;
 
         IResourceBuilder<ProjectResource> apiRestService = builder.AddProject<Projects.ApiRestService>("apirestservice")
             .WithReference(redisConnectionStr)
             .WithEnvironment(act => apiAccessConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
             .WithEnvironment(act => rabbitConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
+
+            .WithReference(realtimeService)
+            .WaitFor(realtimeService)
             ;
 
         IResourceBuilder<ProjectResource> commerceService = builder.AddProject<Projects.CommerceService>("commerceservice")
             .WithEnvironment(act => rabbitConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
             .WithReference(builder.AddConnectionString($"CommerceConnection{_modePrefix}"))
             .WithReference(redisConnectionStr)
+
+            .WithReference(realtimeService)
+            .WaitFor(realtimeService)
             ;
 
         IResourceBuilder<ProjectResource> bankService = builder.AddProject<Projects.BankService>("bankservice")
             .WithEnvironment(act => rabbitConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
             .WithReference(builder.AddConnectionString($"BankConnection{_modePrefix}"))
             .WithReference(redisConnectionStr)
+
+            .WithReference(realtimeService)
+            .WaitFor(realtimeService)
             ;
 
         IResourceBuilder<ProjectResource> identityService = builder.AddProject<Projects.IdentityService>("identityservice")
@@ -207,7 +217,20 @@ public class Program
             .WithReference(redisConnectionStr)
             .WithEnvironment(act => smtpConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
             .WithEnvironment(act => rabbitConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
+
+            .WithReference(realtimeService)
+            .WaitFor(realtimeService)
             ;
+
+        IResourceBuilder<ProjectResource> helpdeskService = builder.AddProject<Projects.HelpDeskService>("helpdeskservice")
+            .WithEnvironment(act => rabbitConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
+            .WithReference(builder.AddConnectionString($"HelpDeskConnection{_modePrefix}"))
+            .WithReference(redisConnectionStr)
+
+            .WithReference(realtimeService)
+            .WaitFor(realtimeService)
+            ;
+
         //
         IResourceBuilder<ProjectResource> webService = builder.AddProject<Projects.BlankBlazorApp>("blankblazorapp")
             .WithReference(realtimeService)

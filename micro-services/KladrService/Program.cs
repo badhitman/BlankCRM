@@ -10,6 +10,7 @@ using SharedLib;
 using DbcLib;
 using NLog;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace KladrService;
 
@@ -17,6 +18,7 @@ public class Program
 {
     public static void Main(string[] args)
     {
+        RealtimeMQTTClientConfigModel _confMQTT = RealtimeMQTTClientConfigModel.BuildEmpty();
         Console.OutputEncoding = Encoding.UTF8;
         HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 
@@ -85,6 +87,10 @@ public class Program
         builder.Configuration.AddEnvironmentVariables();
         builder.Configuration.AddCommandLine(args);
 
+        _confMQTT.Reload(builder.Configuration.GetSection(RealtimeMQTTClientConfigModel.Configuration).Get<RealtimeMQTTClientConfigModel>()!);
+        logger.Warn($"mqtt config: {JsonConvert.SerializeObject(_confMQTT)}");
+        builder.Services.AddSingleton(sp => _confMQTT);
+
         builder.Services
             .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
             ;
@@ -112,10 +118,13 @@ public class Program
         builder.Services
             .AddKeyedSingleton(nameof(RabbitClient), rabbitImplement)
             ;
+        builder.Services
+            .AddSingleton<IMQStandardClientExtRPC>(x => new ClientMQTT(x.GetRequiredService<RealtimeMQTTClientConfigModel>(), x.GetRequiredService<ILogger<ClientMQTT>>(), appName))
+            ;
 
         builder.Services.KladrRegisterMqListeners();
         builder.Services
-            .AddScoped<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
+            .AddSingleton<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
             ;
         #endregion
         builder.Services

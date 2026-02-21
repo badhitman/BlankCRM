@@ -16,6 +16,7 @@ using SharedLib;
 using NLog.Web;
 using DbcLib;
 using NLog;
+using Newtonsoft.Json;
 
 namespace HelpDeskService;
 
@@ -29,6 +30,7 @@ public class Program
     /// </summary>
     public static async Task Main(string[] args)
     {
+        RealtimeMQTTClientConfigModel _confMQTT = RealtimeMQTTClientConfigModel.BuildEmpty();
         Console.OutputEncoding = Encoding.UTF8;
         HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
         Logger logger = LogManager.GetCurrentClassLogger();
@@ -96,6 +98,10 @@ public class Program
         builder.Configuration.AddEnvironmentVariables();
         builder.Configuration.AddCommandLine(args);
 
+        _confMQTT.Reload(builder.Configuration.GetSection(RealtimeMQTTClientConfigModel.Configuration).Get<RealtimeMQTTClientConfigModel>()!);
+        logger.Warn($"mqtt config: {JsonConvert.SerializeObject(_confMQTT)}");
+        builder.Services.AddSingleton(sp => _confMQTT);
+
         builder.Services
             .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
             .Configure<HelpDeskConfigModel>(builder.Configuration.GetSection(HelpDeskConfigModel.Configuration))
@@ -143,7 +149,7 @@ public class Program
             ;
         //
         builder.Services
-            .AddScoped<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
+            .AddSingleton<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
             .AddScoped<IHelpDeskTransmission, HelpDeskTransmission>()
             .AddScoped<IWebTransmission, WebTransmission>()
             .AddScoped<ITelegramTransmission, TelegramTransmission>()
@@ -159,6 +165,9 @@ public class Program
         // 
         builder.Services.HelpDeskRegisterMqListeners();
         #endregion
+        builder.Services
+            .AddSingleton<IMQStandardClientExtRPC>(x => new ClientMQTT(x.GetRequiredService<RealtimeMQTTClientConfigModel>(), x.GetRequiredService<ILogger<ClientMQTT>>(), appName))
+            ;
 
         // Custom metrics for the application
         Meter greeterMeter = new($"OTel.{appName}", "1.0.0");

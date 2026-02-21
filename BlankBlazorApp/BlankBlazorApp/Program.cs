@@ -233,8 +233,8 @@ builder.Services.AddScoped<IUsersAuthenticateService, UsersAuthenticateService>(
     .AddScoped<IEventsWebChatsNotifies, EventsWebChatsNotifiesTransmissionMQTT>()
     ;
 
-#region MQ Transmission (remote methods call)
 string appName = typeof(Program).Assembly.GetName().Name ?? "AssemblyName";
+#region MQ Transmission (remote methods call)
 IMQStandardClientRPC rabbitImplement(IServiceProvider provider, object arg2)
 {
     return new RabbitClient(
@@ -264,7 +264,7 @@ builder.Services
           ;
 
 builder.Services
-    .AddScoped<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
+    .AddSingleton<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
     .AddScoped<IBankService, BankTransmission>()
     .AddScoped<IWebChatService, WebChatTransmission>()
     .AddScoped<ICommerceTransmission, CommerceTransmission>()

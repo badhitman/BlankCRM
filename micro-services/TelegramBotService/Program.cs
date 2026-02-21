@@ -15,6 +15,7 @@ using System.Text;
 using SharedLib;
 using DbcLib;
 using NLog;
+using Newtonsoft.Json;
 
 namespace TelegramBotService;
 
@@ -23,6 +24,7 @@ namespace TelegramBotService;
 /// </summary>
 public class Program
 {
+    static readonly RealtimeMQTTClientConfigModel _confMQTT = RealtimeMQTTClientConfigModel.BuildEmpty();
     /// <summary>
     /// Main
     /// </summary>
@@ -95,6 +97,10 @@ public class Program
         builder.Configuration.AddEnvironmentVariables();
         builder.Configuration.AddCommandLine(args);
 
+        _confMQTT.Reload(builder.Configuration.GetSection(RealtimeMQTTClientConfigModel.Configuration).Get<RealtimeMQTTClientConfigModel>()!);
+        logger.Warn($"mqtt config: {JsonConvert.SerializeObject(_confMQTT)}");
+        builder.Services.AddSingleton(sp => _confMQTT);
+
         builder.Services
            .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
            .Configure<BotConfiguration>(builder.Configuration.GetSection(BotConfiguration.Configuration))
@@ -161,7 +167,7 @@ public class Program
             ;
 
         builder.Services
-            .AddScoped<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
+            .AddSingleton<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
             .AddScoped<IIndexingServive, IndexingTransmission>()
             .AddScoped<IHistoryIndexing, HistoryTransmission>()
             .AddScoped<IWebTransmission, WebTransmission>()
@@ -174,6 +180,9 @@ public class Program
         //
         builder.Services.TelegramBotRegisterMqListeners();
         #endregion
+        builder.Services
+            .AddSingleton<IMQStandardClientExtRPC>(x => new ClientMQTT(x.GetRequiredService<RealtimeMQTTClientConfigModel>(), x.GetRequiredService<ILogger<ClientMQTT>>(), appName))
+            ;
 
         // Custom metrics for the application
         Meter greeterMeter = new($"OTel.{appName}", "1.0.0");

@@ -17,7 +17,9 @@ using System.Diagnostics.Metrics;
 using OpenTelemetry.Trace;
 using OpenTelemetry.Metrics;
 using System.Text;
+using Newtonsoft.Json;
 
+RealtimeMQTTClientConfigModel _confMQTT = RealtimeMQTTClientConfigModel.BuildEmpty();
 Console.OutputEncoding = Encoding.UTF8;
 // Early init of NLog to allow startup and exception logging, before host is built
 Logger logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
@@ -94,6 +96,10 @@ builder.Configuration.AddCommandLine(args);
 
 builder.Services.AddOptions();
 
+_confMQTT.Reload(builder.Configuration.GetSection(RealtimeMQTTClientConfigModel.Configuration).Get<RealtimeMQTTClientConfigModel>()!);
+logger.Warn($"mqtt config: {JsonConvert.SerializeObject(_confMQTT)}");
+builder.Services.AddSingleton(sp => _confMQTT);
+
 builder.Services
    .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
    .Configure<ConstructorConfigModel>(builder.Configuration.GetSection("ConstructorConfig"));
@@ -130,7 +136,7 @@ builder.Services
     ;
 //
 builder.Services
-    .AddScoped<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
+    .AddSingleton<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
     .AddScoped<IIndexingServive, IndexingTransmission>()
     .AddScoped<IHistoryIndexing, HistoryTransmission>()
     .AddScoped<IWebTransmission, WebTransmission>()
@@ -144,6 +150,10 @@ builder.Services
 //
 builder.Services.ConstructorRegisterMqListeners();
 #endregion
+
+builder.Services
+    .AddSingleton<IMQStandardClientExtRPC>(x => new ClientMQTT(x.GetRequiredService<RealtimeMQTTClientConfigModel>(), x.GetRequiredService<ILogger<ClientMQTT>>(), appName))
+    ;
 
 // Custom metrics for the application
 Meter greeterMeter = new($"OTel.{appName}", "1.0.0");

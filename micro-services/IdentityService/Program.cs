@@ -19,6 +19,7 @@ using System.Text;
 using ServerLib;
 using SharedLib;
 using NLog;
+using Newtonsoft.Json;
 
 namespace IdentityService;
 
@@ -32,6 +33,7 @@ public class Program
     /// </summary>
     public static void Main(string[] args)
     {
+        RealtimeMQTTClientConfigModel _confMQTT = RealtimeMQTTClientConfigModel.BuildEmpty();
         Console.OutputEncoding = Encoding.UTF8;
         Logger logger = LogManager.GetCurrentClassLogger();
 
@@ -100,6 +102,10 @@ public class Program
 
         builder.Configuration.AddEnvironmentVariables();
         builder.Configuration.AddCommandLine(args);
+
+        _confMQTT.Reload(builder.Configuration.GetSection(RealtimeMQTTClientConfigModel.Configuration).Get<RealtimeMQTTClientConfigModel>()!);
+        logger.Warn($"mqtt config: {JsonConvert.SerializeObject(_confMQTT)}");
+        builder.Services.AddSingleton(sp => _confMQTT);
 
         builder.Services
             .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
@@ -179,6 +185,10 @@ public class Program
             ;
         
         string appName = typeof(Program).Assembly.GetName().Name ?? "AssemblyName";
+        builder.Services
+            .AddSingleton<IMQStandardClientExtRPC>(x => new ClientMQTT(x.GetRequiredService<RealtimeMQTTClientConfigModel>(), x.GetRequiredService<ILogger<ClientMQTT>>(), appName))
+            ;
+
         #region MQ Transmission (remote methods call)
         IMQStandardClientRPC rabbitImplement(IServiceProvider provider, object arg2)
         {
@@ -194,7 +204,7 @@ public class Program
             ;
 
         builder.Services
-            .AddScoped<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
+            .AddSingleton<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
             .AddScoped<ITelegramTransmission, TelegramTransmission>()
             .AddScoped<IHelpDeskTransmission, HelpDeskTransmission>()
             .AddScoped<IWebTransmission, WebTransmission>()

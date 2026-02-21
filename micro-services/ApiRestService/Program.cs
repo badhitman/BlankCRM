@@ -20,7 +20,9 @@ using SharedLib;
 using NLog.Web;
 using NLog;
 using DbcLib;
+using Newtonsoft.Json;
 
+RealtimeMQTTClientConfigModel _confMQTT = RealtimeMQTTClientConfigModel.BuildEmpty();
 Console.OutputEncoding = Encoding.UTF8;
 Logger logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 
@@ -101,6 +103,10 @@ builder.Configuration.AddEnvironmentVariables();
 builder.Configuration.AddCommandLine(args);
 builder.Services.AddOptions();
 
+_confMQTT.Reload(builder.Configuration.GetSection(RealtimeMQTTClientConfigModel.Configuration).Get<RealtimeMQTTClientConfigModel>()!);
+logger.Warn($"mqtt config: {JsonConvert.SerializeObject(_confMQTT)}");
+builder.Services.AddSingleton(sp => _confMQTT);
+
 builder.Services
     .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
     .Configure<RestApiConfigBaseModel>(builder.Configuration.GetSection(RestApiConfigBaseModel.Configuration))
@@ -124,7 +130,7 @@ builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddTransient<UnhandledExceptionAttribute>();
 builder.Services
-    .AddScoped<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
+    .AddSingleton<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
     .AddScoped<IIndexingServive, IndexingTransmission>()
     .AddScoped<IHistoryIndexing, HistoryTransmission>()
     .AddScoped<RolesAuthorizationFilter>()
@@ -162,6 +168,9 @@ builder.Services
     .AddScoped<IMerchantService, MerchantTransmission>()
     ;
 #endregion
+builder.Services
+            .AddSingleton<IMQStandardClientExtRPC>(x => new ClientMQTT(x.GetRequiredService<RealtimeMQTTClientConfigModel>(), x.GetRequiredService<ILogger<ClientMQTT>>(), appName))
+            ;
 
 // Custom metrics for the application
 Meter greeterMeter = new($"OTel.{appName}", "1.0.0");

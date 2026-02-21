@@ -16,6 +16,7 @@ using SharedLib;
 using NLog.Web;
 using DbcLib;
 using NLog;
+using Newtonsoft.Json;
 
 namespace IndexingService;
 
@@ -29,6 +30,7 @@ public class Program
     /// </summary>
     public static async Task Main(string[] args)
     {
+        RealtimeMQTTClientConfigModel _confMQTT = RealtimeMQTTClientConfigModel.BuildEmpty();
         Console.OutputEncoding = Encoding.UTF8;
         HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
         Logger logger = LogManager.GetCurrentClassLogger();
@@ -96,6 +98,10 @@ public class Program
         builder.Configuration.AddEnvironmentVariables();
         builder.Configuration.AddCommandLine(args);
 
+        _confMQTT.Reload(builder.Configuration.GetSection(RealtimeMQTTClientConfigModel.Configuration).Get<RealtimeMQTTClientConfigModel>()!);
+        logger.Warn($"mqtt config: {JsonConvert.SerializeObject(_confMQTT)}");
+        builder.Services.AddSingleton(sp => _confMQTT);
+
         builder.Services
             .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
             .Configure<MongoConfigModel>(builder.Configuration.GetSection(MongoConfigModel.Configuration))
@@ -123,18 +129,21 @@ public class Program
                 provider.GetRequiredService<ITraceRabbitActionsServiceTransmission>(),
                 appName);
         }
-        
+
         builder.Services
             .AddKeyedSingleton(nameof(RabbitClient), rabbitImplement)
             ;
 
         builder.Services
             .AddScoped<IStorageTransmission, StorageTransmission>()
-            .AddScoped<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
+            .AddSingleton<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
             ;
 
         builder.Services.IndexingServiceRegisterMqListeners();
         #endregion
+        builder.Services
+            .AddSingleton<IMQStandardClientExtRPC>(x => new ClientMQTT(x.GetRequiredService<RealtimeMQTTClientConfigModel>(), x.GetRequiredService<ILogger<ClientMQTT>>(), appName))
+            ;
 
         builder.Services
             .AddScoped<IIndexingServive, IndexingServiceImpl>()

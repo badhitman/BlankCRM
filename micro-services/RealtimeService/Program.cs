@@ -102,11 +102,10 @@ public class Program
         builder.Configuration.AddEnvironmentVariables();
         builder.Configuration.AddCommandLine(args);
 
-        builder.Services
-            .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
-        ;
         _confMQTT.Reload(builder.Configuration.GetSection(RealtimeMQTTClientConfigModel.Configuration).Get<RealtimeMQTTClientConfigModel>()!);
         logger.Warn($"mqtt config: {JsonConvert.SerializeObject(_confMQTT)}");
+        builder.Services.AddSingleton(sp => _confMQTT);
+
         //foreach (KeyValuePair<string, string?> _kvp in builder.Configuration.AsEnumerable())
         //{
         //    logger.Warn($"global config: {JsonConvert.SerializeObject(_kvp)}");
@@ -180,12 +179,12 @@ public class Program
             ;
         //
         builder.Services
+            .AddSingleton<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
             .AddScoped<IEventsWebChatsNotifies, EventsWebChatsNotifiesTransmissionMQTT>()
             .AddScoped<IWebTransmission, WebTransmission>()
             .AddScoped<IIdentityTransmission, IdentityTransmission>()
             .AddScoped<ITelegramTransmission, TelegramTransmission>()
             .AddScoped<IHelpDeskTransmission, HelpDeskTransmission>()
-            .AddScoped<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
             .AddScoped<IRubricsTransmission, RubricsTransmission>()
             .AddScoped<ICommerceTransmission, CommerceTransmission>()
             .AddScoped<IKladrNavigationService, KladrNavigationServiceTransmission>()

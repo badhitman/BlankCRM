@@ -9,7 +9,6 @@ using System.Diagnostics.Metrics;
 using NLog.Extensions.Logging;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
-using FluentScheduler;
 using OpenTelemetry;
 using RemoteCallLib;
 using BankService;
@@ -18,9 +17,9 @@ using SharedLib;
 using NLog.Web;
 using DbcLib;
 using NLog;
-using TinkoffPaymentClientApi.ResponseEntity;
 using Newtonsoft.Json;
 
+RealtimeMQTTClientConfigModel _confMQTT = RealtimeMQTTClientConfigModel.BuildEmpty();
 Console.OutputEncoding = Encoding.UTF8;
 // Early init of NLog to allow startup and exception logging, before host is built
 Logger logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
@@ -96,13 +95,17 @@ if (!string.IsNullOrWhiteSpace(_modePrefix))
 builder.Configuration.AddEnvironmentVariables();
 builder.Configuration.AddCommandLine(args);
 
+_confMQTT.Reload(builder.Configuration.GetSection(RealtimeMQTTClientConfigModel.Configuration).Get<RealtimeMQTTClientConfigModel>()!);
+logger.Warn($"mqtt config: {JsonConvert.SerializeObject(_confMQTT)}");
+builder.Services.AddSingleton(sp => _confMQTT);
+
 builder.Services
     .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
     .Configure<TBankSettings>(builder.Configuration.GetSection(nameof(TBankSettings)))
 ;
 
 builder.Services
-    .AddScoped<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
+    .AddSingleton<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
     .AddScoped<IMerchantService, MerchantImplementService>()
     .AddScoped<IIndexingServive, IndexingTransmission>()
     .AddScoped<IHistoryIndexing, HistoryTransmission>()
@@ -152,6 +155,10 @@ builder.Services
 //
 builder.Services.BankRegisterMqListeners();
 #endregion
+
+builder.Services
+    .AddSingleton<IMQStandardClientExtRPC>(x => new ClientMQTT(x.GetRequiredService<RealtimeMQTTClientConfigModel>(), x.GetRequiredService<ILogger<ClientMQTT>>(), appName))
+    ;
 
 // Custom metrics for the application
 Meter greeterMeter = new($"OTel.{appName}", "1.0.0");
