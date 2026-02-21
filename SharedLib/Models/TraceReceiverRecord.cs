@@ -32,7 +32,7 @@ public class TraceReceiverRecord : TraceReceiverBaseRecord
         return new()
         {
             UTCTimestampInitReceive = DateTime.UtcNow,
-            RequestBody = _requestBody is null ? null : JObject.FromObject(_requestBody),
+            PayloadBody = _requestBody is null ? null : JObject.FromObject(_requestBody),
             ReceiverName = _receiverName.WithoutTransmissionQueueNamePrefix(),
             SenderActionUserId = _authorId,
         };

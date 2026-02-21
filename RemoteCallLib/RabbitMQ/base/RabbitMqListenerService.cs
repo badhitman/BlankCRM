@@ -4,13 +4,14 @@
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
-using RabbitMQ.Client.Events;
-using RabbitMQ.Client;
-using Newtonsoft.Json;
-using System.Text;
-using SharedLib;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using MQTTnet;
+using Newtonsoft.Json;
+using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
+using SharedLib;
+using System.Text;
 #if !DEBUG
 using System.Text.Json.Serialization;
 using System.Text.Json;
@@ -34,6 +35,7 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
     IChannel _channel = default!;
     readonly IResponseReceive<TRequest?, TResponse> receiveService;
     readonly ConnectionFactory factory;
+    readonly ITraceRabbitActionsServiceTransmission traceRepo;
 
     static Dictionary<string, object>? ResponseQueueArguments;
 
@@ -52,9 +54,11 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
     /// <inheritdoc/>
     public RabbitMqListenerService(
         IServiceProvider servicesProvider,
+        ITraceRabbitActionsServiceTransmission _traceRepo,
         IOptions<RabbitMQConfigModel> rabbitConf,
         ILogger<RabbitMqListenerService<TQueue, TRequest, TResponse>> loggerRepo)
     {
+        traceRepo = _traceRepo;
         LoggerRepo = loggerRepo;
         ResponseQueueArguments ??= new()
         {
@@ -130,9 +134,41 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
                 {
                     await _channel.BasicAckAsync(ea.DeliveryTag, false, cancellationToken: stoppingToken);
                 }
+                try
+                {
+                    await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
+                    {
+                        Sender = nameof(consumer.ReceivedAsync),
+                        GuidSession = ea.BasicProperties.ReplyTo[^36..],
+                        ReceiverName = QueueName,
+                        PayloadBody = answer.Response,
+                        UTCTimestampInitReceive = DateTime.UtcNow,
+                    }, stoppingToken);
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
             }
             else
+            {
                 await _channel.BasicAckAsync(ea.DeliveryTag, false, cancellationToken: stoppingToken);
+                try
+                {
+                    await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
+                    {
+                        Sender = nameof(consumer.ReceivedAsync),
+                        GuidSession = "~",
+                        ReceiverName = QueueName,
+                        PayloadBody = answer.Response,
+                        UTCTimestampInitReceive = DateTime.UtcNow,
+                    }, stoppingToken);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
 #else
             try
             {

@@ -26,7 +26,7 @@ public class HistoryReceive : TraceReceiverRecord
         {
             SenderActionUserId = sender.SenderActionUserId,
             ReceiverName = sender.ReceiverName,
-            RequestBody = sender.RequestBody,
+            PayloadBody = sender.PayloadBody,
             ResponseBody = sender.ResponseBody,
             UTCTimestampFinalReceive = sender.UTCTimestampFinalReceive,
             UTCTimestampInitReceive = sender.UTCTimestampInitReceive,

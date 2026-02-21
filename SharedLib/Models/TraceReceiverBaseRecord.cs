@@ -21,10 +21,8 @@ public class TraceReceiverBaseRecord
     /// </summary>
     public required string ReceiverName { get; set; }
 
-    /// <summary>
-    /// Тело входящего запроса
-    /// </summary>
-    public object? RequestBody { get; set; }
+    /// <inheritdoc/>
+    public object? PayloadBody { get; set; }
 
     /// <summary>
     /// TraceReceiverBaseRecord 
@@ -34,7 +32,7 @@ public class TraceReceiverBaseRecord
         return new()
         {
             UTCTimestampInitReceive = DateTime.UtcNow,
-            RequestBody = _requestBody is null ? null : JObject.FromObject(_requestBody),
+            PayloadBody = _requestBody is null ? null : JObject.FromObject(_requestBody),
             ReceiverName = _receiverName.WithoutTransmissionQueueNamePrefix(),
         };
     }

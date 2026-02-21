@@ -30,7 +30,7 @@ public static class RegisterMqListenerExtension
             .RegisterListenerRabbitMQ<TracesSelectForConversionsRetailReceive, TPaginationRequestStandardModel<SelectHistoryElementsRequestModel>, TPaginationResponseStandardModel<TraceReceiverRecord>>()
             .RegisterListenerRabbitMQ<TracesSelectForPaymentsRetailReceive, TPaginationRequestStandardModel<SelectHistoryElementsRequestModel>, TPaginationResponseStandardModel<TraceReceiverRecord>>()
 
-            //.RegisterListenerMQTT<TraceRabbitActionReceive, TraceRabbitActionRequestModel, ResponseBaseModel>()
+            .RegisterListenerMQTT<TraceRabbitActionReceive, TraceRabbitActionRequestModel, ResponseBaseModel>()
             ;
     }
 }

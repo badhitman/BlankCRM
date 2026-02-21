@@ -173,7 +173,6 @@ public class Program
             
             .WithReference(realtimeService)
             .WaitFor(realtimeService)
-            //.WithHttpHealthCheck(() => realtimeService.GetEndpoint("https"), path: "/health")
             ;
 
         IResourceBuilder<ProjectResource> kladrService = builder.AddProject<Projects.KladrService>("kladreservice")

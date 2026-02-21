@@ -237,7 +237,6 @@ public class Program
                     });
             });
 #pragma warning restore ASP0014 // Suggest using top level route registrations
-
         app.UseMqttServer(
             server =>
             {
@@ -274,17 +273,5 @@ public class Program
             });
 
         app.Run();
-    }
-}
-/// <summary>
-/// EventNotifyExtensions
-/// </summary>
-public static class EventNotifyExtensions
-{
-    /// <inheritdoc/>
-    public static IServiceCollection RegisterEventNotify<T>(this IServiceCollection services)
-    {
-        services.AddTransient<IEventNotifyReceive<T>, EventNotifyReceive<T>>();
-        return services;
     }
 }

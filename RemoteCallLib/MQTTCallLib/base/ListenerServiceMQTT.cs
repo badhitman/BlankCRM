@@ -119,7 +119,7 @@ public class ListenerServiceMQTT<TQueue, TRequest, TResponse>
                         .WithPayload(JsonConvert.SerializeObject(answer, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings))
                         .Build();
                 }
-                await mqttClient.PublishAsync(applicationMessage, stoppingToken);
+                await mqttClient.PublishAsync(applicationMessage, stoppingToken);                
             }
         };
 

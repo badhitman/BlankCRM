@@ -25,7 +25,7 @@ public class TraceReceive : TraceReceiverBaseRecord
         return new()
         {
             ReceiverName = sender.ReceiverName,
-            RequestBody = sender.RequestBody,
+            PayloadBody = sender.PayloadBody,
             UTCTimestampInitReceive = sender.UTCTimestampInitReceive,
         };
     }
