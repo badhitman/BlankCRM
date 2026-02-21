@@ -142,7 +142,6 @@ builder.Services.AddIdleCircuitHandler(options =>
 builder.Services.AddOptions();
 
 builder.Services
-    .Configure<ProxyNetMQConfigModel>(builder.Configuration.GetSection(ProxyNetMQConfigModel.Configuration))
     .Configure<UserManageConfigModel>(builder.Configuration.GetSection("UserManage"))
     .Configure<ServerConfigModel>(builder.Configuration.GetSection("ServerConfig"))
     .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
@@ -241,6 +240,7 @@ IMQStandardClientRPC rabbitImplement(IServiceProvider provider, object arg2)
     return new RabbitClient(
         provider.GetRequiredService<IOptions<RabbitMQConfigModel>>(),
         provider.GetRequiredService<ILogger<RabbitClient>>(),
+        provider.GetRequiredService<ITraceRabbitActionsServiceTransmission>(),
         appName);
 }
 
@@ -248,7 +248,7 @@ builder.Services
     .AddKeyedSingleton(nameof(RabbitClient), rabbitImplement)
     ;
 builder.Services
-            .AddSingleton<IMQStandardClientExtRPC>(x => new MQttClient(x.GetRequiredService<RealtimeMQTTClientConfigModel>(), x.GetRequiredService<ILogger<MQttClient>>(), appName))
+            .AddSingleton<IMQStandardClientExtRPC>(x => new ClientMQTT(x.GetRequiredService<RealtimeMQTTClientConfigModel>(), x.GetRequiredService<ILogger<ClientMQTT>>(), appName))
             ;
 
 builder.Services
@@ -264,6 +264,7 @@ builder.Services
           ;
 
 builder.Services
+    .AddScoped<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
     .AddScoped<IBankService, BankTransmission>()
     .AddScoped<IWebChatService, WebChatTransmission>()
     .AddScoped<ICommerceTransmission, CommerceTransmission>()

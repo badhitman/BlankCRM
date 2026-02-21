@@ -103,7 +103,6 @@ public class Program
         builder.Configuration.AddCommandLine(args);
 
         builder.Services
-            .Configure<ProxyNetMQConfigModel>(builder.Configuration.GetSection(ProxyNetMQConfigModel.Configuration))
             .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
         ;
         _confMQTT.Reload(builder.Configuration.GetSection(RealtimeMQTTClientConfigModel.Configuration).Get<RealtimeMQTTClientConfigModel>()!);
@@ -163,9 +162,8 @@ public class Program
 
         string appName = typeof(Program).Assembly.GetName().Name ?? "AssemblyName";
         #region MQ Transmission (remote methods call)
-
         builder.Services
-            .AddSingleton<IMQStandardClientExtRPC>(x => new MQttClient(x.GetRequiredService<RealtimeMQTTClientConfigModel>(), x.GetRequiredService<ILogger<MQttClient>>(), appName))
+            .AddSingleton<IMQStandardClientExtRPC>(x => new ClientMQTT(x.GetRequiredService<RealtimeMQTTClientConfigModel>(), x.GetRequiredService<ILogger<ClientMQTT>>(), appName))
             ;
 
         IMQStandardClientRPC rabbitImplement(IServiceProvider provider, object arg2)
@@ -173,6 +171,7 @@ public class Program
             return new RabbitClient(
                 provider.GetRequiredService<IOptions<RabbitMQConfigModel>>(),
                 provider.GetRequiredService<ILogger<RabbitClient>>(),
+                provider.GetRequiredService<ITraceRabbitActionsServiceTransmission>(),
                 appName);
         }
         
@@ -186,6 +185,7 @@ public class Program
             .AddScoped<IIdentityTransmission, IdentityTransmission>()
             .AddScoped<ITelegramTransmission, TelegramTransmission>()
             .AddScoped<IHelpDeskTransmission, HelpDeskTransmission>()
+            .AddScoped<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
             .AddScoped<IRubricsTransmission, RubricsTransmission>()
             .AddScoped<ICommerceTransmission, CommerceTransmission>()
             .AddScoped<IKladrNavigationService, KladrNavigationServiceTransmission>()
@@ -197,7 +197,6 @@ public class Program
             ;
         #endregion
 
-        builder.Services.AddHostedService<ProxyBackgroundServiceNetMQ>();
         builder.Services.RealtimeRegisterListenersRabbitMQ();
        
         // Custom metrics for the application

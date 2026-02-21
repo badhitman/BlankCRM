@@ -23,13 +23,13 @@ namespace RemoteCallLib;
 /// <typeparam name="TQueue">Очередь</typeparam>
 /// <typeparam name="TRequest">Запрос</typeparam>
 /// <typeparam name="TResponse">Ответ</typeparam>
-public class MQTTListenerService<TQueue, TRequest, TResponse>
+public class ListenerServiceMQTT<TQueue, TRequest, TResponse>
     : BackgroundService
     where TQueue : IMQStandardReceive<TRequest?, TResponse>
     where TResponse : new()
 {
     readonly RealtimeMQTTClientConfigModel MQConfigRepo;
-    readonly ILogger<MQTTListenerService<TQueue, TRequest, TResponse>> LoggerRepo;
+    readonly ILogger<ListenerServiceMQTT<TQueue, TRequest, TResponse>> LoggerRepo;
     readonly IMQStandardReceive<TRequest?, TResponse> receiveService;
 
     IMqttClient mqttClient;
@@ -55,10 +55,10 @@ public class MQTTListenerService<TQueue, TRequest, TResponse>
     }
 
     /// <inheritdoc/>
-    public MQTTListenerService(
+    public ListenerServiceMQTT(
         RealtimeMQTTClientConfigModel rabbitConf,
         IServiceProvider servicesProvider,
-        ILogger<MQTTListenerService<TQueue, TRequest, TResponse>> loggerRepo)
+        ILogger<ListenerServiceMQTT<TQueue, TRequest, TResponse>> loggerRepo)
     {
         LoggerRepo = loggerRepo;
         MQConfigRepo = rabbitConf;
@@ -131,7 +131,7 @@ public class MQTTListenerService<TQueue, TRequest, TResponse>
         MqttClientOptionsBuilder res = new MqttClientOptionsBuilder()
                .WithTcpServer(MQConfigRepo.Host, MQConfigRepo.Port)
                .WithProtocolVersion(MQTTnet.Formatter.MqttProtocolVersion.V500)
-               .WithClientId($"{QueueName} [{nameof(MQTTListenerService<,,>)}.{typeof(TRequest).Name}] {Guid.NewGuid()}");
+               .WithClientId($"{QueueName} [{nameof(ListenerServiceMQTT<,,>)}.{typeof(TRequest).Name}] {Guid.NewGuid()}");
 
         if (propertyValue is not null)
             res.WithUserProperty(propertyValue.Value.Key, propertyValue.Value.Value);

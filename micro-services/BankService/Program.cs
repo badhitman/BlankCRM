@@ -97,16 +97,16 @@ builder.Configuration.AddEnvironmentVariables();
 builder.Configuration.AddCommandLine(args);
 
 builder.Services
-    .Configure<ProxyNetMQConfigModel>(builder.Configuration.GetSection(ProxyNetMQConfigModel.Configuration))
     .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
     .Configure<TBankSettings>(builder.Configuration.GetSection(nameof(TBankSettings)))
 ;
 
 builder.Services
-    .AddScoped<IBankService, BankImplementService>()
+    .AddScoped<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
     .AddScoped<IMerchantService, MerchantImplementService>()
     .AddScoped<IIndexingServive, IndexingTransmission>()
     .AddScoped<IHistoryIndexing, HistoryTransmission>()
+    .AddScoped<IBankService, BankImplementService>()
     ;
 
 builder.Services.AddSingleton<WebConfigModel>();
@@ -131,6 +131,7 @@ IMQStandardClientRPC rabbitImplement(IServiceProvider provider, object arg2)
     return new RabbitClient(
         provider.GetRequiredService<IOptions<RabbitMQConfigModel>>(),
         provider.GetRequiredService<ILogger<RabbitClient>>(),
+        provider.GetRequiredService<ITraceRabbitActionsServiceTransmission>(),
         appName);
 }
 

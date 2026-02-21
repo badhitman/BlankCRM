@@ -23,7 +23,6 @@ namespace TelegramBotService;
 /// </summary>
 public class Program
 {
-    ProxyNetMQConfigModel _netMQ = ProxyNetMQConfigModel.BuildEmpty();
     /// <summary>
     /// Main
     /// </summary>
@@ -97,7 +96,6 @@ public class Program
         builder.Configuration.AddCommandLine(args);
 
         builder.Services
-           .Configure<ProxyNetMQConfigModel>(builder.Configuration.GetSection(ProxyNetMQConfigModel.Configuration))
            .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
            .Configure<BotConfiguration>(builder.Configuration.GetSection(BotConfiguration.Configuration))
        ;
@@ -152,23 +150,18 @@ public class Program
         IMQStandardClientRPC rabbitImplement(IServiceProvider provider, object arg2)
         {
             return new RabbitClient(
-                //provider.GetRequiredService<IOptions<ProxyNetMQConfigModel>>(),
                 provider.GetRequiredService<IOptions<RabbitMQConfigModel>>(),
                 provider.GetRequiredService<ILogger<RabbitClient>>(),
-                //provider.GetRequiredService<ITraceRabbitActionsServiceTransmission>(),
+                provider.GetRequiredService<ITraceRabbitActionsServiceTransmission>(),
                 appName);
         }
-        //IMQStandardClientRPC zeroImplement(IServiceProvider provider, object arg2)
-        //{
-        //    return new NetMQClient(provider.GetRequiredService<IOptions<ProxyNetMQConfigModel>>(), provider.GetRequiredService<ILogger<NetMQClient>>(), appName);
-        //}
+        
         builder.Services
             .AddKeyedSingleton(nameof(RabbitClient), rabbitImplement)
-            //.AddKeyedSingleton(nameof(NetMQClient), zeroImplement)
             ;
 
         builder.Services
-            //.AddSingleton<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
+            .AddScoped<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
             .AddScoped<IIndexingServive, IndexingTransmission>()
             .AddScoped<IHistoryIndexing, HistoryTransmission>()
             .AddScoped<IWebTransmission, WebTransmission>()

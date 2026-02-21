@@ -94,15 +94,15 @@ builder.Configuration.AddEnvironmentVariables();
 builder.Configuration.AddCommandLine(args);
 
 builder.Services
-    .Configure<ProxyNetMQConfigModel>(builder.Configuration.GetSection(ProxyNetMQConfigModel.Configuration))
     .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
 ;
 
 builder.Services
+    .AddScoped<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
     .AddScoped<ICommerceService, CommerceImplementService>()
-    .AddScoped<IRetailService, RetailService>()
     .AddScoped<IIndexingServive, IndexingTransmission>()
     .AddScoped<IHistoryIndexing, HistoryTransmission>()
+    .AddScoped<IRetailService, RetailService>()
     ;
 
 builder.Services.AddSingleton<WebConfigModel>();
@@ -128,6 +128,7 @@ IMQStandardClientRPC rabbitImplement(IServiceProvider provider, object arg2)
     return new RabbitClient(
         provider.GetRequiredService<IOptions<RabbitMQConfigModel>>(),
         provider.GetRequiredService<ILogger<RabbitClient>>(),
+        provider.GetRequiredService<ITraceRabbitActionsServiceTransmission>(),
         appName);
 }
 

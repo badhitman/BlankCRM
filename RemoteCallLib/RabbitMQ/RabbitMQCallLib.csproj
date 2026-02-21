@@ -29,6 +29,7 @@
 		<PackageReference Include="StackExchange.Redis" Version="2.11.0" />
 		<ProjectReference Include="..\..\..\HtmlGenerator\HtmlGenerator.csproj" />
 		<ProjectReference Include="..\..\SharedLib\SharedLib.csproj" />
+		<ProjectReference Include="..\MQTTCallLib\MQTTCallLib.csproj" />
 	</ItemGroup>
 	<Target Name="CopyFilesAfterPublish" AfterTargets="AfterPublish">
 		<Copy SourceFiles="$(TargetDir)runtimes/linux-x64/native/libSkiaSharp.so" DestinationFolder="$([System.IO.Path]::GetFullPath('$(PublishDir)'))/bin/" />

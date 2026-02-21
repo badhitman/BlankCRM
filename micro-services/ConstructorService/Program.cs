@@ -95,7 +95,6 @@ builder.Configuration.AddCommandLine(args);
 builder.Services.AddOptions();
 
 builder.Services
-   .Configure<ProxyNetMQConfigModel>(builder.Configuration.GetSection(ProxyNetMQConfigModel.Configuration))
    .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
    .Configure<ConstructorConfigModel>(builder.Configuration.GetSection("ConstructorConfig"));
 
@@ -113,8 +112,6 @@ builder.Services.AddDbContextFactory<ConstructorContext>(opt =>
 builder.Services.AddMemoryCache();
 builder.Services
     .AddScoped<IConstructorService, FormsConstructorService>()
-    .AddScoped<IIndexingServive, IndexingTransmission>()
-    .AddScoped<IHistoryIndexing, HistoryTransmission>()
     ;
 
 string appName = typeof(Program).Assembly.GetName().Name ?? "AssemblyName";
@@ -124,6 +121,7 @@ IMQStandardClientRPC rabbitImplement(IServiceProvider provider, object arg2)
     return new RabbitClient(
         provider.GetRequiredService<IOptions<RabbitMQConfigModel>>(),
         provider.GetRequiredService<ILogger<RabbitClient>>(),
+        provider.GetRequiredService<ITraceRabbitActionsServiceTransmission>(),
         appName);
 }
 
@@ -132,6 +130,9 @@ builder.Services
     ;
 //
 builder.Services
+    .AddScoped<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
+    .AddScoped<IIndexingServive, IndexingTransmission>()
+    .AddScoped<IHistoryIndexing, HistoryTransmission>()
     .AddScoped<IWebTransmission, WebTransmission>()
     .AddScoped<ITelegramTransmission, TelegramTransmission>()
     .AddScoped<IHelpDeskTransmission, HelpDeskTransmission>()

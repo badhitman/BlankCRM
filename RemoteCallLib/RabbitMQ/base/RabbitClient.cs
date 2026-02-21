@@ -25,6 +25,7 @@ public class RabbitClient : IMQStandardClientRPC
     readonly RabbitMQConfigModel RabbitConfigRepo;
     readonly ConnectionFactory factory;
     readonly ILogger<RabbitClient> loggerRepo;
+    readonly ITraceRabbitActionsServiceTransmission traceRepo;
 
     readonly string AppName;
 
@@ -38,8 +39,10 @@ public class RabbitClient : IMQStandardClientRPC
     public RabbitClient(
         IOptions<RabbitMQConfigModel> rabbitConf,
         ILogger<RabbitClient> _loggerRepo,
+        ITraceRabbitActionsServiceTransmission _traceRepo,
         string appName)
     {
+        traceRepo = _traceRepo;
         AppName = appName;
         loggerRepo = _loggerRepo;
         RabbitConfigRepo = rabbitConf.Value;
@@ -74,6 +77,13 @@ public class RabbitClient : IMQStandardClientRPC
 
         activity?.Start();
         string guidRequest = Guid.NewGuid().ToString();
+
+        await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
+        {
+            ReceiverName = queue,
+            RequestBody = request,
+            UTCTimestampInitReceive = DateTime.UtcNow,
+        }, tokenOuter);
 
         string response_topic = waitResponse ? $"{AppName}.{RabbitConfigRepo.QueueMqNamePrefixForResponse.Replace("\\", "/")}{queue}_{guidRequest}" : "";
         activity?.SetTag(nameof(response_topic), response_topic);

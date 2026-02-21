@@ -24,7 +24,6 @@ using DbcLib;
 Console.OutputEncoding = Encoding.UTF8;
 Logger logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 
-ProxyNetMQConfigModel _netMQ = ProxyNetMQConfigModel.BuildEmpty();
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
@@ -103,7 +102,6 @@ builder.Configuration.AddCommandLine(args);
 builder.Services.AddOptions();
 
 builder.Services
-    .Configure<ProxyNetMQConfigModel>(builder.Configuration.GetSection(ProxyNetMQConfigModel.Configuration))
     .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
     .Configure<RestApiConfigBaseModel>(builder.Configuration.GetSection(RestApiConfigBaseModel.Configuration))
     .Configure<PartUploadSessionConfigModel>(builder.Configuration.GetSection(PartUploadSessionConfigModel.Configuration))
@@ -126,9 +124,10 @@ builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddTransient<UnhandledExceptionAttribute>();
 builder.Services
-    .AddScoped<RolesAuthorizationFilter>()
+    .AddScoped<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
     .AddScoped<IIndexingServive, IndexingTransmission>()
     .AddScoped<IHistoryIndexing, HistoryTransmission>()
+    .AddScoped<RolesAuthorizationFilter>()
     ;
 
 builder.Services.AddScoped<ExpressUserPermissionModel>();
@@ -140,6 +139,7 @@ IMQStandardClientRPC rabbitImplement(IServiceProvider provider, object arg2)
     return new RabbitClient(
         provider.GetRequiredService<IOptions<RabbitMQConfigModel>>(),
         provider.GetRequiredService<ILogger<RabbitClient>>(),
+        provider.GetRequiredService<ITraceRabbitActionsServiceTransmission>(),
         appName);
 }
 

@@ -19,10 +19,9 @@ public static class ServiceProviderExtensions
     public static IServiceCollection RegisterListenerMQTT<TQueue, TRequest, TResponse>(this IServiceCollection sc)
         where TQueue : class, IMQStandardReceive<TRequest?, TResponse?>
         where TResponse : class, new()
-    {
-        
+    {        
         sc.AddScoped<IMQStandardReceive<TRequest?, TResponse?>, TQueue>();
-        sc.AddHostedService<MQTTListenerService<TQueue, TRequest?, TResponse?>>();
+        sc.AddHostedService<ListenerServiceMQTT<TQueue, TRequest?, TResponse?>>();
 
         return sc;
     }

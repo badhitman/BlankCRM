@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
+using MQTTCallLib;
 using SharedLib;
 using Transmission.Receives.indexing;
 using Transmission.Receives.realtime;
@@ -29,7 +30,7 @@ public static class RegisterMqListenerExtension
             .RegisterListenerRabbitMQ<TracesSelectForConversionsRetailReceive, TPaginationRequestStandardModel<SelectHistoryElementsRequestModel>, TPaginationResponseStandardModel<TraceReceiverRecord>>()
             .RegisterListenerRabbitMQ<TracesSelectForPaymentsRetailReceive, TPaginationRequestStandardModel<SelectHistoryElementsRequestModel>, TPaginationResponseStandardModel<TraceReceiverRecord>>()
 
-            //.RegisterListenerNetMQ<TraceRabbitActionReceive, TraceRabbitActionRequestModel, ResponseBaseModel>()
+            .RegisterListenerMQTT<TraceRabbitActionReceive, TraceRabbitActionRequestModel, ResponseBaseModel>()
             ;
     }
 }

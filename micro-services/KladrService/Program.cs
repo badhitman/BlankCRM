@@ -86,7 +86,6 @@ public class Program
         builder.Configuration.AddCommandLine(args);
 
         builder.Services
-            .Configure<ProxyNetMQConfigModel>(builder.Configuration.GetSection(ProxyNetMQConfigModel.Configuration))
             .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
             ;
 
@@ -106,6 +105,7 @@ public class Program
             return new RabbitClient(
                 provider.GetRequiredService<IOptions<RabbitMQConfigModel>>(),
                 provider.GetRequiredService<ILogger<RabbitClient>>(),
+                provider.GetRequiredService<ITraceRabbitActionsServiceTransmission>(),
                 appName);
         }
         
@@ -114,7 +114,9 @@ public class Program
             ;
 
         builder.Services.KladrRegisterMqListeners();
-
+        builder.Services
+            .AddScoped<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
+            ;
         #endregion
         builder.Services
             .AddScoped<IKladrService, KladrServiceImpl>()

@@ -34,8 +34,6 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
     IChannel _channel = default!;
     readonly IResponseReceive<TRequest?, TResponse> receiveService;
     readonly ConnectionFactory factory;
-    readonly ITraceRabbitActionsServiceTransmission _traceRepo;
-    readonly IOptions<ProxyNetMQConfigModel> _proxyNetMQConf;
 
     static Dictionary<string, object>? ResponseQueueArguments;
 
@@ -55,12 +53,8 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
     public RabbitMqListenerService(
         IServiceProvider servicesProvider,
         IOptions<RabbitMQConfigModel> rabbitConf,
-        IOptions<ProxyNetMQConfigModel> proxyNetMQConf,
-        ITraceRabbitActionsServiceTransmission traceRepo,
         ILogger<RabbitMqListenerService<TQueue, TRequest, TResponse>> loggerRepo)
     {
-        _proxyNetMQConf = proxyNetMQConf;
-        _traceRepo = traceRepo;
         LoggerRepo = loggerRepo;
         ResponseQueueArguments ??= new()
         {

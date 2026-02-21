@@ -102,7 +102,6 @@ public class Program
         builder.Configuration.AddCommandLine(args);
 
         builder.Services
-            .Configure<ProxyNetMQConfigModel>(builder.Configuration.GetSection(ProxyNetMQConfigModel.Configuration))
             .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
             .Configure<SmtpConfigModel>(builder.Configuration.GetSection(SmtpConfigModel.Configuration))
             ;
@@ -186,6 +185,7 @@ public class Program
             return new RabbitClient(
                 provider.GetRequiredService<IOptions<RabbitMQConfigModel>>(),
                 provider.GetRequiredService<ILogger<RabbitClient>>(),
+                provider.GetRequiredService<ITraceRabbitActionsServiceTransmission>(),
                 appName);
         }
         
@@ -194,6 +194,7 @@ public class Program
             ;
 
         builder.Services
+            .AddScoped<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
             .AddScoped<ITelegramTransmission, TelegramTransmission>()
             .AddScoped<IHelpDeskTransmission, HelpDeskTransmission>()
             .AddScoped<IWebTransmission, WebTransmission>()

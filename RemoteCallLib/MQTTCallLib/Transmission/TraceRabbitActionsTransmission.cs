@@ -2,17 +2,18 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
-using Microsoft.Extensions.DependencyInjection;
 using SharedLib;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace RemoteCallLib;
 
 /// <summary>
 /// TraceRabbitActionsTransmission
 /// </summary>
-public class TraceRabbitActionsTransmission([FromKeyedServices(nameof(NetMQClient))] IMQStandardClientRPC zeroClient) : ITraceRabbitActionsServiceTransmission
+public class TraceRabbitActionsTransmission(IMQStandardClientExtRPC mqttClient) : ITraceRabbitActionsServiceTransmission
 {
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> SaveActionAsync(TraceRabbitActionRequestModel req, CancellationToken token = default)
-       => await zeroClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.TraceRabbitActionSystemsReceive, req, waitResponse: false, token: token) ?? new();
+       => await mqttClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.TraceRabbitActionSystemsReceive, req, waitResponse: false, token: token) ?? new();
 }
