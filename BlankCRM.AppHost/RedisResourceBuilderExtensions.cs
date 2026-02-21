@@ -31,7 +31,7 @@ internal static class RedisResourceBuilderExtensions
             throw new InvalidOperationException(
                 $"Unable to get the '{context.ResourceName}' connection string.");
 
-        await using var connection = ConnectionMultiplexer.Connect(connectionString);
+        await using ConnectionMultiplexer connection = ConnectionMultiplexer.Connect(connectionString);
 
         IDatabase database = connection.GetDatabase();
 

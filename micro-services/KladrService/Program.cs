@@ -104,25 +104,17 @@ public class Program
         IMQStandardClientRPC rabbitImplement(IServiceProvider provider, object arg2)
         {
             return new RabbitClient(
-                provider.GetRequiredService<IOptions<ProxyNetMQConfigModel>>(),
                 provider.GetRequiredService<IOptions<RabbitMQConfigModel>>(),
                 provider.GetRequiredService<ILogger<RabbitClient>>(),
-                provider.GetRequiredService<ITraceRabbitActionsServiceTransmission>(),
                 appName);
         }
-        IMQStandardClientRPC zeroImplement(IServiceProvider provider, object arg2)
-        {
-            return new NetMQClient(provider.GetRequiredService<IOptions<ProxyNetMQConfigModel>>(), provider.GetRequiredService<ILogger<NetMQClient>>(), appName);
-        }
+        
         builder.Services
             .AddKeyedSingleton(nameof(RabbitClient), rabbitImplement)
-            .AddKeyedSingleton(nameof(NetMQClient), zeroImplement)
             ;
 
         builder.Services.KladrRegisterMqListeners();
 
-        builder.Services
-            .AddSingleton<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>();
         #endregion
         builder.Services
             .AddScoped<IKladrService, KladrServiceImpl>()

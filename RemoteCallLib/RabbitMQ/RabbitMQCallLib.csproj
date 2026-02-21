@@ -28,7 +28,7 @@
 		<PackageReference Include="RabbitMQ.Client" Version="7.2.0" />
 		<PackageReference Include="StackExchange.Redis" Version="2.11.0" />
 		<ProjectReference Include="..\..\..\HtmlGenerator\HtmlGenerator.csproj" />
-		<ProjectReference Include="..\NetMQ\NetMQCallLib.csproj" />
+		<ProjectReference Include="..\..\SharedLib\SharedLib.csproj" />
 	</ItemGroup>
 	<Target Name="CopyFilesAfterPublish" AfterTargets="AfterPublish">
 		<Copy SourceFiles="$(TargetDir)runtimes/linux-x64/native/libSkiaSharp.so" DestinationFolder="$([System.IO.Path]::GetFullPath('$(PublishDir)'))/bin/" />

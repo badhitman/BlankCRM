@@ -70,8 +70,11 @@ public class NetMQListenerService<TQueue, TRequest, TResponse>
     {
         stoppingToken.ThrowIfCancellationRequested();
         TResponseMQModel<TResponse> answer = new() { StartedServer = DateTime.UtcNow, };
+        lock (NetMQClient.mqNetLock)
+        {
+            subSocket.Connect(MQConfigRepo.Value.PublisherSocketEndpoint.ToString());
+        }
 
-        subSocket.Connect(MQConfigRepo.Value.SubscriberSocketEndpoint.ToString());
         subSocket.Options.ReceiveHighWatermark = 1000;
         subSocket.Subscribe(QueueName);
         Console.WriteLine("Subscriber socket connecting...");

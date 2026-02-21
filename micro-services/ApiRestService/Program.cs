@@ -136,25 +136,18 @@ builder.Services.AddScoped<ExpressUserPermissionModel>();
 string appName = typeof(Program).Assembly.GetName().Name ?? "AssemblyName";
 #region MQ Transmission (remote methods call)
 IMQStandardClientRPC rabbitImplement(IServiceProvider provider, object arg2)
-{// IOptions<ProxyNetMQConfigModel> proxyNetMQConf // provider.GetRequiredService<IOptions<ProxyNetMQConfigModel>>(),
+{
     return new RabbitClient(
-        provider.GetRequiredService<IOptions<ProxyNetMQConfigModel>>(),
         provider.GetRequiredService<IOptions<RabbitMQConfigModel>>(),
         provider.GetRequiredService<ILogger<RabbitClient>>(),
-        provider.GetRequiredService<ITraceRabbitActionsServiceTransmission>(),
         appName);
 }
-IMQStandardClientRPC zeroImplement(IServiceProvider provider, object arg2)
-{
-    return new NetMQClient(provider.GetRequiredService<IOptions<ProxyNetMQConfigModel>>(), provider.GetRequiredService<ILogger<NetMQClient>>(), appName);
-}
+
 builder.Services
     .AddKeyedSingleton(nameof(RabbitClient), rabbitImplement)
-    .AddKeyedSingleton(nameof(NetMQClient), zeroImplement)
     ;
 //
 builder.Services
-    .AddSingleton<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
     .AddScoped<IWebChatService, WebChatTransmission>()
     .AddScoped<IWebTransmission, WebTransmission>()
     .AddScoped<ITelegramTransmission, TelegramTransmission>()

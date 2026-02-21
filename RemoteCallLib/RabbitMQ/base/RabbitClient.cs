@@ -25,8 +25,6 @@ public class RabbitClient : IMQStandardClientRPC
     readonly RabbitMQConfigModel RabbitConfigRepo;
     readonly ConnectionFactory factory;
     readonly ILogger<RabbitClient> loggerRepo;
-    readonly ITraceRabbitActionsServiceTransmission _traceRepo;
-    readonly IOptions<ProxyNetMQConfigModel> _proxyNetMQConf;
 
     readonly string AppName;
 
@@ -37,10 +35,11 @@ public class RabbitClient : IMQStandardClientRPC
     /// <summary>
     /// Удалённый вызов команд (RabbitMq client)
     /// </summary>
-    public RabbitClient(IOptions<ProxyNetMQConfigModel> proxyNetMQConf, IOptions<RabbitMQConfigModel> rabbitConf, ILogger<RabbitClient> _loggerRepo, ITraceRabbitActionsServiceTransmission traceRepo, string appName)
+    public RabbitClient(
+        IOptions<RabbitMQConfigModel> rabbitConf,
+        ILogger<RabbitClient> _loggerRepo,
+        string appName)
     {
-        _proxyNetMQConf = proxyNetMQConf;
-        _traceRepo = traceRepo;
         AppName = appName;
         loggerRepo = _loggerRepo;
         RabbitConfigRepo = rabbitConf.Value;
@@ -75,15 +74,6 @@ public class RabbitClient : IMQStandardClientRPC
 
         activity?.Start();
         string guidRequest = Guid.NewGuid().ToString();
-
-        if (_proxyNetMQConf.Value.TracesNamesPatterns?.Any(x => x.Contains(queue)) == true)
-            await _traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
-            {
-                ReceiverName = queue,
-                 RequestBody = request,
-                  UTCTimestampInitReceive = DateTime.UtcNow,
-                   
-            }, tokenOuter);
 
         string response_topic = waitResponse ? $"{AppName}.{RabbitConfigRepo.QueueMqNamePrefixForResponse.Replace("\\", "/")}{queue}_{guidRequest}" : "";
         activity?.SetTag(nameof(response_topic), response_topic);

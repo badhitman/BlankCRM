@@ -152,23 +152,23 @@ public class Program
         IMQStandardClientRPC rabbitImplement(IServiceProvider provider, object arg2)
         {
             return new RabbitClient(
-                provider.GetRequiredService<IOptions<ProxyNetMQConfigModel>>(),
+                //provider.GetRequiredService<IOptions<ProxyNetMQConfigModel>>(),
                 provider.GetRequiredService<IOptions<RabbitMQConfigModel>>(),
                 provider.GetRequiredService<ILogger<RabbitClient>>(),
-                provider.GetRequiredService<ITraceRabbitActionsServiceTransmission>(),
+                //provider.GetRequiredService<ITraceRabbitActionsServiceTransmission>(),
                 appName);
         }
-        IMQStandardClientRPC zeroImplement(IServiceProvider provider, object arg2)
-        {
-            return new NetMQClient(provider.GetRequiredService<IOptions<ProxyNetMQConfigModel>>(), provider.GetRequiredService<ILogger<NetMQClient>>(), appName);
-        }
+        //IMQStandardClientRPC zeroImplement(IServiceProvider provider, object arg2)
+        //{
+        //    return new NetMQClient(provider.GetRequiredService<IOptions<ProxyNetMQConfigModel>>(), provider.GetRequiredService<ILogger<NetMQClient>>(), appName);
+        //}
         builder.Services
             .AddKeyedSingleton(nameof(RabbitClient), rabbitImplement)
-            .AddKeyedSingleton(nameof(NetMQClient), zeroImplement)
+            //.AddKeyedSingleton(nameof(NetMQClient), zeroImplement)
             ;
 
         builder.Services
-            .AddSingleton<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
+            //.AddSingleton<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
             .AddScoped<IIndexingServive, IndexingTransmission>()
             .AddScoped<IHistoryIndexing, HistoryTransmission>()
             .AddScoped<IWebTransmission, WebTransmission>()

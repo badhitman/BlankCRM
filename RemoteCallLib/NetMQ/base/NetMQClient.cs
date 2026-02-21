@@ -25,10 +25,17 @@ public class NetMQClient(IOptions<ProxyNetMQConfigModel> mqConf, ILogger<NetMQCl
     readonly string AppName = appName;
 
     /// <inheritdoc/>
+    public static object mqNetLock = new();
+
+    /// <inheritdoc/>
     public async Task<T?> MqRemoteCallAsync<T>(string queue, object? request = null, bool waitResponse = true, CancellationToken tokenOuter = default)
     {
         queue = queue.Replace("\\", "/");
-        pubSocket.Connect(MQConfigRepo.PublisherSocketEndpoint.ToString());
+        lock (mqNetLock)
+        {
+            pubSocket.Connect(MQConfigRepo.SubscriberSocketEndpoint.ToString());
+        }
+
         pubSocket.Options.SendHighWatermark = 1000;
 
         Meter greeterMeter = new($"OTel.{AppName}", "1.0.0");
@@ -86,7 +93,10 @@ public class NetMQClient(IOptions<ProxyNetMQConfigModel> mqConf, ILogger<NetMQCl
             stopwatch.Start();
             try
             {
-                subSocket.Connect(MQConfigRepo.SubscriberSocketEndpoint.ToString());
+                lock (mqNetLock)
+                {
+                    subSocket.Connect(MQConfigRepo.PublisherSocketEndpoint.ToString());
+                }
                 subSocket.Options.ReceiveHighWatermark = 1000;
                 subSocket.Subscribe(response_topic);
 
