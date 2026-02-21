@@ -33,7 +33,7 @@ public class MongoConfigModel : HostConfigModel
     public string BusHistorySystemName { get; set; } = "receivers-history-db";
 
     /// <summary>
-    /// BusHistorySystemName
+    /// TracesDataBaseSystemName
     /// </summary>
     public string TracesDataBaseSystemName { get; set; } = "traces-db";
 
