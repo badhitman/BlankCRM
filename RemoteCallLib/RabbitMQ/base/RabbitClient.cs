@@ -66,7 +66,7 @@ public class RabbitClient : IMQStandardClientRPC
 
     /// <inheritdoc/>
     public async Task<T?> MqRemoteCallAsync<T>(string queue, object? request = null, bool waitResponse = true, CancellationToken tokenOuter = default)
-    {        
+    {
         queue = queue.Replace("\\", "/");
         // Custom ActivitySource for the application
         ActivitySource greeterActivitySource = new($"OTel.{AppName}");
@@ -123,7 +123,7 @@ public class RabbitClient : IMQStandardClientRPC
 
             return default;
         }
-        catch (OperationCanceledException ex)
+        catch (OperationCanceledException)
         {
             _connection?.Dispose();
             _channel?.Dispose();
@@ -253,7 +253,7 @@ public class RabbitClient : IMQStandardClientRPC
 
                 countGreetings.Add(res_io.Duration().Milliseconds);
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException)
             {
                 try
                 {
@@ -395,7 +395,7 @@ public class RabbitClient : IMQStandardClientRPC
                 }
                 return default;
             }
-            catch (OperationCanceledException ex)
+            catch (OperationCanceledException)
             {
                 _connection.Dispose();
                 _channel.Dispose();
@@ -520,7 +520,7 @@ public class RabbitClient : IMQStandardClientRPC
         catch (OperationCanceledException)
         {
             _connection.Dispose();
-            _channel.Dispose();            
+            _channel.Dispose();
             return default;
         }
         catch (Exception ex)
