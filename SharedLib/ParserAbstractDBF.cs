@@ -20,7 +20,7 @@ public abstract class ParserAbstractDBF : IKladrParseService
     public abstract event PartUploadHandler? PartUploadNotify;
 
     /// <inheritdoc/>
-    protected abstract void NotifyUploadAction(int position);
+    public abstract void NotifyUploadAction(int position);
 
     /// <inheritdoc/>
     public Encoding CurrentEncoding { get; set; } = Encoding.GetEncoding("cp866");
@@ -49,7 +49,8 @@ public abstract class ParserAbstractDBF : IKladrParseService
     protected MemoryStream? DbfFile;
     /// <inheritdoc/>
     protected string? fileName;
-
+    /// <inheritdoc/>
+    public int CurrentNumRecord { get; private set; } = 0;
 
     /// <inheritdoc/>
     public async Task<int> Open(MemoryStream _dbfFile, string name)
@@ -57,7 +58,7 @@ public abstract class ParserAbstractDBF : IKladrParseService
         fileName = name;
         DbfFile = _dbfFile;
         DbfFile.Seek(0, SeekOrigin.Begin);
-
+        CurrentNumRecord = 0;
         dbfHeaderSize = Marshal.SizeOf<DBFHeader>();
         FieldDescriptorHeaderSize = Marshal.SizeOf<FieldDescriptor>();
 
@@ -116,12 +117,12 @@ public abstract class ParserAbstractDBF : IKladrParseService
         limit_row = Math.Min(55, limit_row);
 
         long old_file_position = DbfFile.Position;
-        DbfFile.Seek(header.headerLen, SeekOrigin.Begin);
+        DbfFile.Seek(header.headerLen + CurrentNumRecord, SeekOrigin.Begin);
         Random rnd = new();
         rnd.Next(0, header.numRecords - 1);
         object[] s_row;
         BinaryReader recReader;
-        for (int counter = 0; counter <= limit_row; counter++)
+        for (CurrentNumRecord = 0; CurrentNumRecord <= limit_row; CurrentNumRecord++)
         {
             long random_position_row = rnd.Next(0, header.numRecords - 1) * header.recordLen;
             DbfFile.Seek(header.headerLen + random_position_row, SeekOrigin.Begin);
@@ -206,7 +207,7 @@ public abstract class ParserAbstractDBF : IKladrParseService
     }
 
     /// <inheritdoc/>
-    public async Task UploadData(bool inc_del)
+    public async Task UploadData(bool inc_del, int limitParts = -1)
     {
         if (DbfFile is null)
             throw new Exception("db file not set");
@@ -220,23 +221,22 @@ public abstract class ParserAbstractDBF : IKladrParseService
         if (string.IsNullOrWhiteSpace(fileName))
             throw new Exception("FileName IsNullOrWhiteSpace");
 
-        // DataList.Clear();
-        List<object[]> _dataList = [];
+        DataList.Clear();
 
-        DbfFile.Seek(header.headerLen, SeekOrigin.Begin);
+        DbfFile.Seek(header.headerLen + (CurrentNumRecord * header.recordLen), SeekOrigin.Begin);
         object[] s_row;
         int data_list_Count = 0, del_rows_count = 0;
         BinaryReader recReader;
         byte[] readed_data_tmp;
-        List<Task> tasks = [];
-        for (int counter = 0; counter <= header.numRecords - 1; counter++)
+
+        while (CurrentNumRecord <= header.numRecords - 1)
         {
             buffer = new byte[header.recordLen];
             await DbfFile.ReadExactlyAsync(buffer, 0, header.recordLen);
+            CurrentNumRecord++;
+
             if (buffer.Length == 0)
-            {
                 return;
-            }
 
             recReader = new BinaryReader(new MemoryStream(buffer));
             if (recReader.ReadChar() == '*')
@@ -323,37 +323,37 @@ public abstract class ParserAbstractDBF : IKladrParseService
             }
             recReader.Close();
             data_list_Count++;
-            _dataList.Add(s_row);
+            DataList.Add(s_row);
             if (data_list_Count > 1000)
             {
                 data_list_Count = 0;
-                tasks.Add(Task.Run(async () => await UploadPartTempKladrAsync(new()
+                _ = await UploadPartTempKladrAsync(new()
                 {
                     Columns = [.. Columns.Cast<FieldDescriptor>().Select(x => new FieldDescriptorBase() { FieldLen = x.fieldLen, FieldName = x.fieldName, FieldType = x.fieldType })],
-                    RowsData = _dataList,
+                    RowsData = DataList,
                     TableName = fileName,
-                })));
+                });
 
                 DataList.Clear();
-                DataList.AddRange(_dataList);
-
-                NotifyUploadAction(counter);
+                NotifyUploadAction(CurrentNumRecord);
+                if (limitParts == 0)
+                    return;
+                else if (limitParts > 0)
+                    limitParts--;
             }
         }
-        if (_dataList.Count != 0)
+        if (DataList.Count != 0)
         {
-            tasks.Add(Task.Run(async () => await UploadPartTempKladrAsync(new()
+            _ = await UploadPartTempKladrAsync(new()
             {
                 Columns = [.. Columns.Cast<FieldDescriptor>().Select(x => new FieldDescriptorBase() { FieldLen = x.fieldLen, FieldName = x.fieldName, FieldType = x.fieldType })],
-                RowsData = _dataList,
+                RowsData = DataList,
                 TableName = fileName,
-            })));
+            });
 
             DataList.Clear();
-            DataList.AddRange(_dataList);
             NotifyUploadAction(header.numRecords - 1);
         }
-        await Task.WhenAll(tasks);
     }
 
     /// <inheritdoc/>

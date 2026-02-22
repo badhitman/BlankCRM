@@ -15,7 +15,7 @@ public class ParseImplementDBF(IKladrService RemoteClient) : ParserAbstractDBF
     public override event PartUploadHandler? PartUploadNotify;
 
     /// <inheritdoc/>
-    protected override void NotifyUploadAction(int position)
+    public override void NotifyUploadAction(int position)
     {
         if (PartUploadNotify is not null)
             PartUploadNotify(position);

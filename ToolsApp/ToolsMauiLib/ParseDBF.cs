@@ -11,7 +11,7 @@ public class ParseDBF(IClientRestToolsService RemoteClient) : ParserAbstractDBF
     /// <inheritdoc/>
     public override event PartUploadHandler? PartUploadNotify;
 
-    protected override void NotifyUploadAction(int position)
+    public override void NotifyUploadAction(int position)
     {
         if (PartUploadNotify is not null)
             PartUploadNotify(position);

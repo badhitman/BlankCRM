@@ -26,5 +26,5 @@ public class KladrServiceTransmission([FromKeyedServices(nameof(RabbitClient))] 
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> UploadPartTempKladrAsync(UploadPartTableDataModel req, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<MetadataKladrModel>(GlobalStaticConstantsTransmission.TransmissionQueues.UploadPartTempKladrReceive, req, waitResponse: false, token: token) ?? new();
+        => await rabbitClient.MqRemoteCallAsync<MetadataKladrModel>(GlobalStaticConstantsTransmission.TransmissionQueues.UploadPartTempKladrReceive, req, waitResponse: true, token: token) ?? new();
 }
