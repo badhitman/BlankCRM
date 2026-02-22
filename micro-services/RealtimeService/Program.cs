@@ -141,6 +141,10 @@ public class Program
 
         builder.Services.AddSingleton(sp => _confMQTT);
 
+        builder.Services
+            .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
+        ;
+
         builder.Services.AddHttpContextAccessor();
 
         builder.Services.AddSingleton<MqttHostedServer>();
