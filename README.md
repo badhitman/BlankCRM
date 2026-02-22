@@ -142,11 +142,20 @@ else
 - RabbitMQ подключение потребуется для всех четырёх служб (**TelegramBotService** и **BlazorWebApp**):
 ```json
 {
-  "RabbitMQConfig": {
-    "UserName": "ваш_логин_от_rabbitmq",
-    "Password": "ваш_пароль_от_rabbitmq",
-    "VirtualHost": "/"
-  }
+    "RabbitMQConfig": {
+        "UserName": "debug",
+        "Password": "debug",
+        "VirtualHost": "/",
+        "HostName": "localhost",
+        "Port": 5672,
+        "ClientProvidedName": "debug",
+        "RemoteCallTimeoutMs": 300000,
+        "ListenerConsumerTimeout": 10000,
+        "ListenerMessageTTL": 10000,
+        "ResponseConsumerTimeout": 10000,
+        "ResponseMessageTTL": 15000,
+        "ExpiresResponseQueue": 10000
+	}
 }
 ```
 

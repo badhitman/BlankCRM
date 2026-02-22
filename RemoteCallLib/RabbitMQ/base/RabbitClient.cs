@@ -2,19 +2,18 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
-using Microsoft.Extensions.Configuration;
+using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using RabbitMQ.Client.Exceptions;
+using System.Diagnostics.Metrics;
+using RabbitMQ.Client.Events;
+using System.Diagnostics;
+using System.Text.Json;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
-using RabbitMQ.Client.Events;
-using RabbitMQ.Client.Exceptions;
-using SharedLib;
-using System.Diagnostics;
-using System.Diagnostics.Metrics;
 using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
+using SharedLib;
 
 namespace RemoteCallLib;
 
@@ -30,7 +29,16 @@ public class RabbitClient : IMQStandardClientRPC
 
     readonly string AppName;
 
+    /// <summary>
+    /// Параметры вызывающей очереди
+    /// </summary>
+    static Dictionary<string, object>? ListenerQueueArguments;
+
+    /// <summary>
+    /// Параметры ответной очереди
+    /// </summary>
     static Dictionary<string, object>? ResponseQueueArguments;
+
     /// <inheritdoc/>
     public static readonly JsonSerializerOptions SerializerOptions = new() { ReferenceHandler = ReferenceHandler.IgnoreCycles, WriteIndented = true };
 
@@ -47,13 +55,32 @@ public class RabbitClient : IMQStandardClientRPC
         AppName = appName;
         loggerRepo = _loggerRepo;
         RabbitConfigRepo = rabbitConf.Value;
-        ResponseQueueArguments ??= new()
+
+        if (ListenerQueueArguments is null)
         {
-            { "x-message-ttl", rabbitConf.Value.RemoteCallTimeoutMs },
-            { "x-expires", rabbitConf.Value.RemoteCallTimeoutMs },
-            { "x-consumer-timeout", rabbitConf.Value.RemoteCallTimeoutMs + 100 },
-            { "x-queue-type", "quorum" },
-        };
+            ListenerQueueArguments = new() { { "x-queue-type", "quorum" } };
+
+            if (rabbitConf.Value.ListenerMessageTTL.HasValue && rabbitConf.Value.ListenerMessageTTL.Value > 0)
+                ListenerQueueArguments.Add("x-message-ttl", rabbitConf.Value.ListenerMessageTTL.Value);
+
+            if (rabbitConf.Value.ListenerConsumerTimeout.HasValue && rabbitConf.Value.ListenerConsumerTimeout.Value > 0)
+                ListenerQueueArguments.Add("x-consumer-timeout", rabbitConf.Value.ListenerConsumerTimeout.Value);
+        }
+
+        if (ResponseQueueArguments is null)
+        {
+            ResponseQueueArguments = new() { { "x-queue-type", "classic" } };
+
+            if (rabbitConf.Value.ResponseMessageTTL.HasValue && rabbitConf.Value.ResponseMessageTTL.Value > 0)
+                ResponseQueueArguments.Add("x-message-ttl", rabbitConf.Value.ResponseMessageTTL.Value);
+
+            if (rabbitConf.Value.ExpiresResponseQueue.HasValue && rabbitConf.Value.ExpiresResponseQueue.Value > 0)
+                ResponseQueueArguments.Add("x-expires", rabbitConf.Value.ExpiresResponseQueue.Value);
+
+            if (rabbitConf.Value.ResponseConsumerTimeout.HasValue && rabbitConf.Value.ResponseConsumerTimeout.Value > 0)
+                ResponseQueueArguments.Add("x-consumer-timeout", rabbitConf.Value.ResponseConsumerTimeout.Value);
+        }
+
         factory = new()
         {
             ClientProvidedName = RabbitConfigRepo.ClientProvidedName,
@@ -109,8 +136,8 @@ public class RabbitClient : IMQStandardClientRPC
         }
         catch (TaskCanceledException ex)
         {
-            _connection?.Dispose();
             _channel?.Dispose();
+            _connection?.Dispose();
 
             await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
             {
@@ -125,8 +152,8 @@ public class RabbitClient : IMQStandardClientRPC
         }
         catch (OperationCanceledException)
         {
-            _connection?.Dispose();
             _channel?.Dispose();
+            _connection?.Dispose();
             return default;
         }
         catch (Exception ex)
@@ -134,8 +161,8 @@ public class RabbitClient : IMQStandardClientRPC
             msg = "exception basic ask. error {295C630E-4069-44A1-8619-15E418F4BF58}";
             loggerRepo.LogError(ex, msg);
 
-            _connection?.Dispose();
             _channel?.Dispose();
+            _connection?.Dispose();
             try
             {
                 await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
@@ -160,19 +187,19 @@ public class RabbitClient : IMQStandardClientRPC
             properties.ReplyTo = response_topic;
             try
             {
-                await _channel.QueueDeclareAsync(queue: response_topic, durable: false, exclusive: false, autoDelete: true, arguments: new Dictionary<string, object>(ResponseQueueArguments!.Where(x => x.Key != "x-queue-type"))!, cancellationToken: tokenOuter);
+                await _channel.QueueDeclareAsync(queue: response_topic, durable: false, exclusive: false, autoDelete: true, arguments: ResponseQueueArguments!, cancellationToken: tokenOuter);
             }
             catch (TaskCanceledException)
             {
-                _connection.Dispose();
                 _channel.Dispose();
+                _connection.Dispose();
 
                 return default;
             }
             catch (OperationCanceledException)
             {
-                _connection?.Dispose();
                 _channel?.Dispose();
+                _connection?.Dispose();
                 return default;
             }
             catch (OperationInterruptedException ex)
@@ -180,8 +207,8 @@ public class RabbitClient : IMQStandardClientRPC
                 msg = $"exception basic ask for [queue: {response_topic}]. error 56AA49DF-E8F8-489F-A2AB-591511EE7B33";
                 loggerRepo.LogError(ex, msg);
 
-                _connection?.Dispose();
                 _channel?.Dispose();
+                _connection?.Dispose();
                 try
                 {
                     await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
@@ -204,8 +231,8 @@ public class RabbitClient : IMQStandardClientRPC
                 msg = "exception basic ask. error {C8C5AB97-CE68-4A5B-BB7D-FA71C6419A3E}";
                 loggerRepo.LogError(ex, msg);
 
-                _connection.Dispose();
                 _channel.Dispose();
+                _connection.Dispose();
                 try
                 {
                     await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
@@ -376,8 +403,8 @@ public class RabbitClient : IMQStandardClientRPC
             }
             catch (TaskCanceledException ex)
             {
-                _connection.Dispose();
                 _channel.Dispose();
+                _connection.Dispose();
                 try
                 {
                     await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
@@ -397,16 +424,16 @@ public class RabbitClient : IMQStandardClientRPC
             }
             catch (OperationCanceledException)
             {
-                _connection.Dispose();
                 _channel.Dispose();
+                _connection.Dispose();
                 return default;
             }
             catch (Exception ex)
             {
                 loggerRepo.LogError(ex, "exception 88DE88EF-10C7-4BB8-A36A-F9C6DFDA70B2");
 
-                _connection.Dispose();
                 _channel.Dispose();
+                _connection.Dispose();
 
                 return default;
             }
@@ -414,12 +441,12 @@ public class RabbitClient : IMQStandardClientRPC
 
         try
         {
-            await _channel!.QueueDeclareAsync(queue: queue, durable: true, exclusive: false, autoDelete: false, arguments: new Dictionary<string, object>(ResponseQueueArguments!.Where(x => x.Key != "x-expires"))!, cancellationToken: tokenOuter);
+            await _channel!.QueueDeclareAsync(queue: queue, durable: true, exclusive: false, autoDelete: false, arguments: ListenerQueueArguments!, cancellationToken: tokenOuter);
         }
         catch (TaskCanceledException ex)
         {
-            _connection.Dispose();
             _channel.Dispose();
+            _connection.Dispose();
             try
             {
                 await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
@@ -439,16 +466,16 @@ public class RabbitClient : IMQStandardClientRPC
         }
         catch (OperationCanceledException)
         {
-            _connection.Dispose();
             _channel.Dispose();
+            _connection.Dispose();
             return default;
         }
         catch (Exception ex)
         {
             loggerRepo.LogError(ex, "exception 52301C76-8A66-466B-9553-56D44711135A");
 
-            _connection.Dispose();
             _channel.Dispose();
+            _connection.Dispose();
             try
             {
                 await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
@@ -476,8 +503,8 @@ public class RabbitClient : IMQStandardClientRPC
         catch (Exception ex)
         {
             loggerRepo.LogError(ex, $"Ошибка сериализации объекта [{request?.GetType().Name}]: {request}");
-            _connection.Dispose();
             _channel.Dispose();
+            _connection.Dispose();
 
             return default;
         }
@@ -498,8 +525,8 @@ public class RabbitClient : IMQStandardClientRPC
         }
         catch (TaskCanceledException ex)
         {
-            _connection.Dispose();
             _channel.Dispose();
+            _connection.Dispose();
             try
             {
                 await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
@@ -519,15 +546,15 @@ public class RabbitClient : IMQStandardClientRPC
         }
         catch (OperationCanceledException)
         {
-            _connection.Dispose();
             _channel.Dispose();
+            _connection.Dispose();
             return default;
         }
         catch (Exception ex)
         {
             loggerRepo.LogError(ex, "exception 4BDEC834-2CA1-42D6-9A69-9F3700F064C2");
-            _connection.Dispose();
             _channel.Dispose();
+            _connection.Dispose();
             try
             {
                 await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
@@ -568,6 +595,7 @@ public class RabbitClient : IMQStandardClientRPC
                 {
 
                 }
+
                 cts.Cancel();
                 //cts.Dispose();
             }, token);
@@ -578,8 +606,9 @@ public class RabbitClient : IMQStandardClientRPC
             catch (TaskCanceledException ex)
             {
                 loggerRepo.LogDebug($"response for {response_topic}");
-                _connection.Dispose();
                 _channel.Dispose();
+                _connection.Dispose();
+
                 try
                 {
                     await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
@@ -599,8 +628,8 @@ public class RabbitClient : IMQStandardClientRPC
             catch (OperationCanceledException)
             {
                 loggerRepo.LogDebug($"response for {response_topic}");
-                _connection.Dispose();
                 _channel.Dispose();
+                _connection.Dispose();
             }
             catch (Exception ex)
             {
@@ -608,8 +637,9 @@ public class RabbitClient : IMQStandardClientRPC
                 loggerRepo.LogError(ex, msg);
                 stopwatch.Stop();
 
-                _connection.Dispose();
                 _channel.Dispose();
+                _connection.Dispose();
+
                 try
                 {
                     await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
@@ -625,6 +655,7 @@ public class RabbitClient : IMQStandardClientRPC
                 {
 
                 }
+
                 return default;
             }
 
@@ -646,6 +677,7 @@ public class RabbitClient : IMQStandardClientRPC
         {
             msg = $"Response MQ/IO is null [{queue}] -> [{response_topic}]: {stopwatch.Elapsed} > {TimeSpan.FromMilliseconds(RabbitConfigRepo.RemoteCallTimeoutMs)}";
             loggerRepo.LogError(msg);
+
             try
             {
                 await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
@@ -661,10 +693,12 @@ public class RabbitClient : IMQStandardClientRPC
             {
 
             }
+
             return default;
         }
         else if (res_io is null)
             return default;
+
         try
         {
             await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
@@ -680,6 +714,7 @@ public class RabbitClient : IMQStandardClientRPC
         {
 
         }
+
         return res_io.Response;
     }
 }

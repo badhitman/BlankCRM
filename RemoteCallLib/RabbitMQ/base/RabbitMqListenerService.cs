@@ -37,7 +37,7 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
     readonly ConnectionFactory factory;
     readonly ITraceRabbitActionsServiceTransmission traceRepo;
 
-    static Dictionary<string, object>? ResponseQueueArguments;
+    static Dictionary<string, object>? QueueListenerArguments;
 
     Type? _queueType;
     /// <summary>
@@ -60,16 +60,19 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
     {
         traceRepo = _traceRepo;
         LoggerRepo = loggerRepo;
-        ResponseQueueArguments ??= new()
+
+        if (QueueListenerArguments is null)
         {
-            { "x-message-ttl", rabbitConf.Value.RemoteCallTimeoutMs },
-            { "x-expires", rabbitConf.Value.RemoteCallTimeoutMs },
-            { "x-consumer-timeout", rabbitConf.Value.RemoteCallTimeoutMs + 100 },
-            { "x-queue-type", "quorum" },
-        };
+            QueueListenerArguments = new() { { "x-queue-type", "quorum" } };
+
+            if (rabbitConf.Value.ListenerMessageTTL.HasValue && rabbitConf.Value.ListenerMessageTTL.Value > 0)
+                QueueListenerArguments.Add("x-message-ttl", rabbitConf.Value.ListenerMessageTTL.Value);
+
+            if (rabbitConf.Value.ListenerConsumerTimeout.HasValue && rabbitConf.Value.ListenerConsumerTimeout.Value > 0)
+                QueueListenerArguments.Add("x-consumer-timeout", rabbitConf.Value.ListenerConsumerTimeout.Value);
+        }
 
         using IServiceScope scope = servicesProvider.CreateScope();
-        //ITraceRabbitActionsServiceTransmission traceRepo
         receiveService = scope.ServiceProvider.GetServices<IResponseReceive<TRequest?, TResponse>>().First(o => o.GetType() == QueueType);
         LoggerRepo.LogTrace($"factory: host:{rabbitConf.Value.HostName}; username:{rabbitConf.Value.UserName};");
         factory = new()
@@ -86,7 +89,7 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
     {
         _connection = await factory.CreateConnectionAsync(stoppingToken);
         _channel = await _connection.CreateChannelAsync(cancellationToken: stoppingToken);
-        await _channel.QueueDeclareAsync(queue: QueueName, durable: true, exclusive: false, autoDelete: false, arguments: new Dictionary<string, object>(ResponseQueueArguments!.Where(x => x.Key != "x-expires"))!, cancellationToken: stoppingToken);
+        await _channel.QueueDeclareAsync(queue: QueueName, durable: true, exclusive: false, autoDelete: false, arguments: QueueListenerArguments!, cancellationToken: stoppingToken);
 
         stoppingToken.ThrowIfCancellationRequested();
         TResponseMQModel<TResponse> answer = new()
