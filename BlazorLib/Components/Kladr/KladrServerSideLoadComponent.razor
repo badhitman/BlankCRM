@@ -53,14 +53,14 @@
 
         // Parser.CurrentEncoding = Encoding.GetEncoding(currentEncoding);
         StateHasChanged();
-
+        List<Task> tasks = [];
         foreach (string _fn in allFiles!)
         {
             using MemoryStream ms = new MemoryStream(File.ReadAllBytes(_fn));
             await Parser.Open(ms, Path.GetFileName(_fn));
-            await Parser.UploadData(true);
+            tasks.Add(Parser.UploadData(true));
         }
-
+        await Task.WhenAll(tasks);
         _isLoading = false;
         StateHasChanged();
     }

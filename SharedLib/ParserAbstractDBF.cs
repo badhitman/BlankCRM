@@ -227,7 +227,7 @@ public abstract class ParserAbstractDBF : IKladrParseService
         int data_list_Count = 0, del_rows_count = 0;
         BinaryReader recReader;
         byte[] readed_data_tmp;
-
+        List<Task> tasks = [];
         for (int counter = 0; counter <= header.numRecords - 1; counter++)
         {
             buffer = new byte[header.recordLen];
@@ -326,12 +326,12 @@ public abstract class ParserAbstractDBF : IKladrParseService
             if (data_list_Count > 1000)
             {
                 data_list_Count = 0;
-                _ = await UploadPartTempKladrAsync(new()
+                tasks.Add(Task.Run(async () => await UploadPartTempKladrAsync(new()
                 {
                     Columns = [.. Columns.Cast<FieldDescriptor>().Select(x => new FieldDescriptorBase() { FieldLen = x.fieldLen, FieldName = x.fieldName, FieldType = x.fieldType })],
                     RowsData = DataList,
                     TableName = fileName,
-                });
+                })));
 
                 DataList.Clear();
                 NotifyUploadAction(counter);
@@ -339,16 +339,17 @@ public abstract class ParserAbstractDBF : IKladrParseService
         }
         if (DataList.Count != 0)
         {
-            _ = await UploadPartTempKladrAsync(new()
+            tasks.Add(Task.Run(async () => await UploadPartTempKladrAsync(new()
             {
                 Columns = [.. Columns.Cast<FieldDescriptor>().Select(x => new FieldDescriptorBase() { FieldLen = x.fieldLen, FieldName = x.fieldName, FieldType = x.fieldType })],
                 RowsData = DataList,
                 TableName = fileName,
-            });
+            })));
 
             DataList.Clear();
             NotifyUploadAction(header.numRecords - 1);
         }
+        await Task.WhenAll(tasks);
     }
 
     /// <inheritdoc/>
