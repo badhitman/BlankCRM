@@ -49,7 +49,7 @@ public partial class RetailService : IRetailService
         else
             req.Payload.SortIndex = 1;
 
-        context.WalletsRetailTypes.Update(req.Payload);
+        await context.WalletsRetailTypes.AddAsync(req.Payload, token);
         await context.SaveChangesAsync(token);
 
         return new() { Response = req.Payload.Id };

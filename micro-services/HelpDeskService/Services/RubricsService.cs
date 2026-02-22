@@ -2,15 +2,13 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
-using DbcLib;
-using DocumentFormat.OpenXml.Drawing;
-using Microsoft.EntityFrameworkCore;
+using static SharedLib.GlobalStaticConstantsTransmission;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Caching.Memory;
-using Newtonsoft.Json.Linq;
-using SharedLib;
 using System.Text.RegularExpressions;
-using static SharedLib.GlobalStaticConstantsTransmission;
+using Microsoft.EntityFrameworkCore;
+using SharedLib;
+using DbcLib;
 
 namespace HelpDeskService;
 
@@ -25,7 +23,7 @@ public class RubricsService(
 
     /// <inheritdoc/>
     public async Task<List<RubricNestedModel>> RubricsChildListAsync(RubricsListRequestStandardModel req, CancellationToken token = default)
-    {//RubricNestedModel
+    {
         using HelpDeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
         string? _ctx1 = req.ContextName?.Replace("/", "\\");
         string? _ctx2 = req.ContextName?.Replace("\\", "/");
@@ -186,7 +184,6 @@ public class RubricsService(
             .ToListAsync(cancellationToken: token);
 
         ResponseBaseModel res = new();
-
         int i = all.FindIndex(x => x.Id == data.Id);
         if (req.Payload.Direction == DirectionsEnum.Up)
         {
