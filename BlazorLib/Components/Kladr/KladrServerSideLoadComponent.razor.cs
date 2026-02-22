@@ -52,6 +52,7 @@ public partial class KladrServerSideLoadComponent
                 await Parser.UploadData(true, 10);
                 StateHasChanged();
             }
+            uploadedFiles.Add(currentFilePart);
         }
 
         Parser.PartUploadNotify -= PartUploadNotifyHandle;
