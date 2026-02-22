@@ -220,7 +220,8 @@ public abstract class ParserAbstractDBF : IKladrParseService
         if (string.IsNullOrWhiteSpace(fileName))
             throw new Exception("FileName IsNullOrWhiteSpace");
 
-        DataList.Clear();
+        // DataList.Clear();
+        List<object[]> _dataList = [];
 
         DbfFile.Seek(header.headerLen, SeekOrigin.Begin);
         object[] s_row;
@@ -322,31 +323,34 @@ public abstract class ParserAbstractDBF : IKladrParseService
             }
             recReader.Close();
             data_list_Count++;
-            DataList.Add(s_row);
+            _dataList.Add(s_row);
             if (data_list_Count > 1000)
             {
                 data_list_Count = 0;
                 tasks.Add(Task.Run(async () => await UploadPartTempKladrAsync(new()
                 {
                     Columns = [.. Columns.Cast<FieldDescriptor>().Select(x => new FieldDescriptorBase() { FieldLen = x.fieldLen, FieldName = x.fieldName, FieldType = x.fieldType })],
-                    RowsData = DataList,
+                    RowsData = _dataList,
                     TableName = fileName,
                 })));
 
                 DataList.Clear();
+                DataList.AddRange(_dataList);
+
                 NotifyUploadAction(counter);
             }
         }
-        if (DataList.Count != 0)
+        if (_dataList.Count != 0)
         {
             tasks.Add(Task.Run(async () => await UploadPartTempKladrAsync(new()
             {
                 Columns = [.. Columns.Cast<FieldDescriptor>().Select(x => new FieldDescriptorBase() { FieldLen = x.fieldLen, FieldName = x.fieldName, FieldType = x.fieldType })],
-                RowsData = DataList,
+                RowsData = _dataList,
                 TableName = fileName,
             })));
 
             DataList.Clear();
+            DataList.AddRange(_dataList);
             NotifyUploadAction(header.numRecords - 1);
         }
         await Task.WhenAll(tasks);
