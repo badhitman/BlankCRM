@@ -143,18 +143,20 @@ else
 ```json
 {
     "RabbitMQConfig": {
+        "HostName": "localhost",
+        "Port": 5672,
         "UserName": "debug",
         "Password": "debug",
         "VirtualHost": "/",
-        "HostName": "localhost",
-        "Port": 5672,
         "ClientProvidedName": "debug",
         "RemoteCallTimeoutMs": 300000,
-        "ListenerConsumerTimeout": 10000,
-        "ListenerMessageTTL": 10000,
-        "ResponseConsumerTimeout": 10000,
-        "ResponseMessageTTL": 15000,
-        "ExpiresResponseQueue": 10000
+
+        "ListenerConsumerTimeout": 30000, // Время удержания сообщения (unacked)
+        "ListenerMessageTTL": 900000, // Время жизни сообщений в очереди
+
+        "ResponseConsumerTimeout": 600000, // Время удержания сообщения (unacked) в "очереди ответа"
+        "ResponseMessageTTL": 10000, // Время жизни сообщений в "очереди ответа"
+        "ExpiresResponseQueue": 5000 // Время жизни неиспользуемой "очереди ответа"
 	}
 }
 ```

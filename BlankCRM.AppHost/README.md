@@ -106,12 +106,12 @@ Aspire хост (`DesignerApp.AppHost`) настраивается в одном
 		"ClientProvidedName": "debug",
 		"RemoteCallTimeoutMs": 300000,
 
-		"ListenerConsumerTimeout": 10000, // Время удержания сообщения (unacked)
-		"ListenerMessageTTL": 10000, // Время жизни сообщений в очереди
+		"ListenerConsumerTimeout": 30000, // Время удержания сообщения (unacked)
+		"ListenerMessageTTL": 900000, // Время жизни сообщений в очереди
 
-		"ResponseConsumerTimeout": 10000, // Время удержания сообщения (unacked) в "очереди ответа"
-		"ResponseMessageTTL": 15000, // Время жизни сообщений в "очереди ответа"
-		"ExpiresResponseQueue": 10000 // Время жизни неиспользуемой "очереди ответа"
+		"ResponseConsumerTimeout": 600000, // Время удержания сообщения (unacked) в "очереди ответа"
+		"ResponseMessageTTL": 10000, // Время жизни сообщений в "очереди ответа"
+		"ExpiresResponseQueue": 5000 // Время жизни неиспользуемой "очереди ответа"
 	}
 }
 ```
@@ -169,20 +169,20 @@ Aspire хост (`DesignerApp.AppHost`) настраивается в одном
 		"BotToken": "111777000:xxxyyyxxxyyyxxxyyy"
 	},
 	"RabbitMQConfig": {
-			"HostName": "localhost",
-			"Port": 5672,
-			"UserName": "debug",
-			"Password": "debug",
-			"VirtualHost": "/",
-			"ClientProvidedName": "debug",
-			"RemoteCallTimeoutMs": 300000,
+		"HostName": "localhost",
+		"Port": 5672,
+		"UserName": "debug",
+		"Password": "debug",
+		"VirtualHost": "/",
+		"ClientProvidedName": "debug",
+		"RemoteCallTimeoutMs": 300000,
 
-			"ListenerConsumerTimeout": 10000, // Время удержания сообщения (unacked)
-			"ListenerMessageTTL": 10000, // Время жизни сообщений в очереди
+		"ListenerConsumerTimeout": 30000, // Время удержания сообщения (unacked)
+		"ListenerMessageTTL": 900000, // Время жизни сообщений в очереди
 
-			"ResponseConsumerTimeout": 10000, // Время удержания сообщения (unacked) в "очереди ответа"
-			"ResponseMessageTTL": 15000, // Время жизни сообщений в "очереди ответа"
-			"ExpiresResponseQueue": 10000 // Время жизни неиспользуемой "очереди ответа"
+		"ResponseConsumerTimeout": 600000, // Время удержания сообщения (unacked) в "очереди ответа"
+		"ResponseMessageTTL": 10000, // Время жизни сообщений в "очереди ответа"
+		"ExpiresResponseQueue": 5000 // Время жизни неиспользуемой "очереди ответа"
 	},
 	"MongoDBConfig": {
 		"Scheme": "mongodb",

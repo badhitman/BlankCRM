@@ -99,7 +99,7 @@ public class Program
         builder.Services.AddMemoryCache();
         builder.Services.AddOptions();
 
-        RabbitMQConfigModel _mqConf = builder.Configuration.GetSection("RabbitMQConfig").Get<RabbitMQConfigModel>() ?? throw new Exception("RabbitMQ not config");
+        RabbitMQConfigModel _mqConf = builder.Configuration.GetSection(RabbitMQConfigModel.Configuration).Get<RabbitMQConfigModel>() ?? throw new Exception("RabbitMQ not config");
 
         string connectionStorage = builder.Configuration.GetConnectionString($"KladrConnection{_modePrefix}") ?? throw new InvalidOperationException($"Connection string 'KladrConnection{_modePrefix}' not found.");
         builder.Services.AddDbContextFactory<KladrContext>(opt =>
