@@ -122,7 +122,7 @@ public class RabbitClient : IMQStandardClientRPC
 
         }
 
-        string response_topic = waitResponse ? $"{AppName}.{RabbitConfigRepo.QueueMqNamePrefixForResponse.Replace("\\", "/")}{queue}_{guidRequest}" : "";
+        string response_topic = waitResponse ? $"{AppName}.{RabbitConfigRepo.QueueMqNamePrefixForResponse}{queue}_{guidRequest}".Replace("\\", "/") : "";
         activity?.SetTag(nameof(response_topic), response_topic);
 
         string msg;
@@ -264,7 +264,10 @@ public class RabbitClient : IMQStandardClientRPC
             string msg;
             consumer.ReceivedAsync -= MessageReceivedEvent;
             string content = Encoding.UTF8.GetString(e.Body.ToArray());
-
+            
+            await _channel.QueuePurgeAsync(response_topic, CancellationToken.None);
+            await _channel.QueueDeleteAsync(response_topic, false, false, true, cancellationToken: CancellationToken.None);
+            
             if (!content.Contains(GlobalStaticConstantsRoutes.Routes.PASSWORD_CONTROLLER_NAME, StringComparison.OrdinalIgnoreCase))
                 activity?.SetBaggage(nameof(content), content);
             else
