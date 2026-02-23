@@ -19,7 +19,7 @@ public class ChatTelegramReadReceive(ITelegramBotService tgRepo)
     /// <inheritdoc/>
     public async Task<ChatTelegramStandardModel?> ResponseHandleActionAsync(int chat_id, CancellationToken token = default)
     {
-        if (chat_id <= 0)
+        if (chat_id == 0)
             throw new Exception($"chat id incorrect: {chat_id}");
 
         return await tgRepo.ChatTelegramReadAsync(chat_id, token);
