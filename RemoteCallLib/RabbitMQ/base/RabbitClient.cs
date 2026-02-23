@@ -181,7 +181,7 @@ public class RabbitClient : IMQStandardClientRPC
             return default;
         }
 
-        BasicProperties? properties = new();
+        BasicProperties? properties = new() { AppId = AppName };
         if (waitResponse)
         {
             properties.ReplyTo = response_topic;
@@ -494,8 +494,8 @@ public class RabbitClient : IMQStandardClientRPC
             return default;
         }
 
-#if DEBUG
         string request_payload_json = "";
+#if DEBUG
         try
         {
             request_payload_json = JsonConvert.SerializeObject(request, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings);
