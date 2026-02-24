@@ -48,7 +48,7 @@ public abstract partial class KladrLayerContext : DbContext
     /// <inheritdoc/>
     static string GetFindQuery(string findText, bool housesInclude, string[]? codeLikeFilters = null)
     {
-        string findTextCompress = Regex.Replace(findText, @"\s+", "");
+        string findTextCompress = MyRegexSpices().Replace(findText, "");
         return $@"SELECT x.""CODE"" FROM ((SELECT o.""CODE"", o.""NAME"", 1 as ""LEVEL""
                     FROM public.""{nameof(ObjectsKLADR)}"" AS o
                     WHERE {(codeLikeFilters is null || codeLikeFilters.Length == 0 ? "" : $"({string.Join(" OR ", codeLikeFilters.Select(x => $"o.\"CODE\" LIKE '{x}'"))}) AND")} ({string.IsNullOrWhiteSpace(findText)} OR o.""NAME"" LIKE '%{findText}%' OR o.""NAME"" LIKE '%{findTextCompress}%'))
@@ -352,4 +352,7 @@ public abstract partial class KladrLayerContext : DbContext
 
     /// <inheritdoc/>
     public DbSet<HouseTempKLADRModelDB> TempHousesKLADR { get; set; } = default!;
+
+    [GeneratedRegex(@"\s+")]
+    private static partial Regex MyRegexSpices();
 }

@@ -44,7 +44,7 @@ public partial class RetailService : IRetailService
         }
         req.Payload.ExternalDocumentId = string.IsNullOrWhiteSpace(req.Payload.ExternalDocumentId)
             ? null
-            : Regex.Replace(req.Payload.ExternalDocumentId, @"\s+", "");
+            : MyRegexSpices().Replace(req.Payload.ExternalDocumentId, "");
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
@@ -439,4 +439,7 @@ public partial class RetailService : IRetailService
 
         return res;
     }
+
+    [GeneratedRegex(@"\s+")]
+    private static partial Regex MyRegexSpices();
 }

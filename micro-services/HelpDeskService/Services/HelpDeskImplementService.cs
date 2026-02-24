@@ -19,7 +19,7 @@ namespace HelpDeskService;
 /// <summary>
 /// HelpDesk - Implement
 /// </summary>
-public class HelpDeskImplementService(
+public partial class HelpDeskImplementService(
     IIdentityTransmission IdentityRepo,
     ILogger<HelpDeskImplementService> loggerRepo,
     IDbContextFactory<HelpDeskContext> helpdeskDbFactory,
@@ -938,7 +938,7 @@ public class HelpDeskImplementService(
         issue_upd.Payload.Description = issue_upd.Payload.Description?.Trim();
         string? normalizedDescriptionUpper = issue_upd.Payload.Description?.ToUpper();
 
-        Regex rx = new(@"\s+", RegexOptions.Compiled);
+        Regex rx = MyRegexSpices();
         issue_upd.Payload.Name = rx.Replace(issue_upd.Payload.Name.Trim(), " ");
 
         string normalizedNameUpper = issue_upd.Payload.Name.ToUpper();
@@ -1965,4 +1965,7 @@ public class HelpDeskImplementService(
             await cacheRepo.RemoveAsync(mceKey, token);
         }
     }
+
+    [GeneratedRegex(@"\s+", RegexOptions.Compiled)]
+    private static partial Regex MyRegexSpices();
 }

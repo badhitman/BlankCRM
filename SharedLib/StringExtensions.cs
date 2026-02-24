@@ -12,7 +12,7 @@ namespace SharedLib;
 /// <summary>
 /// StringExtensions
 /// </summary>
-public static class StringExtensions
+public static partial class StringExtensions
 {
     /// <summary>
     /// NullIfEmpty
@@ -40,7 +40,7 @@ public static class StringExtensions
             return 0;
         }
 
-        return [.. Regex.Split(data, @"\s+")
+        return [.. MyRegexSpices().Split(data)
                 .Where(x => !string.IsNullOrWhiteSpace(x))
                 .Select(parseString)];
     }
@@ -124,4 +124,7 @@ public static class StringExtensions
             }
         }
     }
+
+    [GeneratedRegex(@"\s+")]
+    private static partial Regex MyRegexSpices();
 }

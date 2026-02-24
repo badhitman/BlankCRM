@@ -15,7 +15,7 @@ namespace HelpDeskService;
 /// <summary>
 /// RubricsService
 /// </summary>
-public class RubricsService(
+public partial class RubricsService(
     IDbContextFactory<HelpDeskContext> helpdeskDbFactory,
     IMemoryCache cache) : IRubricsService
 {
@@ -264,7 +264,7 @@ public class RubricsService(
             return res;
         }
 
-        Regex rx = new(@"\s+", RegexOptions.Compiled);
+        Regex rx = SpicesRegex();
         rubric.Name = rx.Replace(rubric.Name.Trim(), " ");
         if (string.IsNullOrWhiteSpace(rubric.Name))
         {
@@ -313,4 +313,7 @@ public class RubricsService(
 
         return res;
     }
+
+    [GeneratedRegex(@"\s+", RegexOptions.Compiled)]
+    private static partial Regex SpicesRegex();
 }

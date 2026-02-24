@@ -1,4 +1,8 @@
 ﻿@page "/Users/Profiles/view-{UserId:guid}"
+
+@using BlazorLib.Components.Users
+@using BlazorLib.Components.Users.Pages
+
 @attribute [Authorize(Roles = GlobalStaticConstantsRoles.Roles.Admin)]
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 

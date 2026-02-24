@@ -12,13 +12,13 @@ namespace HelpDeskService;
 /// <summary>
 /// Articles
 /// </summary>
-public class ArticlesService(IDbContextFactory<HelpDeskContext> helpdeskDbFactory) : IArticlesService
+public partial class ArticlesService(IDbContextFactory<HelpDeskContext> helpdeskDbFactory) : IArticlesService
 {
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> ArticleCreateOrUpdateAsync(ArticleModelDB article, CancellationToken token = default)
     {
         TResponseModel<int> res = new();
-        Regex rx = new(@"\s+", RegexOptions.Compiled);
+        Regex rx = MyRegexSpices();
         article.Name = rx.Replace(article.Name.Trim(), " ");
         if (string.IsNullOrWhiteSpace(article.Name))
         {
@@ -162,4 +162,7 @@ public class ArticlesService(IDbContextFactory<HelpDeskContext> helpdeskDbFactor
 
         return res;
     }
+
+    [GeneratedRegex(@"\s+", RegexOptions.Compiled)]
+    private static partial Regex MyRegexSpices();
 }

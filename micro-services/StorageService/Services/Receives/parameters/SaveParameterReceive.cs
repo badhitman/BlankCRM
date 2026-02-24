@@ -11,7 +11,7 @@ namespace Transmission.Receives.storage;
 /// <summary>
 /// Save parameter
 /// </summary>
-public class SaveParameterReceive(IParametersStorage serializeStorageRepo)
+public partial class SaveParameterReceive(IParametersStorage serializeStorageRepo)
     : IResponseReceive<StorageCloudParameterPayloadModel?, TResponseModel<int?>?>
 {
     /// <inheritdoc/>
@@ -23,7 +23,7 @@ public class SaveParameterReceive(IParametersStorage serializeStorageRepo)
         ArgumentNullException.ThrowIfNull(req);
 
         req.Normalize();
-        Regex rx = new(@"\s+", RegexOptions.Compiled);
+        Regex rx = MyRegexSpices();
         StorageCloudParameterModelDB store_db = new()
         {
             ApplicationName = req.ApplicationName is null ? null : rx.Replace(req.ApplicationName.Trim(), " "),
@@ -37,4 +37,7 @@ public class SaveParameterReceive(IParametersStorage serializeStorageRepo)
 
         return await serializeStorageRepo.FlushParameterAsync(store_db, req.TrimHistory, token);
     }
+
+    [GeneratedRegex(@"\s+", RegexOptions.Compiled)]
+    private static partial Regex MyRegexSpices();
 }
