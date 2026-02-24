@@ -2,6 +2,7 @@
 
 @using BlazorLib.Components.Users
 @using BlazorLib.Components.Users.Pages
+@using MudBlazor
 
 @attribute [Authorize(Roles = GlobalStaticConstantsRoles.Roles.Admin)]
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
@@ -12,14 +13,18 @@
 
 <h3>Пользователь</h3>
 
-<div class="row">
-    <div class="col">
-        <RolesPage OwnerUserId="@UserId.ToString()" />
-    </div>
-    <div class="col">
-        <ClaimsManageComponent ClaimArea="ClaimAreasEnum.ForUser" OwnerId="@UserId.ToString()" />
-    </div>
-</div>
+<MudCard>
+    <MudCardContent>
+        <div class="row">
+            <div class="col">
+                <RolesPage OwnerUserId="@UserId.ToString()" />
+            </div>
+            <div class="col">
+                <ClaimsManageComponent ClaimArea="ClaimAreasEnum.ForUser" OwnerId="@UserId.ToString()" />
+            </div>
+        </div>
+    </MudCardContent>
+</MudCard>
 
 @code {
     [Parameter]
