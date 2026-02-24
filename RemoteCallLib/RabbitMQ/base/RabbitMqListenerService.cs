@@ -88,10 +88,10 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
     {
         _connection = await factory.CreateConnectionAsync(stoppingToken);
         _channel = await _connection.CreateChannelAsync(cancellationToken: stoppingToken);
-        
+
         await _channel.QueueDeclareAsync(queue: QueueName, durable: true, exclusive: false, autoDelete: false, arguments: QueueListenerArguments!, cancellationToken: stoppingToken);
         await _channel.BasicQosAsync(prefetchSize: 0, prefetchCount: 1, global: false, cancellationToken: stoppingToken);
-        
+
         stoppingToken.ThrowIfCancellationRequested();
         TResponseMQModel<TResponse> answer = new()
         {
@@ -142,7 +142,7 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
                 {
                     await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
                     {
-                        Sender = nameof(consumer.ReceivedAsync),
+                        Sender = $"{GetType().Name}.{nameof(ExecuteAsync)}.{nameof(consumer.ReceivedAsync)}",
                         GuidSession = ea.BasicProperties.ReplyTo[^36..],
                         ReceiverName = QueueName,
                         PayloadBody = answer.Response,
@@ -161,7 +161,7 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
                 {
                     await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
                     {
-                        Sender = nameof(consumer.ReceivedAsync),
+                        Sender = $"{nameof(_channel.BasicAckAsync)}: {GetType().Name}.{nameof(ExecuteAsync)}.{nameof(consumer.ReceivedAsync)}",
                         GuidSession = "~",
                         ReceiverName = QueueName,
                         PayloadBody = answer.Response,

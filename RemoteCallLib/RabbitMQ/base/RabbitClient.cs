@@ -271,7 +271,7 @@ public class RabbitClient : IMQStandardClientRPC
             if (!content.Contains(GlobalStaticConstantsRoutes.Routes.PASSWORD_CONTROLLER_NAME, StringComparison.OrdinalIgnoreCase))
                 activity?.SetBaggage(nameof(content), content);
             else
-                activity?.SetBaggage(nameof(content), $"MUTE: `{GlobalStaticConstantsRoutes.Routes.PASSWORD_CONTROLLER_NAME}` - contains");
+                activity?.SetBaggage(nameof(content), $"[hide data]: `{GlobalStaticConstantsRoutes.Routes.PASSWORD_CONTROLLER_NAME}` - contains");
 
             try
             {
