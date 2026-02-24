@@ -28,8 +28,9 @@
                 @if (!MailAddress.TryCreate(context.Email, out MailAddress? resMail) || resMail.Host.Equals(GlobalStaticConstants.FakeHost) == true)
                 {
                     isFakeEmail = true;
+                    <span class="font-monospace me-1">[no-email]</span>
                     <MudBlazor.MudLink Href="@($"/Users/Profiles/view-{context.UserId}")" Underline="MudBlazor.Underline.Always" title="@GlobalStaticConstants.FakeHost">
-                        [no-email] @context.GivenName @context.Surname
+                        @context.GivenName @context.Surname
                     </MudBlazor.MudLink>
                 }
                 else
