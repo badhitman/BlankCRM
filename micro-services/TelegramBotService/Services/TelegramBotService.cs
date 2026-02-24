@@ -383,15 +383,6 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
             return res;
         }
 
-        //TResponseModel<TelegramUserBaseModel> tgUser = await IdentityRepo.GetTelegramUserCachedInfoAsync(message.UserTelegramId, token);
-        //if (tgUser.Response is null || !tgUser.Success())
-        //{
-        //    if (tgUser.Success())
-        //        res.AddError($"Пользователь TG#{message.UserTelegramId} не найден в БД");
-        //    res.AddRangeMessages(tgUser.Messages);
-        //    return res;
-        //}
-
         ParseMode parse_mode;
         if (Enum.TryParse(typeof(ParseMode), message.ParseModeName, true, out object? parse_mode_out))
             parse_mode = (ParseMode)parse_mode_out;

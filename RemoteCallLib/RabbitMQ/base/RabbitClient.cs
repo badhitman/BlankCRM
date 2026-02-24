@@ -104,13 +104,13 @@ public class RabbitClient : IMQStandardClientRPC
         Counter<long> countGreetings = greeterMeter.CreateCounter<long>(GlobalStaticConstantsRoutes.Routes.DURATION_ACTION_NAME, description: "Длительность в мс.");
 
         activity?.Start();
-        string guidRequest = Guid.NewGuid().ToString();
+        string guidRequest = waitResponse ? Guid.NewGuid().ToString() : "~";
 
         try
         {
             await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
             {
-                Sender = GetType().Name,
+                Sender = $"{GetType().Name}.{nameof(MqRemoteCallAsync)} /{nameof(waitResponse)}:{waitResponse}",
                 GuidSession = guidRequest,
                 ReceiverName = queue,
                 PayloadBody = request,
@@ -141,19 +141,29 @@ public class RabbitClient : IMQStandardClientRPC
 
             await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
             {
-                Sender = nameof(MqRemoteCallAsync),
+                Sender = $"{GetType().Name}.{nameof(MqRemoteCallAsync)} /{nameof(waitResponse)}:{waitResponse}",
                 GuidSession = guidRequest,
-                ReceiverName = queue,
+                ReceiverName = nameof(TaskCanceledException),
                 PayloadBody = ex,
                 UTCTimestampInitReceive = DateTime.UtcNow,
             }, tokenOuter);
 
             return default;
         }
-        catch (OperationCanceledException)
+        catch (OperationCanceledException ex)
         {
             _channel?.Dispose();
             _connection?.Dispose();
+
+            await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
+            {
+                Sender = $"{GetType().Name}.{nameof(MqRemoteCallAsync)} /{nameof(waitResponse)}:{waitResponse}",
+                GuidSession = guidRequest,
+                ReceiverName = nameof(OperationCanceledException),
+                PayloadBody = ex,
+                UTCTimestampInitReceive = DateTime.UtcNow,
+            }, tokenOuter);
+
             return default;
         }
         catch (Exception ex)
@@ -167,9 +177,9 @@ public class RabbitClient : IMQStandardClientRPC
             {
                 await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
                 {
-                    Sender = nameof(MqRemoteCallAsync),
+                    Sender = $"{GetType().Name}.{nameof(MqRemoteCallAsync)} /{nameof(waitResponse)}:{waitResponse}",
                     GuidSession = guidRequest,
-                    ReceiverName = queue,
+                    ReceiverName = nameof(Exception),
                     PayloadBody = ex,
                     UTCTimestampInitReceive = DateTime.UtcNow,
                 }, tokenOuter);
@@ -196,10 +206,27 @@ public class RabbitClient : IMQStandardClientRPC
 
                 return default;
             }
-            catch (OperationCanceledException)
+            catch (OperationCanceledException ex)
             {
                 _channel?.Dispose();
                 _connection?.Dispose();
+
+                try
+                {
+                    await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
+                    {
+                        Sender = nameof(MqRemoteCallAsync),
+                        GuidSession = guidRequest,
+                        ReceiverName = nameof(OperationCanceledException),
+                        PayloadBody = ex,
+                        UTCTimestampInitReceive = DateTime.UtcNow,
+                    }, tokenOuter);
+                }
+                catch
+                {
+
+                }
+
                 return default;
             }
             catch (OperationInterruptedException ex)
@@ -215,7 +242,7 @@ public class RabbitClient : IMQStandardClientRPC
                     {
                         Sender = nameof(MqRemoteCallAsync),
                         GuidSession = guidRequest,
-                        ReceiverName = queue,
+                        ReceiverName = nameof(OperationInterruptedException),
                         PayloadBody = ex,
                         UTCTimestampInitReceive = DateTime.UtcNow,
                     }, tokenOuter);
@@ -239,7 +266,7 @@ public class RabbitClient : IMQStandardClientRPC
                     {
                         Sender = nameof(MqRemoteCallAsync),
                         GuidSession = guidRequest,
-                        ReceiverName = queue,
+                        ReceiverName = nameof(Exception),
                         PayloadBody = ex,
                         UTCTimestampInitReceive = DateTime.UtcNow,
                     }, tokenOuter);
@@ -264,10 +291,10 @@ public class RabbitClient : IMQStandardClientRPC
             string msg;
             consumer.ReceivedAsync -= MessageReceivedEvent;
             string content = Encoding.UTF8.GetString(e.Body.ToArray());
-            
+
             await _channel.QueuePurgeAsync(response_topic, CancellationToken.None);
             await _channel.QueueDeleteAsync(response_topic, false, false, true, cancellationToken: CancellationToken.None);
-            
+
             if (!content.Contains(GlobalStaticConstantsRoutes.Routes.PASSWORD_CONTROLLER_NAME, StringComparison.OrdinalIgnoreCase))
                 activity?.SetBaggage(nameof(content), content);
             else
@@ -283,7 +310,7 @@ public class RabbitClient : IMQStandardClientRPC
 
                 countGreetings.Add(res_io.Duration().Milliseconds);
             }
-            catch (TaskCanceledException)
+            catch (TaskCanceledException ex)
             {
                 try
                 {
@@ -291,8 +318,8 @@ public class RabbitClient : IMQStandardClientRPC
                     {
                         Sender = $"[{nameof(MessageReceivedEvent)}]-[{nameof(TaskCanceledException)}]",
                         GuidSession = guidRequest,
-                        ReceiverName = queue,
-                        PayloadBody = res_io,
+                        ReceiverName = nameof(TaskCanceledException),
+                        PayloadBody = ex,
                         UTCTimestampInitReceive = DateTime.UtcNow,
                     }, tokenOuter);
                 }
@@ -310,7 +337,7 @@ public class RabbitClient : IMQStandardClientRPC
                     {
                         Sender = $"[{nameof(MessageReceivedEvent)}]-[{nameof(OperationCanceledException)}]",
                         GuidSession = guidRequest,
-                        ReceiverName = queue,
+                        ReceiverName = nameof(OperationCanceledException),
                         PayloadBody = ex,
                         UTCTimestampInitReceive = DateTime.UtcNow,
                     }, tokenOuter);
@@ -331,7 +358,7 @@ public class RabbitClient : IMQStandardClientRPC
                     {
                         Sender = nameof(MessageReceivedEvent),
                         GuidSession = guidRequest,
-                        ReceiverName = queue,
+                        ReceiverName = nameof(Exception),
                         PayloadBody = res_io,
                         UTCTimestampInitReceive = DateTime.UtcNow,
                     }, tokenOuter);
@@ -347,12 +374,42 @@ public class RabbitClient : IMQStandardClientRPC
             {
                 await _channel.BasicAckAsync(e.DeliveryTag, false, tokenOuter);
             }
-            catch (TaskCanceledException)
+            catch (TaskCanceledException ex)
             {
+                try
+                {
+                    await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
+                    {
+                        Sender = nameof(MessageReceivedEvent),
+                        GuidSession = guidRequest,
+                        ReceiverName = nameof(TaskCanceledException),
+                        PayloadBody = ex,
+                        UTCTimestampInitReceive = DateTime.UtcNow,
+                    }, tokenOuter);
+                }
+                catch
+                {
+
+                }
                 return;
             }
-            catch (OperationCanceledException)
+            catch (OperationCanceledException ex)
             {
+                try
+                {
+                    await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
+                    {
+                        Sender = nameof(MessageReceivedEvent),
+                        GuidSession = guidRequest,
+                        ReceiverName = nameof(OperationCanceledException),
+                        PayloadBody = ex,
+                        UTCTimestampInitReceive = DateTime.UtcNow,
+                    }, tokenOuter);
+                }
+                catch
+                {
+
+                }
                 return;
             }
             catch (Exception ex)
@@ -365,7 +422,7 @@ public class RabbitClient : IMQStandardClientRPC
                     {
                         Sender = nameof(MessageReceivedEvent),
                         GuidSession = guidRequest,
-                        ReceiverName = queue,
+                        ReceiverName = nameof(Exception),
                         PayloadBody = ex,
                         UTCTimestampInitReceive = DateTime.UtcNow,
                     }, tokenOuter);
@@ -381,21 +438,7 @@ public class RabbitClient : IMQStandardClientRPC
             cts.Cancel();
             cts.Dispose();
         }
-        try
-        {
-            await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
-            {
-                Sender = nameof(MessageReceivedEvent),
-                GuidSession = guidRequest,
-                ReceiverName = queue,
-                PayloadBody = res_io,
-                UTCTimestampInitReceive = DateTime.UtcNow,
-            }, tokenOuter);
-        }
-        catch
-        {
 
-        }
         consumer.ReceivedAsync += MessageReceivedEvent;
 
         if (waitResponse)
@@ -414,7 +457,7 @@ public class RabbitClient : IMQStandardClientRPC
                     {
                         Sender = $"[{GetType().Name}]-[{nameof(TaskCanceledException)}]",
                         GuidSession = guidRequest,
-                        ReceiverName = queue,
+                        ReceiverName = nameof(TaskCanceledException),
                         PayloadBody = ex,
                         UTCTimestampInitReceive = DateTime.UtcNow,
                     }, tokenOuter);
