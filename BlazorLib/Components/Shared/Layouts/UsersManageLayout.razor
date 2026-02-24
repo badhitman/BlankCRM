@@ -1,19 +1,19 @@
 ﻿@using BlazorLib.Components.Shared.Layouts
+@using MudBlazor
 
 @layout MainLayout
 @inherits LayoutComponentBase
 
-<h1>Users</h1>
-
-<div>
-    <h2>Editing user account settings</h2>
-    <hr />
-    <div class="row row-cols-1 row-cols-md-2 g-1">
-        <div class="col-md-2">
-            <UsersManageNavMenu />
+<MudCard>
+    <MudCardContent>
+        <MudText>Editing user account settings</MudText>
+        <div class="row">
+            <div class="col-md-3">
+                <UsersManageNavMenu />
+            </div>
+            <div class="col-md-9">
+                @Body
+            </div>
         </div>
-        <div class="col-md-10">
-            @Body
-        </div>
-    </div>
-</div>
+    </MudCardContent>
+</MudCard>
