@@ -40,6 +40,7 @@ public partial class RolesManageKitComponent : BlazorBusyComponentBaseAuthModel
             GlobalStaticConstantsRoles.Roles.RetailManage => "Manger (retail)",
             GlobalStaticConstantsRoles.Roles.RetailReports => "Reports (retail)",
             GlobalStaticConstantsRoles.Roles.GoodsManage => "Номенклатура",
+            GlobalStaticConstantsRoles.Roles.WebChatManage => "Web чаты",
             _ => name
         };
     }

@@ -1,6 +1,6 @@
 ﻿@page "/web-chats"
 
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
-@attribute [Authorize(Roles = $"{GlobalStaticConstantsRoles.Roles.Debug},{GlobalStaticConstantsRoles.Roles.Admin}")]
+@attribute [Authorize(Roles = $"{GlobalStaticConstantsRoles.Roles.Debug},{GlobalStaticConstantsRoles.Roles.Admin},{GlobalStaticConstantsRoles.Roles.WebChatManage}")]
 
 <BlazorLib.Components.Chat.WebChatsManageComponent />

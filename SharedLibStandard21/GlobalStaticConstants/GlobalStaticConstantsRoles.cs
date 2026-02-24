@@ -14,25 +14,20 @@ namespace SharedLib
         /// </summary>
         public static class Roles
         {
-            /// <summary>
-            /// admin
-            /// </summary>
+            /// <inheritdoc/>
             public const string Admin = "admin";
 
-            /// <summary>
-            /// Debug
-            /// </summary>
+            /// <inheritdoc/>
             public const string Debug = "debug";
 
-            /// <summary>
-            /// system
-            /// </summary>
+            /// <inheritdoc/>
             public const string System = "system";
 
-            /// <summary>
-            /// GoodsManage
-            /// </summary>
+            /// <inheritdoc/>
             public const string GoodsManage = "GoodsManage";
+
+            /// <inheritdoc/>
+            public const string WebChatManage = "WebChatManage";
 
             #region retail
             /// <summary>

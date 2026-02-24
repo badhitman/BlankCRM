@@ -18,5 +18,6 @@ public partial class ToolsHelpDeskComponent
         GlobalStaticConstantsRoles.Roles.Debug,
         GlobalStaticConstantsRoles.Roles.RetailManage,
         GlobalStaticConstantsRoles.Roles.RetailReports,
-        GlobalStaticConstantsRoles.Roles.GoodsManage]);
+        GlobalStaticConstantsRoles.Roles.GoodsManage,
+        GlobalStaticConstantsRoles.Roles.WebChatManage]);
 }
