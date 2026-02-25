@@ -102,6 +102,7 @@ public class Program
 
         builder.Configuration.AddEnvironmentVariables();
         builder.Configuration.AddCommandLine(args);
+        builder.Services.AddOptions();
 
         ITraceRabbitActionsService.TracesFilter = builder.Configuration.GetSection(nameof(ITraceRabbitActionsService.TracesFilter)).Get<string[]>();
         _confMQTT.Reload(builder.Configuration.GetSection(RealtimeMQTTClientConfigModel.Configuration).Get<RealtimeMQTTClientConfigModel>()!);
@@ -123,7 +124,6 @@ public class Program
         });
         builder.AddServiceDefaults();
 
-        builder.Services.AddOptions();
         builder.Services.AddMemoryCache();
 
         string connectionNlogsString = builder.Configuration.GetConnectionString($"NLogsConnection{_modePrefix}") ?? throw new InvalidOperationException($"Connection string 'NLogsConnection{_modePrefix}' not found.");
@@ -162,7 +162,7 @@ public class Program
         builder.Services
            .AddScoped<IWebChatService, WebChatService>()
            ;
-        
+
         builder.Services.AddTransient<MqttController>();
 
         string appName = typeof(Program).Assembly.GetName().Name ?? "AssemblyName";
@@ -179,7 +179,7 @@ public class Program
                 provider.GetRequiredService<ITraceRabbitActionsServiceTransmission>(),
                 appName);
         }
-        
+
         builder.Services
             .AddKeyedSingleton(nameof(RabbitClient), rabbitImplement)
             ;
@@ -203,7 +203,7 @@ public class Program
         #endregion
 
         builder.Services.RealtimeRegisterListenersRabbitMQ();
-       
+
         // Custom metrics for the application
         Meter greeterMeter = new($"OTel.{appName}", "1.0.0");
         OpenTelemetryBuilder otel = builder.Services.AddOpenTelemetry();

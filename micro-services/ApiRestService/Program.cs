@@ -12,6 +12,7 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
 using System.Reflection;
 using Microsoft.OpenApi;
+using Newtonsoft.Json;
 using ApiRestService;
 using OpenTelemetry;
 using RemoteCallLib;
@@ -20,7 +21,6 @@ using SharedLib;
 using NLog.Web;
 using NLog;
 using DbcLib;
-using Newtonsoft.Json;
 
 RealtimeMQTTClientConfigModel _confMQTT = RealtimeMQTTClientConfigModel.BuildEmpty();
 Console.OutputEncoding = Encoding.UTF8;

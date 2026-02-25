@@ -87,6 +87,7 @@ public class Program
 
         builder.Configuration.AddEnvironmentVariables();
         builder.Configuration.AddCommandLine(args);
+        builder.Services.AddOptions();
 
         ITraceRabbitActionsService.TracesFilter = builder.Configuration.GetSection(nameof(ITraceRabbitActionsService.TracesFilter)).Get<string[]>();
         _confMQTT.Reload(builder.Configuration.GetSection(RealtimeMQTTClientConfigModel.Configuration).Get<RealtimeMQTTClientConfigModel>()!);
@@ -98,7 +99,6 @@ public class Program
             ;
 
         builder.Services.AddMemoryCache();
-        builder.Services.AddOptions();
 
         RabbitMQConfigModel _mqConf = builder.Configuration.GetSection(RabbitMQConfigModel.Configuration).Get<RabbitMQConfigModel>() ?? throw new Exception("RabbitMQ not config");
 
@@ -116,7 +116,7 @@ public class Program
                 provider.GetRequiredService<ITraceRabbitActionsServiceTransmission>(),
                 appName);
         }
-        
+
         builder.Services
             .AddKeyedSingleton(nameof(RabbitClient), rabbitImplement)
             ;

@@ -95,6 +95,7 @@ if (!string.IsNullOrWhiteSpace(_modePrefix))
 
 builder.Configuration.AddEnvironmentVariables();
 builder.Configuration.AddCommandLine(args);
+builder.Services.AddOptions();
 
 ITraceRabbitActionsService.TracesFilter = builder.Configuration.GetSection(nameof(ITraceRabbitActionsService.TracesFilter)).Get<string[]>();
 _confMQTT.Reload(builder.Configuration.GetSection(RealtimeMQTTClientConfigModel.Configuration).Get<RealtimeMQTTClientConfigModel>()!);
@@ -114,7 +115,6 @@ builder.Services
     ;
 
 builder.Services.AddSingleton<WebConfigModel>();
-builder.Services.AddOptions();
 string connectionString = builder.Configuration.GetConnectionString($"CommerceConnection{_modePrefix}") ?? throw new InvalidOperationException($"Connection string 'CommerceConnection{_modePrefix}' not found.");
 
 builder.Services.AddDbContextFactory<CommerceContext>(opt =>

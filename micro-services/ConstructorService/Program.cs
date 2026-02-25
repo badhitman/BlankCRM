@@ -94,7 +94,6 @@ if (!string.IsNullOrWhiteSpace(_modePrefix))
 
 builder.Configuration.AddEnvironmentVariables();
 builder.Configuration.AddCommandLine(args);
-
 builder.Services.AddOptions();
 
 ITraceRabbitActionsService.TracesFilter = builder.Configuration.GetSection(nameof(ITraceRabbitActionsService.TracesFilter)).Get<string[]>();

@@ -98,6 +98,7 @@ public class Program
 
         builder.Configuration.AddEnvironmentVariables();
         builder.Configuration.AddCommandLine(args);
+        builder.Services.AddOptions();
 
         ITraceRabbitActionsService.TracesFilter = builder.Configuration.GetSection(nameof(ITraceRabbitActionsService.TracesFilter)).Get<string[]>();
         _confMQTT.Reload(builder.Configuration.GetSection(RealtimeMQTTClientConfigModel.Configuration).Get<RealtimeMQTTClientConfigModel>()!);
@@ -111,10 +112,7 @@ public class Program
             ;
 
         builder.Services.AddSingleton<WebConfigModel>();
-
         builder.Services.AddMemoryCache();
-
-        builder.Services.AddOptions();
 
         string connectionStorage = builder.Configuration.GetConnectionString($"CloudParametersConnection{_modePrefix}") ?? throw new InvalidOperationException($"Connection string 'CloudParametersConnection{_modePrefix}' not found.");
         builder.Services.AddDbContextFactory<StorageContext>(opt =>
@@ -140,7 +138,7 @@ public class Program
                 provider.GetRequiredService<ITraceRabbitActionsServiceTransmission>(),
                 appName);
         }
-        
+
         builder.Services
             .AddKeyedSingleton(nameof(RabbitClient), rabbitImplement)
             ;

@@ -9,6 +9,7 @@ using System.Diagnostics.Metrics;
 using NLog.Extensions.Logging;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
+using Newtonsoft.Json;
 using OpenTelemetry;
 using RemoteCallLib;
 using BankService;
@@ -17,7 +18,6 @@ using SharedLib;
 using NLog.Web;
 using DbcLib;
 using NLog;
-using Newtonsoft.Json;
 
 RealtimeMQTTClientConfigModel _confMQTT = RealtimeMQTTClientConfigModel.BuildEmpty();
 Console.OutputEncoding = Encoding.UTF8;
@@ -95,6 +95,7 @@ if (!string.IsNullOrWhiteSpace(_modePrefix))
 
 builder.Configuration.AddEnvironmentVariables();
 builder.Configuration.AddCommandLine(args);
+builder.Services.AddOptions();
 
 ITraceRabbitActionsService.TracesFilter = builder.Configuration.GetSection(nameof(ITraceRabbitActionsService.TracesFilter)).Get<string[]>();
 _confMQTT.Reload(builder.Configuration.GetSection(RealtimeMQTTClientConfigModel.Configuration).Get<RealtimeMQTTClientConfigModel>()!);
@@ -115,7 +116,6 @@ builder.Services
     ;
 
 builder.Services.AddSingleton<WebConfigModel>();
-builder.Services.AddOptions();
 string connectionString = builder.Configuration.GetConnectionString($"BankConnection{_modePrefix}") ?? throw new InvalidOperationException($"Connection string 'BankConnection{_modePrefix}' not found.");
 builder.Services.AddDbContextFactory<BankContext>(opt =>
 {

@@ -130,16 +130,16 @@ if (!string.IsNullOrWhiteSpace(_modePrefix))
     ReadSecrets($"secrets{_modePrefix}");
 
 builder.Configuration.AddEnvironmentVariables();
+builder.Services.AddOptions();
 builder.Configuration.AddCommandLine(args);
 
+ITraceRabbitActionsService.TracesFilter = builder.Configuration.GetSection(nameof(ITraceRabbitActionsService.TracesFilter)).Get<string[]>();
 _confMQTT.Reload(builder.Configuration.GetSection(RealtimeMQTTClientConfigModel.Configuration).Get<RealtimeMQTTClientConfigModel>()!);
 logger.Warn($"mqtt config: {JsonConvert.SerializeObject(_confMQTT)}");
 builder.Services.AddSingleton(sp => _confMQTT);
 
 builder.Services.AddIdleCircuitHandler(options =>
     options.IdleTimeout = TimeSpan.FromMinutes(5));
-
-builder.Services.AddOptions();
 
 builder.Services
     .Configure<UserManageConfigModel>(builder.Configuration.GetSection("UserManage"))

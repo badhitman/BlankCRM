@@ -98,7 +98,8 @@ public class Program
 
         builder.Configuration.AddEnvironmentVariables();
         builder.Configuration.AddCommandLine(args);
-        
+        builder.Services.AddOptions();
+
         ITraceRabbitActionsService.TracesFilter = builder.Configuration.GetSection(nameof(ITraceRabbitActionsService.TracesFilter)).Get<string[]>();
         _confMQTT.Reload(builder.Configuration.GetSection(RealtimeMQTTClientConfigModel.Configuration).Get<RealtimeMQTTClientConfigModel>()!);
         logger.Warn($"mqtt config: {JsonConvert.SerializeObject(_confMQTT)}");
@@ -110,8 +111,6 @@ public class Program
             ;
 
         builder.Services.AddMemoryCache();
-
-        builder.Services.AddOptions();
 
         string connectionStorage = builder.Configuration.GetConnectionString($"IndexingServiceConnection{_modePrefix}") ?? throw new InvalidOperationException($"Connection string 'IndexingServiceConnection{_modePrefix}' not found.");
         builder.Services.AddDbContextFactory<IndexingServiceContext>(opt =>

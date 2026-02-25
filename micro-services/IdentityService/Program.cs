@@ -104,6 +104,7 @@ public class Program
 
         builder.Configuration.AddEnvironmentVariables();
         builder.Configuration.AddCommandLine(args);
+        builder.Services.AddOptions();
 
         ITraceRabbitActionsService.TracesFilter = builder.Configuration.GetSection(nameof(ITraceRabbitActionsService.TracesFilter)).Get<string[]>();
         _confMQTT.Reload(builder.Configuration.GetSection(RealtimeMQTTClientConfigModel.Configuration).Get<RealtimeMQTTClientConfigModel>()!);
@@ -115,7 +116,6 @@ public class Program
             .Configure<SmtpConfigModel>(builder.Configuration.GetSection(SmtpConfigModel.Configuration))
             ;
 
-        builder.Services.AddOptions();
         builder.Services.AddMemoryCache();
         builder.Services.AddStackExchangeRedisCache(options =>
         {
@@ -186,7 +186,7 @@ public class Program
             .AddScoped<IIndexingServive, IndexingTransmission>()
             .AddScoped<IHistoryIndexing, HistoryTransmission>()
             ;
-        
+
         string appName = typeof(Program).Assembly.GetName().Name ?? "AssemblyName";
         builder.Services
             .AddSingleton<IMQStandardClientExtRPC>(x => new ClientMQTT(x.GetRequiredService<RealtimeMQTTClientConfigModel>(), x.GetRequiredService<ILogger<ClientMQTT>>(), appName))
@@ -201,7 +201,7 @@ public class Program
                 provider.GetRequiredService<ITraceRabbitActionsServiceTransmission>(),
                 appName);
         }
-        
+
         builder.Services
             .AddKeyedSingleton(nameof(RabbitClient), rabbitImplement)
             ;
