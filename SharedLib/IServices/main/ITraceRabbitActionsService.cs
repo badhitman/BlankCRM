@@ -10,5 +10,8 @@ namespace SharedLib;
 public interface ITraceRabbitActionsService
 {
     /// <inheritdoc/>
+    public static string[]? TracesFilter;
+
+    /// <inheritdoc/>
     public Task<ResponseBaseModel> SaveActionAsync(TraceRabbitActionRequestModel req, CancellationToken token = default);
 }
