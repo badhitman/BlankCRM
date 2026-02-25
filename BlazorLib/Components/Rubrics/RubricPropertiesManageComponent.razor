@@ -1,0 +1,67 @@
+﻿@using MudBlazor
+<MudIconButton Icon="@Icons.Custom.Uncategorized.Radioactive"
+               aria-label="Radioactive"
+               title="Свойства группы"
+               Color="@(IsOpenDialog ? Color.Info:Color.Default)"
+               OnClick="() => IsOpenDialog = !IsOpenDialog"
+               Size="Size.Small" />
+@if (IsOpenDialog)
+{
+    <div @onclick:stopPropagation="true"
+         @onclick:preventDefault="true"
+         @ondblclick:stopPropagation="true"
+         @ondblclick:preventDefault="true"
+         @onclick="() => IsOpenDialog = false"
+         class="modal fade show"
+         id="exampleModalXl"
+         tabindex="-1"
+         aria-labelledby="exampleModalXlLabel"
+         style="display: block;"
+         aria-modal="true"
+         role="dialog">
+        <div @onclick:stopPropagation="true"
+             @onclick:preventDefault="true"
+             @ondblclick:stopPropagation="true"
+             @ondblclick:preventDefault="true"
+             class="modal-dialog modal-xl"
+             style="cursor: default;">
+            <div @onclick:stopPropagation="true"
+                 @onclick:preventDefault="true"
+                 @ondblclick:stopPropagation="true"
+                 @ondblclick:preventDefault="true"
+                 class="modal-content">
+                <div @onclick:stopPropagation="true"
+                     @onclick:preventDefault="true"
+                     @ondblclick:stopPropagation="true"
+                     @ondblclick:preventDefault="true"
+                     class="modal-header">
+                    <h1 class="modal-title fs-4" id="exampleModalXlLabel">Extra large modal</h1>
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                            @onclick="() => IsOpenDialog = false"
+                            @onclick:stopPropagation="true"
+                            @onclick:preventDefault="true"
+                            @ondblclick:stopPropagation="true"
+                            @ondblclick:preventDefault="true"></button>
+                </div>
+                <div @onclick:stopPropagation="true"
+                     @onclick:preventDefault="true"
+                     @ondblclick:stopPropagation="true"
+                     @ondblclick:preventDefault="true"
+                     class="modal-body">
+                    <p>...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required TreeItemData<RubricNestedModel?> Node { get; set; }
+
+    bool IsOpenDialog { get; set; }
+}

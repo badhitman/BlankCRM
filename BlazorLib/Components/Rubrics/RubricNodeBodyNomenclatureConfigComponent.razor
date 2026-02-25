@@ -4,7 +4,9 @@
 <span class="font-monospace"
       style="justify-self: start;"
       @onclick:stopPropagation="true"
-      @ondblclick:stopPropagation="true">
+      @onclick:preventDefault="true"
+      @ondblclick:stopPropagation="true"
+      @ondblclick:preventDefault="true">
     @Node.Text
     @if (IsBusyProgress)
     {
@@ -14,9 +16,8 @@
 <MudSpacer />
 <div style="justify-self: end;"
      @onclick:stopPropagation="true"
-     @ondblclick:stopPropagation="true">
-    <MudIconButton Icon="@Icons.Custom.Uncategorized.Radioactive"
-                   aria-label="Radioactive"
-                   title="Свойства группы"
-                   Size="Size.Small" />
+     @onclick:preventDefault="true"
+     @ondblclick:stopPropagation="true"
+     @ondblclick:preventDefault="true">
+    <RubricPropertiesManageComponent Node="Node" />
 </div>

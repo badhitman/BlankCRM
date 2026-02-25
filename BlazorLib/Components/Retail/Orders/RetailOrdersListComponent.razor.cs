@@ -277,7 +277,7 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseAuthMode
                 .Distinct();
 
             List<Task> tasks = [
-                Task.Run(async () => { await CacheUsersUpdate([.._usersIds],token); }, token),
+                Task.Run(async () => { await CacheUsersUpdate([.._usersIds], token); }, token),
                 Task.Run(async () => { await CacheRubricsUpdate([.. res.Response.Select(x => x.WarehouseId).Distinct()], token); }, token),
                 Task.Run(async () => { await OrdersLinksUpdate(
                     res.Response.SelectMany(x => x.Payments!.Select(y => y.Id)).Distinct(),
@@ -289,7 +289,11 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseAuthMode
         }
 
         await SetBusyAsync(false, token: token);
-        return new TableData<DocumentRetailModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };
+        return new TableData<DocumentRetailModelDB>()
+        {
+            TotalItems = res.TotalRowsCount,
+            Items = res.Response
+        };
     }
 
     async Task OrdersLinksUpdate(IEnumerable<int> paymentsLinksIds, IEnumerable<int> deliveriesLinksIds, IEnumerable<int> conversionsLinksIds, CancellationToken token)

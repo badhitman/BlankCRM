@@ -1,9 +1,12 @@
-﻿@using MudBlazor
+﻿@using BlazorLib.Components.Commerce.Nomenclature.RubricsProperties
+@using MudBlazor
 @inherits RubricNodeBodyComponent
 
 <span class="font-monospace" style="justify-self: start;"
       @onclick:stopPropagation="true"
-      @ondblclick:stopPropagation="true">
+      @onclick:preventDefault="true"
+      @ondblclick:stopPropagation="true"
+      @ondblclick:preventDefault="true">
     @Node.Text
     @if (IsBusyProgress)
     {
@@ -13,9 +16,8 @@
 <MudSpacer />
 <div style="justify-self: end;"
      @onclick:stopPropagation="true"
-     @ondblclick:stopPropagation="true">
-    <MudIconButton Icon="@Icons.Material.Filled.AccountTree"
-                   aria-label="AccountTree"
-                   title="Настройки свойств группы"
-                   Size="Size.Small" />
+     @onclick:preventDefault="true"
+     @ondblclick:stopPropagation="true"
+     @ondblclick:preventDefault="true">
+    <RubricPropertiesConfigComponent Node="Node" />    
 </div>
