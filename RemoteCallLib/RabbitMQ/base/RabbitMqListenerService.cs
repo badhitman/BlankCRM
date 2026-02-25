@@ -140,18 +140,19 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
                 }
                 try
                 {
-                    await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
-                    {
-                        Sender = $"{GetType().Name}.{nameof(ExecuteAsync)}.{nameof(consumer.ReceivedAsync)}",
-                        GuidSession = ea.BasicProperties.ReplyTo[^36..],
-                        ReceiverName = QueueName,
-                        PayloadBody = answer.Response,
-                        UTCTimestampInitReceive = DateTime.UtcNow,
-                    }, stoppingToken);
+                    if (RabbitClient.TracesFilter is null || RabbitClient.TracesFilter.Any(x => QueueName.Contains(x)))
+                        await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
+                        {
+                            Sender = $"{GetType().Name}.{nameof(ExecuteAsync)}.{nameof(consumer.ReceivedAsync)}",
+                            GuidSession = ea.BasicProperties.ReplyTo[^36..],
+                            ReceiverName = QueueName,
+                            PayloadBody = answer.Response,
+                            UTCTimestampInitReceive = DateTime.UtcNow,
+                        }, stoppingToken);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    Console.WriteLine(ex.Message);
+
                 }
             }
             else
@@ -159,18 +160,19 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
                 await _channel.BasicAckAsync(ea.DeliveryTag, false, cancellationToken: stoppingToken);
                 try
                 {
-                    await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
-                    {
-                        Sender = $"{nameof(_channel.BasicAckAsync)}: {GetType().Name}.{nameof(ExecuteAsync)}.{nameof(consumer.ReceivedAsync)}",
-                        GuidSession = "~",
-                        ReceiverName = QueueName,
-                        PayloadBody = answer.Response,
-                        UTCTimestampInitReceive = DateTime.UtcNow,
-                    }, stoppingToken);
+                    if (RabbitClient.TracesFilter is null || RabbitClient.TracesFilter.Any(x => QueueName.Contains(x)))
+                        await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
+                        {
+                            Sender = $"{nameof(_channel.BasicAckAsync)}: {GetType().Name}.{nameof(ExecuteAsync)}.{nameof(consumer.ReceivedAsync)}",
+                            GuidSession = "~",
+                            ReceiverName = QueueName,
+                            PayloadBody = answer.Response,
+                            UTCTimestampInitReceive = DateTime.UtcNow,
+                        }, stoppingToken);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    Console.WriteLine(ex.Message);
+
                 }
             }
 #else
