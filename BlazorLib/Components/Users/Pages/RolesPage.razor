@@ -32,7 +32,9 @@
     <div class="grid">
         <QuickGrid ItemsProvider="@foodRecallProvider" Pagination="@pagination" @ref="myGrid">
             <TemplateColumn Title="Роль">
-                <NavLink href="@($"/Users/Roles/view-{context.Id}")">@context.Name</NavLink>
+                <MudBlazor.MudLink Href="@($"/Users/Roles/view-{context.Id}")">
+                    @context.Name
+                </MudBlazor.MudLink>
             </TemplateColumn>
             <TemplateColumn Align="Align.Right">
                 <div class="hstack">

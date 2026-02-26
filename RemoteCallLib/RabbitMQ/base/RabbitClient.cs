@@ -130,10 +130,16 @@ public class RabbitClient : IMQStandardClientRPC
         IConnection? _connection = null;
         IChannel? _channel = null;
 
+        CancellationTokenSource cts = new();
+        AsyncEventingBasicConsumer consumer;
+        TResponseMQModel<T?>? res_io = null;
+        Stopwatch stopwatch = new();
+
         try
         {
             _connection = await factory.CreateConnectionAsync(tokenOuter);
             _channel = await _connection.CreateChannelAsync(cancellationToken: tokenOuter);
+            consumer = new(_channel);
         }
         catch (TaskCanceledException ex)
         {
@@ -198,7 +204,185 @@ public class RabbitClient : IMQStandardClientRPC
         BasicProperties? properties = new() { AppId = AppName };
         if (waitResponse)
         {
-            properties.ReplyTo = response_topic;
+            async Task MessageReceivedEvent(object? sender, BasicDeliverEventArgs e)
+            {
+                string msg;
+                consumer.ReceivedAsync -= MessageReceivedEvent;
+                string content = Encoding.UTF8.GetString(e.Body.ToArray());
+
+                await _channel.QueuePurgeAsync(response_topic, CancellationToken.None);
+                await _channel.QueueDeleteAsync(response_topic, false, false, true, cancellationToken: CancellationToken.None);
+
+                if (!content.Contains(GlobalStaticConstantsRoutes.Routes.PASSWORD_CONTROLLER_NAME, StringComparison.OrdinalIgnoreCase))
+                    activity?.SetBaggage(nameof(content), content);
+                else
+                    activity?.SetBaggage(nameof(content), $"[hide data]: `{GlobalStaticConstantsRoutes.Routes.PASSWORD_CONTROLLER_NAME}` - contains");
+
+                try
+                {
+                    res_io = JsonConvert.DeserializeObject<TResponseMQModel<T?>>(content, GlobalStaticConstants.JsonSerializerSettings)
+                        ?? throw new Exception("parse error {0CBCCD44-63C8-4E93-8349-11A8BE63B235}");
+
+                    try
+                    {
+                        if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
+                            await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
+                            {
+                                Sender = content,
+                                GuidSession = guidRequest,
+                                ReceiverName = $"{GetType().Name}.{nameof(MqRemoteCallAsync)}.{nameof(MessageReceivedEvent)}",
+                                PayloadBody = res_io,
+                                UTCTimestampInitReceive = DateTime.UtcNow,
+                            }, tokenOuter);
+                    }
+                    catch
+                    {
+
+                    }
+
+                    if (!res_io.Success())
+                        loggerRepo.LogError(res_io.Message());
+
+                    countGreetings.Add(res_io.Duration().Milliseconds);
+                }
+                catch (TaskCanceledException ex)
+                {
+                    try
+                    {
+                        if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
+                            await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
+                            {
+                                Sender = $"[{nameof(MessageReceivedEvent)}]-[{nameof(TaskCanceledException)}]",
+                                GuidSession = guidRequest,
+                                ReceiverName = nameof(TaskCanceledException),
+                                PayloadBody = ex,
+                                UTCTimestampInitReceive = DateTime.UtcNow,
+                            }, tokenOuter);
+                    }
+                    catch
+                    {
+
+                    }
+                    return;
+                }
+                catch (OperationCanceledException ex)
+                {
+                    try
+                    {
+                        if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
+                            await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
+                            {
+                                Sender = $"[{nameof(MessageReceivedEvent)}]-[{nameof(OperationCanceledException)}]",
+                                GuidSession = guidRequest,
+                                ReceiverName = nameof(OperationCanceledException),
+                                PayloadBody = ex,
+                                UTCTimestampInitReceive = DateTime.UtcNow,
+                            }, tokenOuter);
+                    }
+                    catch
+                    {
+
+                    }
+                    return;
+                }
+                catch (Exception ex)
+                {
+                    msg = $"error deserialisation: {content}.\n\nerror ";
+                    loggerRepo.LogError(ex, msg);
+                    try
+                    {
+                        if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
+                            await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
+                            {
+                                Sender = nameof(MessageReceivedEvent),
+                                GuidSession = guidRequest,
+                                ReceiverName = nameof(Exception),
+                                PayloadBody = res_io,
+                                UTCTimestampInitReceive = DateTime.UtcNow,
+                            }, tokenOuter);
+                    }
+                    catch
+                    {
+
+                    }
+                    return;
+                }
+
+                try
+                {
+                    await _channel.BasicAckAsync(e.DeliveryTag, false, tokenOuter);
+                }
+                catch (TaskCanceledException ex)
+                {
+                    try
+                    {
+                        if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
+                            await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
+                            {
+                                Sender = nameof(MessageReceivedEvent),
+                                GuidSession = guidRequest,
+                                ReceiverName = nameof(TaskCanceledException),
+                                PayloadBody = ex,
+                                UTCTimestampInitReceive = DateTime.UtcNow,
+                            }, tokenOuter);
+                    }
+                    catch
+                    {
+
+                    }
+                    return;
+                }
+                catch (OperationCanceledException ex)
+                {
+                    try
+                    {
+                        if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
+                            await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
+                            {
+                                Sender = nameof(MessageReceivedEvent),
+                                GuidSession = guidRequest,
+                                ReceiverName = nameof(OperationCanceledException),
+                                PayloadBody = ex,
+                                UTCTimestampInitReceive = DateTime.UtcNow,
+                            }, tokenOuter);
+                    }
+                    catch
+                    {
+
+                    }
+                    return;
+                }
+                catch (Exception ex)
+                {
+                    msg = "exception basic ask. error {A62029D4-1A23-461D-99AD-349C6B7500A8}";
+                    loggerRepo.LogError(ex, msg);
+                    try
+                    {
+                        if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
+                            await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
+                            {
+                                Sender = nameof(MessageReceivedEvent),
+                                GuidSession = guidRequest,
+                                ReceiverName = nameof(Exception),
+                                PayloadBody = ex,
+                                UTCTimestampInitReceive = DateTime.UtcNow,
+                            }, tokenOuter);
+                    }
+                    catch
+                    {
+
+                    }
+                    return;
+                }
+
+                stopwatch.Stop();
+                cts.Cancel();
+                cts.Dispose();
+            }
+
+            consumer.ReceivedAsync += MessageReceivedEvent;
+
+            properties.ReplyTo = string.IsNullOrEmpty(response_topic) ? null : response_topic;
             try
             {
                 await _channel.QueueDeclareAsync(queue: response_topic, durable: false, exclusive: false, autoDelete: true, arguments: ResponseQueueArguments!, cancellationToken: tokenOuter);
@@ -286,190 +470,8 @@ public class RabbitClient : IMQStandardClientRPC
             }
         }
 
-        Stopwatch stopwatch = new();
-        AsyncEventingBasicConsumer consumer = new(_channel);
-
-        CancellationTokenSource cts = new();
         CancellationToken token = cts.Token;
         ManualResetEventSlim mres = new(false);
-        TResponseMQModel<T?>? res_io = null;
-        async Task MessageReceivedEvent(object? sender, BasicDeliverEventArgs e)
-        {
-            string msg;
-            consumer.ReceivedAsync -= MessageReceivedEvent;
-            string content = Encoding.UTF8.GetString(e.Body.ToArray());
-
-            await _channel.QueuePurgeAsync(response_topic, CancellationToken.None);
-            await _channel.QueueDeleteAsync(response_topic, false, false, true, cancellationToken: CancellationToken.None);
-
-            if (!content.Contains(GlobalStaticConstantsRoutes.Routes.PASSWORD_CONTROLLER_NAME, StringComparison.OrdinalIgnoreCase))
-                activity?.SetBaggage(nameof(content), content);
-            else
-                activity?.SetBaggage(nameof(content), $"[hide data]: `{GlobalStaticConstantsRoutes.Routes.PASSWORD_CONTROLLER_NAME}` - contains");
-
-            try
-            {
-                res_io = JsonConvert.DeserializeObject<TResponseMQModel<T?>>(content, GlobalStaticConstants.JsonSerializerSettings)
-                    ?? throw new Exception("parse error {0CBCCD44-63C8-4E93-8349-11A8BE63B235}");
-
-                try
-                {
-                    if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
-                        await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
-                        {
-                            Sender = content,
-                            GuidSession = guidRequest,
-                            ReceiverName = $"{GetType().Name}.{nameof(MqRemoteCallAsync)}.{nameof(MessageReceivedEvent)}",
-                            PayloadBody = res_io,
-                            UTCTimestampInitReceive = DateTime.UtcNow,
-                        }, tokenOuter);
-                }
-                catch
-                {
-
-                }
-
-                if (!res_io.Success())
-                    loggerRepo.LogError(res_io.Message());
-
-                countGreetings.Add(res_io.Duration().Milliseconds);
-            }
-            catch (TaskCanceledException ex)
-            {
-                try
-                {
-                    if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
-                        await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
-                        {
-                            Sender = $"[{nameof(MessageReceivedEvent)}]-[{nameof(TaskCanceledException)}]",
-                            GuidSession = guidRequest,
-                            ReceiverName = nameof(TaskCanceledException),
-                            PayloadBody = ex,
-                            UTCTimestampInitReceive = DateTime.UtcNow,
-                        }, tokenOuter);
-                }
-                catch
-                {
-
-                }
-                return;
-            }
-            catch (OperationCanceledException ex)
-            {
-                try
-                {
-                    if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
-                        await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
-                        {
-                            Sender = $"[{nameof(MessageReceivedEvent)}]-[{nameof(OperationCanceledException)}]",
-                            GuidSession = guidRequest,
-                            ReceiverName = nameof(OperationCanceledException),
-                            PayloadBody = ex,
-                            UTCTimestampInitReceive = DateTime.UtcNow,
-                        }, tokenOuter);
-                }
-                catch
-                {
-
-                }
-                return;
-            }
-            catch (Exception ex)
-            {
-                msg = $"error deserialisation: {content}.\n\nerror ";
-                loggerRepo.LogError(ex, msg);
-                try
-                {
-                    if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
-                        await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
-                        {
-                            Sender = nameof(MessageReceivedEvent),
-                            GuidSession = guidRequest,
-                            ReceiverName = nameof(Exception),
-                            PayloadBody = res_io,
-                            UTCTimestampInitReceive = DateTime.UtcNow,
-                        }, tokenOuter);
-                }
-                catch
-                {
-
-                }
-                return;
-            }
-
-            try
-            {
-                await _channel.BasicAckAsync(e.DeliveryTag, false, tokenOuter);
-            }
-            catch (TaskCanceledException ex)
-            {
-                try
-                {
-                    if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
-                        await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
-                        {
-                            Sender = nameof(MessageReceivedEvent),
-                            GuidSession = guidRequest,
-                            ReceiverName = nameof(TaskCanceledException),
-                            PayloadBody = ex,
-                            UTCTimestampInitReceive = DateTime.UtcNow,
-                        }, tokenOuter);
-                }
-                catch
-                {
-
-                }
-                return;
-            }
-            catch (OperationCanceledException ex)
-            {
-                try
-                {
-                    if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
-                        await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
-                        {
-                            Sender = nameof(MessageReceivedEvent),
-                            GuidSession = guidRequest,
-                            ReceiverName = nameof(OperationCanceledException),
-                            PayloadBody = ex,
-                            UTCTimestampInitReceive = DateTime.UtcNow,
-                        }, tokenOuter);
-                }
-                catch
-                {
-
-                }
-                return;
-            }
-            catch (Exception ex)
-            {
-                msg = "exception basic ask. error {A62029D4-1A23-461D-99AD-349C6B7500A8}";
-                loggerRepo.LogError(ex, msg);
-                try
-                {
-                    if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
-                        await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
-                        {
-                            Sender = nameof(MessageReceivedEvent),
-                            GuidSession = guidRequest,
-                            ReceiverName = nameof(Exception),
-                            PayloadBody = ex,
-                            UTCTimestampInitReceive = DateTime.UtcNow,
-                        }, tokenOuter);
-                }
-                catch
-                {
-
-                }
-                return;
-            }
-
-            stopwatch.Stop();
-            cts.Cancel();
-            cts.Dispose();
-        }
-
-        consumer.ReceivedAsync += MessageReceivedEvent;
 
         if (waitResponse)
         {
