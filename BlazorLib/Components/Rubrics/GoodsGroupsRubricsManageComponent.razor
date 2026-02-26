@@ -1,25 +1,58 @@
 ﻿@using static SharedLib.GlobalStaticConstantsRoutes
+@using BlazorLib.Components.Rubrics.Properties
 @using Microsoft.Extensions.Options
 @using MudBlazor
-
-@if (CommerceConf.Value.NomenclaturesRubricsPrefixes?.Any(x => !string.IsNullOrWhiteSpace(x)) != true)
+@{
+    IQueryable<string>? _q = CommerceConf.Value.NomenclaturesRubricsPrefixes?.Where(x => !string.IsNullOrWhiteSpace(x)).AsQueryable();
+}
+@if (_q?.Any() != true)
 {
-    <RubricsManageComponent TEntity="RubricNodeBodyNomenclatureConfigComponent"
-                            ContextName="@($"{Routes.GOODS_CONTROLLER_NAME}-{Routes.CATEGORIES_CONTROLLER_NAME}")" />
+    <MudTabs Elevation="2" Rounded ApplyEffectsToContainer>
+        <MudTabPanel Text="Группы">
+            <RubricsManageComponent TEntity="RubricNodeBodyNomenclatureConfigComponent"
+                                    ContextName="@($"{Routes.GOODS_CONTROLLER_NAME}-{Routes.CATEGORIES_CONTROLLER_NAME}")" />
+        </MudTabPanel>
+        <MudTabPanel Text="Поля">
+            <RubricFieldsManageComponent />
+        </MudTabPanel>
+        <MudTabPanel Text="Списки">
+            <RubricDictionariesManageComponent />
+        </MudTabPanel>
+    </MudTabs>
 }
 else
 {
     <MudTabs Outlined Position="@Position.Left" Rounded Border ApplyEffectsToContainer @bind-ActivePanelIndex="ActiveIndex" @ref="panelRef" Style="width:100%">
         <MudTabPanel Text="По умолчанию" Style="width: 100%;">
-            <RubricsManageComponent TEntity="RubricNodeBodyNomenclatureConfigComponent"
-                                    ContextName="@($"{Routes.GOODS_CONTROLLER_NAME}-{Routes.CATEGORIES_CONTROLLER_NAME}")" />
+            <MudTabs Elevation="2" Rounded ApplyEffectsToContainer>
+                <MudTabPanel Text="Группы">
+                    <RubricsManageComponent TEntity="RubricNodeBodyNomenclatureConfigComponent"
+                                            ContextName="@($"{Routes.GOODS_CONTROLLER_NAME}-{Routes.CATEGORIES_CONTROLLER_NAME}")" />
+                </MudTabPanel>
+                <MudTabPanel Text="Поля">
+                    <RubricFieldsManageComponent />
+                </MudTabPanel>
+                <MudTabPanel Text="Списки">
+                    <RubricDictionariesManageComponent />
+                </MudTabPanel>
+            </MudTabs>
         </MudTabPanel>
-        @foreach (string _prefixName in CommerceConf.Value.NomenclaturesRubricsPrefixes.Where(x => !string.IsNullOrWhiteSpace(x)))
+        @foreach (string _prefixName in _q)
         {
             <MudTabPanel Text="@_prefixName" ID="_prefixName" Style="width:100%">
-                <RubricsManageComponent TEntity="RubricNodeBodyNomenclatureConfigComponent"
-                                        PrefixName="@_prefixName"
-                                        ContextName="@($"{Routes.GOODS_CONTROLLER_NAME}-{Routes.CATEGORIES_CONTROLLER_NAME}")" />
+                <MudTabs Elevation="2" Rounded ApplyEffectsToContainer>
+                    <MudTabPanel Text="Группы">
+                        <RubricsManageComponent TEntity="RubricNodeBodyNomenclatureConfigComponent"
+                                                PrefixName="@_prefixName"
+                                                ContextName="@($"{Routes.GOODS_CONTROLLER_NAME}-{Routes.CATEGORIES_CONTROLLER_NAME}")" />
+                    </MudTabPanel>
+                    <MudTabPanel Text="Поля">
+                        <RubricFieldsManageComponent />
+                    </MudTabPanel>
+                    <MudTabPanel Text="Списки">
+                        <RubricDictionariesManageComponent />
+                    </MudTabPanel>
+                </MudTabs>
             </MudTabPanel>
         }
     </MudTabs>

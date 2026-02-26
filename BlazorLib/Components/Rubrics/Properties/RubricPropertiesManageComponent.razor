@@ -35,7 +35,7 @@
                      @ondblclick:stopPropagation="true"
                      @ondblclick:preventDefault="true"
                      class="modal-header">
-                    <h1 class="modal-title fs-4" id="exampleModalXlLabel">Extra large modal</h1>
+                    <h5 class="modal-title fs-4" id="exampleModalXlLabel">Свойства группы</h5>
                     <button type="button"
                             class="btn-close"
                             data-bs-dismiss="modal"
@@ -51,7 +51,14 @@
                      @ondblclick:stopPropagation="true"
                      @ondblclick:preventDefault="true"
                      class="modal-body">
-                    <p>...</p>
+                    <MudTabs Elevation="2" Rounded ApplyEffectsToContainer>
+                        <MudTabPanel Text="Поля">
+                            <RubricFieldsManageComponent />
+                        </MudTabPanel>
+                        <MudTabPanel Text="Списки">
+                            <RubricDictionariesManageComponent />
+                        </MudTabPanel>
+                    </MudTabs>
                 </div>
             </div>
         </div>

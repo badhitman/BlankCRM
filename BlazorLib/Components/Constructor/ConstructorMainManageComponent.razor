@@ -57,7 +57,7 @@ else if (MainProject is null)
             <ProjectsListComponent />
         </MudTabPanel>
         <MudTabPanel Disabled="@(MainProject is null || IsBusyProgress)" Text="Списки">
-            <DirectoryViewComponent />
+            <DirectoryViewComponent ProjectId="MainProject!.Id" ReloadHandler="ReloadAction" />
         </MudTabPanel>
         <MudTabPanel Disabled="@(MainProject is null || IsBusyProgress)" Text="Формы">
             <FormsViewComponent />

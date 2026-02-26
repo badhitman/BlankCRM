@@ -14,6 +14,9 @@ public class ProjectFindModel
     /// </summary>
     public required int ProjectId { get; set; }
 
+    /// <inheritdoc/>
+    public string? ContextName { get; set; }
+
     /// <summary>
     /// QuerySearch
     /// </summary>

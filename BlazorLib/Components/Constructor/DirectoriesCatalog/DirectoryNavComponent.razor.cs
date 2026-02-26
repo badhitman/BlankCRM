@@ -16,11 +16,23 @@ public partial class DirectoryNavComponent : BlazorBusyComponentBaseAuthModel
     IConstructorTransmission ConstructorRepo { get; set; } = default!;
 
 
+    /// <inheritdoc/>
+    [Parameter]
+    public string? ContextName { get; set; }
+
+    /// <inheritdoc/>
+    [Parameter]
+    public required bool CanEdit { get; set; }
+
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required int ProjectId { get; set; }
+
     /// <summary>
-    /// Родительская страница форм
+    /// Событие изменения выбранного справочника/списка
     /// </summary>
-    [CascadingParameter, EditorRequired]
-    public required ConstructorMainManageComponent ParentFormsPage { get; set; }
+    [Parameter, EditorRequired]
+    public required Action ReloadHandler { get; set; }
 
     /// <summary>
     /// Событие изменения выбранного справочника/списка
@@ -119,10 +131,7 @@ public partial class DirectoryNavComponent : BlazorBusyComponentBaseAuthModel
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
 
         if (!rest.Success())
-        {
-            await ParentFormsPage.ReadCurrentMainProject();
-            ParentFormsPage.StateHasChangedCall();
-        }
+            ReloadHandler();
 
         await ReloadDirectories();
         SelectedDirectoryChangeHandler(SelectedDirectoryId);
@@ -134,12 +143,12 @@ public partial class DirectoryNavComponent : BlazorBusyComponentBaseAuthModel
         if (CurrentUserSession is null)
             throw new Exception("CurrentUserSession is null");
 
-        if (ParentFormsPage.MainProject is null)
+        if (ProjectId < 1)
             throw new Exception("Не выбран текущий/основной проект");
 
         await SetBusyAsync();
 
-        TResponseModel<int> rest = await ConstructorRepo.UpdateOrCreateDirectoryAsync(new() { Payload = new() { Name = directoryObject.Name, ProjectId = ParentFormsPage.MainProject.Id, Description = Description }, SenderActionUserId = CurrentUserSession.UserId });
+        TResponseModel<int> rest = await ConstructorRepo.UpdateOrCreateDirectoryAsync(new() { Payload = new() { Name = directoryObject.Name, ProjectId = ProjectId, Description = Description }, SenderActionUserId = CurrentUserSession.UserId });
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (rest.Success())
         {
@@ -148,10 +157,8 @@ public partial class DirectoryNavComponent : BlazorBusyComponentBaseAuthModel
             SelectedDirectoryId = rest.Response;
         }
         else
-        {
-            await ParentFormsPage.ReadCurrentMainProject();
-            ParentFormsPage.StateHasChangedCall();
-        }
+            ReloadHandler();
+
         await SetBusyAsync(false);
     }
 
@@ -176,7 +183,7 @@ public partial class DirectoryNavComponent : BlazorBusyComponentBaseAuthModel
     /// <inheritdoc/>
     protected async Task SaveRenameDirectory()
     {
-        if (selectedDirectory is null || ParentFormsPage.MainProject is null)
+        if (selectedDirectory is null || ProjectId < 1)
             throw new Exception("Не выбран текущий/основной проект");
 
         if (CurrentUserSession is null)
@@ -186,17 +193,14 @@ public partial class DirectoryNavComponent : BlazorBusyComponentBaseAuthModel
 
         TResponseModel<int> rest = await ConstructorRepo.UpdateOrCreateDirectoryAsync(new()
         {
-            Payload = EntryConstructedModel.Build(directoryObject, ParentFormsPage.MainProject.Id, Description),
+            Payload = EntryConstructedModel.Build(directoryObject, ProjectId, Description),
             SenderActionUserId = CurrentUserSession.UserId
         });
         await SetBusyAsync(false);
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         selectedDirectory.Description = Description;
         if (!rest.Success())
-        {
-            await ParentFormsPage.ReadCurrentMainProject();
-            ParentFormsPage.StateHasChangedCall();
-        }
+            ReloadHandler();
 
         await ReloadDirectories();
     }
@@ -214,16 +218,16 @@ public partial class DirectoryNavComponent : BlazorBusyComponentBaseAuthModel
     /// <summary>
     /// Перезагрузить селектор справочников/списков
     /// </summary>
-    public async Task ReloadDirectories(bool stateHasChanged = false)
+    public async Task ReloadDirectories()
     {
-        if (ParentFormsPage.MainProject is null)
+        if (ProjectId < 1)
             throw new Exception("No main/used project selected");
 
         ResetNavForm();
 
         await SetBusyAsync();
 
-        TResponseModel<EntryStandardModel[]> rest = await ConstructorRepo.GetDirectoriesAsync(new() { ProjectId = ParentFormsPage.MainProject.Id });
+        TResponseModel<EntryStandardModel[]> rest = await ConstructorRepo.GetDirectoriesAsync(new() { ProjectId = ProjectId, ContextName = ContextName });
 
         allDirectories = rest.Response ?? throw new Exception();
 

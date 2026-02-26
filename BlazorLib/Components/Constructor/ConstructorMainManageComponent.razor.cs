@@ -58,4 +58,9 @@ public partial class ConstructorMainManageComponent : BlazorBusyComponentBaseAut
         CanEditProject = MainProject is not null && (!MainProject.IsDisabled || MainProject.OwnerUserId.Equals(CurrentUserSession.UserId) || CurrentUserSession.IsAdmin);
         await SetBusyAsync(false);
     }
+    async void ReloadAction()
+    {
+        await ReadCurrentMainProject();
+        StateHasChangedCall();
+    }
 }

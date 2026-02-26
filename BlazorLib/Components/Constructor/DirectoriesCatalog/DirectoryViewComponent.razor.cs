@@ -16,11 +16,19 @@ public partial class DirectoryViewComponent : BlazorBusyComponentBaseAuthModel
     IConstructorTransmission ConstructorRepo { get; set; } = default!;
 
 
+    /// <inheritdoc/>
+    [EditorRequired]
+    public required bool CanEdit { get; set; }
+
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required int ProjectId { get; set; }
+
     /// <summary>
-    /// Родительская страница форм
+    /// Событие изменения выбранного справочника/списка
     /// </summary>
-    [CascadingParameter, EditorRequired]
-    public required ConstructorMainManageComponent ParentFormsPage { get; set; }
+    [Parameter, EditorRequired]
+    public required Action ReloadHandler { get; set; }
 
 
     /// <inheritdoc/>
@@ -61,10 +69,7 @@ public partial class DirectoryViewComponent : BlazorBusyComponentBaseAuthModel
         if (rest.Success())
             await elementsListOfDirectoryView_ref.ReloadElements(directoryNav_ref?.SelectedDirectoryId, true);
         else
-        {
-            await ParentFormsPage.ReadCurrentMainProject();
-            ParentFormsPage.StateHasChangedCall();
-        }
+            ReloadHandler();
 
         if (directoryNav_ref is not null)
             await directoryNav_ref.SetBusyAsync(false);

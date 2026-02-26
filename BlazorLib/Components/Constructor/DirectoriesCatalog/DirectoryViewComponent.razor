@@ -4,12 +4,16 @@
     <div class="card-header">
         <MudPaper Elevation="25">
             <div>
-                <DirectoryNavComponent @ref="directoryNav_ref" SelectedDirectoryChangeHandler="SelectedDirectoryChangeAction" />
+                <DirectoryNavComponent @ref="directoryNav_ref"
+                                       SelectedDirectoryChangeHandler="SelectedDirectoryChangeAction"
+                                       CanEdit="CanEdit"
+                                       ProjectId="ProjectId"
+                                       ReloadHandler="ReloadHandler" />
             </div>
         </MudPaper>
     </div>
     <div class="card-body">
-        @if (ParentFormsPage.CanEditProject)
+        @if (CanEdit)
         {
             <nav class="navbar bg-body-tertiary">
                 <div class="container-fluid">
