@@ -110,8 +110,8 @@ builder.Services
 builder.Services
     .AddSingleton<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
     .AddScoped<IMerchantService, MerchantImplementService>()
-    .AddScoped<IIndexingServive, IndexingTransmission>()
-    .AddScoped<IHistoryIndexing, HistoryTransmission>()
+    .AddScoped<IIndexingServive, IndexingTransmissionRabbit>()
+    .AddScoped<IHistoryIndexing, HistoryTransmissionRabbit>()
     .AddScoped<IBankService, BankImplementService>()
     ;
 
@@ -145,14 +145,14 @@ builder.Services
     ;
 //
 builder.Services
-    .AddScoped<IWebTransmission, WebTransmission>()
-    .AddScoped<ITelegramTransmission, TelegramTransmission>()
-    .AddScoped<IHelpDeskTransmission, HelpDeskTransmission>()
-    .AddScoped<IStorageTransmission, StorageTransmission>()
-    .AddScoped<IRetailService, RetailTransmission>()
-    .AddScoped<IIdentityTransmission, IdentityTransmission>()
-    .AddScoped<IParametersStorageTransmission, ParametersStorageTransmission>()
-    .AddScoped<ICommerceTransmission, CommerceTransmission>()
+    .AddScoped<IWebTransmission, WebTransmissionRabbit>()
+    .AddScoped<ITelegramTransmission, TelegramTransmissionRabbit>()
+    .AddScoped<IHelpDeskTransmission, HelpDeskTransmissionRabbit>()
+    .AddScoped<IStorageTransmission, StorageTransmissionRabbit>()
+    .AddScoped<IRetailService, RetailTransmissionRabbit>()
+    .AddScoped<IIdentityTransmission, IdentityTransmissionRabbit>()
+    .AddScoped<IParametersStorageTransmission, ParametersStorageTransmissionRabbit>()
+    .AddScoped<ICommerceTransmission, CommerceTransmissionRabbit>()
     ;
 //
 builder.Services.BankRegisterMqListeners();

@@ -7,7 +7,7 @@ using SharedLib;
 
 namespace RemoteCallLib;
 
-public partial class CommerceTransmission
+public partial class CommerceTransmissionRabbit
 {
     /// <inheritdoc/>
     public async Task<TPaginationResponseStandardModel<OfferAvailabilityModelDB>> OffersRegistersSelectAsync(TPaginationRequestStandardModel<RegistersSelectRequestBaseModel> req, CancellationToken token = default)

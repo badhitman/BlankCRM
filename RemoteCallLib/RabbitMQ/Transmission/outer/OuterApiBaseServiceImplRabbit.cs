@@ -2,16 +2,14 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
-using Amazon.Runtime;
 using SharedLib;
-using System.Net.Http;
 
 namespace RemoteCallLib;
 
 /// <summary>
 /// OuterApiBaseServiceImpl
 /// </summary>
-public abstract class OuterApiBaseServiceImpl(IHttpClientFactory HttpClientFactory) : IOuterApiService
+public abstract class OuterApiBaseServiceImplRabbit(IHttpClientFactory HttpClientFactory) : IOuterApiService
 {
     /// <summary>
     /// Шаблон имени очереди MQ

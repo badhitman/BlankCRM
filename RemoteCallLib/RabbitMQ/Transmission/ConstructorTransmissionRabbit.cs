@@ -10,7 +10,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// TransmissionConstructorService
 /// </summary>
-public class ConstructorTransmission([FromKeyedServices(nameof(RabbitClient))] IMQStandardClientRPC rabbitClient) : IConstructorTransmission
+public class ConstructorTransmissionRabbit([FromKeyedServices(nameof(RabbitClient))] IMQStandardClientRPC rabbitClient) : IConstructorTransmission
 {
     #region public
     /// <inheritdoc/>

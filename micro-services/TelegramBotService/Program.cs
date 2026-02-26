@@ -170,14 +170,14 @@ public class Program
 
         builder.Services
             .AddSingleton<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
-            .AddScoped<IIndexingServive, IndexingTransmission>()
-            .AddScoped<IHistoryIndexing, HistoryTransmission>()
-            .AddScoped<IWebTransmission, WebTransmission>()
-            .AddScoped<IHelpDeskTransmission, HelpDeskTransmission>()
-            .AddScoped<IStorageTransmission, StorageTransmission>()
-            .AddScoped<IRetailService, RetailTransmission>()
-            .AddScoped<IParametersStorageTransmission, ParametersStorageTransmission>()
-            .AddScoped<IIdentityTransmission, IdentityTransmission>()
+            .AddScoped<IIndexingServive, IndexingTransmissionRabbit>()
+            .AddScoped<IHistoryIndexing, HistoryTransmissionRabbit>()
+            .AddScoped<IWebTransmission, WebTransmissionRabbit>()
+            .AddScoped<IHelpDeskTransmission, HelpDeskTransmissionRabbit>()
+            .AddScoped<IStorageTransmission, StorageTransmissionRabbit>()
+            .AddScoped<IRetailService, RetailTransmissionRabbit>()
+            .AddScoped<IParametersStorageTransmission, ParametersStorageTransmissionRabbit>()
+            .AddScoped<IIdentityTransmission, IdentityTransmissionRabbit>()
             ;
         //
         builder.Services.TelegramBotRegisterMqListeners();

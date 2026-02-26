@@ -133,8 +133,8 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddTransient<UnhandledExceptionAttribute>();
 builder.Services
     .AddSingleton<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
-    .AddScoped<IIndexingServive, IndexingTransmission>()
-    .AddScoped<IHistoryIndexing, HistoryTransmission>()
+    .AddScoped<IIndexingServive, IndexingTransmissionRabbit>()
+    .AddScoped<IHistoryIndexing, HistoryTransmissionRabbit>()
     .AddScoped<RolesAuthorizationFilter>()
     ;
 
@@ -156,18 +156,18 @@ builder.Services
     ;
 //
 builder.Services
-    .AddScoped<IWebChatService, WebChatTransmission>()
-    .AddScoped<IWebTransmission, WebTransmission>()
-    .AddScoped<ITelegramTransmission, TelegramTransmission>()
-    .AddScoped<IHelpDeskTransmission, HelpDeskTransmission>()
-    .AddScoped<IRubricsTransmission, RubricsTransmission>()
-    .AddScoped<ICommerceTransmission, CommerceTransmission>()
-    .AddScoped<IKladrNavigationService, KladrNavigationServiceTransmission>()
-    .AddScoped<IStorageTransmission, StorageTransmission>()
-    .AddScoped<IParametersStorageTransmission, ParametersStorageTransmission>()
-    .AddScoped<IKladrService, KladrServiceTransmission>()
-    .AddScoped<IBankService, BankTransmission>()
-    .AddScoped<IMerchantService, MerchantTransmission>()
+    .AddScoped<IWebChatService, WebChatTransmissionRabbit>()
+    .AddScoped<IWebTransmission, WebTransmissionRabbit>()
+    .AddScoped<ITelegramTransmission, TelegramTransmissionRabbit>()
+    .AddScoped<IHelpDeskTransmission, HelpDeskTransmissionRabbit>()
+    .AddScoped<IRubricsTransmission, RubricsTransmissionRabbit>()
+    .AddScoped<ICommerceTransmission, CommerceTransmissionRabbit>()
+    .AddScoped<IKladrNavigationService, KladrNavigationServiceTransmissionRabbit>()
+    .AddScoped<IStorageTransmission, StorageTransmissionRabbit>()
+    .AddScoped<IParametersStorageTransmission, ParametersStorageTransmissionRabbit>()
+    .AddScoped<IKladrService, KladrServiceTransmissionRabbit>()
+    .AddScoped<IBankService, BankTransmissionRabbit>()
+    .AddScoped<IMerchantService, MerchantTransmissionRabbit>()
     ;
 #endregion
 builder.Services

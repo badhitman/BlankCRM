@@ -113,8 +113,8 @@ public class Program
 
         builder.Services
             .AddScoped<IArticlesService, ArticlesService>()
-            .AddScoped<IIndexingServive, IndexingTransmission>()
-            .AddScoped<IHistoryIndexing, HistoryTransmission>()
+            .AddScoped<IIndexingServive, IndexingTransmissionRabbit>()
+            .AddScoped<IHistoryIndexing, HistoryTransmissionRabbit>()
             ;
 
         builder.Services.AddStackExchangeRedisCache(options =>
@@ -153,17 +153,17 @@ public class Program
         //
         builder.Services
             .AddSingleton<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
-            .AddScoped<IHelpDeskTransmission, HelpDeskTransmission>()
-            .AddScoped<IWebTransmission, WebTransmission>()
-            .AddScoped<ITelegramTransmission, TelegramTransmission>()
-            .AddScoped<ICommerceTransmission, CommerceTransmission>()
+            .AddScoped<IHelpDeskTransmission, HelpDeskTransmissionRabbit>()
+            .AddScoped<IWebTransmission, WebTransmissionRabbit>()
+            .AddScoped<ITelegramTransmission, TelegramTransmissionRabbit>()
+            .AddScoped<ICommerceTransmission, CommerceTransmissionRabbit>()
             .AddScoped<IHelpDeskService, HelpDeskImplementService>()
-            .AddScoped<IRetailService, RetailTransmission>()
+            .AddScoped<IRetailService, RetailTransmissionRabbit>()
             .AddScoped<IRubricsService, RubricsService>()
-            .AddScoped<IKladrNavigationService, KladrNavigationServiceTransmission>()
-            .AddScoped<IStorageTransmission, StorageTransmission>()
-            .AddScoped<IParametersStorageTransmission, ParametersStorageTransmission>()
-            .AddScoped<IIdentityTransmission, IdentityTransmission>()
+            .AddScoped<IKladrNavigationService, KladrNavigationServiceTransmissionRabbit>()
+            .AddScoped<IStorageTransmission, StorageTransmissionRabbit>()
+            .AddScoped<IParametersStorageTransmission, ParametersStorageTransmissionRabbit>()
+            .AddScoped<IIdentityTransmission, IdentityTransmissionRabbit>()
             ;
         // 
         builder.Services.HelpDeskRegisterMqListeners();

@@ -138,15 +138,15 @@ builder.Services
 //
 builder.Services
     .AddSingleton<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
-    .AddScoped<IIndexingServive, IndexingTransmission>()
-    .AddScoped<IHistoryIndexing, HistoryTransmission>()
-    .AddScoped<IWebTransmission, WebTransmission>()
-    .AddScoped<ITelegramTransmission, TelegramTransmission>()
-    .AddScoped<IHelpDeskTransmission, HelpDeskTransmission>()
-    .AddScoped<IKladrNavigationService, KladrNavigationServiceTransmission>()
-    .AddScoped<IStorageTransmission, StorageTransmission>()
-    .AddScoped<IParametersStorageTransmission, ParametersStorageTransmission>()
-    .AddScoped<IIdentityTransmission, IdentityTransmission>()
+    .AddScoped<IIndexingServive, IndexingTransmissionRabbit>()
+    .AddScoped<IHistoryIndexing, HistoryTransmissionRabbit>()
+    .AddScoped<IWebTransmission, WebTransmissionRabbit>()
+    .AddScoped<ITelegramTransmission, TelegramTransmissionRabbit>()
+    .AddScoped<IHelpDeskTransmission, HelpDeskTransmissionRabbit>()
+    .AddScoped<IKladrNavigationService, KladrNavigationServiceTransmissionRabbit>()
+    .AddScoped<IStorageTransmission, StorageTransmissionRabbit>()
+    .AddScoped<IParametersStorageTransmission, ParametersStorageTransmissionRabbit>()
+    .AddScoped<IIdentityTransmission, IdentityTransmissionRabbit>()
     ;
 //
 builder.Services.ConstructorRegisterMqListeners();

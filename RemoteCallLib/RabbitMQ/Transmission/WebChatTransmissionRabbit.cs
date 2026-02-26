@@ -11,7 +11,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// WebChatTransmission
 /// </summary>
-public class WebChatTransmission([FromKeyedServices(nameof(RabbitClient))] IMQStandardClientRPC rabbitClient) : IWebChatService
+public class WebChatTransmissionRabbit([FromKeyedServices(nameof(RabbitClient))] IMQStandardClientRPC rabbitClient) : IWebChatService
 {
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> CreateMessageWebChatAsync(MessageWebChatModelDB req, CancellationToken token = default)

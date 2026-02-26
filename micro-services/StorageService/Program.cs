@@ -145,13 +145,13 @@ public class Program
 
         builder.Services
             .AddSingleton<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
-            .AddScoped<IHelpDeskTransmission, HelpDeskTransmission>()
-            .AddScoped<ITelegramTransmission, TelegramTransmission>()
-            .AddScoped<IIdentityTransmission, IdentityTransmission>()
-            .AddScoped<ICommerceTransmission, CommerceTransmission>()
-            .AddScoped<IWebTransmission, WebTransmission>()
-            .AddScoped<IIndexingServive, IndexingTransmission>()
-            .AddScoped<IHistoryIndexing, HistoryTransmission>()
+            .AddScoped<IHelpDeskTransmission, HelpDeskTransmissionRabbit>()
+            .AddScoped<ITelegramTransmission, TelegramTransmissionRabbit>()
+            .AddScoped<IIdentityTransmission, IdentityTransmissionRabbit>()
+            .AddScoped<ICommerceTransmission, CommerceTransmissionRabbit>()
+            .AddScoped<IWebTransmission, WebTransmissionRabbit>()
+            .AddScoped<IIndexingServive, IndexingTransmissionRabbit>()
+            .AddScoped<IHistoryIndexing, HistoryTransmissionRabbit>()
             ;
         //
         builder.Services.StorageRegisterMqListeners();

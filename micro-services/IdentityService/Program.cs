@@ -183,8 +183,8 @@ public class Program
         // Scoped
         builder.Services
             .AddScoped<IIdentityTools, IdentityTools>()
-            .AddScoped<IIndexingServive, IndexingTransmission>()
-            .AddScoped<IHistoryIndexing, HistoryTransmission>()
+            .AddScoped<IIndexingServive, IndexingTransmissionRabbit>()
+            .AddScoped<IHistoryIndexing, HistoryTransmissionRabbit>()
             ;
 
         string appName = typeof(Program).Assembly.GetName().Name ?? "AssemblyName";
@@ -208,11 +208,11 @@ public class Program
 
         builder.Services
             .AddSingleton<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
-            .AddScoped<ITelegramTransmission, TelegramTransmission>()
-            .AddScoped<IHelpDeskTransmission, HelpDeskTransmission>()
-            .AddScoped<IWebTransmission, WebTransmission>()
-            .AddScoped<IStorageTransmission, StorageTransmission>()
-            .AddScoped<IParametersStorageTransmission, ParametersStorageTransmission>()
+            .AddScoped<ITelegramTransmission, TelegramTransmissionRabbit>()
+            .AddScoped<IHelpDeskTransmission, HelpDeskTransmissionRabbit>()
+            .AddScoped<IWebTransmission, WebTransmissionRabbit>()
+            .AddScoped<IStorageTransmission, StorageTransmissionRabbit>()
+            .AddScoped<IParametersStorageTransmission, ParametersStorageTransmissionRabbit>()
             ;
 
         builder.Services.IdentityRegisterMqListeners();

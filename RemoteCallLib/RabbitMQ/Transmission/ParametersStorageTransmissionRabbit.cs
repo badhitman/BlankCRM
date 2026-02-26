@@ -11,7 +11,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// StorageBaseTransmission
 /// </summary>
-public class ParametersStorageTransmission([FromKeyedServices(nameof(RabbitClient))] IMQStandardClientRPC rabbitClient) : IParametersStorageTransmission
+public class ParametersStorageTransmissionRabbit([FromKeyedServices(nameof(RabbitClient))] IMQStandardClientRPC rabbitClient) : IParametersStorageTransmission
 {
     #region tag`s
     /// <inheritdoc/> tags

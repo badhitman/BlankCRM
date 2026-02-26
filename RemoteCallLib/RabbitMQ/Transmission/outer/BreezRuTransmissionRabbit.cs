@@ -10,7 +10,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// BreezRuTransmission
 /// </summary>
-public class BreezRuTransmission([FromKeyedServices(nameof(RabbitClient))] IMQStandardClientRPC rabbitClient) : IBreezRuApiTransmission
+public class BreezRuTransmissionRabbit([FromKeyedServices(nameof(RabbitClient))] IMQStandardClientRPC rabbitClient) : IBreezRuApiTransmission
 {
     /// <inheritdoc/>
     public async Task<TResponseModel<List<BrandRealBreezRuModel>>> GetBrandsAsync(CancellationToken token = default)

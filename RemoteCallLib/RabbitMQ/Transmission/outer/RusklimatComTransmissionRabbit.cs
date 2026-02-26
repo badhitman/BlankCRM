@@ -11,7 +11,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// RusklimatComTransmission
 /// </summary>
-public class RusklimatComTransmission([FromKeyedServices(nameof(RabbitClient))] IMQStandardClientRPC rabbitClient) : IRusklimatComApiTransmission
+public class RusklimatComTransmissionRabbit([FromKeyedServices(nameof(RabbitClient))] IMQStandardClientRPC rabbitClient) : IRusklimatComApiTransmission
 {
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> DownloadAndSaveAsync(CancellationToken token = default)

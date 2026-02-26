@@ -10,7 +10,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// BankTransmission
 /// </summary>
-public partial class BankTransmission([FromKeyedServices(nameof(RabbitClient))] IMQStandardClientRPC rabbitClient) : IBankService
+public partial class BankTransmissionRabbit([FromKeyedServices(nameof(RabbitClient))] IMQStandardClientRPC rabbitClient) : IBankService
 {
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> BankConnectionCreateOrUpdateAsync(TAuthRequestStandardModel<BankConnectionModelDB> bank, CancellationToken token = default)

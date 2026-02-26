@@ -136,7 +136,7 @@ public class Program
             ;
 
         builder.Services
-            .AddScoped<IStorageTransmission, StorageTransmission>()
+            .AddScoped<IStorageTransmission, StorageTransmissionRabbit>()
             .AddSingleton<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
             ;
 

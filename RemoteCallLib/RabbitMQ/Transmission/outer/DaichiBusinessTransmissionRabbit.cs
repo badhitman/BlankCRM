@@ -11,7 +11,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// DaichiBusinessTransmission
 /// </summary>
-public class DaichiBusinessTransmission([FromKeyedServices(nameof(RabbitClient))] IMQStandardClientRPC rabbitClient) : IDaichiBusinessApiTransmission
+public class DaichiBusinessTransmissionRabbit([FromKeyedServices(nameof(RabbitClient))] IMQStandardClientRPC rabbitClient) : IDaichiBusinessApiTransmission
 {
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> DownloadAndSaveAsync(CancellationToken token = default)

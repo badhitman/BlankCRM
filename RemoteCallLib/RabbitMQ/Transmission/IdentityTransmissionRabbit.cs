@@ -12,7 +12,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// [remote]: Identity
 /// </summary>
-public class IdentityTransmission([FromKeyedServices(nameof(RabbitClient))] IMQStandardClientRPC rabbitClient, IMemoryCache cache) : IIdentityTransmission
+public class IdentityTransmissionRabbit([FromKeyedServices(nameof(RabbitClient))] IMQStandardClientRPC rabbitClient, IMemoryCache cache) : IIdentityTransmission
 {
     static readonly TimeSpan _ts = TimeSpan.FromMinutes(1);
 

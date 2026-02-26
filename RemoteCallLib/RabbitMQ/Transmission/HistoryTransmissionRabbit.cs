@@ -10,7 +10,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// HistoryTransmission
 /// </summary>
-public class HistoryTransmission([FromKeyedServices(nameof(RabbitClient))] IMQStandardClientRPC rabbitClient) : IHistoryIndexing
+public class HistoryTransmissionRabbit([FromKeyedServices(nameof(RabbitClient))] IMQStandardClientRPC rabbitClient) : IHistoryIndexing
 {
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> SaveHistoryForReceiverAsync(TraceReceiverRecord req, CancellationToken token = default)

@@ -11,7 +11,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// KladrNavigationServiceTransmission
 /// </summary>
-public class KladrNavigationServiceTransmission([FromKeyedServices(nameof(RabbitClient))] IMQStandardClientRPC rabbitClient) : IKladrNavigationService
+public class KladrNavigationServiceTransmissionRabbit([FromKeyedServices(nameof(RabbitClient))] IMQStandardClientRPC rabbitClient) : IKladrNavigationService
 {
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> ChildsContainsAsync(string codeLike, CancellationToken token = default)

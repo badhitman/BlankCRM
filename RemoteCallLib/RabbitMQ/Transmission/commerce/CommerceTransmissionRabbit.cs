@@ -10,7 +10,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// CommerceTransmission
 /// </summary>
-public partial class CommerceTransmission([FromKeyedServices(nameof(RabbitClient))] IMQStandardClientRPC rabbitClient) : ICommerceTransmission
+public partial class CommerceTransmissionRabbit([FromKeyedServices(nameof(RabbitClient))] IMQStandardClientRPC rabbitClient) : ICommerceTransmission
 {
     /// <inheritdoc/>
     public async Task<TPaginationResponseStandardModel<RecordsAttendanceModelDB>> RecordsAttendancesSelectAsync(TPaginationRequestAuthModel<RecordsAttendancesRequestModel> req, CancellationToken token = default)

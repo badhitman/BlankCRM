@@ -13,8 +13,8 @@ public class Program
         builder.Services.AddHostedService<Worker>();
 
         builder.Services
-            .AddScoped<IIndexingServive, IndexingTransmission>()
-            .AddScoped<IHistoryIndexing, HistoryTransmission>()
+            .AddScoped<IIndexingServive, IndexingTransmissionRabbit>()
+            .AddScoped<IHistoryIndexing, HistoryTransmissionRabbit>()
             .AddSingleton<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
             //.AddSingleton<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
             ;

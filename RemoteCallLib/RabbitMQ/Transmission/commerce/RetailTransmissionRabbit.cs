@@ -11,7 +11,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// Розница
 /// </summary>
-public class RetailTransmission([FromKeyedServices(nameof(RabbitClient))] IMQStandardClientRPC rabbitClient) : IRetailService
+public class RetailTransmissionRabbit([FromKeyedServices(nameof(RabbitClient))] IMQStandardClientRPC rabbitClient) : IRetailService
 {
     #region Order`s (document retail)
     /// <inheritdoc/>
