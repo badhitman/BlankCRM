@@ -18,4 +18,9 @@ public class CreateProjectRequestModel
     /// UserId
     /// </summary>
     public required string UserId { get; set; }
+
+    /// <summary>
+    /// ContextName
+    /// </summary>
+    public string? ContextName { get; set; }
 }

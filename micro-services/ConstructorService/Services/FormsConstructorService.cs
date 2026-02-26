@@ -317,7 +317,7 @@ public partial class FormsConstructorService(
         using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(token);
         IQueryable<ProjectModelDb> q = context_forms
             .Projects
-            .Where(x => x.OwnerUserId == req.UserId || context_forms.MembersOfProjects.Any(y => y.ProjectId == x.Id && y.UserId == req.UserId))
+            .Where(x => x.ContextName == req.ContextName && (x.OwnerUserId == req.UserId || context_forms.MembersOfProjects.Any(y => y.ProjectId == x.Id && y.UserId == req.UserId)))
             .Include(x => x.Members)
             .AsQueryable();
 
@@ -419,7 +419,7 @@ public partial class FormsConstructorService(
         using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(token);
         ProjectModelDb? projectDb = await context_forms
             .Projects
-            .FirstOrDefaultAsync(x => x.OwnerUserId == userDb.UserId && (x.Name == req.Project.Name), cancellationToken: token);
+            .FirstOrDefaultAsync(x => x.ContextName == req.ContextName && x.OwnerUserId == userDb.UserId && x.Name == req.Project.Name, cancellationToken: token);
 
         if (projectDb is not null)
         {
@@ -434,6 +434,7 @@ public partial class FormsConstructorService(
             OwnerUserId = userDb.UserId,
             Description = req.Project.Description,
             IsDisabled = req.Project.IsDisabled,
+            ContextName = req.ContextName,
         };
 
         await context_forms.AddAsync(projectDb, token);

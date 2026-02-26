@@ -158,6 +158,9 @@ public partial class DirectoryNavComponent : BlazorBusyComponentBaseAuthModel
     async Task CancelCreatingDirectory()
     {
         ResetNavForm();
+        if (_selected_dir_id < 1)
+            return;
+
         await SetBusyAsync();
 
         TResponseModel<EntryDescriptionModel> res = await ConstructorRepo.GetDirectoryAsync(_selected_dir_id);

@@ -18,4 +18,9 @@ public class GetProjectsForUserRequestModel
     /// NameFilter
     /// </summary>
     public string? NameFilter { get; set; }
+
+    /// <summary>
+    /// ContextName
+    /// </summary>
+    public string? ContextName { get; set; }
 }
