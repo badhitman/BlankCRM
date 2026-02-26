@@ -5,6 +5,7 @@
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using SharedLib;
+using System.Collections.Concurrent;
 
 namespace RemoteCallLib;
 
@@ -13,7 +14,7 @@ namespace RemoteCallLib;
 /// </summary>
 public class IdentityTransmission([FromKeyedServices(nameof(RabbitClient))] IMQStandardClientRPC rabbitClient, IMemoryCache cache) : IIdentityTransmission
 {
-    static readonly TimeSpan _ts = TimeSpan.FromSeconds(2);
+    static readonly TimeSpan _ts = TimeSpan.FromSeconds(30);
 
     /// <inheritdoc/>
     public async Task<TResponseModel<string>> CreateUserManualAsync(TAuthRequestStandardModel<UserInfoBaseModel> user, CancellationToken token = default)
@@ -170,22 +171,24 @@ public class IdentityTransmission([FromKeyedServices(nameof(RabbitClient))] IMQS
     /// <inheritdoc/>
     public async Task<TResponseModel<UserInfoModel[]>> GetUsersOfIdentityAsync(string[] ids_users, CancellationToken token = default)
     {
-        bool isSingle = ids_users.Length == 1;
-        if (isSingle)
-        {
-            string mem_token = $"user-identity/{ids_users[0]}";
-            if (cache.TryGetValue(mem_token, out UserInfoModel? users_cache) && users_cache is not null)
-                return new() { Response = [users_cache] };
-        }
+        ConcurrentDictionary<string, UserInfoModel?> usersRes = new(ids_users.Select(x => new KeyValuePair<string, UserInfoModel?>(x, null)));
+        List<Task> tasks = [.. ids_users.Select(x => Task.Run(() => { if (cache.TryGetValue($"user-identity/{x}", out UserInfoModel? users_cache) && users_cache is not null) usersRes[x] = users_cache; }))];
+        await Task.WhenAll(tasks);
+        ids_users = [.. ids_users.Where(x => usersRes[x] is null)];
+        if (ids_users.Length == 0)
+            return new() { Response = [.. usersRes.Select(x => x.Value)!] };
 
         TResponseModel<UserInfoModel[]> res = await rabbitClient.MqRemoteCallAsync<TResponseModel<UserInfoModel[]>>(GlobalStaticConstantsTransmission.TransmissionQueues.GetUsersOfIdentityReceive, ids_users, token: token) ?? new();
-        if (isSingle && res.Response is not null && res.Response.Length == 1)
+        if (res.Response is not null && res.Response.Length != 0)
         {
-            string mem_token = $"user-identity/{ids_users[0]}";
-            cache.Set(mem_token, res.Response[0], new MemoryCacheEntryOptions().SetAbsoluteExpiration(_ts));
+            tasks = [.. res.Response.Select(x => Task.Run(() => {
+                cache.Set($"user-identity/{x.UserId}", x, new MemoryCacheEntryOptions().SetAbsoluteExpiration(_ts));
+                usersRes[x.UserId] = x;
+            }))];
+            await Task.WhenAll(tasks);
         }
 
-        return res;
+        return new() { Response = [.. usersRes.Select(x => x.Value)!] };
     }
 
     /// <inheritdoc/>
