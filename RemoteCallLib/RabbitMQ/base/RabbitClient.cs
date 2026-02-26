@@ -388,6 +388,7 @@ public class RabbitClient : IMQStandardClientRPC
             try
             {
                 await _channel.QueueDeclareAsync(queue: response_topic, durable: false, exclusive: false, autoDelete: true, arguments: ResponseQueueArguments!, cancellationToken: tokenOuter);
+                await _channel.BasicConsumeAsync(response_topic, false, consumer, cancellationToken: tokenOuter);
             }
             catch (TaskCanceledException ex)
             {
@@ -489,84 +490,6 @@ public class RabbitClient : IMQStandardClientRPC
                 }
                 return default;
             }
-
-            try
-            {
-                await _channel.BasicConsumeAsync(response_topic, false, consumer, cancellationToken: tokenOuter);
-            }
-            catch (TaskCanceledException ex)
-            {
-                _channel.Dispose();
-                _connection.Dispose();
-                try
-                {
-                    if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
-                        await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
-                        {
-                            Sender = $"[{GetType().Name}]-[{nameof(TaskCanceledException)}]",
-                            GuidSession = guidRequest,
-                            ReceiverName = nameof(TaskCanceledException),
-                            PayloadBody = ex,
-                            UTCTimestampInitReceive = DateTime.UtcNow,
-                        }, tokenOuter);
-                }
-                catch
-                {
-
-                }
-                return default;
-            }
-            catch (OperationCanceledException ex)
-            {
-                _channel.Dispose();
-                _connection.Dispose();
-
-                try
-                {
-                    if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
-                        await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
-                        {
-                            Sender = nameof(MqRemoteCallAsync),
-                            GuidSession = guidRequest,
-                            ReceiverName = nameof(OperationCanceledException),
-                            PayloadBody = ex,
-                            UTCTimestampInitReceive = DateTime.UtcNow,
-                        }, tokenOuter);
-                }
-                catch
-                {
-
-                }
-
-                return default;
-            }
-            catch (Exception ex)
-            {
-                loggerRepo.LogError(ex, "exception 88DE88EF-10C7-4BB8-A36A-F9C6DFDA70B2");
-
-                _channel.Dispose();
-                _connection.Dispose();
-
-                try
-                {
-                    if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
-                        await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
-                        {
-                            Sender = nameof(MqRemoteCallAsync),
-                            GuidSession = guidRequest,
-                            ReceiverName = nameof(Exception),
-                            PayloadBody = ex,
-                            UTCTimestampInitReceive = DateTime.UtcNow,
-                        }, tokenOuter);
-                }
-                catch
-                {
-
-                }
-
-                return default;
-            }
-
         }
 
         try
