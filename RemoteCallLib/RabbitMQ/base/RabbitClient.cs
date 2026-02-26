@@ -220,9 +220,9 @@ public class RabbitClient : IMQStandardClientRPC
                 if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
                     await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
                     {
-                        Sender = content,
+                        Sender = $"{GetType().Name}.{nameof(MqRemoteCallAsync)}.{nameof(MessageReceivedEvent)}",
                         GuidSession = guidRequest,
-                        ReceiverName = $"{GetType().Name}.{nameof(MqRemoteCallAsync)}.{nameof(MessageReceivedEvent)}",
+                        ReceiverName = queue,
                         PayloadBody = content,
                         UTCTimestampInitReceive = DateTime.UtcNow,
                     }, tokenOuter);

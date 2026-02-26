@@ -2,10 +2,10 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
-using SharedLib;
+using Microsoft.Extensions.Caching.Memory;
 using System.Collections.Concurrent;
+using SharedLib;
 
 namespace RemoteCallLib;
 
@@ -14,7 +14,7 @@ namespace RemoteCallLib;
 /// </summary>
 public class IdentityTransmission([FromKeyedServices(nameof(RabbitClient))] IMQStandardClientRPC rabbitClient, IMemoryCache cache) : IIdentityTransmission
 {
-    static readonly TimeSpan _ts = TimeSpan.FromSeconds(30);
+    static readonly TimeSpan _ts = TimeSpan.FromMinutes(1);
 
     /// <inheritdoc/>
     public async Task<TResponseModel<string>> CreateUserManualAsync(TAuthRequestStandardModel<UserInfoBaseModel> user, CancellationToken token = default)
@@ -176,7 +176,10 @@ public class IdentityTransmission([FromKeyedServices(nameof(RabbitClient))] IMQS
         await Task.WhenAll(tasks);
         ids_users = [.. ids_users.Where(x => usersRes[x] is null)];
         if (ids_users.Length == 0)
-            return new() { Response = [.. usersRes.Select(x => x.Value)!] };
+            return new()
+            {
+                Response = [.. usersRes.Select(x => x.Value)!]
+            };
 
         TResponseModel<UserInfoModel[]> res = await rabbitClient.MqRemoteCallAsync<TResponseModel<UserInfoModel[]>>(GlobalStaticConstantsTransmission.TransmissionQueues.GetUsersOfIdentityReceive, ids_users, token: token) ?? new();
         if (res.Response is not null && res.Response.Length != 0)
@@ -188,7 +191,10 @@ public class IdentityTransmission([FromKeyedServices(nameof(RabbitClient))] IMQS
             await Task.WhenAll(tasks);
         }
 
-        return new() { Response = [.. usersRes.Select(x => x.Value)!] };
+        return new()
+        {
+            Response = [.. usersRes.Select(x => x.Value)!]
+        };
     }
 
     /// <inheritdoc/>
