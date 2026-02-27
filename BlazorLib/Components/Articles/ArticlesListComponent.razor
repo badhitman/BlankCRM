@@ -29,7 +29,7 @@
         </MudTd>
         <MudTd DataLabel="Updated">
             <MudLink Href="@($"/articles/edit-card/{context.Id}")">
-                @du?.GetCustomTime().ToString("d", GlobalStaticConstants.RU)
+                @du?.ToString("d", GlobalStaticConstants.RU)
                 <sup>@du?.ToString("t", GlobalStaticConstants.RU)</sup>
             </MudLink>
         </MudTd>
