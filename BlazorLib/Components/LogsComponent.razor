@@ -75,7 +75,13 @@
     </ToolBarContent>
     <HeaderContent>
         <MudTh></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="RecordTime" T="NLogRecordModelDB">RecordTime</MudTableSortLabel></MudTh>
+        <MudTh>
+            <MudTableSortLabel InitialDirection="SortDirection.Descending"
+                               SortLabel="RecordTime"
+                               T="NLogRecordModelDB">
+                RecordTime
+            </MudTableSortLabel>
+        </MudTh>
         @if (!HideAppColumn)
         {
             <MudTh>App</MudTh>
