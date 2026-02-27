@@ -35,8 +35,8 @@ public class LogsNavigationImpl(IDbContextFactory<NLogsContext> logsDbFactory) :
                 : await oq.CountAsync(x => x.Id >= req.Payload.RowId, cancellationToken: token);
 
         double _pos = (double)_cnt / req.PageSize;
-        _pos = Math.Floor(_pos) == _pos 
-            ? _pos - 1 
+        _pos = Math.Floor(_pos) == _pos
+            ? _pos - 1
             : Math.Floor(_pos);
 
         TPaginationResponseStandardModel<NLogRecordModelDB> res = new()
@@ -83,34 +83,14 @@ public class LogsNavigationImpl(IDbContextFactory<NLogsContext> logsDbFactory) :
         using NLogsContext ctx = await logsDbFactory.CreateDbContextAsync(token);
 
         if (await ctx.Logs.AnyAsync(cancellationToken: token))
-            await Task.WhenAll([
-                    Task.Run(async () => {
-                    using NLogsContext ctx = await logsDbFactory.CreateDbContextAsync();
-                    minDate = await ctx.Logs.MinAsync(x => x.RecordTime);
-                }, token),
-                Task.Run(async () => {
-                    using NLogsContext ctx = await logsDbFactory.CreateDbContextAsync();
-                    maxDate = await ctx.Logs.MaxAsync(x => x.RecordTime);
-                }, token),
-                Task.Run(async () => {
-                    using NLogsContext ctx = await logsDbFactory.CreateDbContextAsync();
-                    (await QuerySet(ctx.Logs.AsQueryable()).GroupBy(x => x.RecordLevel).Select(x => new KeyValuePair<string?, int>(x.Key, x.Count())).ToListAsync()).ForEach(x => LevelsAvailable.Add(x.Key??"", x.Value));
-                }, token),
-                Task.Run(async () => {
-                    using NLogsContext ctx = await logsDbFactory.CreateDbContextAsync();
-                    (await QuerySet(ctx.Logs.AsQueryable()).GroupBy(x => x.ApplicationName).Select(x => new KeyValuePair<string?, int>(x.Key, x.Count())).ToListAsync()).ForEach(x => ApplicationsAvailable.Add(x.Key ?? "", x.Value));
-                }, token),
-                Task.Run(async () => {
-                    using NLogsContext ctx = await logsDbFactory.CreateDbContextAsync();
-                    (await QuerySet(ctx.Logs.AsQueryable()).GroupBy(x => x.ContextPrefix).Select(x => new KeyValuePair<string?, int>(x.Key, x.Count())).ToListAsync()).ForEach(x => ContextsPrefixesAvailable.Add(x.Key ?? "", x.Value));
-                }, token),
-                Task.Run(async () => {
-                    using NLogsContext ctx = await logsDbFactory.CreateDbContextAsync();
-                    (await QuerySet(ctx.Logs.AsQueryable()).GroupBy(x => x.Logger).Select(x => new KeyValuePair<string?, int>(x.Key, x.Count())).ToListAsync()).ForEach(x => LoggersAvailable.Add(x.Key ?? "", x.Value));
-                }, token),
-            ]);
-
-
+        {
+            minDate = await ctx.Logs.MinAsync(x => x.RecordTime, cancellationToken: token);
+            maxDate = await ctx.Logs.MaxAsync(x => x.RecordTime, cancellationToken: token);
+            (await QuerySet(ctx.Logs.AsQueryable()).GroupBy(x => x.RecordLevel).Select(x => new KeyValuePair<string?, int>(x.Key, x.Count())).ToListAsync(cancellationToken: token)).ForEach(x => LevelsAvailable.Add(x.Key ?? "", x.Value));
+            (await QuerySet(ctx.Logs.AsQueryable()).GroupBy(x => x.ApplicationName).Select(x => new KeyValuePair<string?, int>(x.Key, x.Count())).ToListAsync(cancellationToken: token)).ForEach(x => ApplicationsAvailable.Add(x.Key ?? "", x.Value));
+            (await QuerySet(ctx.Logs.AsQueryable()).GroupBy(x => x.ContextPrefix).Select(x => new KeyValuePair<string?, int>(x.Key, x.Count())).ToListAsync(cancellationToken: token)).ForEach(x => ContextsPrefixesAvailable.Add(x.Key ?? "", x.Value));
+            (await QuerySet(ctx.Logs.AsQueryable()).GroupBy(x => x.Logger).Select(x => new KeyValuePair<string?, int>(x.Key, x.Count())).ToListAsync(cancellationToken: token)).ForEach(x => LoggersAvailable.Add(x.Key ?? "", x.Value));
+        }
 
         return new()
         {
