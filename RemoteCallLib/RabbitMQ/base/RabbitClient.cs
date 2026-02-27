@@ -387,7 +387,7 @@ public class RabbitClient : IMQStandardClientRPC
             properties.ReplyTo = string.IsNullOrEmpty(response_topic) ? null : response_topic;
             try
             {
-                await _channel.QueueDeclareAsync(queue: response_topic, durable: false, exclusive: false, autoDelete: false, arguments: ResponseQueueArguments!, cancellationToken: tokenOuter);
+                await _channel.QueueDeclareAsync(queue: response_topic, durable: true, exclusive: false, autoDelete: false, arguments: ResponseQueueArguments!, cancellationToken: tokenOuter);
                 await _channel.BasicConsumeAsync(response_topic, false, consumer, cancellationToken: tokenOuter);
             }
             catch (TaskCanceledException ex)
