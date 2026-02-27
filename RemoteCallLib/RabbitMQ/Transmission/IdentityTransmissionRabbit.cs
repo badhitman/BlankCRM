@@ -171,7 +171,7 @@ public class IdentityTransmissionRabbit([FromKeyedServices(nameof(RabbitClient))
     /// <inheritdoc/>
     public async Task<TResponseModel<UserInfoModel[]>> GetUsersOfIdentityAsync(string[] ids_users, CancellationToken token = default)
     {
-        ConcurrentDictionary<string, UserInfoModel?> usersRes = new(ids_users.Select(x => new KeyValuePair<string, UserInfoModel?>(x, null)));
+        ConcurrentDictionary<string, UserInfoModel?> usersRes = new(ids_users.Distinct().Select(x => new KeyValuePair<string, UserInfoModel?>(x, null)));
         List<Task> tasks = [.. ids_users.Select(x => Task.Run(() => { if (cache.TryGetValue($"user-identity/{x}", out UserInfoModel? users_cache) && users_cache is not null) usersRes[x] = users_cache; }))];
         await Task.WhenAll(tasks);
         ids_users = [.. ids_users.Where(x => usersRes[x] is null)];
