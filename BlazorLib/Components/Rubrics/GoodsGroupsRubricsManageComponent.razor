@@ -2,9 +2,13 @@
 @using BlazorLib.Components.Rubrics.Properties
 @using Microsoft.Extensions.Options
 @using MudBlazor
+
 @{
-    IQueryable<string>? _q = CommerceConf.Value.NomenclaturesRubricsPrefixes?.Where(x => !string.IsNullOrWhiteSpace(x)).AsQueryable();
+    IQueryable<string>? _q = CommerceConf.Value.NomenclaturesRubricsPrefixes?
+    .Where(x => !string.IsNullOrWhiteSpace(x))
+    .AsQueryable();
 }
+
 @if (_q?.Any() != true)
 {
     <MudTabs Elevation="2" Rounded ApplyEffectsToContainer>
@@ -13,10 +17,10 @@
                                     ContextName="@($"{Routes.GOODS_CONTROLLER_NAME}-{Routes.CATEGORIES_CONTROLLER_NAME}")" />
         </MudTabPanel>
         <MudTabPanel Text="Поля">
-            <RubricFieldsManageComponent />
+            <RubricFieldsManageComponent ContextName="@GlobalStaticConstantsTransmission.GoodsCategoriesFieldsSetContextName()" />
         </MudTabPanel>
         <MudTabPanel Text="Списки">
-            <RubricDictionariesManageComponent />
+            <RubricDictionariesManageComponent ContextName="@GlobalStaticConstantsTransmission.GoodsCategoriesPropertiesConfigurationContextName()" />
         </MudTabPanel>
     </MudTabs>
 }
@@ -30,10 +34,10 @@ else
                                             ContextName="@($"{Routes.GOODS_CONTROLLER_NAME}-{Routes.CATEGORIES_CONTROLLER_NAME}")" />
                 </MudTabPanel>
                 <MudTabPanel Text="Поля">
-                    <RubricFieldsManageComponent />
+                    <RubricFieldsManageComponent ContextName="@GlobalStaticConstantsTransmission.GoodsCategoriesFieldsSetContextName()" />
                 </MudTabPanel>
                 <MudTabPanel Text="Списки">
-                    <RubricDictionariesManageComponent />
+                    <RubricDictionariesManageComponent ContextName="@GlobalStaticConstantsTransmission.GoodsCategoriesPropertiesConfigurationContextName()" />
                 </MudTabPanel>
             </MudTabs>
         </MudTabPanel>
@@ -47,10 +51,10 @@ else
                                                 ContextName="@($"{Routes.GOODS_CONTROLLER_NAME}-{Routes.CATEGORIES_CONTROLLER_NAME}")" />
                     </MudTabPanel>
                     <MudTabPanel Text="Поля">
-                        <RubricFieldsManageComponent />
+                        <RubricFieldsManageComponent ContextName="@GlobalStaticConstantsTransmission.GoodsCategoriesFieldsSetContextName(_prefixName)" />
                     </MudTabPanel>
                     <MudTabPanel Text="Списки">
-                        <RubricDictionariesManageComponent />
+                        <RubricDictionariesManageComponent ContextName="@GlobalStaticConstantsTransmission.GoodsCategoriesPropertiesConfigurationContextName(_prefixName)" />
                     </MudTabPanel>
                 </MudTabs>
             </MudTabPanel>
@@ -61,6 +65,7 @@ else
 @code {
     [Inject]
     IOptions<CommerceConfigModel> CommerceConf { get; set; } = default!;
+
 
     MudTabs? panelRef;
     string? activePrefixName;

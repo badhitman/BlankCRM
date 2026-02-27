@@ -69,7 +69,7 @@ public class RabbitClient : IMQStandardClientRPC
 
         if (ResponseQueueArguments is null)
         {
-            ResponseQueueArguments = new() { { "x-queue-type", "classic" } };
+            ResponseQueueArguments = new() { { "x-queue-type", "quorum" } };
 
             if (rabbitConf.Value.ResponseMessageTTL.HasValue && rabbitConf.Value.ResponseMessageTTL.Value > 0)
                 ResponseQueueArguments.Add("x-message-ttl", rabbitConf.Value.ResponseMessageTTL.Value);

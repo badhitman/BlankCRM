@@ -2,8 +2,6 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
-using SharedLib;
-
 namespace BlazorLib.Components.Rubrics;
 
 /// <summary>
@@ -16,7 +14,7 @@ public partial class RubricNodeBodyNomenclatureConfigComponent : RubricNodeBodyC
     {
         await SetBusyAsync();
         await base.OnInitializedAsync();
-        
+
         await SetBusyAsync(false);
     }
 }

@@ -45,6 +45,26 @@ public static partial class GlobalStaticConstantsTransmission
         return _receiverPrefixName;
     }
 
+    /// <inheritdoc/>
+    public static string GoodsCategoriesFieldsSetContextName(string? prefix = null, int nomenclatureId = -1)
+    {
+        string _src = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.GOODS_CONTROLLER_NAME}-{Routes.CATEGORIES_CONTROLLER_NAME}", $"{Routes.FIELDS_CONTROLLER_NAME}-{Routes.SET_ACTION_NAME}");
+        if (!string.IsNullOrWhiteSpace(prefix))
+            _src = $"{_src},{prefix}";
+
+        return Path.Combine(_src, nomenclatureId.ToString());
+    }
+
+    /// <inheritdoc/>
+    public static string GoodsCategoriesPropertiesConfigurationContextName(string? prefix = null, int nomenclatureId = -1)
+    {
+        string _src = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.GOODS_CONTROLLER_NAME}-{Routes.CATEGORIES_CONTROLLER_NAME}", $"{Routes.PROPERTIES_CONTROLLER_NAME}-{Routes.CONFIGURATION_CONTROLLER_NAME}");
+        if (!string.IsNullOrWhiteSpace(prefix))
+            _src = $"{_src},{prefix}";
+
+        return Path.Combine(_src, nomenclatureId.ToString());
+    }
+
     /// <summary>
     /// Transmission MQ queues
     /// </summary>
@@ -580,9 +600,7 @@ public static partial class GlobalStaticConstantsTransmission
         /// <inheritdoc/>
         public readonly static string CalendarsSchedulesReadCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, $"{Routes.WORKSCHEDULES_CONTROLLER_NAME}-{Routes.CALENDARS_CONTROLLER_NAME}", Routes.READ_ACTION_NAME);
 
-        /// <summary>
-        /// WorkSchedulesReadCommerceReceive
-        /// </summary>
+        /// <inheritdoc/>
         public readonly static string WeeklySchedulesReadCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, $"{Routes.WORKSCHEDULES_CONTROLLER_NAME}-{Routes.WEEKLY_CONTROLLER_NAME}", Routes.READ_ACTION_NAME);
 
         /// <inheritdoc/>

@@ -1,5 +1,6 @@
 ﻿@using BlazorLib.Components.Rubrics.Properties
 @using MudBlazor
+
 @inherits RubricNodeBodyComponent
 
 <span class="font-monospace"
@@ -20,5 +21,6 @@
      @onclick:preventDefault="true"
      @ondblclick:stopPropagation="true"
      @ondblclick:preventDefault="true">
-    <RubricPropertiesManageComponent Node="Node" />
+    <RubricPropertiesManageComponent RubricFieldsManageContextName="@GlobalStaticConstantsTransmission.GoodsCategoriesFieldsSetContextName(PrefixName, Node.Value!.Id)"
+                                     RubricDictionariesManageContextName="@GlobalStaticConstantsTransmission.GoodsCategoriesPropertiesConfigurationContextName(PrefixName,Node.Value!.Id)" />
 </div>
