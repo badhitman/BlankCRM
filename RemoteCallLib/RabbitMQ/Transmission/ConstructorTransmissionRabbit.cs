@@ -60,7 +60,7 @@ public class ConstructorTransmissionRabbit([FromKeyedServices(nameof(RabbitClien
         => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.SetProjectAsMainConstructorReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<MainProjectViewModel>> GetCurrentMainProjectAsync(string req, CancellationToken token = default)
+    public async Task<TResponseModel<MainProjectViewModel>> GetCurrentMainProjectAsync(GetCurrentMainProjectRequestModel req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<MainProjectViewModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.GetCurrentMainProjectConstructorReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>

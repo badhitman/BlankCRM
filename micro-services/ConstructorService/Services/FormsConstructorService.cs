@@ -367,7 +367,7 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<List<ProjectModelDb>> ReadProjectsAsync(int[] projects_ids, CancellationToken token = default)
+    public async Task<List<ProjectModelDb>> ProjectsReadAsync(int[] projects_ids, CancellationToken token = default)
     {
         using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(token);
         return await context_forms
@@ -530,7 +530,7 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> AddMemberToProjectAsync(UsersProjectModel req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> AddMembersToProjectAsync(UsersProjectModel req, CancellationToken token = default)
     {
         TResponseModel<UserInfoModel[]> restUsers = await identityRepo.GetUsersOfIdentityAsync(req.UsersIds, token);
         if (!restUsers.Success())
@@ -653,18 +653,18 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<MainProjectViewModel?>> GetCurrentMainProjectAsync(string user_id, CancellationToken token = default)
+    public async Task<TResponseModel<MainProjectViewModel>> GetCurrentMainProjectAsync(GetCurrentMainProjectRequestModel req, CancellationToken token = default)
     {
-        TResponseModel<UserInfoModel[]> restUsers = await identityRepo.GetUsersOfIdentityAsync([user_id], token);
+        TResponseModel<UserInfoModel[]> restUsers = await identityRepo.GetUsersOfIdentityAsync([req.UserIdentityId], token);
         if (!restUsers.Success())
             throw new Exception(restUsers.Message());
 
         UserInfoModel? userDb = restUsers.Response?.Single();
 
-        TResponseModel<MainProjectViewModel?> res = new();
+        TResponseModel<MainProjectViewModel> res = new();
         if (userDb is null)
         {
-            res.AddError($"Пользователь #{user_id} не найден в БД");
+            res.AddError($"Пользователь #{req.UserIdentityId} не найден в БД");
             return res;
         }
 
@@ -675,18 +675,11 @@ public partial class FormsConstructorService(
         using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(token);
         ProjectModelDb? project = null;
         ProjectUseConstructorModelDb? project_use = null;
-        if (!await context_forms.Projects.AnyAsync(x => x.OwnerUserId == user_id, cancellationToken: token) && !await context_forms.MembersOfProjects.AnyAsync(x => x.UserId == user_id, cancellationToken: token))
+        if (!await context_forms.Projects.AnyAsync(x => x.OwnerUserId == req.UserIdentityId, cancellationToken: token) && !await context_forms.MembersOfProjects.AnyAsync(x => x.UserId == req.UserIdentityId, cancellationToken: token))
         {
-            project = new() { Name = "По умолчанию", OwnerUserId = user_id, NormalizedUpperName = "ПО УМОЛЧАНИЮ" };
+            project = new() { Name = "По умолчанию", OwnerUserId = req.UserIdentityId, NormalizedUpperName = "ПО УМОЛЧАНИЮ" };
             await context_forms.AddAsync(project, token);
-            try
-            {
-                await context_forms.SaveChangesAsync(token);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+            await context_forms.SaveChangesAsync(token);
 
 #if DEMO
             _seed_call = true;
@@ -698,9 +691,16 @@ public partial class FormsConstructorService(
 
         res.Response = project is not null
             ? MainProjectViewModel.Build(project)
-            : await context_forms.ProjectsUse.Where(x => x.UserId == user_id)
+            : await context_forms.ProjectsUse.Where(x => x.UserId == req.UserIdentityId)
             .Include(x => x.Project)
-            .Select(x => new MainProjectViewModel() { Id = x.Project!.Id, Name = x.Project.Name, Description = x.Project.Description, IsDisabled = x.Project.IsDisabled, OwnerUserId = x.Project.OwnerUserId })
+            .Select(x => new MainProjectViewModel()
+            {
+                Id = x.Project!.Id,
+                Name = x.Project.Name,
+                Description = x.Project.Description,
+                IsDisabled = x.Project.IsDisabled,
+                OwnerUserId = x.Project.OwnerUserId
+            })
             .FirstOrDefaultAsync(cancellationToken: token);
 
         if (res.Response is null)
@@ -715,11 +715,11 @@ public partial class FormsConstructorService(
 
             project = await context_forms
                 .Projects
-                .Where(x => x.OwnerUserId == user_id)
+                .Where(x => x.OwnerUserId == req.UserIdentityId)
                 .Union(members_query)
                 .FirstAsync(cancellationToken: token);
 
-            project_use = new() { UserId = user_id, ProjectId = project.Id };
+            project_use = new() { UserId = req.UserIdentityId, ProjectId = project.Id };
             await context_forms.AddAsync(project_use, token);
             await context_forms.SaveChangesAsync(token);
 

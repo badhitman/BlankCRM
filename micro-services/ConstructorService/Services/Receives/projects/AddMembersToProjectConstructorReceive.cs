@@ -21,7 +21,7 @@ public class AddMembersToProjectConstructorReceive(IConstructorService conServic
     {
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, null, req);
-        ResponseBaseModel res = await conService.AddMemberToProjectAsync(req, token);
+        ResponseBaseModel res = await conService.AddMembersToProjectAsync(req, token);
         await indexingRepo.SaveHistoryForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }

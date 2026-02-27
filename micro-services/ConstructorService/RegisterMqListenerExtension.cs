@@ -68,7 +68,7 @@ public static class RegisterMqListenerExtension
             .RegisterListenerRabbitMQ<GetDirectoryConstructorReceive, int, TResponseModel<EntryDescriptionModel>>()
             .RegisterListenerRabbitMQ<GetDirectoriesConstructorReceive, ProjectFindModel, TResponseModel<EntryStandardModel[]>>()
             .RegisterListenerRabbitMQ<ReadDirectoriesConstructorReceive, int[], List<EntryNestedModel>>()
-            .RegisterListenerRabbitMQ<GetCurrentMainProjectConstructorReceive, string, TResponseModel<MainProjectViewModel?>>()
+            .RegisterListenerRabbitMQ<GetCurrentMainProjectConstructorReceive, GetCurrentMainProjectRequestModel, TResponseModel<MainProjectViewModel>>()
             .RegisterListenerRabbitMQ<DeleteMembersFromProjectConstructorReceive, UsersProjectModel, ResponseBaseModel>()
             .RegisterListenerRabbitMQ<CanEditProjectConstructorReceive, UserProjectModel, ResponseBaseModel>()
             .RegisterListenerRabbitMQ<SetProjectAsMainConstructorReceive, UserProjectModel, ResponseBaseModel>()

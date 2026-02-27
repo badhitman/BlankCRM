@@ -49,7 +49,7 @@ public partial class ConstructorMainManageComponent : BlazorBusyComponentBaseAut
 
         await SetBusyAsync();
 
-        TResponseModel<MainProjectViewModel> currentMainProject = await ConstructorRepo.GetCurrentMainProjectAsync(CurrentUserSession.UserId);
+        TResponseModel<MainProjectViewModel> currentMainProject = await ConstructorRepo.GetCurrentMainProjectAsync(new() { UserIdentityId = CurrentUserSession.UserId });
 
         if (!currentMainProject.Success())
             SnackBarRepo.ShowMessagesResponse(currentMainProject.Messages);

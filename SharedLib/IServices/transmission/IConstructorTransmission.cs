@@ -94,63 +94,6 @@ public interface IConstructorTransmission : IConstructorBaseService
     public Task<ResponseBaseModel> CheckAndNormalizeSortIndexForElementsOfDirectoryAsync(int req, CancellationToken token = default);
     #endregion
 
-    #region project
-    /// <summary>
-    /// CanEditProject
-    /// </summary>
-    public Task<ResponseBaseModel> CanEditProjectAsync(UserProjectModel req, CancellationToken token = default);
-
-    /// <summary>
-    /// DeleteMembersFromProject
-    /// </summary>
-    public Task<ResponseBaseModel> DeleteMembersFromProjectAsync(UsersProjectModel req, CancellationToken token = default);
-
-    /// <summary>
-    /// ProjectsRead
-    /// </summary>
-    public Task<List<ProjectModelDb>> ProjectsReadAsync(int[] ids, CancellationToken token = default);
-
-    /// <summary>
-    /// GetProjectsForUser
-    /// </summary>
-    public Task<TResponseModel<ProjectViewModel[]>> GetProjectsForUserAsync(GetProjectsForUserRequestModel req, CancellationToken token = default);
-
-    /// <summary>
-    /// SetMarkerDeleteProject
-    /// </summary>
-    public Task<ResponseBaseModel> SetMarkerDeleteProjectAsync(SetMarkerProjectRequestModel req, CancellationToken token = default);
-
-    /// <summary>
-    /// UpdateProject
-    /// </summary>
-    public Task<ResponseBaseModel> UpdateProjectAsync(ProjectViewModel req, CancellationToken token = default);
-
-    /// <summary>
-    /// AddMembersToProject
-    /// </summary>
-    public Task<ResponseBaseModel> AddMembersToProjectAsync(UsersProjectModel req, CancellationToken token = default);
-
-    /// <summary>
-    /// SetProjectAsMain
-    /// </summary>
-    public Task<ResponseBaseModel> SetProjectAsMainAsync(UserProjectModel req, CancellationToken token = default);
-
-    /// <summary>
-    /// GetCurrentMainProject
-    /// </summary>
-    public Task<TResponseModel<MainProjectViewModel>> GetCurrentMainProjectAsync(string req, CancellationToken token = default);
-
-    /// <summary>
-    /// CreateProject
-    /// </summary>
-    public Task<TResponseModel<int>> CreateProjectAsync(CreateProjectRequestModel req, CancellationToken token = default);
-
-    /// <summary>
-    /// GetMembersOfProject
-    /// </summary>
-    public Task<TResponseModel<EntryAltStandardModel[]>> GetMembersOfProjectAsync(int req, CancellationToken token = default);
-    #endregion
-
     /////////////// Формы для редактирования/добавления бизнес-сущностей внутри итогового документа.
     // Базовая бизнес-сущность описывающая каркас/строение данных. Можно сравнить с таблицей БД со своим набором полей/колонок
     // К тому же сразу настраивается web-форма для редактирования объекта данного типа. Возможность устанавливать css стили формам и полям (с умыслом использования возможностей Bootstrap)

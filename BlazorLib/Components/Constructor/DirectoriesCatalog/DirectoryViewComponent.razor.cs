@@ -23,6 +23,10 @@ public partial class DirectoryViewComponent : BlazorBusyComponentBaseAuthModel
     /// <inheritdoc/>
     [Parameter, EditorRequired]
     public required int ProjectId { get; set; }
+    
+    /// <inheritdoc/>
+    [Parameter]
+    public string? ContextName { get; set; }
 
     /// <summary>
     /// Событие изменения выбранного справочника/списка

@@ -10,17 +10,16 @@ namespace Transmission.Receives.constructor;
 /// <summary>
 /// GetCurrentMainProjectReceive
 /// </summary>
-public class GetCurrentMainProjectConstructorReceive(IConstructorService conService) 
-    : IResponseReceive<string?, TResponseModel<MainProjectViewModel?>?>
+public class GetCurrentMainProjectConstructorReceive(IConstructorService conService)
+    : IResponseReceive<GetCurrentMainProjectRequestModel?, TResponseModel<MainProjectViewModel>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.GetCurrentMainProjectConstructorReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<MainProjectViewModel?>?> ResponseHandleActionAsync(string? req, CancellationToken token = default)
+    public async Task<TResponseModel<MainProjectViewModel>?> ResponseHandleActionAsync(GetCurrentMainProjectRequestModel? req, CancellationToken token = default)
     {
-        if (string.IsNullOrWhiteSpace(req))
-            throw new ArgumentNullException(nameof(req));
+        ArgumentNullException.ThrowIfNull(req);
 
         return await conService.GetCurrentMainProjectAsync(req, token);
     }
