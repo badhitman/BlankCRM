@@ -2,19 +2,18 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
+using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System.Diagnostics.Metrics;
+using RabbitMQ.Client.Exceptions;
+using RabbitMQ.Client.Events;
+using System.Diagnostics;
+using System.Text.Json;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
-using RabbitMQ.Client.Events;
-using RabbitMQ.Client.Exceptions;
-using SharedLib;
-using System.Diagnostics;
-using System.Diagnostics.Metrics;
 using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using static SharedLib.GlobalStaticConstantsRoutes;
+using SharedLib;
 
 namespace RemoteCallLib;
 

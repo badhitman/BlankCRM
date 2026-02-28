@@ -31,10 +31,10 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
     where TResponse : new()
 {
     readonly ILogger<RabbitMqListenerService<TQueue, TRequest, TResponse>> LoggerRepo;
-    IConnection _connection;
-    IChannel _channel = default!;
     readonly IResponseReceive<TRequest?, TResponse> receiveService;
     readonly ITraceRabbitActionsServiceTransmission traceRepo;
+    readonly IConnection _connection;
+    IChannel _channel = default!;
 
     static Dictionary<string, object>? QueueListenerArguments;
 
@@ -95,7 +95,10 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
         consumer.ReceivedAsync += async (ch, ea) =>
         {
             TRequest? sr;
-            BasicProperties properties = new() { CorrelationId = ea.BasicProperties.CorrelationId };
+            BasicProperties properties = new()
+            {
+                CorrelationId = ea.BasicProperties.CorrelationId
+            };
 #if DEBUG
             string content = Encoding.UTF8.GetString(ea.Body.ToArray()).Trim();
             try
