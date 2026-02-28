@@ -277,12 +277,12 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseAuthMode
                 .Distinct();
 
             List<Task> tasks = [
-                Task.Run(async () => { await CacheUsersUpdate([.._usersIds], token); }, token),
-                Task.Run(async () => { await CacheRubricsUpdate([.. res.Response.Select(x => x.WarehouseId).Distinct()], token); }, token),
+                Task.Run(async () => { await CacheUsersUpdate([.._usersIds], token); }, CancellationToken.None),
+                Task.Run(async () => { await CacheRubricsUpdate([.. res.Response.Select(x => x.WarehouseId).Distinct()], token); }, CancellationToken.None),
                 Task.Run(async () => { await OrdersLinksUpdate(
                     res.Response.SelectMany(x => x.Payments!.Select(y => y.Id)).Distinct(),
                     res.Response.SelectMany(x => x.Deliveries!.Select(y => y.Id)).Distinct(),
-                    res.Response.SelectMany(x => x.Conversions!.Select(y => y.Id)).Distinct(), token); }, token),
+                    res.Response.SelectMany(x => x.Conversions!.Select(y => y.Id)).Distinct(), token); }, CancellationToken.None),
             ];
 
             await Task.WhenAll(tasks);

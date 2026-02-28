@@ -125,7 +125,7 @@ public class RabbitClient : IMQStandardClientRPC
 
         }
 
-        string _replyQueueName = waitResponse ? $"{AppName}.{RabbitConfigRepo.QueueMqNamePrefixForResponse}{queue}_{Routes.RESPONSE_CONTROLLER_NAME}".Replace("\\", "/") : "";
+        string _replyQueueName = waitResponse ? $"{AppName}.{RabbitConfigRepo.QueueMqNamePrefixForResponse}{queue}_{correlationId}".Replace("\\", "/") : "";
         activity?.SetTag(nameof(_replyQueueName), _replyQueueName);
 
         string msg;

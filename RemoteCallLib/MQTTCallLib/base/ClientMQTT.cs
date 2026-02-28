@@ -94,7 +94,25 @@ public class ClientMQTT(RealtimeMQTTClientConfigModel mqConf, ILogger<ClientMQTT
         mqttClient?.ApplicationMessageReceivedAsync += ResponseClient_ApplicationMessageReceivedAsync;
         loggerRepo.LogTrace($"Sending message into queue [{queue}]", request_payload_json);
 
-        MqttClientConnectResult res = await mqttClient!.ConnectAsync(GetMqttClientOptionsBuilder(queue, propertyValue), tokenOuter);
+        MqttClientConnectResult res;
+
+        try
+        {
+            res = await mqttClient!.ConnectAsync(GetMqttClientOptionsBuilder(queue, propertyValue), tokenOuter);
+        }
+        catch (TaskCanceledException)
+        {
+            return default;
+        }
+        catch (OperationCanceledException)
+        {
+            return default;
+        }
+        catch (Exception ex)
+        {
+            loggerRepo.LogError(ex, $"mqtt connect `{queue}` error");
+            return default;
+        }
 
         MqttApplicationMessage applicationMessage = new MqttApplicationMessageBuilder()
             .WithTopic(queue)
