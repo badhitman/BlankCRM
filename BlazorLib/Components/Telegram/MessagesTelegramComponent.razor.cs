@@ -47,6 +47,9 @@ public partial class MessagesTelegramComponent : BlazorBusyComponentBaseModel
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
+        if (ChatId < 1)
+            return;
+
         await SetBusyAsync();
         CurrentChat = await TelegramRepo.ChatTelegramReadAsync(ChatId);
         await SetBusyAsync(false);
