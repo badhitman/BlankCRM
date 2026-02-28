@@ -75,6 +75,28 @@ public class HistoryImpl(IOptions<MongoConfigModel> mongoConf) : IHistoryIndexin
         Task<List<HistoryReceive>> itemsTask = oQuery.Skip(req.PageNum * req.PageSize).Take(req.PageSize).ToListAsync(cancellationToken: token);
         await Task.WhenAll(totalTask, itemsTask);
 
+#if DEBUG
+        TPaginationResponseStandardModel<TraceReceiverRecord> chk = new()
+        {
+            PageNum = req.PageNum,
+            PageSize = req.PageSize,
+            TotalRowsCount = totalTask.Result,
+            Response = [..itemsTask.Result.Select(x => new HistoryReceive()
+            {
+                UTCTimestampFinalReceive = x.UTCTimestampFinalReceive,
+                UTCTimestampInitReceive = x.UTCTimestampInitReceive,
+
+                ReceiverName = x.ReceiverName,
+                SenderActionUserId = x.SenderActionUserId,
+
+                PayloadBody = x.PayloadBody is null ? null : JObject.Parse(x.PayloadBody.ToBsonDocument().ToJson()),
+                ResponseBody = x.ResponseBody is null ? null : JObject.Parse(x.ResponseBody.ToBsonDocument().ToJson()),
+            })],
+            SortBy = req.SortBy,
+            SortingDirection = req.SortingDirection,
+        };
+#endif
+
         return new()
         {
             PageNum = req.PageNum,
