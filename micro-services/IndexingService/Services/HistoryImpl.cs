@@ -76,12 +76,14 @@ public class HistoryImpl(IOptions<MongoConfigModel> mongoConf) : IHistoryIndexin
         await Task.WhenAll(totalTask, itemsTask);
 
 #if DEBUG
-        TPaginationResponseStandardModel<TraceReceiverRecord> chk = new()
+        try
         {
-            PageNum = req.PageNum,
-            PageSize = req.PageSize,
-            TotalRowsCount = totalTask.Result,
-            Response = [..itemsTask.Result.Select(x => new HistoryReceive()
+            TPaginationResponseStandardModel<TraceReceiverRecord> chk = new()
+            {
+                PageNum = req.PageNum,
+                PageSize = req.PageSize,
+                TotalRowsCount = totalTask.Result,
+                Response = [..itemsTask.Result.Select(x => new HistoryReceive()
             {
                 UTCTimestampFinalReceive = x.UTCTimestampFinalReceive,
                 UTCTimestampInitReceive = x.UTCTimestampInitReceive,
@@ -92,9 +94,14 @@ public class HistoryImpl(IOptions<MongoConfigModel> mongoConf) : IHistoryIndexin
                 PayloadBody = x.PayloadBody is null ? null : JObject.Parse(x.PayloadBody.ToBsonDocument().ToJson()),
                 ResponseBody = x.ResponseBody is null ? null : JObject.Parse(x.ResponseBody.ToBsonDocument().ToJson()),
             })],
-            SortBy = req.SortBy,
-            SortingDirection = req.SortingDirection,
-        };
+                SortBy = req.SortBy,
+                SortingDirection = req.SortingDirection,
+            };
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.ToString());
+        }
 #endif
 
         return new()
