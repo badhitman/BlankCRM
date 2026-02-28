@@ -115,6 +115,7 @@
     </HeaderContent>
     <RowTemplate>
         @{
+            DateTime dc = context.RecordTime.GetCustomTime();
             string _classLevel = GetClassLevel(context.RecordLevel);
             if (context.Id == selectedRecord)
                 _classLevel += " border-double border-4 mud-border-primary pa-4";
@@ -127,10 +128,10 @@
         </MudTd>
         <MudTd DataLabel="RecordTime" Class="@_classLevel">
             <div class="hstack">
-                @context.RecordTime.ToString("d", GlobalStaticConstants.RU)
+                @dc.ToString("d", GlobalStaticConstants.RU)
                 <div>
                     <div class="vstack">
-                        <sup class="me-1">@context.RecordTime.ToString("t", GlobalStaticConstants.RU)</sup>
+                        <sup class="me-1">@dc.ToString("t", GlobalStaticConstants.RU)</sup>
                         <sub @onclick="() => ClipboardCopyHandle(context.Id)"
                              title="Скопировать ссылку в буфер обмена @context.Id"
                              class="ms-1 bi bi-link"
@@ -158,7 +159,9 @@
 
         @if (StackTrace)
         {
-            <MudTd DataLabel="StackTrace">@context.StackTrace</MudTd>
+            <MudTd DataLabel="StackTrace">
+                <pre style="max-height:250px;max-width:850px;"> @context.StackTrace </pre>
+            </MudTd>
         }
         @if (CallSite)
         {

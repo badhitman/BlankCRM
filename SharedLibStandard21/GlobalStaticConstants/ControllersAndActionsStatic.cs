@@ -51,6 +51,9 @@ public static partial class GlobalStaticConstantsRoutes
         /// </summary>
         public const string BANK_CONTROLLER_NAME = "bank";
 
+        /// <inheritdoc/>
+        public const string RESPONSE_CONTROLLER_NAME = "response";
+
         /// <summary>
         /// Customer
         /// </summary>

@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
+using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -30,10 +31,9 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
     where TResponse : new()
 {
     readonly ILogger<RabbitMqListenerService<TQueue, TRequest, TResponse>> LoggerRepo;
-    IConnection _connection = default!;
+    IConnection _connection;
     IChannel _channel = default!;
     readonly IResponseReceive<TRequest?, TResponse> receiveService;
-    readonly ConnectionFactory factory;
     readonly ITraceRabbitActionsServiceTransmission traceRepo;
 
     static Dictionary<string, object>? QueueListenerArguments;
@@ -53,12 +53,14 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
     /// <inheritdoc/>
     public RabbitMqListenerService(
         IServiceProvider servicesProvider,
+        IConnection connection,
         ITraceRabbitActionsServiceTransmission _traceRepo,
         IOptions<RabbitMQConfigModel> rabbitConf,
         ILogger<RabbitMqListenerService<TQueue, TRequest, TResponse>> loggerRepo)
     {
         traceRepo = _traceRepo;
         LoggerRepo = loggerRepo;
+        _connection = connection;
 
         if (QueueListenerArguments is null)
         {
@@ -74,19 +76,11 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
         using IServiceScope scope = servicesProvider.CreateScope();
         receiveService = scope.ServiceProvider.GetServices<IResponseReceive<TRequest?, TResponse>>().First(o => o.GetType() == QueueType);
         LoggerRepo.LogTrace($"factory: host:{rabbitConf.Value.HostName}; username:{rabbitConf.Value.UserName};");
-        factory = new()
-        {
-            ClientProvidedName = rabbitConf.Value.ClientProvidedName,
-            HostName = rabbitConf.Value.HostName,
-            UserName = rabbitConf.Value.UserName,
-            Password = rabbitConf.Value.Password
-        };
     }
 
     /// <inheritdoc/>
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _connection = await factory.CreateConnectionAsync(stoppingToken);
         _channel = await _connection.CreateChannelAsync(cancellationToken: stoppingToken);
 
         await _channel.QueueDeclareAsync(queue: QueueName, durable: true, exclusive: false, autoDelete: false, arguments: QueueListenerArguments!, cancellationToken: stoppingToken);
@@ -101,7 +95,7 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
         consumer.ReceivedAsync += async (ch, ea) =>
         {
             TRequest? sr;
-
+            BasicProperties properties = new() { CorrelationId = ea.BasicProperties.CorrelationId };
 #if DEBUG
             string content = Encoding.UTF8.GetString(ea.Body.ToArray()).Trim();
             try
@@ -125,14 +119,14 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
                 try
                 {
                     string jsonRawAnswer = JsonConvert.SerializeObject(answer, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings);
-                    await _channel.BasicPublishAsync(exchange: "", routingKey: ea.BasicProperties.ReplyTo, mandatory: true, body: Encoding.UTF8.GetBytes(jsonRawAnswer), cancellationToken: stoppingToken);
+                    await _channel.BasicPublishAsync(exchange: "", routingKey: ea.BasicProperties.ReplyTo, mandatory: true, basicProperties: properties, body: Encoding.UTF8.GetBytes(jsonRawAnswer), cancellationToken: stoppingToken);
                 }
                 catch (Exception ex)
                 {
                     LoggerRepo.LogError(ex, "bus answer error");
                     ResponseBaseModel _rbm = new();
                     _rbm.Messages.InjectException(ex);
-                    await _channel.BasicPublishAsync(exchange: "", routingKey: ea.BasicProperties.ReplyTo, mandatory: true, body: Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(_rbm)), cancellationToken: stoppingToken);
+                    await _channel.BasicPublishAsync(exchange: "", routingKey: ea.BasicProperties.ReplyTo, mandatory: true, basicProperties: properties, body: Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(_rbm)), cancellationToken: stoppingToken);
                 }
                 finally
                 {
@@ -191,7 +185,7 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
             {
                 try
                 {
-                    await _channel.BasicPublishAsync(exchange: "", routingKey: ea.BasicProperties.ReplyTo, mandatory: true, body: System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(answer), cancellationToken: stoppingToken);
+                    await _channel.BasicPublishAsync(exchange: "", routingKey: ea.BasicProperties.ReplyTo, mandatory: true, basicProperties: properties, body: System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(answer), cancellationToken: stoppingToken);
                 }
                 finally
                 {

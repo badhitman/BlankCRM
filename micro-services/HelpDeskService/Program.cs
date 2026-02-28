@@ -138,6 +138,24 @@ public class Program
 
         string appName = typeof(Program).Assembly.GetName().Name ?? "AssemblyName";
         #region MQ Transmission (remote methods call)
+        builder.Services.AddSingleton<RabbitMQ.Client.ConnectionFactory>(sp =>
+        {
+            IOptions<RabbitMQConfigModel> rabbitConf = sp.GetRequiredService<IOptions<RabbitMQConfigModel>>();
+
+            return new()
+            {
+                ClientProvidedName = rabbitConf.Value.ClientProvidedName,
+                HostName = rabbitConf.Value.HostName,
+                UserName = rabbitConf.Value.UserName,
+                Password = rabbitConf.Value.Password
+            };
+        });
+        builder.Services.AddSingleton(sp => {
+
+            RabbitMQ.Client.ConnectionFactory factory = sp.GetRequiredService<RabbitMQ.Client.ConnectionFactory>();
+            return factory.CreateConnectionAsync().Result;
+        });
+
         IMQStandardClientRPC rabbitImplement(IServiceProvider provider, object arg2)
         {
             return new RabbitClient(
