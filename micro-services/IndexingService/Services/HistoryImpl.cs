@@ -75,34 +75,11 @@ public class HistoryImpl(IOptions<MongoConfigModel> mongoConf) : IHistoryIndexin
         Task<List<HistoryReceive>> itemsTask = oQuery.Skip(req.PageNum * req.PageSize).Take(req.PageSize).ToListAsync(cancellationToken: token);
         await Task.WhenAll(totalTask, itemsTask);
 
-#if DEBUG
-        try
+        MongoDB.Bson.IO.JsonWriterSettings settings = new()
         {
-            TPaginationResponseStandardModel<TraceReceiverRecord> chk = new()
-            {
-                PageNum = req.PageNum,
-                PageSize = req.PageSize,
-                TotalRowsCount = totalTask.Result,
-                Response = [..itemsTask.Result.Select(x => new HistoryReceive()
-            {
-                UTCTimestampFinalReceive = x.UTCTimestampFinalReceive,
-                UTCTimestampInitReceive = x.UTCTimestampInitReceive,
-
-                ReceiverName = x.ReceiverName,
-                SenderActionUserId = x.SenderActionUserId,
-
-                PayloadBody = x.PayloadBody is null ? null : x.PayloadBody.ToBsonDocument().ToJson(),
-                ResponseBody = x.ResponseBody is null ? null : x.ResponseBody.ToBsonDocument().ToJson(),
-            })],
-                SortBy = req.SortBy,
-                SortingDirection = req.SortingDirection,
-            };
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.ToString());
-        }
-#endif
+            Indent = true, // Включает отступы для красивого форматирования.
+            OutputMode = MongoDB.Bson.IO.JsonOutputMode.RelaxedExtendedJson // Дополнительно: при желании можно использовать менее строгий формат JSON.
+        };
 
         return new()
         {
@@ -117,8 +94,8 @@ public class HistoryImpl(IOptions<MongoConfigModel> mongoConf) : IHistoryIndexin
                 ReceiverName = x.ReceiverName,
                 SenderActionUserId = x.SenderActionUserId,
 
-                PayloadBody = x.PayloadBody is null ? null : x.PayloadBody.ToBsonDocument().ToJson(),
-                ResponseBody = x.ResponseBody is null ? null : x.ResponseBody.ToBsonDocument().ToJson(),
+                PayloadBody = x.PayloadBody?.ToBsonDocument().ToJson(settings),
+                ResponseBody = x.ResponseBody?.ToBsonDocument().ToJson(settings),
             })],
             SortBy = req.SortBy,
             SortingDirection = req.SortingDirection,
