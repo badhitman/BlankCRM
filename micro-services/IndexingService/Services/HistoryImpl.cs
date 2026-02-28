@@ -91,7 +91,7 @@ public class HistoryImpl(IOptions<MongoConfigModel> mongoConf) : IHistoryIndexin
                 ReceiverName = x.ReceiverName,
                 SenderActionUserId = x.SenderActionUserId,
 
-                PayloadBody = x.PayloadBody is null ? null : JObject.Parse(x.PayloadBody.ToBsonDocument().ToJson()),
+                PayloadBody = x.PayloadBody is null ? null : x.PayloadBody.ToBsonDocument().ToJson(),
                 ResponseBody = x.ResponseBody is null ? null : x.ResponseBody.ToBsonDocument().ToJson(),
             })],
                 SortBy = req.SortBy,
@@ -117,7 +117,7 @@ public class HistoryImpl(IOptions<MongoConfigModel> mongoConf) : IHistoryIndexin
                 ReceiverName = x.ReceiverName,
                 SenderActionUserId = x.SenderActionUserId,
 
-                PayloadBody = x.PayloadBody is null ? null : JObject.Parse(x.PayloadBody.ToBsonDocument().ToJson()),
+                PayloadBody = x.PayloadBody is null ? null : x.PayloadBody.ToBsonDocument().ToJson(),
                 ResponseBody = x.ResponseBody is null ? null : x.ResponseBody.ToBsonDocument().ToJson(),
             })],
             SortBy = req.SortBy,
