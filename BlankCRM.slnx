@@ -13,6 +13,7 @@
     <Project Path="SharedLibStandard21/SharedLibStandard21.csproj" />
   </Folder>
   <Folder Name="/libs/bus/">
+    <File Path="RemoteCallLib/README.md" />
     <Project Path="RemoteCallLib/MQTTCallLib/MQTTCallLib.csproj" />
     <Project Path="RemoteCallLib/RabbitMQ/RabbitMQCallLib.csproj" />
   </Folder>
@@ -27,7 +28,7 @@
   </Folder>
   <Folder Name="/maui/">
     <Project Path="ToolsApp/ToolsMauiApp/ToolsMauiApp.csproj">
-      <Deploy Solution="Debug|*" />
+      <Deploy />
     </Project>
     <Project Path="ToolsApp/ToolsMauiAppMigration/ToolsMauiAppMigration.csproj" />
     <Project Path="ToolsApp/ToolsMauiLib/ToolsMauiLib.csproj" />
