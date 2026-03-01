@@ -59,7 +59,7 @@ public class RabbitClient : IMQStandardClientRPC
         traceRepo = _traceRepo;
         AppName = appName;
         loggerRepo = _loggerRepo;
-        RabbitConfigRepo = rabbitConf.Value;        
+        RabbitConfigRepo = rabbitConf.Value;
 
         if (ListenerQueueArguments is null)
         {
@@ -201,7 +201,7 @@ public class RabbitClient : IMQStandardClientRPC
             }
             return default;
         }
-        
+
         async Task MessageReceivedEvent(MqttApplicationMessageReceivedEventArgs e)
         {
             string content = Encoding.UTF8.GetString(e.ApplicationMessage.Payload).Trim();
@@ -241,7 +241,9 @@ public class RabbitClient : IMQStandardClientRPC
             {
 
             }
-            countGreetings.Add(res_io.Duration().Milliseconds);
+            
+            if (res_io is not null)
+                countGreetings.Add(res_io.Duration().Milliseconds);
 
             stopwatch.Stop();
             cts.Cancel();
