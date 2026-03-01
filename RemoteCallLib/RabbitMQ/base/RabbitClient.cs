@@ -2,18 +2,19 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
-using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System.Diagnostics.Metrics;
-using RabbitMQ.Client.Exceptions;
-using RabbitMQ.Client.Events;
-using System.Diagnostics;
-using System.Text.Json;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
-using System.Text;
+using RabbitMQ.Client.Events;
+using RabbitMQ.Client.Exceptions;
 using SharedLib;
+using System.Diagnostics;
+using System.Diagnostics.Metrics;
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace RemoteCallLib;
 
@@ -37,7 +38,7 @@ public class RabbitClient : IMQStandardClientRPC
     /// <summary>
     /// Параметры ответной очереди
     /// </summary>
-    static Dictionary<string, object>? ResponseQueueArguments;
+    static Dictionary<string, object?>? ResponseQueueArguments;
 
     /// <inheritdoc/>
     public static readonly JsonSerializerOptions SerializerOptions = new() { ReferenceHandler = ReferenceHandler.IgnoreCycles, WriteIndented = true };
@@ -94,7 +95,6 @@ public class RabbitClient : IMQStandardClientRPC
     /// <inheritdoc/>
     public async Task<T?> MqRemoteCallAsync<T>(string queue, object? request = null, bool waitResponse = true, CancellationToken tokenOuter = default)
     {
-        string consumerTag = string.Empty;
         queue = queue.Replace("\\", "/");
         // Custom ActivitySource for the application
         ActivitySource greeterActivitySource = new($"OTel.{AppName}");
@@ -202,7 +202,7 @@ public class RabbitClient : IMQStandardClientRPC
         {
             if (e.BasicProperties.CorrelationId != correlationId)
             {
-                await _channel.BasicCancelAsync(consumerTag, cancellationToken: CancellationToken.None);
+                await _channel.BasicCancelAsync(e.ConsumerTag, cancellationToken: CancellationToken.None);
                 return;
             }
 
@@ -216,7 +216,7 @@ public class RabbitClient : IMQStandardClientRPC
             if (!content.Contains(GlobalStaticConstantsRoutes.Routes.PASSWORD_CONTROLLER_NAME, StringComparison.OrdinalIgnoreCase))
                 activity?.SetBaggage(nameof(content), content);
             else
-                activity?.SetBaggage(nameof(content), $"[hide data]: `{GlobalStaticConstantsRoutes.Routes.PASSWORD_CONTROLLER_NAME}` - contains");
+                activity?.SetBaggage(nameof(content), $"[hide data]: `{Routes.PASSWORD_CONTROLLER_NAME}` - contains");
 
             try
             {
@@ -390,8 +390,8 @@ public class RabbitClient : IMQStandardClientRPC
             properties.ReplyTo = string.IsNullOrEmpty(_replyQueueName) ? null : _replyQueueName;
             try
             {
-                await _channel.QueueDeclareAsync(queue: _replyQueueName, durable: false, exclusive: false, autoDelete: false, arguments: ResponseQueueArguments!, cancellationToken: tokenOuter);
-                consumerTag = await _channel.BasicConsumeAsync(_replyQueueName, false, consumer, cancellationToken: tokenOuter);
+                await _channel.QueueDeclareAsync(queue: _replyQueueName, durable: false, exclusive: false, autoDelete: false, arguments: ResponseQueueArguments, cancellationToken: tokenOuter);
+                await _channel.BasicConsumeAsync(_replyQueueName, false, consumer, cancellationToken: tokenOuter);
             }
             catch (TaskCanceledException ex)
             {

@@ -36,6 +36,11 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
     readonly IConnection _connection;
     IChannel _channel = default!;
 
+    /// <summary>
+    /// Параметры ответной очереди
+    /// </summary>
+    static Dictionary<string, object?>? ResponseQueueArguments;
+    IOptions<RabbitMQConfigModel> rabbitConf;
     static Dictionary<string, object>? QueueListenerArguments;
 
     Type? _queueType;
@@ -55,9 +60,10 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
         IServiceProvider servicesProvider,
         IConnection connection,
         ITraceRabbitActionsServiceTransmission _traceRepo,
-        IOptions<RabbitMQConfigModel> rabbitConf,
+        IOptions<RabbitMQConfigModel> _rabbitConf,
         ILogger<RabbitMqListenerService<TQueue, TRequest, TResponse>> loggerRepo)
     {
+        rabbitConf = _rabbitConf;
         traceRepo = _traceRepo;
         LoggerRepo = loggerRepo;
         _connection = connection;
@@ -119,9 +125,23 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
 
             if (!string.IsNullOrWhiteSpace(ea.BasicProperties.ReplyTo))
             {
+                if (ResponseQueueArguments is null)
+                {
+                    ResponseQueueArguments = new() { { "x-queue-type", "classic" } };
+
+                    if (rabbitConf.Value.ResponseMessageTTL.HasValue && rabbitConf.Value.ResponseMessageTTL.Value > 0)
+                        ResponseQueueArguments.Add("x-message-ttl", rabbitConf.Value.ResponseMessageTTL.Value);
+
+                    if (rabbitConf.Value.ExpiresResponseQueue.HasValue && rabbitConf.Value.ExpiresResponseQueue.Value > 0)
+                        ResponseQueueArguments.Add("x-expires", rabbitConf.Value.ExpiresResponseQueue.Value);
+
+                    if (rabbitConf.Value.ResponseConsumerTimeout.HasValue && rabbitConf.Value.ResponseConsumerTimeout.Value > 0)
+                        ResponseQueueArguments.Add("x-consumer-timeout", rabbitConf.Value.ResponseConsumerTimeout.Value);
+                }
                 try
                 {
                     string jsonRawAnswer = JsonConvert.SerializeObject(answer, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings);
+                    await _channel.QueueDeclareAsync(queue: ea.BasicProperties.ReplyTo, durable: false, exclusive: false, autoDelete: false, arguments: ResponseQueueArguments, cancellationToken: stoppingToken);
                     await _channel.BasicPublishAsync(exchange: "", routingKey: ea.BasicProperties.ReplyTo, mandatory: true, basicProperties: properties, body: Encoding.UTF8.GetBytes(jsonRawAnswer), cancellationToken: stoppingToken);
                 }
                 catch (Exception ex)
