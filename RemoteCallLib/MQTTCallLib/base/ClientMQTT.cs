@@ -2,19 +2,19 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
+using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
-using MQTTnet;
+using System.Diagnostics.Metrics;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Diagnostics;
+using System.Text.Json;
+using System.Threading;
 using MQTTnet.Adapter;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Diagnostics.Metrics;
 using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Threading;
-using System.Threading.Tasks;
+using MQTTnet;
+using System;
 
 namespace SharedLib;
 
