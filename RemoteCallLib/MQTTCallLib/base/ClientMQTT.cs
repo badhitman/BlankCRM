@@ -2,18 +2,19 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
-using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
-using System.Diagnostics.Metrics;
-using System.Threading.Tasks;
-using System.Diagnostics;
-using System.Text.Json;
-using System.Threading;
-using Newtonsoft.Json;
-using System.Text;
 using MQTTnet;
+using MQTTnet.Adapter;
+using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Diagnostics.Metrics;
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SharedLib;
 
@@ -108,9 +109,13 @@ public class ClientMQTT(RealtimeMQTTClientConfigModel mqConf, ILogger<ClientMQTT
         {
             return default;
         }
+        catch (MqttConnectingFailedException)
+        {
+            return default;
+        }
         catch (Exception ex)
         {
-            loggerRepo.LogError(ex, $"mqtt connect `{queue}` error");
+            loggerRepo.LogError(ex, $"mqtt connect `{queue}` error.\n{JsonConvert.SerializeObject(MQConfigRepo)}");
             return default;
         }
 
