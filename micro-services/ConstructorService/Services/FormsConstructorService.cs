@@ -406,7 +406,7 @@ public partial class FormsConstructorService(
             directory_db = DirectoryConstructorModelDB.Build(req.Payload);
             await context_forms.AddAsync(directory_db, cancellationToken);
             await context_forms.SaveChangesAsync(cancellationToken: cancellationToken);
-            res.AddSuccess($"Справочник успешно создан #{res.Response}");
+            res.AddSuccess($"Справочник успешно создан #{directory_db.Id}");
         }
         else
         {

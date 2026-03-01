@@ -5,8 +5,8 @@
 
 @{
     IQueryable<string>? _q = CommerceConf.Value.NomenclaturesRubricsPrefixes?
-    .Where(x => !string.IsNullOrWhiteSpace(x))
-    .AsQueryable();
+        .Where(x => !string.IsNullOrWhiteSpace(x))
+        .AsQueryable();
 }
 
 @if (_q?.Any() != true)
