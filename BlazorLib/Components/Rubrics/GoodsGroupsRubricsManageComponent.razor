@@ -33,10 +33,10 @@ else
                     <RubricsManageComponent TEntity="RubricNodeBodyNomenclatureConfigComponent"
                                             ContextName="@($"{Routes.GOODS_CONTROLLER_NAME}-{Routes.CATEGORIES_CONTROLLER_NAME}")" />
                 </MudTabPanel>
-                <MudTabPanel Text="Поля">
+                <MudTabPanel Text="Поля (default)">
                     <RubricFieldsManageComponent ContextName="@GlobalStaticConstantsTransmission.GoodsCategoriesFieldsSetContextName()" />
                 </MudTabPanel>
-                <MudTabPanel Text="Списки">
+                <MudTabPanel Text="Списки (default)">
                     <RubricDictionariesManageComponent ContextName="@GlobalStaticConstantsTransmission.GoodsCategoriesPropertiesConfigurationContextName()" />
                 </MudTabPanel>
             </MudTabs>
@@ -50,10 +50,10 @@ else
                                                 PrefixName="@_prefixName"
                                                 ContextName="@($"{Routes.GOODS_CONTROLLER_NAME}-{Routes.CATEGORIES_CONTROLLER_NAME}")" />
                     </MudTabPanel>
-                    <MudTabPanel Text="Поля">
+                    <MudTabPanel Text="@($"Поля (*{_prefixName} default)")">
                         <RubricFieldsManageComponent ContextName="@GlobalStaticConstantsTransmission.GoodsCategoriesFieldsSetContextName(_prefixName)" />
                     </MudTabPanel>
-                    <MudTabPanel Text="Списки">
+                    <MudTabPanel Text="@($"Списки (*{_prefixName} default)")">
                         <RubricDictionariesManageComponent ContextName="@GlobalStaticConstantsTransmission.GoodsCategoriesPropertiesConfigurationContextName(_prefixName)" />
                     </MudTabPanel>
                 </MudTabs>

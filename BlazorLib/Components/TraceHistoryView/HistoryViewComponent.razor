@@ -41,8 +41,15 @@
         <MudTh>Ответ</MudTh>
     </HeaderContent>
     <RowTemplate>
+        @{
+            DateTime _dt = context.UTCTimestampInitReceive.GetCustomTime();
+        }
         <MudTd DataLabel="Дата">
-            @context.UTCTimestampInitReceive.GetCustomTime()
+            @_dt
+            <span class="hstack">
+                @_dt.ToString("d", GlobalStaticConstants.RU)
+                <sup>@_dt.ToString("t", GlobalStaticConstants.RU)</sup>
+            </span>
             <sup title="время на выполнение операции">@(context.UTCTimestampFinalReceive - context.UTCTimestampInitReceive)</sup>
         </MudTd>
         <MudTd DataLabel="Событие">

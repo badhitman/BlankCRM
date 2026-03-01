@@ -256,27 +256,33 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
 
     async void NewMessageWebChatHandler(NewMessageWebChatEventModel req)
     {
-        List<Task> tasks = [];
-        if (virtualizeComponent is not null)
-            tasks.Add(virtualizeComponent.RefreshDataAsync());
-
-        if (!ChatDialogOpen)
-            missingMessages++;
-        else
-            missingMessages = 0;
-
-        if (!ChatDialogOpen)
+        try
         {
-            tasks.Add(Task.Run(async () => await JsRuntime.InvokeVoidAsync("effects.JQuery", "pulsate", "missingMessagesBadge")));
-            tasks.Add(Task.Run(async () => await JsRuntime.InvokeVoidAsync("effects.Toast", "Новое сообщение в чате", req.TextMessage, "info", true, "#9EC600")));
+            List<Task> tasks = [];
+            if (virtualizeComponent is not null)
+                tasks.Add(virtualizeComponent.RefreshDataAsync());
+
+            if (!ChatDialogOpen)
+                missingMessages++;
+            else
+                missingMessages = 0;
+
+            if (!ChatDialogOpen)
+            {
+                tasks.Add(Task.Run(async () => await JsRuntime.InvokeVoidAsync("effects.JQuery", "pulsate", "missingMessagesBadge")));
+                tasks.Add(Task.Run(async () => await JsRuntime.InvokeVoidAsync("effects.Toast", "Новое сообщение в чате", req.TextMessage, "info", true, "#9EC600")));
+            }
+
+            if (!muteSound)
+                tasks.Add(Task.Run(async () => await JsRuntime.InvokeVoidAsync("methods.PlayAudio", "audioPlayerChatWrapperComponent")));
+
+            await Task.WhenAll(tasks);
         }
-
-        if (!muteSound)
-            tasks.Add(Task.Run(async () => await JsRuntime.InvokeVoidAsync("methods.PlayAudio", "audioPlayerChatWrapperComponent")));
-        muteSound = false;
-
-        await Task.WhenAll(tasks);
-        await InvokeAsync(StateHasChanged);
+        finally
+        {
+            muteSound = false;
+            await InvokeAsync(StateHasChanged);
+        }
     }
 
     /// <inheritdoc/>

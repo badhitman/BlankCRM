@@ -115,7 +115,7 @@
     </HeaderContent>
     <RowTemplate>
         @{
-            DateTime dc = context.RecordTime.GetCustomTime();
+            DateTime dc = context.RecordTime;//.GetCustomTime()
             string _classLevel = GetClassLevel(context.RecordLevel);
             if (context.Id == selectedRecord)
                 _classLevel += " border-double border-4 mud-border-primary pa-4";
