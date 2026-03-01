@@ -2,19 +2,19 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
+using static SharedLib.GlobalStaticConstantsRoutes;
+using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System.Diagnostics.Metrics;
+using RabbitMQ.Client.Events;
+using System.Diagnostics;
+using System.Text.Json;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
-using RabbitMQ.Client.Events;
-using RabbitMQ.Client.Exceptions;
-using SharedLib;
-using System.Diagnostics;
-using System.Diagnostics.Metrics;
 using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using static SharedLib.GlobalStaticConstantsRoutes;
+using SharedLib;
+using MQTTnet;
 
 namespace RemoteCallLib;
 
@@ -27,6 +27,8 @@ public class RabbitClient : IMQStandardClientRPC
     readonly ConnectionFactory factory;
     readonly ILogger<RabbitClient> loggerRepo;
     readonly ITraceRabbitActionsServiceTransmission traceRepo;
+    readonly MqttClientFactory mqttFactoryCLI = new();
+    readonly RealtimeMQTTClientConfigModel MQConfigRepo;
     IConnection? _connection;
     readonly string AppName;
 
@@ -50,12 +52,14 @@ public class RabbitClient : IMQStandardClientRPC
         IOptions<RabbitMQConfigModel> rabbitConf,
         ILogger<RabbitClient> _loggerRepo,
         ITraceRabbitActionsServiceTransmission _traceRepo,
+        RealtimeMQTTClientConfigModel _MQConfigRepo,
         string appName)
     {
+        MQConfigRepo = _MQConfigRepo;
         traceRepo = _traceRepo;
         AppName = appName;
         loggerRepo = _loggerRepo;
-        RabbitConfigRepo = rabbitConf.Value;
+        RabbitConfigRepo = rabbitConf.Value;        
 
         if (ListenerQueueArguments is null)
         {
@@ -128,7 +132,7 @@ public class RabbitClient : IMQStandardClientRPC
         activity?.SetTag(nameof(_replyQueueName), _replyQueueName);
 
         string msg;
-
+        IMqttClient mqttClient = mqttFactoryCLI.CreateMqttClient();
         IChannel? _channel = null;
 
         CancellationTokenSource cts = new();
@@ -197,21 +201,24 @@ public class RabbitClient : IMQStandardClientRPC
             }
             return default;
         }
-
-        async Task MessageReceivedEvent(object? sender, BasicDeliverEventArgs e)
+        
+        async Task MessageReceivedEvent(MqttApplicationMessageReceivedEventArgs e)
         {
-            if (e.BasicProperties.CorrelationId != correlationId)
+            string content = Encoding.UTF8.GetString(e.ApplicationMessage.Payload).Trim();
+            try
             {
-                await _channel.BasicCancelAsync(e.ConsumerTag, cancellationToken: CancellationToken.None);
-                return;
+                res_io = content.Equals("null", StringComparison.OrdinalIgnoreCase)
+                ? default
+                : JsonConvert.DeserializeObject<TResponseMQModel<T?>?>(content);
+                e.ReasonCode = MqttApplicationMessageReceivedReasonCode.Success;
+                e.ResponseReasonString = typeof(T).Name;
             }
-
-            string msg;
-            //consumer.ReceivedAsync -= MessageReceivedEvent;
-            string content = Encoding.UTF8.GetString(e.Body.ToArray());
-
-            //await _channel.QueuePurgeAsync(_replyQueueName, CancellationToken.None);
-            //await _channel.QueueDeleteAsync(_replyQueueName, false, false, true, cancellationToken: CancellationToken.None);
+            catch (Exception ex)
+            {
+                loggerRepo.LogError(ex, $"Ошибка выполнения удалённой команды: {_replyQueueName}");
+                e.ReasonCode = MqttApplicationMessageReceivedReasonCode.UnspecifiedError;
+                e.ResponseReasonString = ex.Message;
+            }
 
             if (!content.Contains(GlobalStaticConstantsRoutes.Routes.PASSWORD_CONTROLLER_NAME, StringComparison.OrdinalIgnoreCase))
                 activity?.SetBaggage(nameof(content), content);
@@ -234,150 +241,12 @@ public class RabbitClient : IMQStandardClientRPC
             {
 
             }
-
-            try
-            {
-                res_io = JsonConvert.DeserializeObject<TResponseMQModel<T?>>(content, GlobalStaticConstants.JsonSerializerSettings)
-                    ?? throw new Exception("parse error {0CBCCD44-63C8-4E93-8349-11A8BE63B235}");
-
-                if (!res_io.Success())
-                    loggerRepo.LogError(res_io.Message());
-
-                countGreetings.Add(res_io.Duration().Milliseconds);
-            }
-            catch (TaskCanceledException ex)
-            {
-                try
-                {
-                    if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
-                        await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
-                        {
-                            Sender = $"[{nameof(MessageReceivedEvent)}]-[{nameof(TaskCanceledException)}]",
-                            GuidSession = correlationId ?? "~",
-                            ReceiverName = nameof(TaskCanceledException),
-                            PayloadBody = ex,
-                            UTCTimestampInitReceive = DateTime.UtcNow,
-                        }, tokenOuter);
-                }
-                catch
-                {
-
-                }
-                return;
-            }
-            catch (OperationCanceledException ex)
-            {
-                try
-                {
-                    if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
-                        await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
-                        {
-                            Sender = $"[{nameof(MessageReceivedEvent)}]-[{nameof(OperationCanceledException)}]",
-                            GuidSession = correlationId ?? "~",
-                            ReceiverName = nameof(OperationCanceledException),
-                            PayloadBody = ex,
-                            UTCTimestampInitReceive = DateTime.UtcNow,
-                        }, tokenOuter);
-                }
-                catch
-                {
-
-                }
-                return;
-            }
-            catch (Exception ex)
-            {
-                msg = $"error deserialisation: {content}.\n\nerror ";
-                loggerRepo.LogError(ex, msg);
-                try
-                {
-                    if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
-                        await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
-                        {
-                            Sender = nameof(MessageReceivedEvent),
-                            GuidSession = correlationId ?? "~",
-                            ReceiverName = nameof(Exception),
-                            PayloadBody = res_io,
-                            UTCTimestampInitReceive = DateTime.UtcNow,
-                        }, tokenOuter);
-                }
-                catch
-                {
-
-                }
-                return;
-            }
-
-            try
-            {
-                await _channel.BasicAckAsync(e.DeliveryTag, false, tokenOuter);
-            }
-            catch (TaskCanceledException ex)
-            {
-                try
-                {
-                    if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
-                        await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
-                        {
-                            Sender = nameof(MessageReceivedEvent),
-                            GuidSession = correlationId ?? "~",
-                            ReceiverName = nameof(TaskCanceledException),
-                            PayloadBody = ex,
-                            UTCTimestampInitReceive = DateTime.UtcNow,
-                        }, tokenOuter);
-                }
-                catch
-                {
-
-                }
-                return;
-            }
-            catch (OperationCanceledException ex)
-            {
-                try
-                {
-                    if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
-                        await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
-                        {
-                            Sender = nameof(MessageReceivedEvent),
-                            GuidSession = correlationId ?? "~",
-                            ReceiverName = nameof(OperationCanceledException),
-                            PayloadBody = ex,
-                            UTCTimestampInitReceive = DateTime.UtcNow,
-                        }, tokenOuter);
-                }
-                catch
-                {
-
-                }
-                return;
-            }
-            catch (Exception ex)
-            {
-                msg = "exception basic ask. error {A62029D4-1A23-461D-99AD-349C6B7500A8}";
-                loggerRepo.LogError(ex, msg);
-                try
-                {
-                    if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
-                        await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
-                        {
-                            Sender = nameof(MessageReceivedEvent),
-                            GuidSession = correlationId ?? "~",
-                            ReceiverName = nameof(Exception),
-                            PayloadBody = ex,
-                            UTCTimestampInitReceive = DateTime.UtcNow,
-                        }, tokenOuter);
-                }
-                catch
-                {
-
-                }
-                return;
-            }
+            countGreetings.Add(res_io.Duration().Milliseconds);
 
             stopwatch.Stop();
             cts.Cancel();
             cts.Dispose();
+            await mqttClient.DisconnectAsync(cancellationToken: CancellationToken.None);
         }
 
         CancellationToken token = cts.Token;
@@ -385,110 +254,12 @@ public class RabbitClient : IMQStandardClientRPC
         BasicProperties properties = new() { AppId = AppName, CorrelationId = correlationId };
         if (waitResponse)
         {
-            consumer.ReceivedAsync += MessageReceivedEvent;
+            mqttClient.ApplicationMessageReceivedAsync += MessageReceivedEvent;
+
+            await mqttClient.ConnectAsync(GetMqttClientOptionsBuilder(new(GlobalStaticConstantsRoutes.Routes.MUTE_CONTROLLER_NAME, [1])), token);
+            await mqttClient.SubscribeAsync(_replyQueueName, cancellationToken: token);
 
             properties.ReplyTo = string.IsNullOrEmpty(_replyQueueName) ? null : _replyQueueName;
-            try
-            {
-                await _channel.QueueDeclareAsync(queue: _replyQueueName, durable: false, exclusive: false, autoDelete: false, arguments: ResponseQueueArguments, cancellationToken: tokenOuter);
-                await _channel.BasicConsumeAsync(_replyQueueName, false, consumer, cancellationToken: tokenOuter);
-            }
-            catch (TaskCanceledException ex)
-            {
-                _channel.Dispose();
-
-                try
-                {
-                    if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
-                        await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
-                        {
-                            Sender = nameof(MqRemoteCallAsync),
-                            GuidSession = correlationId ?? "~",
-                            ReceiverName = nameof(TaskCanceledException),
-                            PayloadBody = ex,
-                            UTCTimestampInitReceive = DateTime.UtcNow,
-                        }, tokenOuter);
-                }
-                catch
-                {
-
-                }
-
-                return default;
-            }
-            catch (OperationCanceledException ex)
-            {
-                _channel?.Dispose();
-
-                try
-                {
-                    if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
-                        await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
-                        {
-                            Sender = nameof(MqRemoteCallAsync),
-                            GuidSession = correlationId ?? "~",
-                            ReceiverName = nameof(OperationCanceledException),
-                            PayloadBody = ex,
-                            UTCTimestampInitReceive = DateTime.UtcNow,
-                        }, tokenOuter);
-                }
-                catch
-                {
-
-                }
-
-                return default;
-            }
-            catch (OperationInterruptedException ex)
-            {
-                msg = $"exception basic ask for [queue: {_replyQueueName}]. error 56AA49DF-E8F8-489F-A2AB-591511EE7B33";
-                loggerRepo.LogError(ex, msg);
-
-                _channel?.Dispose();
-
-                try
-                {
-                    if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
-                        await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
-                        {
-                            Sender = nameof(MqRemoteCallAsync),
-                            GuidSession = correlationId ?? "~",
-                            ReceiverName = nameof(OperationInterruptedException),
-                            PayloadBody = ex,
-                            UTCTimestampInitReceive = DateTime.UtcNow,
-                        }, tokenOuter);
-                }
-                catch
-                {
-
-                }
-
-                return default;
-            }
-            catch (Exception ex)
-            {
-                msg = "exception basic ask. error {C8C5AB97-CE68-4A5B-BB7D-FA71C6419A3E}";
-                loggerRepo.LogError(ex, msg);
-
-                _channel.Dispose();
-                try
-                {
-                    if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
-                        await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
-                        {
-                            Sender = nameof(MqRemoteCallAsync),
-                            GuidSession = correlationId ?? "~",
-                            ReceiverName = nameof(Exception),
-                            PayloadBody = ex,
-                            UTCTimestampInitReceive = DateTime.UtcNow,
-                        }, tokenOuter);
-                }
-                catch
-                {
-
-                }
-                return default;
-            }
         }
 
         try
@@ -498,6 +269,7 @@ public class RabbitClient : IMQStandardClientRPC
         catch (TaskCanceledException ex)
         {
             _channel.Dispose();
+            await mqttClient.DisconnectAsync(cancellationToken: CancellationToken.None);
             try
             {
                 if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
@@ -519,7 +291,7 @@ public class RabbitClient : IMQStandardClientRPC
         catch (OperationCanceledException ex)
         {
             _channel.Dispose();
-
+            await mqttClient.DisconnectAsync(cancellationToken: CancellationToken.None);
             try
             {
                 if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
@@ -542,7 +314,7 @@ public class RabbitClient : IMQStandardClientRPC
         catch (Exception ex)
         {
             loggerRepo.LogError(ex, "exception 52301C76-8A66-466B-9553-56D44711135A");
-
+            await mqttClient.DisconnectAsync(cancellationToken: CancellationToken.None);
             _channel.Dispose();
             try
             {
@@ -573,6 +345,7 @@ public class RabbitClient : IMQStandardClientRPC
         {
             loggerRepo.LogError(ex, $"Ошибка сериализации объекта [{request?.GetType().Name}]: {request}");
             _channel.Dispose();
+            await mqttClient.DisconnectAsync(cancellationToken: CancellationToken.None);
             return default;
         }
 
@@ -593,6 +366,7 @@ public class RabbitClient : IMQStandardClientRPC
         catch (TaskCanceledException ex)
         {
             _channel.Dispose();
+            await mqttClient.DisconnectAsync(cancellationToken: CancellationToken.None);
             try
             {
                 if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
@@ -614,6 +388,7 @@ public class RabbitClient : IMQStandardClientRPC
         catch (OperationCanceledException ex)
         {
             _channel.Dispose();
+            await mqttClient.DisconnectAsync(cancellationToken: CancellationToken.None);
             try
             {
                 if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
@@ -636,6 +411,7 @@ public class RabbitClient : IMQStandardClientRPC
         {
             loggerRepo.LogError(ex, "exception 4BDEC834-2CA1-42D6-9A69-9F3700F064C2");
             _channel.Dispose();
+            await mqttClient.DisconnectAsync(cancellationToken: CancellationToken.None);
             try
             {
                 if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
@@ -680,6 +456,7 @@ public class RabbitClient : IMQStandardClientRPC
                 }
 
                 cts.Cancel();
+                await mqttClient.DisconnectAsync(cancellationToken: CancellationToken.None);
                 //cts.Dispose();
             }, token);
             try
@@ -690,7 +467,7 @@ public class RabbitClient : IMQStandardClientRPC
             {
                 loggerRepo.LogDebug($"response for {_replyQueueName}");
                 _channel.Dispose();
-
+                await mqttClient.DisconnectAsync(cancellationToken: CancellationToken.None);
                 try
                 {
                     if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
@@ -712,6 +489,7 @@ public class RabbitClient : IMQStandardClientRPC
             {
                 loggerRepo.LogDebug($"response for {_replyQueueName}");
                 _channel.Dispose();
+                await mqttClient.DisconnectAsync(cancellationToken: CancellationToken.None);
                 try
                 {
                     if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
@@ -735,7 +513,7 @@ public class RabbitClient : IMQStandardClientRPC
                 loggerRepo.LogError(ex, msg);
                 stopwatch.Stop();
                 _channel.Dispose();
-
+                await mqttClient.DisconnectAsync(cancellationToken: CancellationToken.None);
                 try
                 {
                     if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
@@ -815,5 +593,20 @@ public class RabbitClient : IMQStandardClientRPC
         }
 
         return res_io.Response;
+
+        MqttClientOptions GetMqttClientOptionsBuilder(KeyValuePair<string, byte[]>? propertyValue)
+        {
+            MqttClientOptionsBuilder res = new MqttClientOptionsBuilder()
+                   .WithTcpServer(MQConfigRepo.Host, MQConfigRepo.Port)
+                   .WithProtocolVersion(MQTTnet.Formatter.MqttProtocolVersion.V500)
+                   .WithClientId($"{queue} [{typeof(T).Name}] {Guid.NewGuid()}")
+                   ;
+
+            if (propertyValue is not null)
+                res.WithUserProperty(propertyValue.Value.Key, propertyValue.Value.Value);
+
+            return res.Build();
+        }
     }
+
 }

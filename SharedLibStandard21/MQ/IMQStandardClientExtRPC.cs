@@ -17,4 +17,9 @@ public interface IMQStandardClientExtRPC
     /// Удалённый вызов метода через MQTT
     /// </summary>
     public Task<T?> MqRemoteCallAsync<T>(string queue, object? request = null, bool waitResponse = true, KeyValuePair<string, byte[]>? propertyValue = null, CancellationToken token = default) where T : class;
+
+    /// <summary>
+    /// Удалённый вызов метода через MQTT
+    /// </summary>
+    public Task MqRemoteSendAsync(string queue, string jsonRequest, bool waitResponse = true, KeyValuePair<string, byte[]>? propertyValue = null, CancellationToken token = default);
 }

@@ -39,7 +39,6 @@ public class ClientMQTT(RealtimeMQTTClientConfigModel mqConf, ILogger<ClientMQTT
     {
         queue = queue.Replace("\\", "/");
         using IMqttClient mqttClient = mqttFactory.CreateMqttClient();
-        //using IMqttClient? responseClient = waitResponse ? mqttFactory.CreateMqttClient() : null;
 
         string _sc = MQConfigRepo.ToString();
 
@@ -63,37 +62,6 @@ public class ClientMQTT(RealtimeMQTTClientConfigModel mqConf, ILogger<ClientMQTT
         }
 
         string response_topic = waitResponse ? $"{MQConfigRepo.QueueMqNamePrefixForResponse}{queue}_{Guid.NewGuid()}" : "";
-
-        Task ResponseClient_ApplicationMessageReceivedAsync(MqttApplicationMessageReceivedEventArgs eMsg)
-        {
-            mqttClient.ApplicationMessageReceivedAsync -= ResponseClient_ApplicationMessageReceivedAsync;
-            string msg;
-            string content = Encoding.UTF8.GetString(eMsg.ApplicationMessage.Payload);
-
-            try
-            {
-                res_io = JsonConvert.DeserializeObject<TResponseMQModel<T?>>(content, GlobalStaticConstants.JsonSerializerSettings)
-                    ?? throw new Exception("parse error {0CBCCD44-63C8-4E93-8349-11A8BE63B235}");
-
-                if (!res_io.Success())
-                    loggerRepo.LogError(res_io.Message());
-
-                countGreetings.Add(res_io.Duration().Milliseconds);
-            }
-            catch (Exception ex)
-            {
-                msg = $"error deserialisation: {content}.\n\nerror ";
-                loggerRepo.LogError(ex, msg);
-            }
-
-            stopwatch.Stop();
-            cts.Cancel();
-            cts.Dispose();
-
-            return Task.CompletedTask;
-        }
-        mqttClient?.ApplicationMessageReceivedAsync += ResponseClient_ApplicationMessageReceivedAsync;
-        loggerRepo.LogTrace($"Sending message into queue [{queue}]", request_payload_json);
 
         MqttClientConnectResult res;
 
@@ -131,6 +99,9 @@ public class ClientMQTT(RealtimeMQTTClientConfigModel mqConf, ILogger<ClientMQTT
             dq.UserProperties ??= [];
             dq.UserProperties.Add(new(propertyValue.Value.Key, propertyValue.Value.Value));
         }
+
+        mqttClient.ApplicationMessageReceivedAsync += ResponseClient_ApplicationMessageReceivedAsync;
+        loggerRepo.LogTrace($"Sending message into queue [{queue}]", request_payload_json);
 
         if (waitResponse)
         {
@@ -205,6 +176,83 @@ public class ClientMQTT(RealtimeMQTTClientConfigModel mqConf, ILogger<ClientMQTT
 
         await mqttClient.DisconnectAsync(dq, tokenOuter);
         return res_io.Response;
+
+        Task ResponseClient_ApplicationMessageReceivedAsync(MqttApplicationMessageReceivedEventArgs eMsg)
+        {
+            mqttClient.ApplicationMessageReceivedAsync -= ResponseClient_ApplicationMessageReceivedAsync;
+            string msg;
+            string content = Encoding.UTF8.GetString(eMsg.ApplicationMessage.Payload);
+
+            try
+            {
+                res_io = JsonConvert.DeserializeObject<TResponseMQModel<T?>>(content, GlobalStaticConstants.JsonSerializerSettings)
+                    ?? throw new Exception("parse error {0CBCCD44-63C8-4E93-8349-11A8BE63B235}");
+
+                if (!res_io.Success())
+                    loggerRepo.LogError(res_io.Message());
+
+                countGreetings.Add(res_io.Duration().Milliseconds);
+            }
+            catch (Exception ex)
+            {
+                msg = $"error deserialisation: {content}.\n\nerror ";
+                loggerRepo.LogError(ex, msg);
+            }
+
+            stopwatch.Stop();
+            cts.Cancel();
+            cts.Dispose();
+
+            return Task.CompletedTask;
+        }
+    }
+
+    /// <inheritdoc/>
+    public async Task MqRemoteSendAsync(string queue, string jsonRequest, bool waitResponse = true, KeyValuePair<string, byte[]>? propertyValue = null, CancellationToken token = default)
+    {
+        propertyValue ??= new(GlobalStaticConstantsRoutes.Routes.MUTE_CONTROLLER_NAME, [1]);
+
+        queue = queue.Replace("\\", "/");
+        using IMqttClient mqttClient = mqttFactory.CreateMqttClient();
+        string _sc = MQConfigRepo.ToString();
+        MqttClientConnectResult res;
+
+        try
+        {
+            res = await mqttClient!.ConnectAsync(GetMqttClientOptionsBuilder(queue, propertyValue), token);
+        }
+        catch (TaskCanceledException)
+        {
+            return;
+        }
+        catch (OperationCanceledException)
+        {
+            return;
+        }
+        catch (MqttConnectingFailedException)
+        {
+            return;
+        }
+        catch (Exception ex)
+        {
+            loggerRepo.LogError(ex, $"mqtt connect `{queue}` error.\n{JsonConvert.SerializeObject(MQConfigRepo)}");
+            return;
+        }
+
+        MqttApplicationMessage applicationMessage = new MqttApplicationMessageBuilder()
+            .WithTopic(queue)
+            .WithPayload(jsonRequest)
+            .Build();
+
+        MqttClientDisconnectOptions dq = new();
+        if (propertyValue is not null)
+        {
+            dq.UserProperties ??= [];
+            dq.UserProperties.Add(new(propertyValue.Value.Key, propertyValue.Value.Value));
+        }
+
+        await mqttClient.PublishAsync(applicationMessage, token);
+        await mqttClient.DisconnectAsync(dq, token);
     }
 
     MqttClientOptions GetMqttClientOptionsBuilder(string queue, KeyValuePair<string, byte[]>? propertyValue)

@@ -259,6 +259,7 @@ IMQStandardClientRPC rabbitImplement(IServiceProvider provider, object arg2)
         provider.GetRequiredService<IOptions<RabbitMQConfigModel>>(),
         provider.GetRequiredService<ILogger<RabbitClient>>(),
         provider.GetRequiredService<ITraceRabbitActionsServiceTransmission>(),
+        _confMQTT,
         appName);
 }
 

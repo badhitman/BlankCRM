@@ -145,6 +145,7 @@ public class Program
                 provider.GetRequiredService<IOptions<RabbitMQConfigModel>>(),
                 provider.GetRequiredService<ILogger<RabbitClient>>(),
                 provider.GetRequiredService<ITraceRabbitActionsServiceTransmission>(),
+                _confMQTT,
                 appName);
         }
 
