@@ -431,7 +431,7 @@ public partial class FormsConstructorService : IConstructorService
                 .FirstAsync(cancellationToken: token);
 
             project_use = new() { UserId = req.UserIdentityId, ProjectId = project.Id };
-            await context_forms.AddAsync(project_use, token);
+            await context_forms.ProjectsUse.AddAsync(project_use, token);
             await context_forms.SaveChangesAsync(token);
 
             res.Response = MainProjectViewModel.Build(project);

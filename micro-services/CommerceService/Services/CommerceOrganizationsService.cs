@@ -143,7 +143,7 @@ public partial class CommerceImplementService : ICommerceService
                 KladrCode = addressOfficeOrganization.KladrCode,
                 KladrTitle = addressOfficeOrganization.KladrTitle,
             };
-            await context.AddAsync(add, token);
+            await context.Offices.AddAsync(add, token);
             await context.SaveChangesAsync(token);
             res.AddSuccess("Адрес добавлен");
             res.Response = add.Id;
@@ -302,7 +302,7 @@ public partial class CommerceImplementService : ICommerceService
 
                 if (!string.IsNullOrWhiteSpace(req.SenderActionUserId) && req.SenderActionUserId != GlobalStaticConstantsRoles.Roles.System && sq is not null)
                 {
-                    await context.AddAsync(new UserOrganizationModelDB()
+                    await context.Units.AddAsync(new UserOrganizationModelDB()
                     {
                         LastUpdatedAtUTC = DateTime.UtcNow,
                         UserPersonIdentityId = req.SenderActionUserId,
@@ -336,9 +336,9 @@ public partial class CommerceImplementService : ICommerceService
             req.Payload.NewKPP = req.Payload.KPP;
             req.Payload.LastUpdatedAtUTC = DateTime.UtcNow;
 
-            await context.AddAsync(req.Payload, token);
+            await context.Organizations.AddAsync(req.Payload, token);
             await context.SaveChangesAsync(token);
-            await context.AddAsync(new UserOrganizationModelDB()
+            await context.Units.AddAsync(new UserOrganizationModelDB()
             {
                 LastUpdatedAtUTC = DateTime.UtcNow,
                 UserPersonIdentityId = req.SenderActionUserId,
@@ -429,7 +429,7 @@ public partial class CommerceImplementService : ICommerceService
                 return res;
             }
 
-            await context.AddAsync(req.Payload, token);
+            await context.Units.AddAsync(req.Payload, token);
             await context.SaveChangesAsync(token);
             res.AddSuccess("Пользователь добавлен");
             res.Response = req.Payload.Id;
@@ -557,7 +557,7 @@ public partial class CommerceImplementService : ICommerceService
         if (req.Payload.Id < 1)
         {
             req.Payload.Id = 0;
-            await context.AddAsync(req.Payload, token);
+            await context.BanksDetails.AddAsync(req.Payload, token);
             await context.SaveChangesAsync(token);
 
             res.Response = req.Payload.Id;

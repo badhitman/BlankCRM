@@ -73,7 +73,7 @@ public partial class CommerceImplementService(
                 ExternalDocumentId = req.Payload.ExternalDocumentId,
             };
 
-            await context.AddAsync(payment_db, token);
+            await context.PaymentsB2B.AddAsync(payment_db, token);
             await context.SaveChangesAsync(token);
 
             res.AddSuccess("Платёж добавлен");
@@ -153,7 +153,7 @@ public partial class CommerceImplementService(
         {
             req.Payload.CreatedAtUTC = DateTime.UtcNow;
             req.Payload.LastUpdatedAtUTC = DateTime.UtcNow;
-            await context.AddAsync(req, token);
+            await context.PricesRules.AddAsync(req.Payload, token);
             await context.SaveChangesAsync(token);
             res.AddSuccess("Создано новое правило ценообразования");
         }
@@ -321,7 +321,7 @@ public partial class CommerceImplementService(
                 Weight = req.Payload.Weight,
             };
 
-            await context.AddAsync(req.Payload, token);
+            await context.Offers.AddAsync(req.Payload, token);
             await context.SaveChangesAsync(token);
             res.AddSuccess("Предложение добавлено");
             res.Response = req.Payload.Id;
@@ -455,7 +455,7 @@ public partial class CommerceImplementService(
                 ? await context.Nomenclatures.MaxAsync(x => x.SortIndex, cancellationToken: token) + 1
                 : 0;
 
-            await context.AddAsync(nomenclature_db, token);
+            await context.Nomenclatures.AddAsync(nomenclature_db, token);
             await context.SaveChangesAsync(token);
             msg = $"Номенклатура {about} создана #{nomenclature_db.Id}";
             loggerRepo.LogInformation(msg);
@@ -879,7 +879,7 @@ public partial class CommerceImplementService(
             order.PrepareForSave();
             order.CreatedAtUTC = dtu;
 
-            await context.AddAsync(order, token);
+            await context.OrdersB2B.AddAsync(order, token);
             await context.SaveChangesAsync(token);
             res.Response = order.Id;
 
@@ -1100,7 +1100,7 @@ public partial class CommerceImplementService(
                 NomenclatureId = row.NomenclatureId,
                 WarehouseId = orderRowRecordDb.WarehouseId,
             };
-            await context.AddAsync(regOfferAv, token);
+            await context.OffersAvailability.AddAsync(regOfferAv, token);
         }
 
         OfferAvailabilityModelDB? regOfferAvStorno = null;
@@ -1117,7 +1117,7 @@ public partial class CommerceImplementService(
                     NomenclatureId = rowOfOrderDb.NomenclatureId,
                     WarehouseId = orderRowRecordDb.WarehouseId,
                 };
-                await context.AddAsync(regOfferAvStorno, token);
+                await context.OffersAvailability.AddAsync(regOfferAvStorno, token);
             }
         }
         res.DocumentNewVersion = Guid.NewGuid();
@@ -1157,7 +1157,7 @@ public partial class CommerceImplementService(
             }
 
             row.Version = Guid.NewGuid();
-            await context.AddAsync(row, token);
+            await context.RowsOrders.AddAsync(row, token);
             await context.SaveChangesAsync(token);
             res.AddSuccess("Товар добавлен к заказу");
             res.Response = row.Id;
@@ -1413,7 +1413,7 @@ public partial class CommerceImplementService(
                         Quantity = rowOfWarehouseDocumentElement.Row.Quantity,
                     };
                     registersOffersDb.Add(_newReg);
-                    await context.AddAsync(_newReg, token);
+                    await context.OffersAvailability.AddAsync(_newReg, token);
                 }
                 else
                     registersOffersDb[_i].Quantity += rowOfWarehouseDocumentElement.Row.Quantity;
