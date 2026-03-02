@@ -34,7 +34,7 @@ public static class RegisterMqListenerExtension
             .RegisterListenerRabbitMQ<ArticlesReadReceive, int[], TResponseModel<ArticleModelDB[]>>()
             .RegisterListenerRabbitMQ<ArticleCreateOrUpdateReceive, ArticleModelDB, TResponseModel<int>>()
             .RegisterListenerRabbitMQ<IssuesReadReceive, TAuthRequestStandardModel<IssuesReadRequestModel>, TResponseModel<IssueHelpDeskModelDB[]>>()
-            .RegisterListenerRabbitMQ<SubscribeUpdateReceive, TAuthRequestStandardModel<SubscribeUpdateRequestModel>, TResponseModel<bool?>>()
+            .RegisterListenerRabbitMQ<SubscribeUpdateReceive, TAuthRequestStandardModel<SubscribeUpdateRequestModel>, TResponseModel<bool>>()
             .RegisterListenerRabbitMQ<SubscribesListReceive, TAuthRequestStandardModel<int>, TResponseModel<List<SubscriberIssueHelpDeskModelDB>>>()
             .RegisterListenerRabbitMQ<ExecuterUpdateReceive, TAuthRequestStandardModel<UserIssueModel>, TResponseModel<bool>>()
             .RegisterListenerRabbitMQ<MessagesListReceive, TAuthRequestStandardModel<int>, TResponseModel<IssueMessageHelpDeskModelDB[]>>()

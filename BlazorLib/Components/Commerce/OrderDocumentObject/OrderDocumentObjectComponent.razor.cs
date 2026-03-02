@@ -133,7 +133,7 @@ public partial class OrderDocumentObjectComponent : BlazorBusyComponentBaseAuthM
         };
         await SetBusyAsync();
 
-        TResponseModel<bool> res = await HelpDeskRepo.StatusChangeAsync(req);
+        TResponseModel<bool> res = await HelpDeskRepo.IssueStatusChangeAsync(req);
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         if (res.Response && res.Success())
             NavRepo.ReloadPage();

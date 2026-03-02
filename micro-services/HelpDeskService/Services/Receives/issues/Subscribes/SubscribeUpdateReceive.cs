@@ -11,17 +11,17 @@ namespace Transmission.Receives.helpdesk;
 /// Subscribe update - of context user
 /// </summary>
 public class SubscribeUpdateReceive(IHelpDeskService hdRepo, IHistoryIndexing indexingRepo)
-    : IResponseReceive<TAuthRequestStandardModel<SubscribeUpdateRequestModel>?, TResponseModel<bool?>?>
+    : IResponseReceive<TAuthRequestStandardModel<SubscribeUpdateRequestModel>?, TResponseModel<bool>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.SubscribeIssueUpdateHelpDeskReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<bool?>?> ResponseHandleActionAsync(TAuthRequestStandardModel<SubscribeUpdateRequestModel>? req, CancellationToken token = default)
+    public async Task<TResponseModel<bool>?> ResponseHandleActionAsync(TAuthRequestStandardModel<SubscribeUpdateRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req?.Payload);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.SenderActionUserId, req.Payload);
-        TResponseModel<bool?> res = await hdRepo.SubscribeUpdateAsync(req, token);
+        TResponseModel<bool> res = await hdRepo.SubscribeUpdateAsync(req, token);
         await indexingRepo.SaveHistoryForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }

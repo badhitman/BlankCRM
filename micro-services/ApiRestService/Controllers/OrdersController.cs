@@ -172,7 +172,7 @@ public class OrdersController(ICommerceTransmission commRepo, IHelpDeskTransmiss
                 Step = Step,
             }
         };
-        TResponseModel<bool> update_final = await hdRepo.StatusChangeAsync(status_change_req);
+        TResponseModel<bool> update_final = await hdRepo.IssueStatusChangeAsync(status_change_req);
         response.AddRangeMessages(update_final.Messages);
         return response;
     }

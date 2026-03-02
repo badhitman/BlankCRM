@@ -48,7 +48,7 @@ public partial class StatusIssueComponent : IssueWrapBaseModel
         await SetBusyAsync();
 
         TResponseModel<bool> res = await HelpDeskRepo
-            .StatusChangeAsync(new()
+            .IssueStatusChangeAsync(new()
             {
                 SenderActionUserId = CurrentUserSession.UserId,
                 Payload = new()

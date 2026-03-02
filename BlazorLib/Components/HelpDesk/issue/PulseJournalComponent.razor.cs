@@ -26,7 +26,7 @@ public partial class PulseJournalComponent : IssueWrapBaseModel
             return new TableData<PulseViewModel>() { TotalItems = 0, Items = [] };
 
         await SetBusyAsync(token: token);
-        TResponseModel<TPaginationResponseStandardModel<PulseViewModel>> tp = await HelpDeskRepo.PulseSelectJournalAsync(new()
+        TResponseModel<TPaginationResponseStandardModel<PulseViewModel>> tp = await HelpDeskRepo.PulseJournalSelectAsync(new()
         {
             Payload = new TPaginationRequestStandardModel<UserIssueModel>()
             {

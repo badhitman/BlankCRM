@@ -58,7 +58,7 @@ public class HelpDeskTransmissionRabbit([FromKeyedServices(nameof(RabbitClient))
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<bool>>(GlobalStaticConstantsTransmission.TransmissionQueues.ExecuterIssueUpdateHelpDeskReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<bool>> StatusChangeAsync(TAuthRequestStandardModel<StatusChangeRequestModel> req, CancellationToken token = default)
+    public async Task<TResponseModel<bool>> IssueStatusChangeAsync(TAuthRequestStandardModel<StatusChangeRequestModel> req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<bool>>(GlobalStaticConstantsTransmission.TransmissionQueues.StatusChangeIssueHelpDeskReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
@@ -66,7 +66,7 @@ public class HelpDeskTransmissionRabbit([FromKeyedServices(nameof(RabbitClient))
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<bool>>(GlobalStaticConstantsTransmission.TransmissionQueues.PulseIssuePushHelpDeskReceive, req, waitResponse, token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<TPaginationResponseStandardModel<PulseViewModel>>> PulseSelectJournalAsync(TAuthRequestStandardModel<TPaginationRequestStandardModel<UserIssueModel>> req, CancellationToken token = default)
+    public async Task<TResponseModel<TPaginationResponseStandardModel<PulseViewModel>>> PulseJournalSelectAsync(TAuthRequestStandardModel<TPaginationRequestStandardModel<UserIssueModel>> req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<TPaginationResponseStandardModel<PulseViewModel>>>(GlobalStaticConstantsTransmission.TransmissionQueues.PulseJournalHelpDeskSelectReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
