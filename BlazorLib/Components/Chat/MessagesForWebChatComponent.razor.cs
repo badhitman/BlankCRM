@@ -38,7 +38,6 @@ public partial class MessagesForWebChatComponent : BlazorBusyComponentUsersCache
     public required DialogWebChatModelDB DialogWebChat { get; set; }
 
 
-    MessageWebChatModelDB? _selectedMessage;
     private string _inputFileId = Guid.NewGuid().ToString();
     string? _textSendMessage;
     MudTable<MessageWebChatModelDB>? tableRef;
@@ -59,22 +58,6 @@ public partial class MessagesForWebChatComponent : BlazorBusyComponentUsersCache
         foreach (IBrowserFile file in e.GetMultipleFiles())
         {
             loadedFiles.Add(file);
-        }
-    }
-
-    void BanUser()
-    {
-        if (_selectedMessage is not null)
-        {
-            SnackBarRepo.Add($"`` has been banned!", Severity.Error);
-        }
-    }
-
-    void ShowHiddenInfo()
-    {
-        if (_selectedMessage is not null)
-        {
-            SnackBarRepo.Add($"Hidden information for ``", Severity.Info);
         }
     }
 
