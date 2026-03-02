@@ -39,7 +39,9 @@ else
             @foreach (EntryStandardModel e in EntriesElements)
             {
                 <CascadingValue Value="e">
-                    <ElementDirectoryFieldSetComponent SelectedDirectoryId="SelectedDirectoryId" />
+                    <ElementDirectoryFieldSetComponent SelectedDirectoryId="SelectedDirectoryId"
+                                                       ReloadHandler="ReloadHandler"
+                                                       CanEdit="CanEdit" />
                 </CascadingValue>
             }
         </CascadingValue>

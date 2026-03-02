@@ -32,21 +32,25 @@ public partial class ElementDirectoryFieldSetComponent : BlazorBusyComponentBase
     [CascadingParameter, EditorRequired]
     public required ElementsOfDirectoryListViewComponent ParentDirectoryElementsList { get; set; }
 
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required bool CanEdit { get; set; }
+
     /// <summary>
-    /// Родительская страница форм
+    /// Событие изменения выбранного справочника/списка
     /// </summary>
-    [CascadingParameter, EditorRequired]
-    public required ConstructorMainManageComponent ParentFormsPage { get; set; }
+    [Parameter, EditorRequired]
+    public required Action ReloadHandler { get; set; }
 
 
-    EntryDescriptionModel? ElementObjectOrign;
+    EntryDescriptionModel? ElementObjectOrigin;
     EntryDescriptionModel? ElementObjectEdit;
 
     string images_upload_url = default!;
     Dictionary<string, object> editorConf = default!;
 
     /// <inheritdoc/>
-    protected bool IsEdited => ElementObjectOrign is not null && !ElementObjectOrign.Equals(ElementObjectEdit);
+    protected bool IsEdited => ElementObjectOrigin is not null && !ElementObjectOrigin.Equals(ElementObjectEdit);
 
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
@@ -74,17 +78,14 @@ public partial class ElementDirectoryFieldSetComponent : BlazorBusyComponentBase
         if (!rest.Success())
             return;
 
-        ElementObjectOrign = GlobalTools.CreateDeepCopy(ElementObjectEdit);
+        ElementObjectOrigin = GlobalTools.CreateDeepCopy(ElementObjectEdit);
 
         IsEdit = false;
         await ParentDirectoryElementsList.ReloadElements(null, true);
         StateHasChanged();
 
         if (!rest.Success())
-        {
-            await ParentFormsPage.ReadCurrentMainProject();
-            ParentFormsPage.StateHasChangedCall();
-        }
+            ReloadHandler();
     }
 
 
@@ -93,7 +94,7 @@ public partial class ElementDirectoryFieldSetComponent : BlazorBusyComponentBase
     {
         if (IsEdit)
         {
-            ElementObjectOrign = null;
+            ElementObjectOrigin = null;
             ElementObjectEdit = null;
             IsEdit = false;
             return;
@@ -102,15 +103,15 @@ public partial class ElementDirectoryFieldSetComponent : BlazorBusyComponentBase
         await SetBusyAsync();
 
         TResponseModel<EntryDescriptionModel> res = await ConstructorRepo.GetElementOfDirectoryAsync(ElementObject.Id);
-        ElementObjectOrign = res.Response ?? throw new Exception();
-        ElementObjectEdit = GlobalTools.CreateDeepCopy(ElementObjectOrign);
+        ElementObjectOrigin = res.Response ?? throw new Exception();
+        ElementObjectEdit = GlobalTools.CreateDeepCopy(ElementObjectOrigin);
         IsEdit = true;
         await SetBusyAsync(false);
     }
 
     void RsetEdit()
     {
-        ElementObjectEdit = GlobalTools.CreateDeepCopy(ElementObjectOrign);
+        ElementObjectEdit = GlobalTools.CreateDeepCopy(ElementObjectOrigin);
     }
 
     /// <summary>
@@ -160,8 +161,7 @@ public partial class ElementDirectoryFieldSetComponent : BlazorBusyComponentBase
         if (!rest.Success())
         {
             SnackBarRepo.ShowMessagesResponse(rest.Messages);
-            await ParentFormsPage.ReadCurrentMainProject();
-            ParentFormsPage.StateHasChangedCall();
+            ReloadHandler();
         }
         await ParentDirectoryElementsList.ReloadElements(null, true);
     }
@@ -182,8 +182,7 @@ public partial class ElementDirectoryFieldSetComponent : BlazorBusyComponentBase
         if (!rest.Success())
         {
             SnackBarRepo.ShowMessagesResponse(rest.Messages);
-            await ParentFormsPage.ReadCurrentMainProject();
-            ParentFormsPage.StateHasChangedCall();
+            ReloadHandler();
         }
         await ParentDirectoryElementsList.ReloadElements(null, true);
         await SetBusyAsync();
@@ -209,8 +208,7 @@ public partial class ElementDirectoryFieldSetComponent : BlazorBusyComponentBase
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
-            await ParentFormsPage.ReadCurrentMainProject();
-            ParentFormsPage.StateHasChangedCall();
+            ReloadHandler();
         }
         await ConstructorRepo.CheckAndNormalizeSortIndexForElementsOfDirectoryAsync(SelectedDirectoryId);
         await ParentDirectoryElementsList.ReloadElements(null, true);

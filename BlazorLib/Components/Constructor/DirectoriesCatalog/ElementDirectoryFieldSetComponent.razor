@@ -7,7 +7,7 @@
             <div class="alert alert-@(IsEdited ? "success" : "primary")" role="alert">
                 <div class="vstack gap-3">
                     <div class="input-group input-group-sm">
-                        @if (ElementObjectOrign is not null && ElementObjectEdit is not null && !ElementObjectOrign.Name.Equals(ElementObjectEdit.Name))
+                        @if (ElementObjectOrigin is not null && ElementObjectEdit is not null && !ElementObjectOrigin.Name.Equals(ElementObjectEdit.Name))
                         {
                             <span class="input-group-text" id="inputGroup-sizing-sm">New element name</span>
                         }
@@ -31,7 +31,7 @@
                 <code title="Name">@ElementObject.Name</code>
             </div>
 
-            @if (ParentFormsPage.CanEditProject)
+            @if (CanEdit)
             {
                 <span @onclick="MoveUp" class="link-@(IsMostUp ? "secondary" : "info") bi bi-arrow-up-square@(IsMostUp ? "" : "-fill") me-2" title="Up"></span>
                 <span @onclick="MoveDown" class="link-@(IsMostDown ? "secondary" : "info") bi bi-arrow-down-square@(IsMostDown ? "" : "-fill") me-3" title="Down"></span>

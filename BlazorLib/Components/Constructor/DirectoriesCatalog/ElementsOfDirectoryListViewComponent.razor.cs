@@ -20,6 +20,16 @@ public partial class ElementsOfDirectoryListViewComponent : BlazorBusyComponentB
     /// <inheritdoc/>
     [Parameter, EditorRequired]
     public required int SelectedDirectoryId { get; set; }
+    
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required bool CanEdit { get; set; }
+
+    /// <summary>
+    /// Событие изменения выбранного справочника/списка
+    /// </summary>
+    [Parameter, EditorRequired]
+    public required Action ReloadHandler { get; set; }
 
 
     /// <inheritdoc/>

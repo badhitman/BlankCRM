@@ -18,7 +18,7 @@ public partial class DirectoryViewComponent : BlazorBusyComponentBaseAuthModel
 
     /// <inheritdoc/>
     [EditorRequired]
-    public required bool CanEdit { get; set; }
+    public required bool CanEdit { get; set; } = true;
 
     /// <inheritdoc/>
     [Parameter, EditorRequired]

@@ -7,7 +7,6 @@
                 <DirectoryNavComponent @ref="directoryNav_ref"
                                        SelectedDirectoryChangeHandler="SelectedDirectoryChangeAction"
                                        CanEdit="CanEdit"
-                                       ContextName="ContextName"
                                        ProjectId="ProjectId"
                                        ReloadHandler="ReloadHandler" />
             </div>
@@ -43,6 +42,8 @@
                 </div>
             </nav>
         }
-        <ElementsOfDirectoryListViewComponent @ref="elementsListOfDirectoryView_ref" SelectedDirectoryId="@(directoryNav_ref?.SelectedDirectoryId ?? -1)" />
+        <ElementsOfDirectoryListViewComponent @ref="elementsListOfDirectoryView_ref" SelectedDirectoryId="@(directoryNav_ref?.SelectedDirectoryId ?? -1)"
+                                              ReloadHandler="ReloadHandler"
+                                              CanEdit="CanEdit" />
     </div>
 </div>
