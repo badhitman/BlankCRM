@@ -90,8 +90,7 @@
                 <MudChat ChatPosition="@position">
                     <MudAvatar>@(position == ChatBubblePosition.Start ? "" : "US")</MudAvatar>
                     <MudChatHeader Name="@(position == ChatBubblePosition.Start ? "00" : (UsersCache.FirstOrDefault(x => x.UserId == context.SenderUserIdentityId)?.ToString() ?? context.SenderUserIdentityId))" Time="@context.CreatedAtUTC.GetCustomTime().ToString()" />
-                    <MudChatBubble OnClick="@((args) => ClickMessage(args, context))"
-                                   OnContextClick="@((args) => RightClickMessage(args, context))">
+                    <MudChatBubble>
                         @context.Text
                     </MudChatBubble>
                     @if (context.AttachesFiles is not null && context.AttachesFiles.Count != 0)
@@ -121,14 +120,6 @@
         <MudTablePager />
     </PagerContent>
 </MudTable>
-<MudMenu PositionAtCursor @ref="_contextMenu" id="_contextMenu">
-    <MudMenuItem Icon="@Icons.Material.Filled.Block" OnClick="@BanUser">
-        Ban
-    </MudMenuItem>
-    <MudMenuItem Icon="@Icons.Material.Filled.Info" OnClick="@ShowHiddenInfo">
-        View Details for
-    </MudMenuItem>
-</MudMenu>
 <audio id="audioPlayerMessagesForWebChatComponent">
     <source src="/sounds/siri-answering.mp3" type="audio/mpeg" />
     Your browser does not support the audio tag.

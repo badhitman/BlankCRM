@@ -41,7 +41,6 @@ public partial class MessagesForWebChatComponent : BlazorBusyComponentUsersCache
     MessageWebChatModelDB? _selectedMessage;
     private string _inputFileId = Guid.NewGuid().ToString();
     string? _textSendMessage;
-    MudMenu? _contextMenu;
     MudTable<MessageWebChatModelDB>? tableRef;
 
     /// <inheritdoc/>
@@ -77,20 +76,6 @@ public partial class MessagesForWebChatComponent : BlazorBusyComponentUsersCache
         {
             SnackBarRepo.Add($"Hidden information for ``", Severity.Info);
         }
-    }
-
-    async Task RightClickMessage(MouseEventArgs args, MessageWebChatModelDB message)
-    {
-        _selectedMessage = message;
-        if (_contextMenu != null)
-            await _contextMenu.OpenMenuAsync(args);
-    }
-
-    async Task ClickMessage(MouseEventArgs args, MessageWebChatModelDB message)
-    {
-        _selectedMessage = message;
-        SnackBarRepo.Add("Message clicked: " + message.Text, Severity.Info);
-        await Task.CompletedTask;
     }
 
     async Task SendMessage()

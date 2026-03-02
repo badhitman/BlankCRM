@@ -20,11 +20,13 @@ public partial class FormsViewComponent : BlazorBusyComponentBaseModel
     IConstructorTransmission ConstructorRepo { get; set; } = default!;
 
 
-    /// <summary>
-    /// Родительская страница форм
-    /// </summary>
-    [CascadingParameter, EditorRequired]
-    public required ConstructorMainManageComponent ParentFormsPage { get; set; }
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required bool CanEdit { get; set; }
+
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required MainProjectViewModel MainProject { get; set; }
 
 
     /// <summary>
@@ -63,7 +65,6 @@ public partial class FormsViewComponent : BlazorBusyComponentBaseModel
         DialogParameters<EditFormDialogComponent> parameters = new()
         {
             { x => x.Form, rest.Response },
-            { x => x.ParentFormsPage, ParentFormsPage }
         };
         DialogOptions options = new() { MaxWidth = MaxWidth.ExtraExtraLarge, FullWidth = true, CloseOnEscapeKey = true };
         IDialogReference result = await DialogServiceRepo.ShowAsync<EditFormDialogComponent>($"Редактирование формы #{rest.Response?.Id}", parameters, options);
@@ -77,12 +78,17 @@ public partial class FormsViewComponent : BlazorBusyComponentBaseModel
     TableState? _table_state;
     async Task RestJson()
     {
-        if (ParentFormsPage.MainProject is null)
+        if (MainProject is null || MainProject.Id < 1)
             throw new Exception("Проект не выбран.");
 
         await SetBusyAsync();
 
-        rest_data = await ConstructorRepo.SelectFormsAsync(new() { Request = SimplePaginationRequestStandardModel.Build(searchString, _table_state?.PageSize ?? 10, _table_state?.Page ?? 0), ProjectId = ParentFormsPage.MainProject.Id });
+        rest_data = await ConstructorRepo.SelectFormsAsync(new()
+        {
+            Request = SimplePaginationRequestStandardModel.Build(searchString, _table_state?.PageSize ?? 10, _table_state?.Page ?? 0),
+            ProjectId = MainProject.Id
+        });
+
         await SetBusyAsync(false);
     }
 
@@ -91,7 +97,7 @@ public partial class FormsViewComponent : BlazorBusyComponentBaseModel
     /// </summary>
     protected async Task OpenDialogCreateForm()
     {
-        if (ParentFormsPage.MainProject is null)
+        if (MainProject is null || MainProject.Id < 1)
         {
             SnackBarRepo.Error("Не выбран основной/текущий проект");
             return;
@@ -99,8 +105,7 @@ public partial class FormsViewComponent : BlazorBusyComponentBaseModel
 
         DialogParameters<EditFormDialogComponent> parameters = new()
         {
-            { x => x.Form, FormConstructorModelDB.BuildEmpty(ParentFormsPage.MainProject.Id) },
-            { x => x.ParentFormsPage, ParentFormsPage }
+            { x => x.Form, FormConstructorModelDB.BuildEmpty(MainProject.Id) }
         };
         DialogOptions options = new() { MaxWidth = MaxWidth.ExtraExtraLarge, FullWidth = true, CloseOnEscapeKey = true };
         IDialogReference result = await DialogServiceRepo.ShowAsync<EditFormDialogComponent>("Создание новой формы", parameters, options);

@@ -25,11 +25,13 @@ public partial class EditFormDialogComponent : BlazorBusyComponentBaseAuthModel
     [Parameter, EditorRequired]
     public FormConstructorModelDB Form { get; set; } = default!;
 
-    /// <summary>
-    /// Родительская страница форм
-    /// </summary>
+    /// <inheritdoc/>
     [Parameter, EditorRequired]
-    public required ConstructorMainManageComponent ParentFormsPage { get; set; }
+    public required bool CanEdit { get; set; }
+
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required Action ReloadHandler { get; set; }
 
 
     TabSetComponent tab_set_ref = default!;
@@ -67,8 +69,7 @@ public partial class EditFormDialogComponent : BlazorBusyComponentBaseAuthModel
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
-            await ParentFormsPage.ReadCurrentMainProject();
-            ParentFormsPage.StateHasChangedCall();
+            ReloadHandler();
             await SetBusyAsync(false);
             return;
         }

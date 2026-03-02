@@ -19,14 +19,23 @@ public partial class FieldsFormViewComponent : BlazorBusyComponentBaseAuthModel
 
 
     /// <inheritdoc/>
-    [CascadingParameter, EditorRequired]
-    public required FormConstructorModelDB Form { get; set; }
+    [Parameter, EditorRequired]
+    public required bool CanEdit { get; set; }
 
     /// <summary>
     /// Родительская страница форм
+    /// Событие изменения выбранного справочника/списка
     /// </summary>
     [CascadingParameter, EditorRequired]
     public required ConstructorMainManageComponent ParentFormsPage { get; set; }
+
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required Action ReloadHandler { get; set; }
+
+    /// <inheritdoc/>
+    [CascadingParameter, EditorRequired]
+    public required FormConstructorModelDB Form { get; set; }
 
 
     FieldFormBaseLowConstructorModel? _field_master;
