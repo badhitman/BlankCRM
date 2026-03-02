@@ -7,13 +7,8 @@ namespace SharedLib;
 /// <summary>
 /// IHelpDeskTransmission
 /// </summary>
-public interface IHelpDeskTransmission : IArticlesService
+public interface IHelpDeskTransmission : IArticlesService, IHelpDeskServiceBase
 {
-    /// <summary>
-    /// Входящее сообщение от клиента в TelegramBot
-    /// </summary>
-    public Task<ResponseBaseModel> TelegramMessageIncomingAsync(TelegramIncomingMessageModel req, CancellationToken token = default);
-
     #region issue
     /// <summary>
     /// Получить обращения для пользователя
@@ -64,22 +59,5 @@ public interface IHelpDeskTransmission : IArticlesService
     /// Получить обращения
     /// </summary>
     public Task<TPaginationResponseStandardModel<IssueHelpDeskModel>> ConsoleIssuesSelectAsync(TPaginationRequestStandardModel<ConsoleIssuesRequestModel> req, CancellationToken token = default);
-    #endregion
-
-    #region message
-    /// <summary>
-    /// Сообщение из обращения помечается как ответ (либо этот признак снимается: в зависимости от запроса)
-    /// </summary>
-    public Task<TResponseModel<bool>> MessageVoteAsync(TAuthRequestStandardModel<VoteIssueRequestModel> req, CancellationToken token = default);
-
-    /// <summary>
-    /// Добавить сообщение к обращению
-    /// </summary>
-    public Task<TResponseModel<int>> MessageCreateOrUpdateAsync(TAuthRequestStandardModel<IssueMessageHelpDeskBaseModel> req, CancellationToken token = default);
-
-    /// <summary>
-    /// Сообщения из обращения
-    /// </summary>
-    public Task<TResponseModel<IssueMessageHelpDeskModelDB[]>> MessagesListAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default);
-    #endregion
+    #endregion    
 }

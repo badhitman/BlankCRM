@@ -81,11 +81,11 @@ public partial class HelpDeskImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int?>> MessageUpdateOrCreateAsync(TAuthRequestStandardModel<IssueMessageHelpDeskBaseModel> req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> MessageCreateOrUpdateAsync(TAuthRequestStandardModel<IssueMessageHelpDeskBaseModel> req, CancellationToken token = default)
     {
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
 
-        TResponseModel<int?> res = new();
+        TResponseModel<int> res = new();
 
         if (req.Payload is null)
         {
@@ -387,9 +387,9 @@ public partial class HelpDeskImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<bool?>> MessageVoteAsync(TAuthRequestStandardModel<VoteIssueRequestModel> req, CancellationToken token = default)
+    public async Task<TResponseModel<bool>> MessageVoteAsync(TAuthRequestStandardModel<VoteIssueRequestModel> req, CancellationToken token = default)
     {
-        TResponseModel<bool?> res = new();
+        TResponseModel<bool> res = new();
 
         if (req.Payload is null)
         {
@@ -1025,7 +1025,7 @@ public partial class HelpDeskImplementService(
             await Task.WhenAll([
                 PulsePushAsync(p_req, token),
                 Task.Run(async () => { helpdesk_user_redirect_telegram_for_issue_rest = await StorageRepo.ReadParameterAsync<long?>(GlobalStaticCloudStorageMetadata.HelpDeskNotificationTelegramForCreateIssue); }, token),
-                MessageUpdateOrCreateAsync(new() { SenderActionUserId = GlobalStaticConstantsRoles.Roles.System, Payload = new() { MessageText = $"Пользователь `{actor.UserName}` создал новый запрос: {issue_upd.Payload.Name}", IssueId = issue.Id } }, token)]);
+                MessageCreateOrUpdateAsync(new() { SenderActionUserId = GlobalStaticConstantsRoles.Roles.System, Payload = new() { MessageText = $"Пользователь `{actor.UserName}` создал новый запрос: {issue_upd.Payload.Name}", IssueId = issue.Id } }, token)]);
 
             if (helpdesk_user_redirect_telegram_for_issue_rest.Success() && helpdesk_user_redirect_telegram_for_issue_rest.Response.HasValue && helpdesk_user_redirect_telegram_for_issue_rest.Response != 0)
             {

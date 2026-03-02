@@ -11,17 +11,17 @@ namespace Transmission.Receives.helpdesk;
 /// MessageVote Receive
 /// </summary>
 public class MessageVoteReceive(IHelpDeskService hdRepo, IHistoryIndexing indexingRepo)
-    : IResponseReceive<TAuthRequestStandardModel<VoteIssueRequestModel>?, TResponseModel<bool?>?>
+    : IResponseReceive<TAuthRequestStandardModel<VoteIssueRequestModel>?, TResponseModel<bool>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.MessageOfIssueVoteHelpDeskReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<bool?>?> ResponseHandleActionAsync(TAuthRequestStandardModel<VoteIssueRequestModel>? req, CancellationToken token = default)
+    public async Task<TResponseModel<bool>?> ResponseHandleActionAsync(TAuthRequestStandardModel<VoteIssueRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req?.Payload);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.SenderActionUserId, req.Payload);
-        TResponseModel<bool?> res = await hdRepo.MessageVoteAsync(req, token);
+        TResponseModel<bool> res = await hdRepo.MessageVoteAsync(req, token);
         await indexingRepo.SaveHistoryForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }

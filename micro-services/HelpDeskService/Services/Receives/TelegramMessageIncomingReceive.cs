@@ -10,7 +10,7 @@ namespace Transmission.Receives.helpdesk;
 /// <summary>
 /// TelegramMessageIncomingReceive
 /// </summary>
-public class TelegramMessageIncomingReceive(IHelpDeskService hdRepo, IHistoryIndexing indexingRepo)
+public class TelegramMessageIncomingReceive(IHelpDeskService hdRepo)
     : IResponseReceive<TelegramIncomingMessageModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
@@ -20,9 +20,6 @@ public class TelegramMessageIncomingReceive(IHelpDeskService hdRepo, IHistoryInd
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TelegramIncomingMessageModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, null, req);
-        ResponseBaseModel res = await hdRepo.TelegramMessageIncomingAsync(req, token);
-        await indexingRepo.SaveHistoryForReceiverAsync(trace.SetResponse(res), token);
-        return res;
+        return await hdRepo.TelegramMessageIncomingAsync(req, token);
     }
 }

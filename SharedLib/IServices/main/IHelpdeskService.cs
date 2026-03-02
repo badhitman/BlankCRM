@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// HelpDesk (service)
 /// </summary>
-public interface IHelpDeskService
+public interface IHelpDeskService : IHelpDeskServiceBase
 {
     /// <summary>
     /// ReplaceTags
@@ -20,23 +20,6 @@ public interface IHelpDeskService
         .Replace(GlobalStaticConstants.DocumentLinkProperty, clearMd ? $"{clearBaseUri}/{documentPagePath}/{documentId}" : $"<a href='{clearBaseUri}/{documentPagePath}/{documentId}'>{aboutDocument}</a>")
         .Replace(GlobalStaticConstants.HostAddressProperty, clearMd ? clearBaseUri : $"<a href='{clearBaseUri}'>{clearBaseUri}</a>");
     }
-
-    #region messages
-    /// <summary>
-    /// Сообщение в обращение
-    /// </summary>
-    public Task<TResponseModel<int?>> MessageUpdateOrCreateAsync(TAuthRequestStandardModel<IssueMessageHelpDeskBaseModel> req, CancellationToken token = default);
-
-    /// <summary>
-    /// Message vote
-    /// </summary>
-    public Task<TResponseModel<bool?>> MessageVoteAsync(TAuthRequestStandardModel<VoteIssueRequestModel> req, CancellationToken token = default);
-
-    /// <summary>
-    /// MessagesList
-    /// </summary>
-    public Task<TResponseModel<IssueMessageHelpDeskModelDB[]>> MessagesListAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default);
-    #endregion
 
     #region issues
     /// <summary>
@@ -95,14 +78,6 @@ public interface IHelpDeskService
     public Task<TResponseModel<bool>> PulsePushAsync(PulseRequestModel req, CancellationToken token = default);
 
     #endregion
-
-    /// <summary>
-    /// Обработка входящего Telegram сообщения
-    /// </summary>
-    /// <remarks>
-    /// Если это ответ в контексте заявки, тогда оно регистрируется и переправляется
-    /// </remarks>
-    public Task<ResponseBaseModel> TelegramMessageIncomingAsync(TelegramIncomingMessageModel req, CancellationToken token = default);
 
     /// <summary>
     /// SetWebConfig
