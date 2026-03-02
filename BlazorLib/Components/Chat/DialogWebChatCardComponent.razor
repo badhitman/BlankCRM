@@ -91,6 +91,15 @@
                         Взять в работу
                     </button>
                 }
+                else
+                {
+                    <button type="button"
+                            class="btn btn-outline-info bi bi-key-fill"
+                            @onclick="OutFromChat"
+                            title="Покинуть чат">
+                        Выйти
+                    </button>
+                }
                 @if (CurrentUserSession is not null && q?.Any(x => x.UserIdentityId == CurrentUserSession.UserId) != true)
                 {
                     <button type="button"

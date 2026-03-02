@@ -27,6 +27,9 @@ public partial class DialogWebChatCardComponent : BlazorBusyComponentUsersCached
     ChatStatusComponent? chatStatusRef;
     MessagesForWebChatComponent? messagesRef;
 
+    UserSelectInputComponent? userSelectorRef;
+    DialogWebChatModelDB? currentDialog, dialogEdit;
+
     async Task SetStateChatRequest(Microsoft.AspNetCore.Components.Web.MouseEventArgs args)
             => await EventsWebChatsHandleRepo.StateSetWebChatAsync(new StateWebChatModel()
             {
@@ -42,8 +45,6 @@ public partial class DialogWebChatCardComponent : BlazorBusyComponentUsersCached
         await SetBusyAsync(false);
     }
 
-    UserSelectInputComponent? userSelectorRef;
-    DialogWebChatModelDB? currentDialog, dialogEdit;
     bool DialogIsEdit
     {
         get
@@ -61,6 +62,31 @@ public partial class DialogWebChatCardComponent : BlazorBusyComponentUsersCached
     }
     bool RoomNotEdit => !DialogIsEdit;
 
+
+    async Task OutFromChat()
+    {
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
+        if (dialogEdit?.UsersJoins is null)
+        {
+            SnackBarRepo.Error("dialogEdit?.UsersJoins is null");
+            return;
+        }
+        TAuthRequestStandardModel<int> req = new()
+        {
+            SenderActionUserId = CurrentUserSession.UserId,
+            Payload = dialogEdit.UsersJoins.Where(x => x.UserIdentityId == CurrentUserSession.UserId).Select(x => x.Id).First(),
+        };
+
+        await SetBusyAsync();
+        ResponseBaseModel res = await WebChatRepo.DeleteUserJoinDialogWebChatAsync(req);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
+        await ReloadDialog();
+        await SetBusyAsync(false);
+    }
 
     async Task JoinToChat(bool isExclusive = false)
     {
