@@ -55,14 +55,10 @@ public partial class RetailService : IRetailService
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         IQueryable<ConversionOrderRetailLinkModelDB> q = context.ConversionsOrdersLinksRetail.AsQueryable();
 
-        bool
-            forOrders = req.Payload?.OrdersIds is not null && req.Payload.OrdersIds.Length != 0,
-            forConversions = req.Payload?.ConversionsIds is not null && req.Payload.ConversionsIds.Length != 0;
-
-        if (forOrders)
+        if (req.Payload?.OrdersIds is not null && req.Payload.OrdersIds.Length != 0)
             q = q.Where(x => req.Payload!.OrdersIds!.Contains(x.OrderDocumentId));
 
-        if (forConversions)
+        if (req.Payload?.ConversionsIds is not null && req.Payload.ConversionsIds.Length != 0)
             q = q.Where(x => req.Payload!.ConversionsIds!.Contains(x.ConversionDocumentId));
 
         IQueryable<ConversionOrderRetailLinkModelDB> pq = q
@@ -71,52 +67,47 @@ public partial class RetailService : IRetailService
             .Skip(req.PageNum * req.PageSize)
             .Take(req.PageSize);
 
-        Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<ConversionOrderRetailLinkModelDB, DocumentRetailModelDB?>? v = pq
-            .Include(x => x.ConversionDocument!)
-            .ThenInclude(x => x.FromWallet!)
-            .ThenInclude(x => x.WalletType)
-            .Include(x => x.ConversionDocument!)
-            .ThenInclude(x => x.ToWallet!)
-            .ThenInclude(x => x.WalletType)
-            .Include(x => x.OrderDocument);
+        List<ConversionOrderRetailLinkModelDB> res = await pq.ToListAsync(cancellationToken: token);
 
-        Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<ConversionOrderRetailLinkModelDB, DocumentRetailModelDB?> BuildQuery()
+        int[] ordersIds = [.. res.Select(x => x.OrderDocumentId).Distinct()];
+        List<DocumentRetailModelDB> ordersDb = ordersIds.Length == 0
+            ? []
+            : await context.OrdersRetail
+                .Where(x => ordersIds.Contains(x.Id))
+                .ToListAsync(cancellationToken: token);
+
+        int[] conversionsIds = [.. res.Select(x => x.ConversionDocumentId).Distinct()];
+        List<WalletConversionRetailDocumentModelDB> conversionsDb = conversionsIds.Length == 0
+            ? []
+            : await context.ConversionsDocumentsWalletsRetail
+                .Where(x => conversionsIds.Contains(x.Id))
+                .ToListAsync(cancellationToken: token);
+
+        int[] walletsIds = [.. conversionsDb.Select(x => x.FromWalletId).Union(conversionsDb.Select(x => x.ToWalletId)).Distinct()];
+        List<WalletRetailModelDB> walletsDb = walletsIds.Length == 0
+            ? []
+            : await context.WalletsRetail
+                .Where(x => walletsIds.Contains(x.Id))
+                .ToListAsync(cancellationToken: token);
+
+        int[] walletsTypesIds = [.. walletsDb.Select(x => x.WalletTypeId).Distinct()];
+        List<WalletRetailTypeModelDB> walletsTypesDb = walletsTypesIds.Length == 0
+            ? []
+            : await context.WalletsRetailTypes
+                .Where(x => walletsTypesIds.Contains(x.Id))
+                .ToListAsync(cancellationToken: token);
+
+        res.ForEach(link =>
         {
-            return pq
-            .Include(x => x.ConversionDocument!)
-            .ThenInclude(x => x.FromWallet!)
-            .ThenInclude(x => x.WalletType)
-            .Include(x => x.ConversionDocument!)
-            .ThenInclude(x => x.ToWallet!)
-            .ThenInclude(x => x.WalletType)
-            .Include(x => x.OrderDocument);
-        }
+            link.OrderDocument = ordersDb.First(y => y.Id == link.OrderDocumentId);
+            link.ConversionDocument = conversionsDb.First(y => y.Id == link.ConversionDocumentId);
 
-        List<ConversionOrderRetailLinkModelDB> res = await BuildQuery().ToListAsync(cancellationToken: token);
+            link.ConversionDocument.FromWallet = walletsDb.First(x => x.Id == link.ConversionDocument.FromWalletId);
+            link.ConversionDocument.FromWallet.WalletType = walletsTypesDb.First(x => x.Id == link.ConversionDocument.FromWallet.WalletTypeId);
 
-        if (forOrders != forConversions)
-            foreach (ConversionOrderRetailLinkModelDB row in res.Where(x => x.AmountPayment <= 0))
-            {
-                if (forOrders)
-                {
-                    row.AmountPayment = row.ConversionDocument is null
-                        ? 0
-                        : row.ConversionDocument.ToWalletSum;
-                }
-                else if (forConversions)
-                {
-                    row.AmountPayment = row.OrderDocument?.Rows is null || row.OrderDocument.Rows.Count == 0
-                        ? 0
-                        : row.OrderDocument.Rows.Sum(x => x.Amount);
-                }
-
-                if (row.AmountPayment != 0)
-                {
-                    context.ConversionsOrdersLinksRetail.Update(row);
-                    await context.SaveChangesAsync(token);
-                }
-            }
-
+            link.ConversionDocument.ToWallet = walletsDb.First(x => x.Id == link.ConversionDocument.ToWalletId);
+            link.ConversionDocument.ToWallet.WalletType = walletsTypesDb.First(x => x.Id == link.ConversionDocument.ToWallet.WalletTypeId);
+        });
 
         return new()
         {

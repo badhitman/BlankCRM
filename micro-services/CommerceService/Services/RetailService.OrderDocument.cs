@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using SharedLib;
 using DbcLib;
+using MongoDB.Driver.Linq;
 
 namespace CommerceService;
 
@@ -381,21 +382,82 @@ public partial class RetailService : IRetailService
             .Take(req.PageSize);
 
         List<DocumentRetailModelDB> res = await pq
-                .Include(x => x.Rows!)
-                .ThenInclude(x => x.Offer)
-
-                .Include(x => x.Deliveries!)
-                //.ThenInclude(x => x.DeliveryDocument)
-
-                .Include(x => x.Conversions!)
-                //.ThenInclude(x => x.ConversionDocument)
-
-                .Include(x => x.Payments!)
-                //.ThenInclude(x => x.PaymentDocument)
-
                 .ToListAsync(cancellationToken: token);
 
-        res.ForEach(x => { if (x.StatusDocument == 0 || x.StatusDocument == default) x.StatusDocument = null; });
+        int[] documentsIds = [.. res.Select(x => x.Id)];
+
+        List<RetailOrderDeliveryLinkModelDB> deliveriesLinks = await context.OrdersDeliveriesLinks
+            .Where(x => documentsIds.Contains(x.OrderDocumentId))
+            .ToListAsync(cancellationToken: token);
+        int[] deliveriesDocumentsIds = [.. deliveriesLinks.Select(x => x.DeliveryDocumentId).Distinct()];
+        List<DeliveryDocumentRetailModelDB> deliveriesDocumentsDb = deliveriesDocumentsIds.Length == 0
+            ? []
+            : await context.DeliveryDocumentsRetail
+                .Where(x => deliveriesDocumentsIds.Contains(x.Id)).ToListAsync(cancellationToken: token);
+
+        List<ConversionOrderRetailLinkModelDB> conversionsLinks = await context.ConversionsOrdersLinksRetail
+            .Where(x => documentsIds.Contains(x.OrderDocumentId))
+            .ToListAsync(cancellationToken: token);
+        int[] conversionsDocumentsIds = [.. conversionsLinks.Select(x => x.ConversionDocumentId).Distinct()];
+        List<WalletConversionRetailDocumentModelDB> conversionsDocumentsDb = conversionsDocumentsIds.Length == 0
+            ? []
+            : await context.ConversionsDocumentsWalletsRetail
+                .Where(x => conversionsDocumentsIds.Contains(x.Id))
+                .ToListAsync(cancellationToken: token);
+
+        List<PaymentOrderRetailLinkModelDB> paymentsLinks = await context.PaymentsOrdersLinks
+            .Where(x => documentsIds.Contains(x.OrderDocumentId))
+            .ToListAsync(cancellationToken: token);
+        int[] paymentsDocumentsIds = [.. paymentsLinks.Select(x => x.PaymentDocumentId).Distinct()];
+        List<PaymentRetailDocumentModelDB> paymentsDocuments = paymentsDocumentsIds.Length == 0
+            ? []
+            : await context.PaymentsRetailDocuments
+                .Where(x => paymentsDocumentsIds.Contains(x.Id))
+                .ToListAsync(cancellationToken: token);
+
+        List<RowOfRetailOrderDocumentModelDB> rowsOfDocuments = await context.RowsOrdersRetails.Where(x => documentsIds.Contains(x.OrderId))
+            .ToListAsync(cancellationToken: token);
+
+        List<int> offersIds = [.. rowsOfDocuments.Select(x => x.OfferId)];
+        List<OfferModelDB> offersDb = await context.Offers
+            .Where(x => offersIds.Contains(x.Id))
+            .ToListAsync(cancellationToken: token);
+
+        res.ForEach(order =>
+        {
+            if (order.StatusDocument == 0 || order.StatusDocument == default)
+                order.StatusDocument = null;
+
+            order.Deliveries = [.. deliveriesLinks
+                .Where(link => link.OrderDocumentId == order.Id)
+                .Select(link => {
+                    link.DeliveryDocument = deliveriesDocumentsDb.First(x=>x.Id == link.DeliveryDocumentId);
+                    return link;
+                })];
+
+            order.Conversions = [.. conversionsLinks
+                .Where(link => link.OrderDocumentId == order.Id)
+                .Select(link =>
+                {
+                    link.ConversionDocument = conversionsDocumentsDb.First(x=>x.Id == link.ConversionDocumentId);
+                    return link;
+                })];
+
+            order.Payments = [.. paymentsLinks
+                .Where(link => link.OrderDocumentId == order.Id)
+                .Select(link =>
+                {
+                    link.PaymentDocument = paymentsDocuments.First(x=>x.Id == link.PaymentDocumentId);
+                    return link;
+                })];
+
+            order.Rows = [.. rowsOfDocuments.Where(row => row.OrderId == order.Id)
+                .Select(row =>
+                {
+                    row.Offer = offersDb.First(o => o.Id == row.OfferId);
+                    return row;
+                })];
+        });
 
         return new()
         {

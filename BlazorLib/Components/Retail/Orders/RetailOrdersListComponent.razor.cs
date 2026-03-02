@@ -279,10 +279,6 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseAuthMode
             List<Task> tasks = [
                 Task.Run(async () => { await CacheUsersUpdate([.._usersIds], token); }, CancellationToken.None),
                 Task.Run(async () => { await CacheRubricsUpdate([.. res.Response.Select(x => x.WarehouseId).Distinct()], token); }, CancellationToken.None),
-                Task.Run(async () => { await OrdersLinksUpdate(
-                    res.Response.SelectMany(x => x.Payments!.Select(y => y.Id)).Distinct(),
-                    res.Response.SelectMany(x => x.Deliveries!.Select(y => y.Id)).Distinct(),
-                    res.Response.SelectMany(x => x.Conversions!.Select(y => y.Id)).Distinct(), token); }, CancellationToken.None),
             ];
 
             await Task.WhenAll(tasks);
@@ -294,33 +290,6 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseAuthMode
             TotalItems = res.TotalRowsCount,
             Items = res.Response
         };
-    }
-
-    async Task OrdersLinksUpdate(IEnumerable<int> paymentsLinksIds, IEnumerable<int> deliveriesLinksIds, IEnumerable<int> conversionsLinksIds, CancellationToken token)
-    {
-        if (paymentsLinksIds.Any())
-        {
-            TResponseModel<PaymentOrderRetailLinkModelDB[]> resPayments = await RetailRepo.PaymentsOrdersDocumentsLinksGetAsync([.. paymentsLinksIds], token);
-            PaymentsLinksCache = resPayments.Response ?? [];
-        }
-        else
-            PaymentsLinksCache = [];
-
-        if (deliveriesLinksIds.Any())
-        {
-            TResponseModel<RetailOrderDeliveryLinkModelDB[]> resDeliveries = await RetailRepo.DeliveriesOrdersLinksDocumentsReadAsync([.. deliveriesLinksIds], token);
-            DeliveriesLinksCache = resDeliveries.Response ?? [];
-        }
-        else
-            DeliveriesLinksCache = [];
-
-        if (conversionsLinksIds.Any())
-        {
-            TResponseModel<ConversionOrderRetailLinkModelDB[]> resConversions = await RetailRepo.ConversionsOrdersDocumentsLinksReadRetailAsync([.. conversionsLinksIds], token);
-            ConversionsLinksCache = resConversions.Response ?? [];
-        }
-        else
-            ConversionsLinksCache = [];
     }
 
     async void OnSearch(string text)

@@ -7,7 +7,6 @@ using Newtonsoft.Json;
 using System.Text;
 using SharedLib;
 using DbcLib;
-using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace CommerceService;
 
