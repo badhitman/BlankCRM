@@ -142,11 +142,11 @@
         <MudTd DataLabel="Финансы">
             @if (context.Conversions is not null && context.Conversions.Count != 0)
             {
-                <OrderConversionsAboutComponent ConversionsDocuments="@([..ConversionsLinksCache.Where(x => context.Conversions.Any(y => y.Id == x.Id))])" />
+                <OrderConversionsAboutComponent ConversionsDocuments="context.Conversions" />
             }
             @if (context.Payments is not null && context.Payments.Count != 0)
             {
-                <OrderPaymentsAboutComponent PaymentsDocuments="@([..PaymentsLinksCache.Where(x => context.Payments.Any(y => y.Id == x.Id))])" />
+                <OrderPaymentsAboutComponent PaymentsDocuments="context.Payments" />
             }
         </MudTd>
         <MudTd DataLabel="Номенклатура">
@@ -155,7 +155,7 @@
         <MudTd DataLabel="Отгрузка">
             @if (context.Deliveries is not null && context.Deliveries.Count != 0)
             {
-                <OrderDeliveriesAboutComponent DeliveriesDocuments="@([..DeliveriesLinksCache.Where(x => context.Deliveries.Any(y => y.Id == x.Id))])" />
+                <OrderDeliveriesAboutComponent DeliveriesDocuments="context.Deliveries" />
             }
         </MudTd>
         <MudTd DataLabel="Информация">

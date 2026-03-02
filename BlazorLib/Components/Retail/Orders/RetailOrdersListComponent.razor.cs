@@ -77,18 +77,6 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseAuthMode
     /// </summary>
     protected List<UserInfoModel> UsersCache = [];
 
-    /// <summary>
-    /// PaymentsLinksCache
-    /// </summary>
-    protected PaymentOrderRetailLinkModelDB[] PaymentsLinksCache = [];
-    /// <summary>
-    /// DeliveriesLinksCache
-    /// </summary>
-    protected RetailOrderDeliveryLinkModelDB[] DeliveriesLinksCache = [];
-    /// <summary>
-    /// ConversionsLinksCache
-    /// </summary>
-    protected ConversionOrderRetailLinkModelDB[] ConversionsLinksCache = [];
 
     MudTable<DocumentRetailModelDB>? tableRef;
     bool _visibleCreateNewOrder;
