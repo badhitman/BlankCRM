@@ -12,11 +12,11 @@
 </div>
 @if (SelectedTypeFieldForEditRow == TypesFieldsFormsEnum.Text)
 {
-    <TextFieldFormRowEditUIComponent Field="Field" @ref="FieldTextUI" />
+    <TextFieldFormRowEditUIComponent Field="Field" @ref="FieldTextUI" Form="Form" />
 }
 else if (SelectedTypeFieldForEditRow == TypesFieldsFormsEnum.Generator)
 {
-    <GeneratorFieldFormRowEditUIComponent Field="Field" @ref="FieldGeneratorUI" />
+    <GeneratorFieldFormRowEditUIComponent Field="Field" @ref="FieldGeneratorUI" Form="Form" />
 }
 else if (SelectedTypeFieldForEditRow == TypesFieldsFormsEnum.ProgramCalculationDouble)
 {

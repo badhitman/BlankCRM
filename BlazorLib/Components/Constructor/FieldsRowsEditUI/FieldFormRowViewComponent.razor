@@ -46,11 +46,11 @@
                     <CascadingValue Value="SetFieldAction">
                         @if (_field_master is FieldFormConstructorModelDB sf)
                         {
-                            <FieldFormRowEditComponent Field="sf" @ref="FieldEditUI_ref" />
+                            <FieldFormRowEditComponent Field="sf" @ref="FieldEditUI_ref" Form="Form" />
                         }
                         else if (_field_master is FieldFormAkaDirectoryConstructorModelDB df)
                         {
-                            <FieldDirectoryFormRowEditComponent Field="df" @ref="FieldDirUI_ref" />
+                            <FieldDirectoryFormRowEditComponent Field="df" @ref="FieldDirUI_ref" Form="Form" />
                         }
                         else
                         {
@@ -76,7 +76,10 @@
                                         <button disabled type="button" class="btn btn-primary">Сохранить</button>
                                     }
                                 }
-                                <SessionsValuesOfFieldViewComponent @ref="_sessionsValuesOfFieldViewComponent_Ref" FieldName="@Field.Name" ShowReferralsHandler="ShowReferrals" />
+                                <SessionsValuesOfFieldViewComponent @ref="_sessionsValuesOfFieldViewComponent_Ref"
+                                                                    Form="Form"
+                                                                    FieldName="@Field.Name"
+                                                                    ShowReferralsHandler="ShowReferrals" />
                             </div>
                         </div>
                     </div>
@@ -171,8 +174,8 @@
                 @if (ParentFormsPage.CanEditProject)
                 {
                     <MudIconButton OnClick="() => { IsEditRow = true; }" Size="Size.Small" Icon="@Icons.Material.Filled.Edit" Color="Color.Info" aria-label="Редактировать" />
-                    <MudIconButton OnClick="MoveFieldUp" Disabled="!CanUp" Size="Size.Small" Icon="@Icons.Material.Filled.ArrowDropUp" aria-label="Выше" Color="@(CanUp ? Color.Success : Color.Default)" />
-                    <MudIconButton OnClick="MoveFieldDown" Disabled="!CanDown" Size="Size.Small" Icon="@Icons.Material.Filled.ArrowDropDown" aria-label="Ниже" Color="@(CanDown ? Color.Success : Color.Default)" />
+                    <MudIconButton OnClick="MoveFieldUp" Disabled="!CanUp" Size="Size.Small" Icon="@Icons.Material.Filled.ArrowDropUp" aria-label="Выше" Color="@(CanUp? Color.Success: Color.Default)" />
+                    <MudIconButton OnClick="MoveFieldDown" Disabled="!CanDown" Size="Size.Small" Icon="@Icons.Material.Filled.ArrowDropDown" aria-label="Ниже" Color="@(CanDown? Color.Success: Color.Default)" />
                     <MudIconButton OnClick="DeleteClick" Size="Size.Small" Icon="@Icons.Material.Filled.DeleteOutline" Color="@(Color.Warning)" aria-label="Удалить" />
                 }
                 else

@@ -27,7 +27,7 @@ public class FieldFormEditFormBaseComponent : ComponentBase, IDomBaseComponent
     /// <summary>
     /// Форма
     /// </summary>
-    [CascadingParameter, EditorRequired]
+    [Parameter, EditorRequired]
     public required FormConstructorModelDB Form { get; set; }
 
     /// <inheritdoc/>

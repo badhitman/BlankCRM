@@ -26,7 +26,7 @@ public partial class AddingFieldFormViewComponent : ComponentBase
     Action<FieldFormBaseLowConstructorModel, Type> StateHasChangedHandler { get; set; } = default!;
 
     /// <inheritdoc/>
-    [CascadingParameter, EditorRequired]
+    [Parameter, EditorRequired]
     public required FormConstructorModelDB Form { get; set; }
 
 

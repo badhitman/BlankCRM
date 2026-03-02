@@ -26,7 +26,7 @@ public partial class DirectoryFieldFormUIComponent : BlazorBusyComponentBaseMode
     public Action<FieldFormBaseLowConstructorModel, Type> StateHasChangedHandler { get; set; } = default!;
 
     /// <inheritdoc/>
-    [CascadingParameter, EditorRequired]
+    [Parameter, EditorRequired]
     public required FormConstructorModelDB Form { get; set; }
 
 

@@ -4,7 +4,6 @@
 
 using BlazorLib.Components.Constructor.FieldsClient;
 using Microsoft.AspNetCore.Components;
-using MudBlazor;
 using SharedLib;
 
 namespace BlazorLib.Components.Constructor.Form;
@@ -22,19 +21,12 @@ public partial class FieldsFormViewComponent : BlazorBusyComponentBaseAuthModel
     [Parameter, EditorRequired]
     public required bool CanEdit { get; set; }
 
-    /// <summary>
-    /// Родительская страница форм
-    /// Событие изменения выбранного справочника/списка
-    /// </summary>
-    [CascadingParameter, EditorRequired]
-    public required ConstructorMainManageComponent ParentFormsPage { get; set; }
-
     /// <inheritdoc/>
     [Parameter, EditorRequired]
     public required Action ReloadHandler { get; set; }
 
     /// <inheritdoc/>
-    [CascadingParameter, EditorRequired]
+    [Parameter, EditorRequired]
     public required FormConstructorModelDB Form { get; set; }
 
 
@@ -145,8 +137,7 @@ public partial class FieldsFormViewComponent : BlazorBusyComponentBaseAuthModel
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
-            await ParentFormsPage.ReadCurrentMainProject();
-            ParentFormsPage.StateHasChangedCall();
+            ReloadHandler();
             await SetBusyAsync(false);
             return;
         }

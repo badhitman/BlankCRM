@@ -154,7 +154,7 @@
         </div>
         break;
     case TypesFieldsFormsEnum.Generator:
-        <GeneratorClientViewComponent ReadOnly="@(SessionDocument is null)" GroupByRowNum="GroupByRowNum" />
+        <GeneratorClientViewComponent ReadOnly="@(SessionDocument is null)" GroupByRowNum="GroupByRowNum" Form="Form" />
         break;
     case TypesFieldsFormsEnum.AddressKladrRussia:
         <KladrInputComponent @bind-KladrObject="KladrObject" ReadOnly="@(SessionDocument is null)" />

@@ -24,7 +24,7 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
     /// <summary>
     /// Форма
     /// </summary>
-    [CascadingParameter, EditorRequired]
+    [Parameter, EditorRequired]
     public required FormConstructorModelDB Form { get; set; }
 
     /// <summary>

@@ -23,7 +23,7 @@ public abstract class FieldComponentBaseModel : BlazorBusyComponentBaseModel, ID
     /// <summary>
     /// Форма
     /// </summary>
-    [CascadingParameter, EditorRequired]
+    [Parameter, EditorRequired]
     public required FormConstructorModelDB Form { get; set; }
 
     /// <summary>

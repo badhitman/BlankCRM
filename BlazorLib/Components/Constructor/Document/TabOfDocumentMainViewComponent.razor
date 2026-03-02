@@ -93,11 +93,11 @@ else
             <CascadingValue Value="PageJoinForm.Form">
                 @if (IsTable)
                 {
-                    <ClientTableViewFormComponent Title="@TitleFormJoin" />
+                    <ClientTableViewFormComponent Title="@TitleFormJoin" Form="PageJoinForm.Form" />
                 }
                 else
                 {
-                    <ClientStandardViewFormComponent Title="@TitleFormJoin" />
+                    <ClientStandardViewFormComponent Title="@TitleFormJoin" Form="PageJoinForm.Form" />
                 }
             </CascadingValue>
         </div>

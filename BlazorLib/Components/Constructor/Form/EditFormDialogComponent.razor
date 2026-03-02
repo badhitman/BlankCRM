@@ -65,11 +65,10 @@
                     }
                     else
                     {
-                        <CascadingValue Value="Form">
-                            <FieldsFormViewComponent @ref="_fields_view_ref"
-                                                     CanEdit="CanEdit"
-                                                     ReloadHandler="ReloadHandler" />
-                        </CascadingValue>
+                        <FieldsFormViewComponent @ref="_fields_view_ref"
+                                                 CanEdit="CanEdit"
+                                                 Form="Form"
+                                                 ReloadHandler="ReloadHandler" />
                     }
                 </TabComponent>
             </TabSetComponent>

@@ -44,7 +44,7 @@ public partial class ClientTableViewFormComponent : BlazorBusyComponentBaseModel
     public TabOfDocumentSchemeConstructorModelDB? DocumentPage { get; set; }
 
     /// <inheritdoc/>
-    [CascadingParameter, EditorRequired]
+    [Parameter, EditorRequired]
     public required FormConstructorModelDB Form { get; set; }
 
     /// <inheritdoc/>

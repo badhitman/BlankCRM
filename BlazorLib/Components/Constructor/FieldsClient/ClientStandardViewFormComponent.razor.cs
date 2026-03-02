@@ -28,8 +28,8 @@ public partial class ClientStandardViewFormComponent : BlazorBusyComponentBaseMo
     public uint RowNum { get; set; } = 0;
 
     /// <inheritdoc/>
-    [CascadingParameter, EditorRequired]
-    public FormConstructorModelDB Form { get; set; } = default!;
+    [Parameter, EditorRequired]
+    public FormConstructorModelDB Form { get; set; }
 
 
     /// <summary>

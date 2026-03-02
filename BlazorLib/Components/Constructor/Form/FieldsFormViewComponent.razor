@@ -5,14 +5,14 @@
 
 <div class="card">
     <div class="card-header">
-        @if (ParentFormsPage.CanEditProject)
+        @if (CanEdit)
         {
             <div class="row g-3 align-items-center">
                 <div class="col-auto">
                     <label for="inputName" class="col-form-label">Добавить поле</label>
                 </div>
                 <CascadingValue Value="AddingFieldStateHasChangedAction">
-                    <AddingFieldFormViewComponent @ref="field_creating_field_ref" FieldObject="_field_master" />
+                    <AddingFieldFormViewComponent @ref="field_creating_field_ref" FieldObject="_field_master" Form="Form" />
                 </CascadingValue>
                 @if (field_creating_field_ref?.SelectedTypeFieldForAdding > 0)
                 {
@@ -43,7 +43,7 @@
             <tbody>
                 @foreach (FieldFormBaseLowConstructorModel fo in Form.AllFields)
                 {
-                    <FieldFormRowViewComponent ReloadFieldsHandler="ReloadFields" Field="fo" />
+                    <FieldFormRowViewComponent ReloadFieldsHandler="ReloadFields" Field="fo" Form="Form" />
                 }
             </tbody>
         </table>
@@ -56,7 +56,7 @@
         <h6 class="card-subtitle mb-2 text-muted">Как это увидит пользователь</h6>
         <div class="card">
             <div class="card-body">
-                <ClientStandardViewFormComponent @ref="client_standard_ref" />
+                <ClientStandardViewFormComponent @ref="client_standard_ref" Form="Form" />
             </div>
         </div>
     </div>
