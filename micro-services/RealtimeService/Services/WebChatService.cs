@@ -141,11 +141,18 @@ public partial class WebChatService(
         if (!string.IsNullOrWhiteSpace(req.Payload?.FilterUserIdentityId))
             q = q.Where(x => x.InitiatorIdentityId == req.Payload.FilterUserIdentityId);
 
+        if (req.Payload?.WithoutEmpty.HasValue == true)
+        {
+            q = req.Payload.WithoutEmpty.Value
+                ? q.Where(x => context.Messages.Any(y => y.DialogOwnerId == x.Id))
+                : q.Where(x => !context.Messages.Any(y => y.DialogOwnerId == x.Id));
+        }
+
         IOrderedQueryable<DialogWebChatModelDB> oq() => req.SortBy switch
         {
-            nameof(DialogWebChatViewModel.LastMessageAtUTC) => req.SortingDirection == DirectionsEnum.Down ? q.OrderByDescending(x => x.LastMessageAtUTC) : q.OrderBy(x => x.LastMessageAtUTC),
+            nameof(DialogWebChatViewModel.LastMessageAtUTC) => req.SortingDirection == DirectionsEnum.Down ? q.OrderByDescending(x => x.LastMessageAtUTC != null).ThenByDescending(x => x.LastMessageAtUTC) : q.OrderBy(x => x.LastMessageAtUTC != null).ThenBy(x => x.LastMessageAtUTC),
             nameof(DialogWebChatViewModel.LastOnlineAtUTC) => req.SortingDirection == DirectionsEnum.Down ? q.OrderByDescending(x => x.LastOnlineAtUTC) : q.OrderBy(x => x.LastOnlineAtUTC),
-            _ => q.OrderByDescending(x => x.LastMessageAtUTC),
+            _ => q.OrderByDescending(x => x.Id),
         };
 
         return new()

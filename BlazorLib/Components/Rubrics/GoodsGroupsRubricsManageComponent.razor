@@ -3,6 +3,8 @@
 @using Microsoft.Extensions.Options
 @using MudBlazor
 
+@inherits BlazorBusyComponentBaseAuthModel
+
 @{
     IQueryable<string>? _q = CommerceConf.Value.NomenclaturesRubricsPrefixes?
         .Where(x => !string.IsNullOrWhiteSpace(x))
@@ -16,11 +18,11 @@
             <RubricsManageComponent TEntity="RubricNodeBodyNomenclatureConfigComponent"
                                     ContextName="@($"{Routes.GOODS_CONTROLLER_NAME}-{Routes.CATEGORIES_CONTROLLER_NAME}")" />
         </MudTabPanel>
-        <MudTabPanel Text="Поля">
-            <RubricFieldsManageComponent ContextName="@GlobalStaticConstantsTransmission.GoodsCategoriesFieldsSetContextName()" />
+        <MudTabPanel Text="Поля" Disabled="@(IsBusyProgress || currentProjectId < 1)">
+            <RubricFieldsManageComponent ProjectId="currentProjectId" />
         </MudTabPanel>
-        <MudTabPanel Text="Списки">
-            <RubricDictionariesManageComponent ContextName="@GlobalStaticConstantsTransmission.GoodsCategoriesPropertiesConfigurationContextName()" />
+        <MudTabPanel Text="Списки" Disabled="@(IsBusyProgress || currentProjectId < 1)">
+            <RubricDictionariesManageComponent ProjectId="currentProjectId" />
         </MudTabPanel>
     </MudTabs>
 }
@@ -33,11 +35,11 @@ else
                     <RubricsManageComponent TEntity="RubricNodeBodyNomenclatureConfigComponent"
                                             ContextName="@($"{Routes.GOODS_CONTROLLER_NAME}-{Routes.CATEGORIES_CONTROLLER_NAME}")" />
                 </MudTabPanel>
-                <MudTabPanel Text="Поля (default)">
-                    <RubricFieldsManageComponent ContextName="@GlobalStaticConstantsTransmission.GoodsCategoriesFieldsSetContextName()" />
+                <MudTabPanel Text="Поля (default)" Disabled="@(IsBusyProgress || currentProjectId < 1)">
+                    <RubricFieldsManageComponent ProjectId="currentProjectId" />
                 </MudTabPanel>
-                <MudTabPanel Text="Списки (default)">
-                    <RubricDictionariesManageComponent ContextName="@GlobalStaticConstantsTransmission.GoodsCategoriesPropertiesConfigurationContextName()" />
+                <MudTabPanel Text="Списки (default)" Disabled="@(IsBusyProgress || currentProjectId < 1)">
+                    <RubricDictionariesManageComponent ProjectId="currentProjectId" />
                 </MudTabPanel>
             </MudTabs>
         </MudTabPanel>
@@ -50,11 +52,11 @@ else
                                                 PrefixName="@_prefixName"
                                                 ContextName="@($"{Routes.GOODS_CONTROLLER_NAME}-{Routes.CATEGORIES_CONTROLLER_NAME}")" />
                     </MudTabPanel>
-                    <MudTabPanel Text="@($"Поля (*{_prefixName} default)")">
-                        <RubricFieldsManageComponent ContextName="@GlobalStaticConstantsTransmission.GoodsCategoriesFieldsSetContextName(_prefixName)" />
+                    <MudTabPanel Text="@($"Поля (*{_prefixName} default)")" Disabled="@(IsBusyProgress || currentProjectId < 1)">
+                        <RubricFieldsManageComponent ProjectId="currentProjectId" />
                     </MudTabPanel>
-                    <MudTabPanel Text="@($"Списки (*{_prefixName} default)")">
-                        <RubricDictionariesManageComponent ContextName="@GlobalStaticConstantsTransmission.GoodsCategoriesPropertiesConfigurationContextName(_prefixName)" />
+                    <MudTabPanel Text="@($"Списки (*{_prefixName} default)")" Disabled="@(IsBusyProgress || currentProjectId < 1)">
+                        <RubricDictionariesManageComponent ProjectId="currentProjectId" />
                     </MudTabPanel>
                 </MudTabs>
             </MudTabPanel>
@@ -66,7 +68,11 @@ else
     [Inject]
     IOptions<CommerceConfigModel> CommerceConf { get; set; } = default!;
 
+    [Inject]
+    IConstructorTransmission ConRepo { get; set; } = default!;
 
+
+    int currentProjectId;
     MudTabs? panelRef;
     string? activePrefixName;
     int _activeIndex;
@@ -77,6 +83,35 @@ else
         {
             _activeIndex = value;
             activePrefixName = panelRef?.ActivePanel?.ID?.ToString();
+            InvokeAsync(ReadProject);
         }
+    }
+
+
+    async Task ReadProject()
+    {
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
+
+        await SetBusyAsync();
+        TResponseModel<MainProjectViewModel> res = await ConRepo.GetCurrentMainProjectAsync(new()
+        {
+            UserIdentityId = CurrentUserSession.UserId,
+            ContextName = GlobalStaticConstantsTransmission.GoodsCategoriesFieldsSetContextName(activePrefixName)
+        });
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
+        currentProjectId = res.Response?.Id ?? 0;
+        await SetBusyAsync(false);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await SetBusyAsync();
+        await base.OnInitializedAsync();
+        await ReadProject();
+        await SetBusyAsync(false);
     }
 }

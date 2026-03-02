@@ -17,14 +17,6 @@ public partial class DirectoryNavComponent : BlazorBusyComponentBaseAuthModel
 
 
     /// <inheritdoc/>
-    [Parameter]
-    public string? ContextName { get; set; }
-
-    /// <inheritdoc/>
-    [Parameter]
-    public required bool CanEdit { get; set; }
-
-    /// <inheritdoc/>
     [Parameter, EditorRequired]
     public required int ProjectId { get; set; }
 
@@ -33,6 +25,10 @@ public partial class DirectoryNavComponent : BlazorBusyComponentBaseAuthModel
     /// </summary>
     [Parameter, EditorRequired]
     public required Action ReloadHandler { get; set; }
+
+    /// <inheritdoc/>
+    [Parameter]
+    public required bool CanEdit { get; set; }
 
     /// <summary>
     /// Событие изменения выбранного справочника/списка
@@ -227,7 +223,7 @@ public partial class DirectoryNavComponent : BlazorBusyComponentBaseAuthModel
 
         await SetBusyAsync();
 
-        TResponseModel<EntryStandardModel[]> rest = await ConstructorRepo.GetDirectoriesAsync(new() { ProjectId = ProjectId, ContextName = ContextName });
+        TResponseModel<EntryStandardModel[]> rest = await ConstructorRepo.GetDirectoriesAsync(new() { ProjectId = ProjectId });
 
         allDirectories = rest.Response ?? throw new Exception();
 

@@ -84,6 +84,10 @@ else if (InitialTreeItems.Count == 0)
     [Parameter]
     public string? PrefixName { get; set; }
 
+    [Parameter]
+    public int? ProjectId { get; set; }
+
+
     /// <summary>
     /// ValueChanged
     /// </summary>
@@ -110,6 +114,10 @@ else if (InitialTreeItems.Count == 0)
         _res.Add("Node", _node);
         _res.Add("ContextName", ContextName);
         _res.Add("PrefixName", PrefixName);
+
+        if (ProjectId.HasValue)
+            _res.Add("ProjectId", ProjectId.Value);
+
         return _res;
     }
 

@@ -18,4 +18,7 @@ public class SelectDialogsWebChatsRequestModel
     /// FilterUserIdentityId
     /// </summary>
     public string? FilterUserIdentityId { get; set; }
+
+    /// <inheritdoc/>
+    public bool? WithoutEmpty {  get; set; }
 }

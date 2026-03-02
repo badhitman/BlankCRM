@@ -54,10 +54,10 @@
                      class="modal-body">
                     <MudTabs Elevation="2" Rounded ApplyEffectsToContainer>
                         <MudTabPanel Text="Поля">
-                            <RubricFieldsManageComponent ContextName="@RubricFieldsManageContextName" />
+                            <RubricFieldsManageComponent ProjectId="ProjectId" />
                         </MudTabPanel>
                         <MudTabPanel Text="Списки">
-                            <RubricDictionariesManageComponent ContextName="@RubricDictionariesManageContextName" />
+                            <RubricDictionariesManageComponent ProjectId="ProjectId" />
                         </MudTabPanel>
                     </MudTabs>
                 </div>
@@ -67,11 +67,8 @@
 }
 
 @code {
-    [Parameter,EditorRequired]
-    public required string RubricFieldsManageContextName { get; set; }
-
     [Parameter, EditorRequired]
-    public required string RubricDictionariesManageContextName { get; set; }
+    public required int ProjectId { get; set; }
 
 
     bool IsOpenDialog { get; set; }

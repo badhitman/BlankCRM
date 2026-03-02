@@ -55,16 +55,6 @@ public static partial class GlobalStaticConstantsTransmission
         return Path.Combine(_src, ownerId.ToString());
     }
 
-    /// <inheritdoc/>
-    public static string GoodsCategoriesPropertiesConfigurationContextName(string? prefix = null, int ownerId = 0)
-    {
-        string _src = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.GOODS_CONTROLLER_NAME}-{Routes.CATEGORIES_CONTROLLER_NAME}", $"{Routes.PROPERTIES_CONTROLLER_NAME}-{Routes.CONFIGURATION_CONTROLLER_NAME}");
-        if (!string.IsNullOrWhiteSpace(prefix))
-            _src = $"{_src},{prefix}";
-
-        return Path.Combine(_src, ownerId.ToString());
-    }
-
     /// <summary>
     /// Transmission MQ queues
     /// </summary>
