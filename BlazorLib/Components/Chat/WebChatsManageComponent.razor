@@ -81,11 +81,14 @@
                 foreach (UserJoinDialogWebChatModelDB usr in context.UsersJoins.Where(x => !x.OutDateUTC.HasValue))
                 {
                     <span class="badge text-bg-@(usr.OutDateUTC is null ? "primary" : "secondary") me-1" title="@(usr.OutDateUTC is null ? "" : $"{usr.JoinedDateUTC}-{usr.OutDateUTC}")">
-                        @(UsersCache.FirstOrDefault(x => x.UserId == usr.UserIdentityId)?.UserName ?? usr.UserIdentityId)
                         @if (usr.UserIdentityId == CurrentUserSession?.UserId)
                         {
-                            <span class="ms-1">(Вы)</span>
+                            <span class="ms-1">[Вы]</span>
                         }
+                        else
+                        {
+                            UsersCache.FirstOrDefault(x => x.UserId == usr.UserIdentityId)?.UserName ?? usr.UserIdentityId
+                                }
                     </span>
                 }
             }
