@@ -1012,7 +1012,7 @@ public partial class FormsConstructorService(
             form_db.Css = req.Payload.Css;
             form_db.AddRowButtonTitle = req.Payload.AddRowButtonTitle;
             context_forms.Update(form_db);
-            msg = $"Поле (простой тип) формы #{req.Payload.Id} обновлено в БД";
+            msg = $"Форма #{req.Payload.Id} обновлена";
             res.AddInfo(msg);
             logger.LogInformation(msg);
             await context_forms.SaveChangesAsync(cancellationToken);

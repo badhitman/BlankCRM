@@ -30,11 +30,6 @@ public partial class FormsViewComponent : BlazorBusyComponentBaseModel
 
 
     /// <summary>
-    /// имя типа данных: формы
-    /// </summary>
-    const string type_name_form_of_tab = nameof(FormConstructorModelDB);
-
-    /// <summary>
     /// Таблица
     /// </summary>
     protected MudTable<FormConstructorModelDB>? table;
@@ -66,6 +61,7 @@ public partial class FormsViewComponent : BlazorBusyComponentBaseModel
         {
             { x => x.Form, rest.Response },
             { x => x.CanEdit, CanEdit },
+            { x => x.ReloadHandler, () => {if (table is not null) InvokeAsync(table.ReloadServerData); } },
         };
         DialogOptions options = new() { MaxWidth = MaxWidth.ExtraExtraLarge, FullWidth = true, CloseOnEscapeKey = true };
         IDialogReference result = await DialogServiceRepo.ShowAsync<EditFormDialogComponent>($"Редактирование формы #{rest.Response?.Id}", parameters, options);
@@ -106,7 +102,9 @@ public partial class FormsViewComponent : BlazorBusyComponentBaseModel
 
         DialogParameters<EditFormDialogComponent> parameters = new()
         {
-            { x => x.Form, FormConstructorModelDB.BuildEmpty(MainProject.Id) }
+            { x => x.ReloadHandler, () => { if (table is not null) InvokeAsync(table.ReloadServerData); } },
+            { x => x.Form, FormConstructorModelDB.BuildEmpty(MainProject.Id) },
+            { x => x.CanEdit, CanEdit },
         };
         DialogOptions options = new() { MaxWidth = MaxWidth.ExtraExtraLarge, FullWidth = true, CloseOnEscapeKey = true };
         IDialogReference result = await DialogServiceRepo.ShowAsync<EditFormDialogComponent>("Создание новой формы", parameters, options);
