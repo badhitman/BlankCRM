@@ -65,6 +65,7 @@ public partial class FormsViewComponent : BlazorBusyComponentBaseModel
         DialogParameters<EditFormDialogComponent> parameters = new()
         {
             { x => x.Form, rest.Response },
+            { x => x.CanEdit, CanEdit },
         };
         DialogOptions options = new() { MaxWidth = MaxWidth.ExtraExtraLarge, FullWidth = true, CloseOnEscapeKey = true };
         IDialogReference result = await DialogServiceRepo.ShowAsync<EditFormDialogComponent>($"Редактирование формы #{rest.Response?.Id}", parameters, options);
