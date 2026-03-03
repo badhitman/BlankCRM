@@ -19,12 +19,12 @@ namespace ConstructorService;
 /// Constructor служба
 /// </summary>
 public partial class FormsConstructorService : IConstructorService
-{   
+{
     /////////////// Контекст работы конструктора: работы в системе над какими-либо сущностями всегда принадлежат какому-либо проекту/контексту.
     // При переключении контекста (текущий/основной проект) становятся доступны только работы по этому проекту
     // В проект можно добавлять участников, что бы те могли работать вместе с владельцем => вносить изменения в конструкторе данного проекта/контекста
     // Если проект отключить (есть у него такой статус: IsDisabled), то работы с проектом блокируются для всех участников, кроме владельца
-   
+
     /// <inheritdoc/>
     public async Task<TResponseModel<ProjectViewModel[]>> GetProjectsForUserAsync(GetProjectsForUserRequestModel req, CancellationToken token = default)
     {
@@ -66,7 +66,7 @@ public partial class FormsConstructorService : IConstructorService
             return [.. usersIdentity.Where(identityUser => members.Any(memberOfProject => memberOfProject.UserId == identityUser.Id))];
         }
 
-        Func<ProjectModelDb, ProjectViewModel> cast_expression = (project) => new ProjectViewModel()
+        ProjectViewModel cast_expression(ProjectModelDb project) => new()
         {
             OwnerUserId = project.OwnerUserId,
             Name = project.Name,
@@ -100,9 +100,6 @@ public partial class FormsConstructorService : IConstructorService
             .Include(x => x.Documents!)
             .ThenInclude(x => x.Tabs!)
             .ThenInclude(x => x.JoinsForms)
-
-            //.Include(x => x.Documents!)
-            //.ThenInclude(x=>x.)
 
             .ToListAsync(cancellationToken: token);
     }

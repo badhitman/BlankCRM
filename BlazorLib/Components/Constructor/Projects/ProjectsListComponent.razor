@@ -39,16 +39,14 @@
                     <th scope="col"></th>
                 </tr>
             </thead>
-            <CascadingValue Value="this">
-                <tbody>
-                    @foreach (ProjectViewModel pr in ProjectsOfUser)
-                    {
-                        <ProjectTableRowComponent ProjectRow="pr"
-                                                  ParentProjectsList="this"
-                                                  ParentFormsPage="ParentFormsPage" />
-                    }
-                </tbody>
-            </CascadingValue>
+            <tbody>
+                @foreach (ProjectViewModel pr in ProjectsOfUser)
+                {
+                    <ProjectTableRowComponent ProjectRow="pr"
+                                              ParentProjectsList="this"
+                                              ParentFormsPage="ParentFormsPage" />
+                }
+            </tbody>
         </table>
     }
 </div>

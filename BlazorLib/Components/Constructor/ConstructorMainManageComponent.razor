@@ -50,9 +50,9 @@ else if (MainProject is null)
         <p class="mb-0">Что бы работать с конструктором - необходимо назначить проект контекста работы</p>
     </div>
 }
-
-<MudTabs Outlined Position="Position.Left" Rounded Border ApplyEffectsToContainer Class="mt-8" PanelClass="pa-4">
-    <CascadingValue Value="this">
+else
+{
+    <MudTabs Outlined Position="Position.Left" Rounded Border ApplyEffectsToContainer Class="mt-8" PanelClass="pa-4">
         <MudTabPanel Disabled="IsBusyProgress" Text="Проекты">
             <ProjectsListComponent ParentFormsPage="this" />
         </MudTabPanel>
@@ -75,5 +75,5 @@ else if (MainProject is null)
                 </MudTabPanel>
             </Authorized>
         </AuthorizeView>
-    </CascadingValue>
-</MudTabs>
+    </MudTabs>
+}
