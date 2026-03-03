@@ -87,8 +87,8 @@
                         }
                         else
                         {
-                            UsersCache.FirstOrDefault(x => x.UserId == usr.UserIdentityId)?.UserName ?? usr.UserIdentityId
-                                }
+                            <text>@(UsersCache.FirstOrDefault(x => x.UserId == usr.UserIdentityId)?.UserName ?? usr.UserIdentityId)</text>
+                        }
                     </span>
                 }
             }
