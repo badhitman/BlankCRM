@@ -18,6 +18,10 @@ public partial class FieldsFormViewComponent : BlazorBusyComponentBaseAuthModel
 
 
     /// <inheritdoc/>
+    [Parameter]
+    public TypesFieldsFormsEnum[]? PresetTypes { get; set; }
+
+    /// <inheritdoc/>
     [Parameter, EditorRequired]
     public required bool CanEdit { get; set; }
 

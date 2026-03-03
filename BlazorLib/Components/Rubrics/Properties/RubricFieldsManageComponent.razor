@@ -1,12 +1,37 @@
-﻿@using MudBlazor
+﻿@using BlazorLib.Components.Constructor.Form
+@using MudBlazor
+@inherits BlazorBusyComponentBaseAuthModel
+
 <MudCard>
     <MudCardContent>
-        <MudText>RubricFieldsManageComponent</MudText>
-        поля для группы
+        <select @bind="SelectedFormId" class="form-select mb-2" aria-label="Формы">
+            @if (allForms.Count == 0)
+            {
+                <option disabled selected>Форм нет</option>
+            }
+            else
+            {
+                foreach (FormConstructorModelDB _e in allForms)
+                {
+                    <option value="@_e.Id">@_e.Name (@_e.Name)</option>
+                }
+            }
+        </select>
+
+        @if (Form is not null)
+        {
+            <FieldsFormViewComponent CanEdit ReloadHandler="ReloadHandleAction" Form="Form" PresetTypes="[TypesFieldsFormsEnum.Bool, TypesFieldsFormsEnum.Int]" />
+        }
+        else
+        {
+            <figure class="text-center">
+                <blockquote class="blockquote">
+                    <p>Не выбран вариант.</p>
+                </blockquote>
+                <figcaption class="blockquote-footer">
+                    Укажите <cite title="вариант формы">вариант формы</cite>
+                </figcaption>
+            </figure>
+        }
     </MudCardContent>
 </MudCard>
-
-@code {
-    [Parameter, EditorRequired]
-    public required int ProjectId { get; set; }
-}

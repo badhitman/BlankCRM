@@ -28,12 +28,6 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
     public required FormConstructorModelDB Form { get; set; }
 
     /// <summary>
-    /// Родительская страница форм
-    /// </summary>
-    [CascadingParameter, EditorRequired]
-    public required ConstructorMainManageComponent ParentFormsPage { get; set; }
-
-    /// <summary>
     /// Поле формы
     /// </summary>
     [Parameter, EditorRequired]
@@ -44,6 +38,14 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
     /// </summary>
     [Parameter, EditorRequired]
     public required Action<FormConstructorModelDB?> ReloadFieldsHandler { get; set; }
+
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required bool CanEdit { get; set; }
+
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required Action ReloadHandler { get; set; }
 
 
     FieldFormBaseLowConstructorModel _field_master = default!;
@@ -333,8 +335,7 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
-            await ParentFormsPage.ReadCurrentMainProject();
-            ParentFormsPage.StateHasChangedCall();
+            ReloadHandler();
             await SetBusyAsync(false);
             return;
         }
@@ -462,8 +463,7 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
 
         if (!rest.Success())
         {
-            await ParentFormsPage.ReadCurrentMainProject();
-            ParentFormsPage.StateHasChangedCall();
+            ReloadHandler();
             await SetBusyAsync(false);
             return;
         }
@@ -539,8 +539,7 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
 
         if (!rest.Success())
         {
-            await ParentFormsPage.ReadCurrentMainProject();
-            ParentFormsPage.StateHasChangedCall();
+            ReloadHandler();
             await SetBusyAsync(false);
             return;
         }
@@ -581,8 +580,7 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
 
         if (!rest.Success())
         {
-            await ParentFormsPage.ReadCurrentMainProject();
-            ParentFormsPage.StateHasChangedCall();
+            ReloadHandler();
             await SetBusyAsync(false);
             return;
         }

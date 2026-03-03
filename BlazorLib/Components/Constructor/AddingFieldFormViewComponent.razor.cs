@@ -15,6 +15,7 @@ namespace BlazorLib.Components.Constructor;
 public partial class AddingFieldFormViewComponent : ComponentBase
 {
     /// <inheritdoc/>
+    [Parameter]
     public TypesFieldsFormsEnum[]? PresetTypes { get; set; }
 
     /// <inheritdoc/>

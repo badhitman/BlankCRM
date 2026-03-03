@@ -12,7 +12,10 @@
                     <label for="inputName" class="col-form-label">Добавить поле</label>
                 </div>
                 <CascadingValue Value="AddingFieldStateHasChangedAction">
-                    <AddingFieldFormViewComponent @ref="field_creating_field_ref" FieldObject="_field_master" Form="Form" />
+                    <AddingFieldFormViewComponent @ref="field_creating_field_ref"
+                                                  FieldObject="_field_master"
+                                                  PresetTypes="PresetTypes"
+                                                  Form="Form" />
                 </CascadingValue>
                 @if (field_creating_field_ref?.SelectedTypeFieldForAdding > 0)
                 {
@@ -43,7 +46,11 @@
             <tbody>
                 @foreach (FieldFormBaseLowConstructorModel fo in Form.AllFields)
                 {
-                    <FieldFormRowViewComponent ReloadFieldsHandler="ReloadFields" Field="fo" Form="Form" />
+                    <FieldFormRowViewComponent ReloadFieldsHandler="ReloadFields"
+                                               ReloadHandler="ReloadHandler"
+                                               CanEdit="CanEdit"
+                                               Form="Form"
+                                               Field="fo" />
                 }
             </tbody>
         </table>
