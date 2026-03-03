@@ -18,11 +18,21 @@ public partial class TabsOfDocumentViewComponent : BlazorBusyComponentBaseModel
     IConstructorTransmission ConstructorRepo { get; set; } = default!;
 
 
-    /// <summary>
-    /// DocumentScheme page
-    /// </summary>
-    [CascadingParameter, EditorRequired]
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
     public required TabOfDocumentSchemeConstructorModelDB TabOfDocumentScheme { get; set; }
+
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required bool CanEdit { get; set; }
+
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required bool InUse { get; set; }
+    
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required Action ReloadHandler { get; set; }
 
 
     int _join_form_id;
@@ -51,7 +61,7 @@ public partial class TabsOfDocumentViewComponent : BlazorBusyComponentBaseModel
         {
             await SetBusyAsync();
             TResponseModel<TabOfDocumentSchemeConstructorModelDB> rest = await ConstructorRepo.GetTabOfDocumentSchemeAsync(TabOfDocumentScheme.Id);
-           
+
             SnackBarRepo.ShowMessagesResponse(rest.Messages);
             if (!rest.Success())
             {
@@ -101,7 +111,7 @@ public partial class TabsOfDocumentViewComponent : BlazorBusyComponentBaseModel
             SnackBarRepo.Info($"Дозагрузка `{nameof(TabOfDocumentScheme.JoinsForms)}` в `{nameof(TabOfDocumentScheme)} ['{TabOfDocumentScheme.Name}' #{TabOfDocumentScheme.Id}]`");
             await SetBusyAsync();
             TResponseModel<TabOfDocumentSchemeConstructorModelDB> rest = await ConstructorRepo.GetTabOfDocumentSchemeAsync(TabOfDocumentScheme.Id);
-            
+
             SnackBarRepo.ShowMessagesResponse(rest.Messages);
             TabOfDocumentScheme.JoinsForms = rest.Response?.JoinsForms;
             await SetBusyAsync(false);

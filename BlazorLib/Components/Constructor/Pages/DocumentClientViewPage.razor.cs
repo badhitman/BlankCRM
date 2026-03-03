@@ -3,13 +3,12 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
-using BlazorLib;
 using SharedLib;
 
 namespace BlazorLib.Components.Constructor.Pages;
 
 /// <summary>
-/// 
+/// DocumentClientViewPage
 /// </summary>
 public partial class DocumentClientViewPage : BlazorBusyComponentBaseModel
 {
@@ -40,5 +39,9 @@ public partial class DocumentClientViewPage : BlazorBusyComponentBaseModel
             SessionDocument.DataSessionValues.ForEach(x => { x.Owner ??= SessionDocument; x.OwnerId = SessionDocument.Id; });
 
         await SetBusyAsync(false);
+    }
+    void ReloadHandler()
+    {
+
     }
 }

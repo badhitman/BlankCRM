@@ -2,8 +2,6 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
-using BlazorLib;
-using BlazorLib.Components.Constructor;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging;
 using SharedLib;
@@ -21,17 +19,20 @@ public partial class TabOfDocumentMainViewComponent : BlazorBusyComponentBaseAut
     [Inject]
     IConstructorTransmission ConstructorRepo { get; set; } = default!;
 
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required bool CanEdit { get; set; }
 
     /// <inheritdoc/>
-    [CascadingParameter, EditorRequired]
-    public required ConstructorMainManageComponent ParentFormsPage { get; set; }
+    [Parameter, EditorRequired]
+    public required Action ReloadHandler { get; set; }
 
     /// <inheritdoc/>
-    [CascadingParameter]
+    [Parameter, EditorRequired]
     public required TabOfDocumentSchemeConstructorModelDB DocumentPage { get; set; }
 
     /// <inheritdoc/>
-    [CascadingParameter, EditorRequired]
+    [Parameter, EditorRequired]
     public required FormToTabJoinConstructorModelDB PageJoinForm { get; set; }
 
     /// <inheritdoc/>
@@ -55,7 +56,7 @@ public partial class TabOfDocumentMainViewComponent : BlazorBusyComponentBaseAut
     public required Action<TabOfDocumentSchemeConstructorModelDB?> UpdatePageActionHandle { get; set; }
 
     /// <inheritdoc/>
-    [CascadingParameter, EditorRequired]
+    [Parameter, EditorRequired]
     public required bool InUse { get; set; }
 
 
@@ -79,8 +80,7 @@ public partial class TabOfDocumentMainViewComponent : BlazorBusyComponentBaseAut
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
-            await ParentFormsPage.ReadCurrentMainProject();
-            ParentFormsPage.StateHasChangedCall();
+            ReloadHandler();
         }
         UpdatePageActionHandle(null);
         await SetBusyAsync(false);
@@ -138,8 +138,7 @@ public partial class TabOfDocumentMainViewComponent : BlazorBusyComponentBaseAut
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
-            await ParentFormsPage.ReadCurrentMainProject();
-            ParentFormsPage.StateHasChangedCall();
+            ReloadHandler();
             await SetBusyAsync(false);
             return;
         }
@@ -172,8 +171,7 @@ public partial class TabOfDocumentMainViewComponent : BlazorBusyComponentBaseAut
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
-            await ParentFormsPage.ReadCurrentMainProject();
-            ParentFormsPage.StateHasChangedCall();
+            ReloadHandler();
             await SetBusyAsync(false);
             return;
         }

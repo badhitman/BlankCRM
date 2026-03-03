@@ -20,12 +20,20 @@ public partial class DocumentClientViewComponent : ComponentBase
     /// <summary>
     /// Session questionnaire
     /// </summary>
-    [CascadingParameter, EditorRequired]
+    [Parameter, EditorRequired]
     public required SessionOfDocumentDataModelDB SessionOfDocumentData { get; set; }
 
     /// <inheritdoc/>
-    [CascadingParameter, EditorRequired]
-    public bool InUse { get; set; } = default!;
+    [Parameter, EditorRequired]
+    public bool InUse { get; set; }
+
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public bool CanEdit { get; set; }
+
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required Action ReloadHandler { get; set; }
 
 
     /// <summary>

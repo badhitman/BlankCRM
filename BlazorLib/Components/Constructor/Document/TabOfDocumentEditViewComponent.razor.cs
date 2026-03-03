@@ -2,10 +2,7 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
-using BlazorLib.Components.Constructor;
 using Microsoft.AspNetCore.Components;
-using BlazorLib;
-using MudBlazor;
 using SharedLib;
 
 namespace BlazorLib.Components.Constructor.Document;
@@ -19,10 +16,22 @@ public partial class TabOfDocumentEditViewComponent : BlazorBusyComponentBaseAut
     IConstructorTransmission ConstructorRepo { get; set; } = default!;
 
 
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required bool InUse { get; set; }
+
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required bool CanEdit { get; set; }
+
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required Action ReloadHandler { get; set; }
+
     /// <summary>
     /// DocumentScheme page
     /// </summary>
-    [CascadingParameter, EditorRequired]
+    [Parameter, EditorRequired]
     public required TabOfDocumentSchemeConstructorModelDB DocumentPage { get; set; }
 
     /// <summary>
@@ -53,29 +62,25 @@ public partial class TabOfDocumentEditViewComponent : BlazorBusyComponentBaseAut
     /// Set name for page - handle action
     /// </summary>
     [Parameter, EditorRequired]
-    public Action<int, string?> SetNameForPageHandle { get; set; } = default!;
+    public Action<int, string?> SetNameForPageHandle { get; set; }
 
     /// <summary>
     /// DocumentScheme reload - handle action
     /// </summary>
     [Parameter, EditorRequired]
-    public Action DocumentReloadHandle { get; set; } = default!;
+    public Action DocumentReloadHandle { get; set; }
 
     /// <summary>
     /// Set hold handle - action
     /// </summary>
     [Parameter, EditorRequired]
-    public Action<bool> SetHoldHandle { get; set; } = default!;
+    public Action<bool> SetHoldHandle { get; set; }
 
     /// <summary>
     /// Update questionnaire - handle action
     /// </summary>
     [Parameter, EditorRequired]
-    public Action<DocumentSchemeConstructorModelDB, TabOfDocumentSchemeConstructorModelDB?> UpdateDocumentHandle { get; set; } = default!;
-
-    /// <inheritdoc/>
-    [CascadingParameter, EditorRequired]
-    public required ConstructorMainManageComponent ParentFormsPage { get; set; }
+    public Action<DocumentSchemeConstructorModelDB, TabOfDocumentSchemeConstructorModelDB?> UpdateDocumentHandle { get; set; }
 
 
     int _selectedFormForAdding;
@@ -148,12 +153,11 @@ public partial class TabOfDocumentEditViewComponent : BlazorBusyComponentBaseAut
         await SetBusyAsync();
 
         TResponseModel<DocumentSchemeConstructorModelDB> rest = await ConstructorRepo.MoveTabOfDocumentSchemeAsync(new() { Payload = new() { Id = DocumentPage.Id, Direct = direct }, SenderActionUserId = CurrentUserSession.UserId });
-        
+
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
-            await ParentFormsPage.ReadCurrentMainProject();
-            ParentFormsPage.StateHasChangedCall();
+            ReloadHandler();
             await SetBusyAsync(false);
             return;
         }
@@ -184,12 +188,11 @@ public partial class TabOfDocumentEditViewComponent : BlazorBusyComponentBaseAut
         await SetBusyAsync();
 
         ResponseBaseModel rest = await ConstructorRepo.DeleteTabOfDocumentSchemeAsync(new() { Payload = new() { DeleteTabOfDocumentSchemeId = DocumentPage.Id }, SenderActionUserId = CurrentUserSession.UserId });
-        
+
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
-            await ParentFormsPage.ReadCurrentMainProject();
-            ParentFormsPage.StateHasChangedCall();
+            ReloadHandler();
             await SetBusyAsync(false);
             return;
         }
@@ -235,8 +238,7 @@ public partial class TabOfDocumentEditViewComponent : BlazorBusyComponentBaseAut
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
-            await ParentFormsPage.ReadCurrentMainProject();
-            ParentFormsPage.StateHasChangedCall();
+            ReloadHandler();
             await SetBusyAsync(false);
             return;
         }
@@ -257,12 +259,11 @@ public partial class TabOfDocumentEditViewComponent : BlazorBusyComponentBaseAut
         await SetBusyAsync();
 
         TResponseModel<TabOfDocumentSchemeConstructorModelDB> rest = await ConstructorRepo.CreateOrUpdateTabOfDocumentSchemeAsync(new() { Payload = new EntryDescriptionOwnedModel() { Id = DocumentPage.Id, OwnerId = DocumentPage.OwnerId, Name = DocumentPage.Name, Description = DocumentPage.Description }, SenderActionUserId = CurrentUserSession.UserId });
-        
+
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
-            await ParentFormsPage.ReadCurrentMainProject();
-            ParentFormsPage.StateHasChangedCall();
+            ReloadHandler();
             await SetBusyAsync(false);
             return;
         }
@@ -291,7 +292,7 @@ public partial class TabOfDocumentEditViewComponent : BlazorBusyComponentBaseAut
 
         await SetBusyAsync();
         TResponseModel<TabOfDocumentSchemeConstructorModelDB> rest = await ConstructorRepo.GetTabOfDocumentSchemeAsync(DocumentPage.Id);
-       
+
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {

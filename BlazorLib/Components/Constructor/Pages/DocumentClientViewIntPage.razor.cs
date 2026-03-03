@@ -3,7 +3,6 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
-using BlazorLib;
 using SharedLib;
 
 namespace BlazorLib.Components.Constructor.Pages;
@@ -38,5 +37,9 @@ public partial class DocumentClientViewIntPage : BlazorBusyComponentBaseAuthMode
             SessionDocument.DataSessionValues.ForEach(x => { x.Owner ??= SessionDocument; x.OwnerId = SessionDocument.Id; });
 
         await SetBusyAsync(false);
+    }
+    private void ReloadHandler()
+    {
+
     }
 }

@@ -44,7 +44,12 @@
                     </form>
                 </TabComponent>
                 <TabComponent IsDisabled="@(DocumentScheme.Id < 1)" Tooltip="Состав опроса/анкеты" Title="Страницы" SystemName="@DocumentScheme.Id.ToString()">
-                    <TabsOfDocumentsSchemesViewComponent @ref="pages_questionnaires_view_ref" DocumentScheme="DocumentScheme" CanEdit="CanEdit" ProjectId="ProjectId" />
+                    <TabsOfDocumentsSchemesViewComponent @ref="pages_questionnaires_view_ref"
+                                                         DocumentScheme="DocumentScheme"
+                                                         ReloadHandler="ReloadHandler"
+                                                         ProjectId="ProjectId"
+                                                         CanEdit="CanEdit"
+                                                         InUse="false" />
                 </TabComponent>
             </TabSetComponent>
         }

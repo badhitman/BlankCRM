@@ -31,10 +31,10 @@ else if (!CanEdit)
             {
                 questionnaire_page.Owner = DocumentScheme;
                 <MudTabPanel ID="@($"document-scheme_{questionnaire_page.Id}")"
-                             Text="@questionnaire_page.Name"               
+                             Text="@questionnaire_page.Name"
                              BadgeDot="@(questionnaire_page.Id < 1)">
                     <CascadingValue Value="questionnaire_page">
-                        <TabsOfDocumentViewComponent />
+                        <TabsOfDocumentViewComponent CanEdit="CanEdit" ReloadHandler="ReloadHandler" TabOfDocumentScheme="questionnaire_page" InUse="InUse" />
                     </CascadingValue>
                 </MudTabPanel>
             }
@@ -66,7 +66,18 @@ else
                              ShowCloseIcon="@(tab_of_document_scheme.Id < 1)"
                              BadgeDot="@(tab_of_document_scheme.Id < 1)">
                     <CascadingValue Value="tab_of_document_scheme">
-                        <TabOfDocumentEditViewComponent AllForms="AllForms" CanUpMove="@(CanUpPage(tab_of_document_scheme))" CanDownMove="@(CanDownPage(tab_of_document_scheme))" SetHoldHandle="SetHoldAction" UpdateDocumentHandle="Update" DocumentReloadHandle="DocumentReloadAction" SetNameForPageHandle="SetNameForPage" SetIdForPageHandle="SetIdForPageAction" />
+                        <TabOfDocumentEditViewComponent CanDownMove="@(CanDownPage(tab_of_document_scheme))"
+                                                        CanUpMove="@(CanUpPage(tab_of_document_scheme))"
+                                                        DocumentReloadHandle="DocumentReloadAction"
+                                                        SetIdForPageHandle="SetIdForPageAction"
+                                                        SetNameForPageHandle="SetNameForPage"
+                                                        DocumentPage="tab_of_document_scheme"
+                                                        SetHoldHandle="SetHoldAction"
+                                                        UpdateDocumentHandle="Update"
+                                                        ReloadHandler="ReloadHandler"
+                                                        AllForms="AllForms"
+                                                        CanEdit="CanEdit"
+                                                        InUse="InUse" />
                     </CascadingValue>
                 </MudTabPanel>
             }

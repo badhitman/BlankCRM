@@ -34,7 +34,7 @@ else
                     <form class="row gy-2 gx-3 align-items-center">
                         <div class="col-auto">
                             <div class="form-check mt-2">
-                                <input @bind="SetTitleForm" disabled="@(IsDisabled || !ParentFormsPage.CanEditProject)" class="form-check-input" type="checkbox" id="@($"setFormTitleCheck_{DocumentPage.Id}")">
+                                <input @bind="SetTitleForm" disabled="@(IsDisabled || !CanEdit)" class="form-check-input" type="checkbox" id="@($"setFormTitleCheck_{DocumentPage.Id}")">
                                 <label class="form-check-label" for="@($"setFormTitleCheck_{DocumentPage.Id}")">
                                     Отображать заголовок
                                 </label>
@@ -44,7 +44,7 @@ else
                         {
                             <div class="col-auto">
                                 <label class="visually-hidden" for="@($"autoSizingInput_{DocumentPage.Id}")">Name</label>
-                                <input @bind-value="PageJoinFormName" @bind-value:event="oninput" type="text" class="form-control" id="@($"autoSizingInput_{DocumentPage.Id}")" placeholder="Отображаемое имя" aria-describedby="@($"nameFormHelpInline_{DocumentPage.Id}")" readonly="@(!ParentFormsPage.CanEditProject)">
+                                <input @bind-value="PageJoinFormName" @bind-value:event="oninput" type="text" class="form-control" id="@($"autoSizingInput_{DocumentPage.Id}")" placeholder="Отображаемое имя" aria-describedby="@($"nameFormHelpInline_{DocumentPage.Id}")" readonly="@(!CanEdit)">
                             </div>
                             @if (string.IsNullOrWhiteSpace(PageJoinFormName))
                             {
@@ -59,7 +59,7 @@ else
                             <div class="hstack">
                                 <div>
                                     <div class="form-check mt-2">
-                                        <input @bind="IsTable" disabled="@(IsDisabled || !ParentFormsPage.CanEditProject)" class="form-check-input" type="checkbox" id="@($"setFormAsTable_{DocumentPage.Id}")">
+                                        <input @bind="IsTable" disabled="@(IsDisabled || !CanEdit)" class="form-check-input" type="checkbox" id="@($"setFormAsTable_{DocumentPage.Id}")">
                                         <label class="form-check-label" for="@($"setFormAsTable_{DocumentPage.Id}")">
                                             Таблица
                                         </label>
@@ -67,7 +67,7 @@ else
                                 </div>
                             </div>
                         </div>
-                        @if (IsEdited && ParentFormsPage.CanEditProject)
+                        @if (IsEdited && CanEdit)
                         {
                             <div class="col-auto">
                                 <div class="btn-group" role="group" aria-label="Basic outlined example">
@@ -77,7 +77,7 @@ else
                             </div>
                         }
                     </form>
-                    @if (!ParentFormsPage.CanEditProject)
+                    @if (!CanEdit)
                     {
                         <MudSpacer />
                         <div>

@@ -19,9 +19,5 @@
 }
 else
 {
-    <CascadingValue Value="SessionDocument">
-        <CascadingValue Value="true">
-            <DocumentClientViewComponent />
-        </CascadingValue>
-    </CascadingValue>
+    <DocumentClientViewComponent InUse SessionOfDocumentData="SessionDocument" CanEdit ReloadHandler="ReloadHandler" />
 }

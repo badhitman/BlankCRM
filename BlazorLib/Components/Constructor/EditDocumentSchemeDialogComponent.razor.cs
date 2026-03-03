@@ -36,6 +36,10 @@ public partial class EditDocumentSchemeDialogComponent : BlazorBusyComponentBase
     [Parameter, EditorRequired]
     public required bool CanEdit { get; set; }
 
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required Action ReloadHandler { get; set; }
+
 
     /// <inheritdoc/>
     protected bool IsEdited => DocumentScheme.Name != DocumentNameOrigin || DocumentScheme.Description != DocumentDescriptionOrigin;

@@ -32,6 +32,14 @@ public partial class TabsOfDocumentsSchemesViewComponent : BlazorBusyComponentBa
     [Parameter, EditorRequired]
     public required bool CanEdit { get; set; }
 
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required bool InUse { get; set; }
+
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required Action ReloadHandler { get; set; }
+
 
     /// <inheritdoc/>
     protected bool _stateHasChanged;
@@ -68,7 +76,7 @@ public partial class TabsOfDocumentsSchemesViewComponent : BlazorBusyComponentBa
         };
         await SetBusyAsync();
         TPaginationResponseStandardModel<FormConstructorModelDB> rest = await ConstructorRepo.SelectFormsAsync(reqForms);
-        
+
         if (rest.TotalRowsCount > rest.PageSize)
             SnackBarRepo.Error($"Записей больше: {rest.TotalRowsCount}");
 
@@ -87,7 +95,7 @@ public partial class TabsOfDocumentsSchemesViewComponent : BlazorBusyComponentBa
             await SetBusyAsync();
             StateHasChanged();
             TResponseModel<DocumentSchemeConstructorModelDB> rest = await ConstructorRepo.GetDocumentSchemeAsync(DocumentScheme.Id);
-            
+
             SnackBarRepo.ShowMessagesResponse(rest.Messages);
             if (rest.Response is null)
             {

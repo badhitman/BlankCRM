@@ -51,7 +51,16 @@ else
                 {
                     pjf.Tab ??= TabOfDocumentScheme;
                     <CascadingValue Value="pjf">
-                        <TabOfDocumentMainViewComponent @key="@($"page-{TabOfDocumentScheme.Id}_jform-{pjf.Id}")" UpdatePageActionHandle="UpdatePageAction" CurrentFormJoinEdit="_join_form_id" CanDown="@(CanDownJoinForm(pjf))" CanUp="@(CanUpJoinForm(pjf))" JoinFormHoldHandle="JoinFormHoldAction" />
+                        <TabOfDocumentMainViewComponent @key="@($"page-{TabOfDocumentScheme.Id}_jform-{pjf.Id}")"
+                                                        UpdatePageActionHandle="UpdatePageAction"
+                                                        CurrentFormJoinEdit="_join_form_id"
+                                                        CanDown="@(CanDownJoinForm(pjf))"
+                                                        CanUp="@(CanUpJoinForm(pjf))"
+                                                        JoinFormHoldHandle="JoinFormHoldAction"
+                                                        DocumentPage="TabOfDocumentScheme"
+                                                        PageJoinForm="pjf" CanEdit="CanEdit"
+                                                        InUse="InUse"
+                                                        ReloadHandler="ReloadHandler" />
                     </CascadingValue>
                 }
             }
