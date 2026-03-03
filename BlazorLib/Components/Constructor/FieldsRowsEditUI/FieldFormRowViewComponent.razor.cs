@@ -46,6 +46,10 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
     /// <inheritdoc/>
     [Parameter, EditorRequired]
     public required Action ReloadHandler { get; set; }
+    
+    /// <inheritdoc/>
+    [Parameter]
+    public TypesFieldsFormsEnum[]? PresetTypes { get; set; }
 
 
     FieldFormBaseLowConstructorModel _field_master = default!;

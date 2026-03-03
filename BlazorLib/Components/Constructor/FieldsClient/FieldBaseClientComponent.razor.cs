@@ -184,7 +184,7 @@ public partial class FieldBaseClientComponent : FieldComponentBaseModel
     protected override void OnInitialized()
     {
         if (!Entries.Any())
-            Entries = DeclarationAbstraction.CommandsAsEntries<TextFieldValueAgent>();
+            Entries = ExtensionsBlazorLib.CommandsAsEntries<TextFieldValueAgent>();
 
         switch (Field.TypeField)
         {
@@ -218,7 +218,7 @@ public partial class FieldBaseClientComponent : FieldComponentBaseModel
                     _dateTimeFieldValue = _out_dt;
                 break;
             case TypesFieldsFormsEnum.ProgramCalculationDouble:
-                CalculationsAsEntries = DeclarationAbstraction.CommandsAsEntries<VirtualColumnCalculationAbstraction>();
+                CalculationsAsEntries = ExtensionsBlazorLib.CommandsAsEntries<VirtualColumnCalculationAbstraction>();
                 _stringFieldValue = "<calculator>";
                 break;
             default:

@@ -2,8 +2,8 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
+using static BlazorLib.ExtensionsBlazorLib;
 using Microsoft.AspNetCore.Components;
-using static BlazorLib.Extensions;
 using MudBlazor;
 
 namespace BlazorLib.Components.Shared;

@@ -35,7 +35,7 @@ public partial class RubricFieldsManageComponent : BlazorBusyComponentBaseAuthMo
 
     void ReloadHandleAction()
     {
-        throw new NotImplementedException();
+        
     }
 
     /// <inheritdoc/>

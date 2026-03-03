@@ -13,6 +13,11 @@ namespace BlazorLib.Components.Constructor.FieldsRowsEditUI;
 public partial class FieldFormRowEditComponent : FieldFormEditFormBaseComponent
 {
     /// <inheritdoc/>
+    [Parameter]
+    public TypesFieldsFormsEnum[]? PresetTypes { get; set; }
+
+
+    /// <inheritdoc/>
     public TypesFieldsFormsEnum SelectedTypeFieldForEditRow
     {
         get
@@ -71,7 +76,7 @@ public partial class FieldFormRowEditComponent : FieldFormEditFormBaseComponent
     }
 
     /// <inheritdoc/>
-    protected IEnumerable<CommandEntryModel> Entries = DeclarationAbstraction.CommandsAsEntries<VirtualColumnCalculationAbstraction>();
+    protected IEnumerable<CommandEntryModel> Entries = ExtensionsBlazorLib.CommandsAsEntries<VirtualColumnCalculationAbstraction>();
 
     FieldFormConstructorModelDB _field_copy = default!;
 

@@ -30,6 +30,12 @@ public class FieldFormEditFormBaseComponent : ComponentBase, IDomBaseComponent
     [Parameter, EditorRequired]
     public required FormConstructorModelDB Form { get; set; }
 
+    /// <summary>
+    /// Форма
+    /// </summary>
+    [Parameter, EditorRequired]
+    public bool CanEdit { get; set; }
+
     /// <inheritdoc/>
     [CascadingParameter, EditorRequired]
     public required Action<FieldFormConstructorModelDB> StateHasChangedHandler { get; set; }
@@ -37,12 +43,6 @@ public class FieldFormEditFormBaseComponent : ComponentBase, IDomBaseComponent
     /// <inheritdoc/>
     [CascadingParameter]
     public SessionOfDocumentDataModelDB? SessionDocument { get; set; }
-
-    /// <summary>
-    /// Родительская страница форм
-    /// </summary>
-    [CascadingParameter, EditorRequired]
-    public required ConstructorMainManageComponent ParentFormsPage { get; set; }
 
 
     /// <inheritdoc/>

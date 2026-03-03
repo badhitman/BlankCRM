@@ -51,20 +51,29 @@
                     </div>
                     <div class="col-12">
                         <div class="mb-3 form-check">
-                            <input @bind="_field_master.Required" type="checkbox" class="form-check-input" id="exampleCheck1" disabled="@(!CanEdit)">
+                            <input @bind="_field_master.Required"
+                                   type="checkbox"
+                                   class="form-check-input"
+                                   id="exampleCheck1"
+                                   disabled="@(!CanEdit)">
                             <label class="form-check-label" for="exampleCheck1">Обязательный</label>
                         </div>
                     </div>
                     <div class="col-12">
                         <div class="mb-3">
                             <label for="@(_currentTemplateInputRichText_ref?.UID)" class="form-label">Описание</label>
-                            <InputRichTextComponent @bind-Value="_field_master.Description" @ref="_currentTemplateInputRichText_ref" ReadOnly="@(!CanEdit)" />
+                            <InputRichTextComponent @bind-Value="_field_master.Description"
+                                                    @ref="_currentTemplateInputRichText_ref"
+                                                    ReadOnly="@(!CanEdit)" />
                         </div>
                     </div>
                     <CascadingValue Value="SetFieldAction">
                         @if (_field_master is FieldFormConstructorModelDB sf)
                         {
-                            <FieldFormRowEditComponent Field="sf" @ref="FieldEditUI_ref" Form="Form" />
+                            <FieldFormRowEditComponent Field="sf" @ref="FieldEditUI_ref"
+                                                       Form="Form"
+                                                       CanEdit="CanEdit"
+                                                       PresetTypes="PresetTypes" />
                         }
                         else if (_field_master is FieldFormAkaDirectoryConstructorModelDB df)
                         {

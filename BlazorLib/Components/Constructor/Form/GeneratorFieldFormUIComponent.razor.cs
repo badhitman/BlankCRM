@@ -60,7 +60,7 @@ public partial class GeneratorFieldFormUIComponent : ComponentBase
     /// <inheritdoc/>
     protected override void OnInitialized()
     {
-        Entries = [.. DeclarationAbstraction.CommandsAsEntries<FieldValueGeneratorAbstraction>()];
+        Entries = [.. ExtensionsBlazorLib.CommandsAsEntries<FieldValueGeneratorAbstraction>()];
 
         if (Entries.Any())
             SelectedGeneratorField = Entries.First().Id;

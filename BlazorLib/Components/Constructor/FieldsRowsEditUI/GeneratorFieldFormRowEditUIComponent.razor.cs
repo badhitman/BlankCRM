@@ -70,7 +70,7 @@ public partial class GeneratorFieldFormRowEditUIComponent : FieldFormEditFormBas
     /// <inheritdoc/>
     protected override void OnInitialized()
     {
-        Entries = DeclarationAbstraction.CommandsAsEntries<FieldValueGeneratorAbstraction>().ToArray();
+        Entries = [.. ExtensionsBlazorLib.CommandsAsEntries<FieldValueGeneratorAbstraction>()];
         if (!string.IsNullOrWhiteSpace(GeneratorClass))
         {
             _dc = DeclarationAbstraction.GetHandlerService(GeneratorClass);

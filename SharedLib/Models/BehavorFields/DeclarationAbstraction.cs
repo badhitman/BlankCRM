@@ -26,46 +26,6 @@ public abstract class DeclarationAbstraction
     /// </summary>
     public virtual bool AllowCallWithoutParameters { get; } = false;
 
-    /// <summary>
-    /// Кэш команд
-    /// </summary>
-    static readonly Dictionary<string, CommandEntryModel[]> _commands_cache = [];
-
-    /// <summary>
-    /// Все программные калькуляции
-    /// </summary>
-    public static CommandEntryModel[] CommandsAsEntries<T>()
-    {
-        Type _current_type = typeof(T);
-        string? type_name = _current_type.FullName;
-        if (string.IsNullOrWhiteSpace(type_name))
-            throw new ArgumentException($"Тип данных [{_current_type}] без имени?", nameof(_current_type.FullName));
-
-        lock (_commands_cache)
-        {
-            if (_commands_cache.TryGetValue(type_name, out CommandEntryModel[]? _vcc))
-                return _vcc;
-
-            IEnumerable<Type> types = AppDomain.CurrentDomain.GetAssemblies()
-            .SelectMany(s => s.GetTypes())
-            .Where(p => _current_type.IsAssignableFrom(p) && _current_type != p && !p.IsAbstract && !p.IsInterface);
-
-            CommandEntryModel[] res = [.. types.Select(x =>
-            {
-                if (Activator.CreateInstance(x) is not T obj)
-                    throw new Exception("error 919F8FF2-B902-4112-8680-67352F369F0C");
-
-                if (obj is not DeclarationAbstraction _set)
-                    throw new Exception("error EF8D4F4A-F578-44C6-B78C-BA7685662938");
-
-                return new CommandEntryModel() { Id = x.Name, Name = _set.Name, Description = _set.About, AllowCallWithoutParameters = _set.AllowCallWithoutParameters };
-            })];
-
-            _commands_cache.Add(type_name, res);
-            return res;
-        }
-    }
-
     static readonly Dictionary<string, CommandAsEntryModel> ParseCalculationsAsEntriesCache = [];
 
     /// <summary>
@@ -117,9 +77,7 @@ public abstract class DeclarationAbstraction
             if (kvp is not null)
             {
                 string[]? pd = JsonConvert.DeserializeObject<string[]>(kvp[nameof(MetadataExtensionsFormFieldsEnum.Parameter)]);
-                //if (pd is not null)
-                //    _v.Options = pd;
-
+               
                 CommandAsEntryModel _v = new()
                 {
                     CommandName = kvp[nameof(MetadataExtensionsFormFieldsEnum.Descriptor)],
