@@ -2,11 +2,7 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
-using BlazorLib;
-using BlazorLib.Components;
-using BlazorLib.Components.Constructor;
 using Microsoft.AspNetCore.Components;
-using MudBlazor;
 using SharedLib;
 
 namespace BlazorLib.Components.Constructor.FieldsRowsEditUI;
@@ -36,10 +32,10 @@ public partial class FieldDirectoryFormRowEditComponent : BlazorBusyComponentBas
     public required FormConstructorModelDB Form { get; set; }
 
     /// <summary>
-    /// Родительская страница форм
+    /// Форма
     /// </summary>
-    [CascadingParameter, EditorRequired]
-    public required ConstructorMainManageComponent ParentFormsPage { get; set; }
+    [Parameter, EditorRequired]
+    public required bool CanEdit { get; set; }
 
 
     /// <inheritdoc/>

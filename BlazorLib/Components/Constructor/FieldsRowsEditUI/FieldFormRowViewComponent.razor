@@ -77,7 +77,9 @@
                         }
                         else if (_field_master is FieldFormAkaDirectoryConstructorModelDB df)
                         {
-                            <FieldDirectoryFormRowEditComponent Field="df" @ref="FieldDirUI_ref" Form="Form" />
+                            <FieldDirectoryFormRowEditComponent Field="df" @ref="FieldDirUI_ref"
+                                                                Form="Form"
+                                                                CanEdit="CanEdit" />
                         }
                         else
                         {

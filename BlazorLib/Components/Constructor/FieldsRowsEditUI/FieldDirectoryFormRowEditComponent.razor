@@ -4,7 +4,7 @@
     <div class="row gy-2 gx-3 align-items-center">
         <div class="col-md-10">
             <label for="inputSelect-@(DomID)" class="form-label">Тип справочника</label>
-            <select @bind="SelectedDirectoryField" class="form-select" id="inputSelect-@(DomID)" aria-describedby="@(DomID)Help" disabled="@(IsBusyProgress || !ParentFormsPage.CanEditProject)">
+            <select @bind="SelectedDirectoryField" class="form-select" id="inputSelect-@(DomID)" aria-describedby="@(DomID)Help" disabled="@(IsBusyProgress || !CanEdit)">
                 @if (Entries is not null)
                 {
                     foreach (EntryStandardModel e in Entries)
