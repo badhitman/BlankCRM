@@ -30,7 +30,11 @@ public partial class EditDocumentSchemeDialogComponent : BlazorBusyComponentBase
 
     /// <inheritdoc/>
     [Parameter, EditorRequired]
-    public required ConstructorMainManageComponent ParentFormsPage { get; set; }
+    public required int ProjectId { get; set; }
+
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required bool CanEdit { get; set; }
 
 
     /// <inheritdoc/>
@@ -53,7 +57,7 @@ public partial class EditDocumentSchemeDialogComponent : BlazorBusyComponentBase
         {
             await SetBusyAsync();
             TResponseModel<DocumentSchemeConstructorModelDB> rest = await ConstructorRepo.GetDocumentSchemeAsync(DocumentScheme.Id);
-            
+
             SnackBarRepo.ShowMessagesResponse(rest.Messages);
             if (rest.Response is null)
             {
@@ -78,13 +82,23 @@ public partial class EditDocumentSchemeDialogComponent : BlazorBusyComponentBase
         if (CurrentUserSession is null)
             throw new Exception("CurrentUserSession is null");
 
-        if (ParentFormsPage.MainProject is null)
+        if (ProjectId < 1)
             throw new Exception("No main/used project selected");
 
         await SetBusyAsync();
-        
-        TResponseModel<DocumentSchemeConstructorModelDB> rest = await ConstructorRepo.UpdateOrCreateDocumentSchemeAsync(new() { Payload = new EntryConstructedModel() { Id = DocumentScheme.Id, Name = DocumentNameOrigin, Description = DocumentDescriptionOrigin, ProjectId = ParentFormsPage.MainProject.Id }, SenderActionUserId = CurrentUserSession.UserId });
-        
+
+        TResponseModel<DocumentSchemeConstructorModelDB> rest = await ConstructorRepo.UpdateOrCreateDocumentSchemeAsync(new()
+        {
+            Payload = new EntryConstructedModel()
+            {
+                Id = DocumentScheme.Id,
+                Name = DocumentNameOrigin,
+                Description = DocumentDescriptionOrigin,
+                ProjectId = ProjectId
+            },
+            SenderActionUserId = CurrentUserSession.UserId
+        });
+
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {

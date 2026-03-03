@@ -63,7 +63,7 @@ else if (MainProject is null)
             <FormsViewComponent CanEdit="CanEditProject" MainProject="MainProject" />
         </MudTabPanel>
         <MudTabPanel Disabled="@(MainProject is null || IsBusyProgress)" Text="Документы">
-            <DocumentsSchemesTableComponent />
+            <DocumentsSchemesTableComponent CanEdit="CanEditProject" ProjectId="MainProject!.Id" />
         </MudTabPanel>
         <MudTabPanel Disabled="@(MainProject is null || IsBusyProgress)" Text="Ссылки" ToolTip="Доступ к заполнению данными документов (в т.ч. анонимные пользователи)">
             <SessionsViewComponent />

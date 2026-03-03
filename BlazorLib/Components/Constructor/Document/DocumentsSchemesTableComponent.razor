@@ -6,13 +6,13 @@
           Dense Hover Striped @ref="table">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Questionnaires</MudText>
-        <MudIconButton Disabled="@(!ParentFormsPage.CanEditProject)" title="Create a new survey/questionnaire" OnClick="() => DocumentOpenDialog()" Icon="@Icons.Material.Filled.AddBox"></MudIconButton>
+        <MudIconButton Disabled="@(!CanEdit)" title="Create a new survey/questionnaire" OnClick="() => DocumentOpenDialog()" Icon="@Icons.Material.Filled.AddBox"></MudIconButton>
         <MudSpacer />
         <MudTextField Disabled="IsBusyProgress" T="string" ValueChanged="@(async s => await OnSearch(s))" Placeholder="Search by survey, tab or form name" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
     </ToolBarContent>
     <HeaderContent>
         <MudTh>Name</MudTh>
-        @if (ParentFormsPage.CanEditProject)
+        @if (CanEdit)
         {
             <MudTh></MudTh>
         }
@@ -51,7 +51,7 @@
                 }
             </div>
         </MudTd>
-        @if (ParentFormsPage.CanEditProject)
+        @if (CanEdit)
         {
             <MudTd>
                 <div class="hstack gap-3">

@@ -23,8 +23,12 @@ public partial class DocumentsSchemesTableComponent : BlazorBusyComponentBaseAut
 
 
     /// <inheritdoc/>
-    [CascadingParameter, EditorRequired]
-    public required ConstructorMainManageComponent ParentFormsPage { get; set; }
+    [Parameter, EditorRequired]
+    public int ProjectId { get; set; }
+
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public bool CanEdit { get; set; }
 
 
     MudTable<DocumentSchemeConstructorModelDB>? table;
@@ -63,13 +67,13 @@ public partial class DocumentsSchemesTableComponent : BlazorBusyComponentBaseAut
     /// </summary>
     protected async Task<TableData<DocumentSchemeConstructorModelDB>> ServerReload(TableState state, CancellationToken token)
     {
-        if (ParentFormsPage.MainProject is null)
+        if (ProjectId < 1)
             throw new Exception("No main/used project selected");
 
         SimplePaginationRequestStandardModel req = new();
         await SetBusyAsync(token: token);
 
-        data = await ConstructorRepo.RequestDocumentsSchemesAsync(new() { RequestPayload = req, ProjectId = ParentFormsPage.MainProject.Id }, token);
+        data = await ConstructorRepo.RequestDocumentsSchemesAsync(new() { RequestPayload = req, ProjectId = ProjectId }, token);
         await SetBusyAsync(false, token);
 
         if (data.Response is null)
@@ -84,14 +88,14 @@ public partial class DocumentsSchemesTableComponent : BlazorBusyComponentBaseAut
     /// <inheritdoc/>
     protected async Task DocumentOpenDialog(DocumentSchemeConstructorModelDB? document_scheme = null)
     {
-        if (ParentFormsPage.MainProject is null)
+        if (ProjectId < 1)
             throw new Exception("No main/used project selected");
 
-        document_scheme ??= DocumentSchemeConstructorModelDB.BuildEmpty(ParentFormsPage.MainProject.Id);
+        document_scheme ??= DocumentSchemeConstructorModelDB.BuildEmpty(ProjectId);
         DialogParameters<EditDocumentSchemeDialogComponent> parameters = new()
         {
             { x => x.DocumentScheme, document_scheme },
-            { x => x.ParentFormsPage, ParentFormsPage },
+            { x => x.ProjectId, ProjectId },
         };
 
         DialogOptions options = new() { MaxWidth = MaxWidth.ExtraExtraLarge, FullWidth = true, CloseOnEscapeKey = true };

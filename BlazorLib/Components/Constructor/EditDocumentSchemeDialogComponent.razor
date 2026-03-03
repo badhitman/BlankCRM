@@ -18,12 +18,12 @@
                     <form class="row g-3" autocomplete="off">
                         <div class="col-12">
                             <label for="inputName4" class="form-label">Название</label>
-                            <input @bind-value="DocumentNameOrigin" @bind-value:event="oninput" type="text" class="form-control" id="inputName4" readonly="@(!ParentFormsPage.CanEditProject)">
+                            <input @bind-value="DocumentNameOrigin" @bind-value:event="oninput" type="text" class="form-control" id="inputName4" readonly="@(!CanEdit)">
                         </div>
                         <div class="col-12">
                             <div class="mb-3">
                                 <label for="@(_currentTemplateInputRichText?.UID)" class="form-label">Описание</label>
-                                <InputRichTextComponent @bind-Value="DocumentDescriptionOrigin" @ref="_currentTemplateInputRichText" ReadOnly="@(!ParentFormsPage.CanEditProject)" />
+                                <InputRichTextComponent @bind-Value="DocumentDescriptionOrigin" @ref="_currentTemplateInputRichText" ReadOnly="@(!CanEdit)" />
                             </div>
                         </div>
                         <div class="col-12">
@@ -32,7 +32,7 @@
                                 <MudSpacer />
                                 <div>
                                     <div class="btn-group" role="group">
-                                        <button @onclick="SaveDocument" disabled="@(string.IsNullOrWhiteSpace(DocumentNameOrigin) || !IsEdited || !ParentFormsPage.CanEditProject)" class="btn btn-outline-success" type="button" id="save-form">Сохранить</button>
+                                        <button @onclick="SaveDocument" disabled="@(string.IsNullOrWhiteSpace(DocumentNameOrigin) || !IsEdited || !CanEdit)" class="btn btn-outline-success" type="button" id="save-form">Сохранить</button>
                                         @if (IsEdited)
                                         {
                                             <button @onclick="ResetDocumentForm" class="btn btn-outline-primary" type="button" id="reset-form">Сброс</button>
@@ -44,9 +44,7 @@
                     </form>
                 </TabComponent>
                 <TabComponent IsDisabled="@(DocumentScheme.Id < 1)" Tooltip="Состав опроса/анкеты" Title="Страницы" SystemName="@DocumentScheme.Id.ToString()">
-                    <CascadingValue Value="ParentFormsPage">
-                        <TabsOfDocumentsSchemesViewComponent @ref="pages_questionnaires_view_ref" DocumentScheme="DocumentScheme" />
-                    </CascadingValue>
+                    <TabsOfDocumentsSchemesViewComponent @ref="pages_questionnaires_view_ref" DocumentScheme="DocumentScheme" CanEdit="CanEdit" ProjectId="ProjectId" />
                 </TabComponent>
             </TabSetComponent>
         }

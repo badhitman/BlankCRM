@@ -61,7 +61,7 @@ public partial class FormsViewComponent : BlazorBusyComponentBaseModel
         {
             { x => x.Form, rest.Response },
             { x => x.CanEdit, CanEdit },
-            { x => x.ReloadHandler, () => {if (table is not null) InvokeAsync(table.ReloadServerData); } },
+            { x => x.ReloadHandler, ReloadHandleAction },
         };
         DialogOptions options = new() { MaxWidth = MaxWidth.ExtraExtraLarge, FullWidth = true, CloseOnEscapeKey = true };
         IDialogReference result = await DialogServiceRepo.ShowAsync<EditFormDialogComponent>($"Редактирование формы #{rest.Response?.Id}", parameters, options);
@@ -70,6 +70,12 @@ public partial class FormsViewComponent : BlazorBusyComponentBaseModel
             await table.ReloadServerData();
 
         await SetBusyAsync(false);
+    }
+
+    void ReloadHandleAction()
+    {
+        if (table is not null)
+            InvokeAsync(table.ReloadServerData);
     }
 
     TableState? _table_state;

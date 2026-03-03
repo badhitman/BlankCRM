@@ -11,7 +11,7 @@
         </figcaption>
     </figure>
 }
-else if (!ParentFormsPage.CanEditProject)
+else if (!CanEdit)
 {
     <MudTabs @bind-ActivePanelIndex="@DocumentIndex" PanelClass="px-4 py-6" Elevation="4" Rounded ApplyEffectsToContainer>
         @if (!DocumentScheme.Tabs.Any())

@@ -25,8 +25,12 @@ public partial class TabsOfDocumentsSchemesViewComponent : BlazorBusyComponentBa
     public required DocumentSchemeConstructorModelDB DocumentScheme { get; set; }
 
     /// <inheritdoc/>
-    [CascadingParameter, EditorRequired]
-    public required ConstructorMainManageComponent ParentFormsPage { get; set; }
+    [Parameter, EditorRequired]
+    public required int ProjectId { get; set; }
+
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required bool CanEdit { get; set; }
 
 
     /// <inheritdoc/>
@@ -54,12 +58,12 @@ public partial class TabsOfDocumentsSchemesViewComponent : BlazorBusyComponentBa
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
-        if (ParentFormsPage.MainProject is null)
+        if (ProjectId < 1)
             throw new Exception("No main/used project selected");
 
         SelectFormsModel reqForms = new()
         {
-            ProjectId = ParentFormsPage.MainProject.Id,
+            ProjectId = ProjectId,
             Request = AltSimplePaginationRequestModel.Build(null, 100, 0, true)
         };
         await SetBusyAsync();

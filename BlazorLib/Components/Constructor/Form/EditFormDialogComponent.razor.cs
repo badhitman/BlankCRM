@@ -69,7 +69,6 @@ public partial class EditFormDialogComponent : BlazorBusyComponentBaseAuthModel
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
-            ReloadHandler();
             await SetBusyAsync(false);
             return;
         }
@@ -83,6 +82,7 @@ public partial class EditFormDialogComponent : BlazorBusyComponentBaseAuthModel
         Form.Reload(rest.Response);
         ResetForm();
         await SetBusyAsync(false);
+        ReloadHandler();
     }
 
     /// <inheritdoc/>
