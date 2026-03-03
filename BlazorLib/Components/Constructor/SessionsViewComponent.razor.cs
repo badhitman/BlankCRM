@@ -79,7 +79,7 @@ public partial class SessionsViewComponent : BlazorBusyComponentBaseAuthModel
             ProjectId = ProjectId
         };
         await SetBusyAsync(token: token);
-        await Task.Delay(1, token);
+        
         TPaginationResponseStandardModel<SessionOfDocumentDataModelDB> rest = await ConstructorRepo.RequestSessionsDocumentsAsync(req, token);
 
         if (rest.Response is null)
