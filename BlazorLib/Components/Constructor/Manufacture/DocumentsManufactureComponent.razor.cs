@@ -14,7 +14,7 @@ namespace BlazorLib.Components.Constructor.Manufacture;
 public partial class DocumentsManufactureComponent : BlazorBusyComponentBaseModel
 {
     /// <inheritdoc/>
-    [CascadingParameter, EditorRequired]
+    [Parameter, EditorRequired]
     public required ManufactureComponent ManufactureParentView { get; set; }
 
 
@@ -56,7 +56,7 @@ public partial class DocumentsManufactureComponent : BlazorBusyComponentBaseMode
     /// </summary>
     public void ReloadTree()
     {
-        if (ManufactureParentView.ParentFormsPage.SystemNamesManufacture is null)
+        if (ManufactureParentView.SystemNamesManufacture is null)
             return;
 
         TreeItemDataModel FieldToTreeItem(FieldFormBaseLowConstructorModel field, int doc_id, int tab_id, int form_id)
@@ -70,7 +70,7 @@ public partial class DocumentsManufactureComponent : BlazorBusyComponentBaseMode
 
             TreeItemDataModel _res = new(et, icon_field_of_form)
             {
-                SystemName = ManufactureParentView.ParentFormsPage.SystemNamesManufacture.GetSystemName(field.Id, et.Tag, field.GetType().Name),
+                SystemName = ManufactureParentView.SystemNamesManufacture.GetSystemName(field.Id, et.Tag, field.GetType().Name),
                 Tooltip = "Поле внутри формы",
                 Qualification = field.GetType().Name
             };
@@ -118,7 +118,7 @@ public partial class DocumentsManufactureComponent : BlazorBusyComponentBaseMode
 
             return new TreeItemDataModel(et, icon_form_of_tab)
             {
-                SystemName = ManufactureParentView.ParentFormsPage.SystemNamesManufacture.GetSystemName(form.Id, et.Tag),
+                SystemName = ManufactureParentView.SystemNamesManufacture.GetSystemName(form.Id, et.Tag),
                 Tooltip = "Форма, размещённая внутри таба/вкладки",
                 Children = [.. form.AllFields.Select(field => FieldToTreeItem(field, doc_id, tab_id, form.Id))],
                 ErrorMessage = form.AllFields.Length == 0 ? $"Форма '{form.Name}' пустая - нет ни одного поля" : null
@@ -136,7 +136,7 @@ public partial class DocumentsManufactureComponent : BlazorBusyComponentBaseMode
 
             return new TreeItemDataModel(et, icon_tab_of_doc)
             {
-                SystemName = ManufactureParentView.ParentFormsPage.SystemNamesManufacture.GetSystemName(tab.Id, et.Tag),
+                SystemName = ManufactureParentView.SystemNamesManufacture.GetSystemName(tab.Id, et.Tag),
                 Tooltip = "Вкладка/Таб документа",
                 Children = [.. tab.JoinsForms!.Select(x => FormToTreeItem(x.Form!, doc_id, tab.Id))],
                 ErrorMessage = tab.JoinsForms!.Count == 0 ? $"Таб/Вкладка '{tab.Name}' пустая - нет ни одной формы" : null
@@ -150,7 +150,7 @@ public partial class DocumentsManufactureComponent : BlazorBusyComponentBaseMode
         {
             TreeItems.Add(new TreeItemDataModel(new EntryTagModel() { Name = doc.Name, Id = doc.Id, Tag = ManufactureComponent.DocumentSchemeConstructorTypeName }, icon_doc)
             {
-                SystemName = ManufactureParentView.ParentFormsPage.SystemNamesManufacture.GetSystemName(doc.Id, ManufactureComponent.DocumentSchemeConstructorTypeName),
+                SystemName = ManufactureParentView.SystemNamesManufacture.GetSystemName(doc.Id, ManufactureComponent.DocumentSchemeConstructorTypeName),
                 Tooltip = "Документ (схема данных бизнес-сущности)",
                 Children = [.. doc.Tabs!.Select(y => TabToTreeItem(y, doc.Id))],
                 ErrorMessage = doc.Tabs!.Count == 0 ? $"Документ '{doc.Name}' пустой - не имеет вкладок/табов" : null

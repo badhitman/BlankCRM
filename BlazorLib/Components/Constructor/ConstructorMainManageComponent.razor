@@ -54,7 +54,7 @@ else if (MainProject is null)
 <MudTabs Outlined Position="Position.Left" Rounded Border ApplyEffectsToContainer Class="mt-8" PanelClass="pa-4">
     <CascadingValue Value="this">
         <MudTabPanel Disabled="IsBusyProgress" Text="Проекты">
-            <ProjectsListComponent />
+            <ProjectsListComponent ParentFormsPage="this" />
         </MudTabPanel>
         <MudTabPanel Disabled="@(MainProject is null || IsBusyProgress)" Text="Списки">
             <DirectoryViewComponent ProjectId="MainProject!.Id" ReloadHandler="ReloadAction" />
@@ -66,12 +66,12 @@ else if (MainProject is null)
             <DocumentsSchemesTableComponent CanEdit="CanEditProject" ProjectId="MainProject!.Id" />
         </MudTabPanel>
         <MudTabPanel Disabled="@(MainProject is null || IsBusyProgress)" Text="Ссылки" ToolTip="Доступ к заполнению данными документов (в т.ч. анонимные пользователи)">
-            <SessionsViewComponent />
+            <SessionsViewComponent ProjectId="MainProject!.Id" />
         </MudTabPanel>
         <AuthorizeView Roles="@($"{GlobalStaticConstantsRoles.Roles.Admin},manufacture")">
             <Authorized>
                 <MudTabPanel Disabled="@(MainProject is null || IsBusyProgress)" Text=".NET" BadgeData='"C#"' BadgeColor="Color.Primary" ToolTip="Генерация кодовой базы C# .NET">
-                    <ManufactureComponent />
+                    <ManufactureComponent MainProject="MainProject" SystemNamesManufacture="SystemNamesManufacture" />
                 </MudTabPanel>
             </Authorized>
         </AuthorizeView>

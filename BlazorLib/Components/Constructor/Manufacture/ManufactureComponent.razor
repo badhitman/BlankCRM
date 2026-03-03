@@ -2,26 +2,24 @@
 
 <div class="vstack gap-3">
     <div class="p-2"><h3>Генерация кода C#</h3></div>
-    <CascadingValue Value="this">
-        <MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-2">
-            <MudTabPanel Text="Config">
-                <ConfigManufactureComponent @ref="_conf" />
-            </MudTabPanel>
-            <MudTabPanel Text="Struct">
-                <CascadingValue Value="@ParentFormsPage.SystemNamesManufacture">
-                    <div class="p-2">
-                        <EnumerationsManufactureComponent @ref="enumerations_ref" />
-                    </div>
-                    <div class="p-2">
-                        <DocumentsManufactureComponent @ref="documents_ref" />
-                    </div>
-                </CascadingValue>
-            </MudTabPanel>
-        </MudTabs>
-    </CascadingValue>
+    <MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-2">
+        <MudTabPanel Text="Config">
+            <ConfigManufactureComponent @ref="_conf" ManufactureParentView="this" />
+        </MudTabPanel>
+        <MudTabPanel Text="Struct">
+            <CascadingValue Value="@SystemNamesManufacture">
+                <div class="p-2">
+                    <EnumerationsManufactureComponent @ref="enumerations_ref" ManufactureParentView="this" />
+                </div>
+                <div class="p-2">
+                    <DocumentsManufactureComponent @ref="documents_ref" ManufactureParentView="this" />
+                </div>
+            </CascadingValue>
+        </MudTabPanel>
+    </MudTabs>
 
     <div class="d-grid gap-2">
-        <button disabled="@(_errors.Any() || Manufacture is null || ParentFormsPage.SystemNamesManufacture is null)" @onclick="Download" class="btn btn-primary" type="button">Скачать C# .NET</button>
+        <button disabled="@(_errors.Any() || Manufacture is null || SystemNamesManufacture is null)" @onclick="Download" class="btn btn-primary" type="button">Скачать C# .NET</button>
     </div>
     <ul class="list-group">
         @foreach (string e in _errors)

@@ -14,7 +14,7 @@ namespace BlazorLib.Components.Constructor.FieldsClient;
 public partial class FieldDirectoryClientComponent : FieldComponentBaseModel
 {
     /// <inheritdoc/>
-    [CascadingParameter, EditorRequired]
+    [Parameter, EditorRequired]
     public required FieldFormAkaDirectoryConstructorModelDB Field { get; set; }
 
     /// <summary>

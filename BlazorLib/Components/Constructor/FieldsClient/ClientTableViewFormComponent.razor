@@ -35,7 +35,14 @@ else
                 {
                     foreach (IGrouping<uint, ValueDataForSessionOfDocumentModelDB> row in SessionDocument.RowsData(PageJoinForm.Id)!)
                     {
-                        <ClientTableRowViewComponent @key=@(row) RowNum="row.Key" RowData="row.ToArray()" OpenHandle="OpenEditRowAction" DeleteHandle="DeleteRowAction" />
+                        <ClientTableRowViewComponent SessionDocument="SessionDocument"
+                                                     OpenHandle="OpenEditRowAction"
+                                                     DeleteHandle="DeleteRowAction"
+                                                     PageJoinForm="PageJoinForm"
+                                                     RowData="row.ToArray()"
+                                                     RowNum="row.Key"
+                                                     InUse="InUse"
+                                                     @key=@(row) />
                     }
                 }
                 else
@@ -62,7 +69,11 @@ else
             }
             @if (SessionDocument is not null)
             {
-                <button @onclick="AddRowToTable" class="btn btn-outline-primary" type="button">@(string.IsNullOrEmpty(Form.AddRowButtonTitle) ? "Добавить строку" : Form.AddRowButtonTitle)</button>
+                <button @onclick="AddRowToTable"
+                        class="btn btn-outline-primary"
+                        type="button">
+                    @(string.IsNullOrEmpty(Form.AddRowButtonTitle) ? "Добавить строку" : Form.AddRowButtonTitle)
+                </button>
             }
         </div>
     }
@@ -70,7 +81,9 @@ else
     {
         <div class="alert alert-warning alert-dismissible fade show mt-3" role="alert">
             <button type="button" class="btn-close" aria-label="Close" @onclick="() => { TableCalculationKit = !TableCalculationKit; }"></button>
-            <TableCalculationKitComponent @ref="_table_kit_ref" />
+            <TableCalculationKitComponent SessionDocument="SessionDocument"
+                                          PageJoinForm="PageJoinForm"
+                                          @ref="_table_kit_ref" />
         </div>
     }
 }

@@ -18,12 +18,12 @@ public partial class FieldDirectoryFormRowEditComponent : BlazorBusyComponentBas
 
 
     /// <inheritdoc/>
-    [CascadingParameter, EditorRequired]
-    public Action<FieldFormAkaDirectoryConstructorModelDB> StateHasChangedHandler { get; set; } = default!;
+    [Parameter, EditorRequired]
+    public required Action<FieldFormAkaDirectoryConstructorModelDB> StateHasChangedHandler { get; set; } 
 
     /// <inheritdoc/>
     [Parameter, EditorRequired]
-    public FieldFormAkaDirectoryConstructorModelDB Field { get; set; } = default!;
+    public required FieldFormAkaDirectoryConstructorModelDB Field { get; set; }
 
     /// <summary>
     /// Форма

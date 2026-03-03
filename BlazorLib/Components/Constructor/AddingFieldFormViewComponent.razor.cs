@@ -23,8 +23,9 @@ public partial class AddingFieldFormViewComponent : ComponentBase
     public FieldFormBaseLowConstructorModel? FieldObject { get; set; }
     FieldFormBaseLowConstructorModel? _field_object_master;
 
-    [CascadingParameter, EditorRequired]
-    Action<FieldFormBaseLowConstructorModel, Type> StateHasChangedHandler { get; set; } = default!;
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required Action<FieldFormBaseLowConstructorModel, Type> StateHasChangedHandler { get; set; }
 
     /// <inheritdoc/>
     [Parameter, EditorRequired]

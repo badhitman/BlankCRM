@@ -14,8 +14,8 @@ namespace BlazorLib.Components.Constructor.FieldsClient;
 public partial class GeneratorClientViewComponent : FieldComponentBaseModel
 {
     /// <inheritdoc/>
-    [CascadingParameter, EditorRequired]
-    public FieldFormConstructorModelDB Field { get; set; } = default!;
+    [Parameter, EditorRequired]
+    public required FieldFormConstructorModelDB Field { get; set; }
 
     /// <inheritdoc/>
     [Parameter, EditorRequired]

@@ -2,8 +2,6 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
-using BlazorLib.Components.Constructor.Manufacture;
-using BlazorLib.Components.Constructor;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using CodegeneratorLib;
@@ -28,11 +26,13 @@ public partial class ManufactureComponent : BlazorBusyComponentBaseAuthModel
     protected IJSRuntime JsRuntimeRepo { get; set; } = default!;
 
 
-    /// <summary>
-    /// Родительская страница форм
-    /// </summary>
-    [CascadingParameter, EditorRequired]
-    public required ConstructorMainManageComponent ParentFormsPage { get; set; }
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required List<SystemNameEntryModel>? SystemNamesManufacture { get; set; }
+
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required MainProjectViewModel MainProject { get; set; }
 
 
     ConfigManufactureComponent _conf = default!;
@@ -96,7 +96,7 @@ public partial class ManufactureComponent : BlazorBusyComponentBaseAuthModel
     {
         await SetBusyAsync();
 
-        List<ProjectModelDb> rest_project = await ConstructorRepo.ProjectsReadAsync([ParentFormsPage.MainProject!.Id]);
+        List<ProjectModelDb> rest_project = await ConstructorRepo.ProjectsReadAsync([MainProject!.Id]);
         CurrentProject = rest_project.Single();
 
         //TResponseModel<ManageManufactureModelDB> rest_manufacture = await ManufactureRepo.ReadManufactureConfig(ParentFormsPage.MainProject.Id, user.UserId);
@@ -108,23 +108,22 @@ public partial class ManufactureComponent : BlazorBusyComponentBaseAuthModel
 
     async Task Download()
     {
-        if (ParentFormsPage.SystemNamesManufacture is null)
+        if (SystemNamesManufacture is null)
             return;
 
         ArgumentNullException.ThrowIfNull(CurrentProject.Directories);
         ArgumentNullException.ThrowIfNull(CurrentProject.Documents);
-        ArgumentNullException.ThrowIfNull(ParentFormsPage.MainProject);
 
         if (Manufacture is null)
             throw new Exception();
 
         CodeGeneratorConfigModel conf_gen = Manufacture;
-        GeneratorCSharpService gen = new(conf_gen, ParentFormsPage.MainProject);
+        GeneratorCSharpService gen = new(conf_gen, MainProject);
 
         StructureProjectModel struct_project = new()
         {
-            Enumerations = [.. CurrentProject.Directories.Select(dir => IJournalUniversalService.EnumConvert(dir, ParentFormsPage.SystemNamesManufacture))],
-            Documents = [.. CurrentProject.Documents.Select(x => IJournalUniversalService.DocumentConvert(x, ParentFormsPage.SystemNamesManufacture))],
+            Enumerations = [.. CurrentProject.Directories.Select(dir => IJournalUniversalService.EnumConvert(dir, SystemNamesManufacture))],
+            Documents = [.. CurrentProject.Documents.Select(x => IJournalUniversalService.DocumentConvert(x, SystemNamesManufacture))],
         };
 
         var _err = struct_project
@@ -140,12 +139,11 @@ public partial class ManufactureComponent : BlazorBusyComponentBaseAuthModel
             return;
         }
 
-        _err = struct_project
+        _err = [.. struct_project
             .Documents
             .GroupBy(e => e.SystemName)
             .Select(x => new { SystemName = x.Key, Count = x.Count() })
-            .Where(x => x.Count > 1)
-            .ToArray();
+            .Where(x => x.Count > 1)];
 
         if (_err.Length != 0)
         {

@@ -25,14 +25,8 @@ public partial class SystemNameManufactureComponent : BlazorBusyComponentBaseMod
     public required TreeItemData<EntryTagModel> Item { get; set; }
 
     /// <inheritdoc/>
-    [CascadingParameter, EditorRequired]
+    [Parameter, EditorRequired]
     public required ManufactureComponent ManufactureParentView { get; set; }
-
-    /// <summary>
-    /// Родительская страница конструктора
-    /// </summary>
-    [CascadingParameter, EditorRequired]
-    public required ConstructorMainManageComponent ParentFormsPage { get; set; }
 
 
     string Information

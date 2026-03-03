@@ -10,18 +10,18 @@ namespace BlazorLib;
 /// <summary>
 /// TabOfDocumentComponent
 /// </summary>
-public abstract class TTabOfDocumenBaseComponent : DocumenBodyBaseComponent
+public abstract class TTabOfDocumenBaseComponent : DocumentBodyBaseComponent
 {
     /// <summary>
     /// Tab Metadata
     /// </summary>
-    [CascadingParameter, EditorRequired]
+    [Parameter, EditorRequired]
     public required TabFitModel TabMetadata { get; set; }
 
     /// <summary>
     /// ParentDocument
     /// </summary>
-    [CascadingParameter, EditorRequired]
+    [Parameter, EditorRequired]
     public required DocumentEditBaseComponent ParentDocument { get; set; }
 
     /// <summary>

@@ -10,9 +10,9 @@ using MudBlazor;
 namespace BlazorLib;
 
 /// <summary>
-/// DocumenBodyBaseComponent
+/// DocumentBodyBaseComponent
 /// </summary>
-public abstract class DocumenBodyBaseComponent : BlazorBusyComponentBaseModel
+public abstract class DocumentBodyBaseComponent : BlazorBusyComponentBaseModel
 {
     /// <inheritdoc/>
     [Inject]
@@ -25,11 +25,9 @@ public abstract class DocumenBodyBaseComponent : BlazorBusyComponentBaseModel
     [Parameter, EditorRequired]
     public required string ID { get; set; }
 
-    /// <summary>
-    /// Document Metadata
-    /// </summary>
-    [CascadingParameter, EditorRequired]
-    public required DocumentFitModel DocumentMetadata { get; set; }
+
+    /// <inheritdoc/>
+    public DocumentFitModel? DocumentMetadata { get; set; }
 
     /// <summary>
     /// PK строки БД.
@@ -44,5 +42,5 @@ public abstract class DocumenBodyBaseComponent : BlazorBusyComponentBaseModel
     /// <summary>
     /// IsEdited
     /// </summary>
-    public abstract bool IsEdited { get; }    
+    public abstract bool IsEdited { get; }
 }

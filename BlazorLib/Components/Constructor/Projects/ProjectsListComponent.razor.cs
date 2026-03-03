@@ -21,7 +21,7 @@ public partial class ProjectsListComponent : BlazorBusyComponentBaseAuthModel
 
 
     /// <inheritdoc/>
-    [CascadingParameter, EditorRequired]
+    [Parameter, EditorRequired]
     public required ConstructorMainManageComponent ParentFormsPage { get; set; }
 
 

@@ -33,18 +33,16 @@ else
             <div class="@fb.Css mb-3">
                 @if (fb is FieldFormConstructorModelDB fs)
                 {
-                    <CascadingValue Value="fs">
-                        <FieldBaseClientComponent GroupByRowNum="@RowNum" FieldsReferring="FieldsReferring" Form="Form" />
-                    </CascadingValue>
+                    <FieldBaseClientComponent GroupByRowNum="@RowNum" FieldsReferring="FieldsReferring" Form="Form" Field="fs" />
+
                 }
                 else if (fb is FieldFormAkaDirectoryConstructorModelDB fd)
                 {
-                    <CascadingValue Value="fd">
-                        <FieldDirectoryClientComponent DirectoryObject="@Directories.FirstOrDefault(x => x.Id == fd.DirectoryId)"
-                                                       GroupByRowNum="@RowNum"
-                                                       Form="Form"
-                                                       FieldsReferring="FieldsReferring" />
-                    </CascadingValue>
+                    <FieldDirectoryClientComponent DirectoryObject="@Directories.FirstOrDefault(x => x.Id == fd.DirectoryId)"
+                                                   GroupByRowNum="@RowNum"
+                                                   Form="Form"
+                                                   FieldsReferring="FieldsReferring"
+                                                   Field="fd" />
                 }
                 else
                 {

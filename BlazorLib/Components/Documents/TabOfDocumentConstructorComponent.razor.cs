@@ -20,20 +20,21 @@ public partial class TabOfDocumentConstructorComponent : TTabOfDocumenBaseCompon
     /// <summary>
     /// Tab
     /// </summary>
-    [CascadingParameter, EditorRequired]
+    [Parameter, EditorRequired]
     public required TabOfDocumentSchemeConstructorModelDB Tab { get; set; }
 
     /// <summary>
     /// PK строки БД
     /// </summary>
-    [CascadingParameter]
+    [Parameter]
     public SessionOfDocumentDataModelDB? Session { get; set; }
 
     /// <summary>
     /// Document
     /// </summary>
-    [CascadingParameter, EditorRequired]
+    [Parameter, EditorRequired]
     public required DocumentSchemeConstructorModelDB Document { get; set; }
+
 
     /// <summary>
     /// Данные/значения текущей сессии для выбранной вкладки

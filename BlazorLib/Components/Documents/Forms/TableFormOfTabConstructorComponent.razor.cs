@@ -14,13 +14,13 @@ namespace BlazorLib.Components.Documents.Forms;
 public partial class TableFormOfTabConstructorComponent : FormBaseCore
 {
     /// <inheritdoc/>
-    [CascadingParameter]
+    [Parameter]
     public List<ValueDataForSessionOfDocumentModelDB>? SessionValues { get; set; }
 
     /// <summary>
     /// Вкладка/таб
     /// </summary>
-    [CascadingParameter, EditorRequired]
+    [Parameter, EditorRequired]
     public required FormToTabJoinConstructorModelDB Join { get; set; }
 
     KeyValuePair<uint, ValueDataForSessionOfDocumentModelDB[]>[]? RowsData => SessionValues?

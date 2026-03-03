@@ -14,13 +14,13 @@ public abstract partial class FormBaseModel : FormBaseCore
     /// <summary>
     /// Формы в табе
     /// </summary>
-    [CascadingParameter, EditorRequired]
+    [Parameter, EditorRequired]
     public required List<FormBaseModel> FormsStack { get; set; }
 
     /// <summary>
     /// FormChangeAction
     /// </summary>
-    [CascadingParameter, EditorRequired]
+    [Parameter, EditorRequired]
     public required Action<FormBaseModel> FormChangeAction { get; set; }
 
     /// <summary>

@@ -20,11 +20,11 @@ public partial class DoneClientViewComponent : BlazorBusyComponentBaseModel
 
 
     /// <inheritdoc/>
-    [CascadingParameter]
+    [Parameter, EditorRequired]
     public required SessionOfDocumentDataModelDB SessionDocument { get; set; }
 
     /// <inheritdoc/>
-    [CascadingParameter]
+    [Parameter,EditorRequired]
     public required bool InUse { get; set; }
 
 

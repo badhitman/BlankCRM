@@ -33,8 +33,8 @@ public abstract class FieldBaseComponentModel : BlazorBusyComponentBaseModel
     public bool Readonly { get; set; }
 
     /// <inheritdoc/>
-    [CascadingParameter, EditorRequired]
-    public required FormBaseModel ParentForm { get; set; }
+    [Parameter, EditorRequired]
+    public required List<FieldBaseComponentModel> FieldsComponents { get; set; }
 
 
     /// <summary>
@@ -57,6 +57,6 @@ public abstract class FieldBaseComponentModel : BlazorBusyComponentBaseModel
     /// <inheritdoc/>
     protected override void OnInitialized()
     {
-        ParentForm.FieldsComponents.Add(this);
+        FieldsComponents.Add(this);
     }
 }

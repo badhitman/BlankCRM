@@ -20,7 +20,7 @@ public partial class GeneratorFieldFormUIComponent : ComponentBase
     public required FieldFormConstructorModelDB FieldObject { get; set; }
 
     /// <inheritdoc/>
-    [CascadingParameter, EditorRequired]
+    [Parameter, EditorRequired]
     public required Action<FieldFormBaseLowConstructorModel, Type> StateHasChangedHandler { get; set; }
 
     string? _generation_options;

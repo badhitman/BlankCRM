@@ -6,6 +6,7 @@ using BlazorLib.Components.Shared.tabs;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using SharedLib;
+using System.ComponentModel.DataAnnotations;
 
 namespace BlazorLib.Components.Constructor.Form;
 
@@ -18,12 +19,13 @@ public partial class EditFormDialogComponent : BlazorBusyComponentBaseAuthModel
     IConstructorTransmission ConstructorRepo { get; set; } = default!;
 
 
-    [CascadingParameter]
-    IMudDialogInstance MudDialog { get; set; } = default!;
+    /// <inheritdoc/>
+    [Parameter, Required]
+    public required IMudDialogInstance MudDialog { get; set; }
 
     /// <inheritdoc/>
     [Parameter, EditorRequired]
-    public FormConstructorModelDB Form { get; set; } = default!;
+    public FormConstructorModelDB Form { get; set; }
 
     /// <inheritdoc/>
     [Parameter, EditorRequired]
@@ -32,9 +34,6 @@ public partial class EditFormDialogComponent : BlazorBusyComponentBaseAuthModel
     /// <inheritdoc/>
     [Parameter, EditorRequired]
     public required Action ReloadHandler { get; set; }
-
-
-    TabSetComponent tab_set_ref = default!;
 
     /// <inheritdoc/>
     protected FieldsFormViewComponent? _fields_view_ref;

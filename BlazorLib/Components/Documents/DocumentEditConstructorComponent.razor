@@ -42,7 +42,7 @@ else if (DocumentKey > 0 && session is null)
         </figcaption>
     </figure>
 }
-else
+else if (DocumentMetadata is not null)
 {
     DocumentSchemeConstructorModelDB scheme_obj = schemes[0];
     scheme_obj.Tabs = scheme_obj.Tabs?.OrderBy(x => x.SortIndex).ToList();
@@ -55,21 +55,15 @@ else
         @foreach (TabFitModel _tab in DocumentMetadata.Tabs)
         {
             <TabComponent OnClickHandle="TabTryChange" Title="@_tab.Name" SystemName='@_tab.SystemName'>
-                <CascadingValue Value="scheme_obj">
-                    <CascadingValue Value="DocumentMetadata">
-                        <CascadingValue Value="session">
-                            <CascadingValue Value="_tab">
-                                <CascadingValue Value="TabChangeEvent">
-                                    <CascadingValue Value="this">
-                                        <CascadingValue Value="scheme_obj.Tabs!.First(x=>x.SortIndex == _tab.SortIndex)">
-                                            <TabOfDocumentConstructorComponent DocumentKey="@DocumentKey" TabChangeHandle="TabChangeEvent" ID="@($"{(DocumentKey.HasValue ? $"{DocumentKey.Value}>" : "")}{_tab.SystemName}")" />
-                                        </CascadingValue>
-                                    </CascadingValue>
-                                </CascadingValue>
-                            </CascadingValue>
-                        </CascadingValue>
-                    </CascadingValue>
-                </CascadingValue>
+                <TabOfDocumentConstructorComponent DocumentKey="@DocumentKey"
+                                                   Document="scheme_obj"
+                                                   Session="session"
+                                                   TabChangeHandle="TabChangeEvent"
+                                                   ID="@($"{(DocumentKey.HasValue ? $"{DocumentKey.Value}>" : "")}{_tab.SystemName}")"
+                                                   Tab="scheme_obj.Tabs!.First(x=>x.SortIndex == _tab.SortIndex)"
+                                                   TabMetadata="_tab"                                                    
+                                                   ParentDocument="this" ParentForm="" />
+
             </TabComponent>
         }
     </TabSetComponent>

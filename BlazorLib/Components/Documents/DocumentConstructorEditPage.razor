@@ -6,7 +6,10 @@
 @page "/journal-{DocumentNameOrId}/project-{ProjectId}/document/"
 @page "/journal-{DocumentNameOrId}/project-{ProjectId}/document/{DocumentKey}"
 
-<h3>Документ (@(_dpk.HasValue ? _dpk > 0 ? "редактирование" : "создание нового" : "DEMO"))</h3>
+@inherits BlazorBusyComponentBaseAuthModel
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+<h3>Документ (@(_dpk.HasValue? _dpk > 0 ? "редактирование" : "создание нового" : "DEMO"))</h3>
 
 <MudCard>
     <MudCardContent>
@@ -23,7 +26,10 @@
         }
         else
         {
-            <DocumentEditConstructorComponent DocumentNameOrId="@DocumentNameOrId" ProjectId="ProjectId" DocumentKey="_dpk" ID="@($"doc:{DocumentKey}")" />
+            <DocumentEditConstructorComponent DocumentNameOrId="@DocumentNameOrId"
+                                              ID="@($"doc:{DocumentKey}")"
+                                              ProjectId="ProjectId"
+                                              DocumentKey="_dpk" />
         }
     </MudCardContent>
 </MudCard>
@@ -36,7 +42,7 @@
     public string? DocumentNameOrId { get; set; }
 
     /// <summary>
-    /// ProjectId
+    /// DocumentKey
     /// </summary>
     [Parameter]
     public string? DocumentKey { get; set; }

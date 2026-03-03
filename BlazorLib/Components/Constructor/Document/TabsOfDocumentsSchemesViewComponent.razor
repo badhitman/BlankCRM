@@ -33,9 +33,7 @@ else if (!CanEdit)
                 <MudTabPanel ID="@($"document-scheme_{questionnaire_page.Id}")"
                              Text="@questionnaire_page.Name"
                              BadgeDot="@(questionnaire_page.Id < 1)">
-                    <CascadingValue Value="questionnaire_page">
-                        <TabsOfDocumentViewComponent CanEdit="CanEdit" ReloadHandler="ReloadHandler" TabOfDocumentScheme="questionnaire_page" InUse="InUse" />
-                    </CascadingValue>
+                    <TabsOfDocumentViewComponent CanEdit="CanEdit" ReloadHandler="ReloadHandler" TabOfDocumentScheme="questionnaire_page" InUse="InUse" />
                 </MudTabPanel>
             }
         }
@@ -65,20 +63,18 @@ else
                              Disabled="@TabIsDisabled(tab_of_document_scheme.Id)"
                              ShowCloseIcon="@(tab_of_document_scheme.Id < 1)"
                              BadgeDot="@(tab_of_document_scheme.Id < 1)">
-                    <CascadingValue Value="tab_of_document_scheme">
-                        <TabOfDocumentEditViewComponent CanDownMove="@(CanDownPage(tab_of_document_scheme))"
-                                                        CanUpMove="@(CanUpPage(tab_of_document_scheme))"
-                                                        DocumentReloadHandle="DocumentReloadAction"
-                                                        SetIdForPageHandle="SetIdForPageAction"
-                                                        SetNameForPageHandle="SetNameForPage"
-                                                        DocumentPage="tab_of_document_scheme"
-                                                        SetHoldHandle="SetHoldAction"
-                                                        UpdateDocumentHandle="Update"
-                                                        ReloadHandler="ReloadHandler"
-                                                        AllForms="AllForms"
-                                                        CanEdit="CanEdit"
-                                                        InUse="InUse" />
-                    </CascadingValue>
+                    <TabOfDocumentEditViewComponent CanDownMove="@(CanDownPage(tab_of_document_scheme))"
+                                                    CanUpMove="@(CanUpPage(tab_of_document_scheme))"
+                                                    DocumentReloadHandle="DocumentReloadAction"
+                                                    SetIdForPageHandle="SetIdForPageAction"
+                                                    SetNameForPageHandle="SetNameForPage"
+                                                    DocumentPage="tab_of_document_scheme"
+                                                    SetHoldHandle="SetHoldAction"
+                                                    UpdateDocumentHandle="Update"
+                                                    ReloadHandler="ReloadHandler"
+                                                    AllForms="AllForms"
+                                                    CanEdit="CanEdit"
+                                                    InUse="InUse" />
                 </MudTabPanel>
             }
         }

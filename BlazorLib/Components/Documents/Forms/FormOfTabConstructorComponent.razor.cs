@@ -19,26 +19,26 @@ public partial class FormOfTabConstructorComponent : FormBaseModel
 
 
     /// <inheritdoc/>
-    [CascadingParameter]
+    [Parameter]
     public List<ValueDataForSessionOfDocumentModelDB>? SessionValues { get; set; }
     List<ValueDataForSessionOfDocumentModelDB>? _selfSessionValues;
 
     /// <summary>
     /// PK строки БД
     /// </summary>
-    [CascadingParameter]
+    [Parameter]
     public SessionOfDocumentDataModelDB? Session { get; set; }
 
     /// <summary>
     /// Tab
     /// </summary>
-    [CascadingParameter, EditorRequired]
+    [Parameter, EditorRequired]
     public required TabOfDocumentSchemeConstructorModelDB Tab { get; set; }
 
     /// <summary>
     /// Join
     /// </summary>
-    [CascadingParameter, EditorRequired]
+    [Parameter, EditorRequired]
     public required FormToTabJoinConstructorModelDB Join { get; set; }
 
 

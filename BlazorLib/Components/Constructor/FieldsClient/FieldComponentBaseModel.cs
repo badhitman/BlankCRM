@@ -29,25 +29,25 @@ public abstract class FieldComponentBaseModel : BlazorBusyComponentBaseModel, ID
     /// <summary>
     /// Текущий пользователь (сессия)
     /// </summary>
-    [CascadingParameter]
+    [Parameter]
     public UserInfoModel? CurrentUser { get; set; }
 
     /// <summary>
     /// Документ/сессия
     /// </summary>
-    [CascadingParameter]
+    [Parameter]
     public SessionOfDocumentDataModelDB? SessionDocument { get; set; }
 
     /// <summary>
     /// Страница/Таб документа
     /// </summary>
-    [CascadingParameter]
+    [Parameter]
     public TabOfDocumentSchemeConstructorModelDB? DocumentPage { get; set; }
 
     /// <summary>
     /// Связь формы со страницей опроса/анкеты. В режиме DEMO тут NULL
     /// </summary>
-    [CascadingParameter]
+    [Parameter]
     public FormToTabJoinConstructorModelDB? PageJoinForm { get; set; }
 
 

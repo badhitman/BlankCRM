@@ -21,12 +21,12 @@ public partial class TableCalculationKitComponent : BlazorBusyComponentBaseModel
 
 
     /// <inheritdoc/>
-    [CascadingParameter, EditorRequired]
+    [Parameter, EditorRequired]
     public required FormToTabJoinConstructorModelDB PageJoinForm { get; set; }
 
     /// <inheritdoc/>
-    [CascadingParameter, EditorRequired]
-    public SessionOfDocumentDataModelDB SessionDocument { get; set; } = default!;
+    [Parameter, EditorRequired]
+    public required SessionOfDocumentDataModelDB SessionDocument { get; set; } 
 
 
     /// <inheritdoc/>

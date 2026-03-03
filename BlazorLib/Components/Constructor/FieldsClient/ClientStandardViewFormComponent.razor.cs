@@ -3,7 +3,6 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
-using BlazorLib;
 using SharedLib;
 
 namespace BlazorLib.Components.Constructor.FieldsClient;
@@ -24,7 +23,7 @@ public partial class ClientStandardViewFormComponent : BlazorBusyComponentBaseMo
     /// <summary>
     /// Номер строки таблицы данных (0 - если форма обычная, а не не таблица/многострочная)
     /// </summary>
-    [CascadingParameter]
+    [Parameter]
     public uint RowNum { get; set; } = 0;
 
     /// <inheritdoc/>

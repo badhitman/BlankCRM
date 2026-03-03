@@ -10,17 +10,17 @@ namespace BlazorLib;
 /// <summary>
 /// FormBaseCore
 /// </summary>
-public abstract partial class FormBaseCore : DocumenBodyBaseComponent
+public abstract partial class FormBaseCore : DocumentBodyBaseComponent
 {
     /// <summary>
     /// Form Metadata
     /// </summary>
-    [CascadingParameter, EditorRequired]
+    [Parameter, EditorRequired]
     public required FormFitModel FormMetadata { get; set; }
 
     /// <summary>
     /// TabMetadata
     /// </summary>
-    [CascadingParameter, EditorRequired]
+    [Parameter, EditorRequired]
     public required TabFitModel TabMetadata { get; set; }
 }

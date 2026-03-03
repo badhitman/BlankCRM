@@ -13,41 +13,39 @@ else
 {
     <MudCard>
         <MudCardContent id="@($"tab:{ID}")">
-            <CascadingValue Value="this">
-                @{
-                    int i = -1;
-                }
-                @foreach (FormFitModel form_metadata in TabMetadata.Forms)
-                {
-                    i++;
-                    FormToTabJoinConstructorModelDB _join_form = TabOfDocument.JoinsForms![i];
-                    List<ValueDataForSessionOfDocumentModelDB>? _sv = SessionValues?.Where(x => x.JoinFormToTab!.FormId == _join_form.FormId).ToList();
-                    _join_form = TabOfDocument.JoinsForms![i];
+            @{
+                int i = -1;
+            }
+            @foreach (FormFitModel form_metadata in TabMetadata.Forms)
+            {
+                i++;
+                FormToTabJoinConstructorModelDB _join_form = TabOfDocument.JoinsForms![i];
+                List<ValueDataForSessionOfDocumentModelDB>? _sv = SessionValues?.Where(x => x.JoinFormToTab!.FormId == _join_form.FormId).ToList();
+                _join_form = TabOfDocument.JoinsForms![i];
 
-                    <CascadingValue Value="_join_form">
-                        <CascadingValue Value="TabMetadata">
-                            <CascadingValue Value="FormsStack">
-                                <CascadingValue Value="form_metadata">
-                                    <CascadingValue Value="_sv">
-                                        <CascadingValue Value="FormChangeEvent">
-                                            <CascadingValue Value="TabOfDocument">
-                                                @if (form_metadata.IsTable)
-                                            {
-                                                <TableFormOfTabConstructorComponent DocumentKey="DocumentKey" ID="@($"[teble]{ID}>{form_metadata.SystemName}")" />
-                                            }
-                                            else
-                                            {
-                                                <FormOfTabConstructorComponent DocumentKey="DocumentKey" ID="@($"{ID}>{form_metadata.SystemName}")" />
-                                            }
-                                        </CascadingValue>
-                                    </CascadingValue>
-                                </CascadingValue>
-                            </CascadingValue>
-                        </CascadingValue>
-                    </CascadingValue>
-                </CascadingValue>
+                @if (form_metadata.IsTable)
+                {
+                    <TableFormOfTabConstructorComponent DocumentKey="DocumentKey"
+                                                        SessionValues="_sv"
+                                                        ID="@($"[teble]{ID}>{form_metadata.SystemName}")"
+                                                        FormMetadata="form_metadata"
+                                                        Join="_join_form"
+                                                        TabMetadata="TabMetadata" />
                 }
-            </CascadingValue>
+                else
+                {
+                    <FormOfTabConstructorComponent DocumentKey="DocumentKey"
+                                                   ID="@($"{ID}>{form_metadata.SystemName}")"
+                                                   TabMetadata="TabMetadata"
+                                                   FormMetadata="form_metadata"
+                                                   Join="_join_form"
+                                                   FormsStack="FormsStack"
+                                                   Tab="Tab"
+                                                   Session="Session"
+                                                   SessionValues="SessionValues"
+                                                   FormChangeAction="FormChangeEvent" ParentForm="ParentForm" />
+                }
+            }
         </MudCardContent>
     </MudCard>
 }

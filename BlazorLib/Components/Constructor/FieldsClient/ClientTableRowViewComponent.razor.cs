@@ -30,15 +30,15 @@ public partial class ClientTableRowViewComponent : ComponentBase, IDomBaseCompon
     public required uint RowNum { get; set; }
 
     /// <inheritdoc/>
-    [CascadingParameter]
+    [Parameter]
     public bool? InUse { get; set; }
 
     /// <inheritdoc/>
-    [CascadingParameter, EditorRequired]
+    [Parameter, EditorRequired]
     public required FormToTabJoinConstructorModelDB PageJoinForm { get; set; }
 
     /// <inheritdoc/>
-    [CascadingParameter, EditorRequired]
+    [Parameter, EditorRequired]
     public required SessionOfDocumentDataModelDB SessionDocument { get; set; }
 
     /// <inheritdoc/>

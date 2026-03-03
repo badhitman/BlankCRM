@@ -42,7 +42,8 @@
                 </div>
             </nav>
         }
-        <ElementsOfDirectoryListViewComponent @ref="elementsListOfDirectoryView_ref" SelectedDirectoryId="@(directoryNav_ref?.SelectedDirectoryId ?? -1)"
+        <ElementsOfDirectoryListViewComponent @ref="elementsListOfDirectoryView_ref"
+                                              SelectedDirectoryId="@(directoryNav_ref?.SelectedDirectoryId ?? -1)"
                                               ReloadHandler="ReloadHandler"
                                               CanEdit="CanEdit" />
     </div>

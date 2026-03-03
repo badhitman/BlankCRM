@@ -13,7 +13,7 @@
             </div>
             <div class="col-12" title="Выбранная схема документа используется в том числе и для фильтрации выводимых ссылок">
                 <label class="visually-hidden" for="inlineFormSelectPref">Документ/схема</label>
-                <select @bind="SelectedDocumentSchemeId" class="form-select" disabled="@(ParentFormsPage is null)" id="inlineFormSelectPref">
+                <select @bind="SelectedDocumentSchemeId" class="form-select" id="inlineFormSelectPref">
                     <option value="0">Выбор анкеты...</option>
                     @foreach (DocumentSchemeConstructorModelDB q in DocumentsAll)
                     {
@@ -22,12 +22,12 @@
                 </select>
             </div>
             <div class="col-12">
-                <button @onclick="CreateNewSession" disabled="@(SelectedDocumentSchemeId < 1 || ParentFormsPage is null)" type="button" class="btn btn@(SelectedDocumentSchemeId > 0 ? "" : "-outline")-primary">@CreateSessionButtonTitle</button>
+                <button @onclick="CreateNewSession" disabled="@(SelectedDocumentSchemeId < 1)" type="button" class="btn btn@(SelectedDocumentSchemeId > 0 ? "" : "-outline")-primary">@CreateSessionButtonTitle</button>
             </div>
             @if (SelectedDocumentSchemeId > 0)
             {
                 <div class="col-12">
-                    <button @onclick="() => { SelectedDocumentSchemeId = 0; NameSessionForCreate = null; }" type="button" class="btn btn-outline-secondary" disabled="@(ParentFormsPage is null)">Отмена</button>
+                    <button @onclick="() => { SelectedDocumentSchemeId = 0; NameSessionForCreate = null; }" type="button" class="btn btn-outline-secondary">Отмена</button>
                 </div>
             }
         </form>

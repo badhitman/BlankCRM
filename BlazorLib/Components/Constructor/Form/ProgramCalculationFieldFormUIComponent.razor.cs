@@ -17,8 +17,8 @@ public partial class ProgramCalculationFieldFormUIComponent : ComponentBase
     public FieldFormConstructorModelDB FieldObject { get; set; } = default!;
 
     /// <inheritdoc/>
-    [CascadingParameter, EditorRequired]
-    public Action<FieldFormBaseLowConstructorModel, Type> StateHasChangedHandler { get; set; } = default!;
+    [Parameter, EditorRequired]
+    public required Action<FieldFormBaseLowConstructorModel, Type> StateHasChangedHandler { get; set; }
 
     string? _fields_names;
     string? FieldsNames

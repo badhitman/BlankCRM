@@ -12,7 +12,7 @@ namespace BlazorLib;
 /// <summary>
 /// Document edit
 /// </summary>
-public abstract class DocumentEditBaseComponent : DocumenBodyBaseComponent
+public abstract class DocumentEditBaseComponent : DocumentBodyBaseComponent
 {
     /// <inheritdoc/>
     [Inject]

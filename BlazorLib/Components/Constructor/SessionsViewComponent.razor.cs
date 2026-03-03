@@ -19,13 +19,10 @@ public partial class SessionsViewComponent : BlazorBusyComponentBaseAuthModel
     [Inject]
     IConstructorTransmission ConstructorRepo { get; set; } = default!;
 
-    [Inject]
-    IUsersProfilesService UsersProfilesRepo { get; set; } = default!;
-
 
     /// <inheritdoc/>
-    [CascadingParameter, EditorRequired]
-    public required ConstructorMainManageComponent ParentFormsPage { get; set; }
+    [Parameter, EditorRequired]
+    public required int ProjectId { get; set; }
 
 
     IEnumerable<DocumentSchemeConstructorModelDB> DocumentsAll = [];
@@ -51,7 +48,7 @@ public partial class SessionsViewComponent : BlazorBusyComponentBaseAuthModel
     {
         get
         {
-            if (ParentFormsPage is null)
+            if (ProjectId < 1)
                 return "Не выбран основной/рабочий проект";
 
             if (SelectedDocumentSchemeId < 1)
@@ -69,7 +66,7 @@ public partial class SessionsViewComponent : BlazorBusyComponentBaseAuthModel
         if (string.IsNullOrWhiteSpace(CurrentUserSession.UserId))
             throw new Exception("Не определён текущий пользователь");
 
-        if (ParentFormsPage.MainProject is null)
+        if (ProjectId < 1)
             throw new Exception("Не установлен основной проект");
 
         RequestSessionsDocumentsRequestPaginationModel req = new()
@@ -79,7 +76,7 @@ public partial class SessionsViewComponent : BlazorBusyComponentBaseAuthModel
             FindQuery = searchString,
             DocumentSchemeId = SelectedDocumentSchemeId,
             FilterUserId = CurrentUserSession.UserId,
-            ProjectId = ParentFormsPage.MainProject.Id
+            ProjectId = ProjectId
         };
         await SetBusyAsync(token: token);
         await Task.Delay(1, token);
@@ -167,7 +164,7 @@ public partial class SessionsViewComponent : BlazorBusyComponentBaseAuthModel
             return;
         }
 
-        if (ParentFormsPage.MainProject is null)
+        if (ProjectId < 1)
             throw new Exception("Не выбран основной/текущий проект");
 
         SessionOfDocumentDataModelDB req = new()
@@ -176,7 +173,7 @@ public partial class SessionsViewComponent : BlazorBusyComponentBaseAuthModel
             NormalizedUpperName = NameSessionForCreate.Trim().ToUpper(),
             OwnerId = SelectedDocumentSchemeId,
             AuthorUser = CurrentUserSession.UserId,
-            ProjectId = ParentFormsPage.MainProject.Id
+            ProjectId = ProjectId
         };
         await SetBusyAsync();
         TResponseModel<SessionOfDocumentDataModelDB> rest = await ConstructorRepo.UpdateOrCreateSessionDocumentAsync(req);
@@ -211,12 +208,20 @@ public partial class SessionsViewComponent : BlazorBusyComponentBaseAuthModel
 
     async Task RestUpdate()
     {
-        if (ParentFormsPage.MainProject is null)
+        if (ProjectId < 1)
             throw new Exception("No main/used project selected");
 
         await SetBusyAsync();
 
-        TPaginationResponseStandardModel<DocumentSchemeConstructorModelDB> rest = await ConstructorRepo.RequestDocumentsSchemesAsync(new() { RequestPayload = new() { PageNum = 0, PageSize = 1000 }, ProjectId = ParentFormsPage.MainProject.Id });
+        TPaginationResponseStandardModel<DocumentSchemeConstructorModelDB> rest = await ConstructorRepo.RequestDocumentsSchemesAsync(new()
+        {
+            RequestPayload = new()
+            {
+                PageNum = 0,
+                PageSize = 1000
+            },
+            ProjectId = ProjectId
+        });
 
         if (rest.Response is null)
         {

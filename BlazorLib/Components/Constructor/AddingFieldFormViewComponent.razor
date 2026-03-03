@@ -26,19 +26,28 @@ else
     switch (SelectedTypeFieldForAdding)
     {
         case int.MaxValue:
-            <DirectoryFieldFormUIComponent @ref="FieldDirUI" FieldObject="FieldObjectForDirectory" Form="Form" />
+            <DirectoryFieldFormUIComponent @ref="FieldDirUI"
+                                           FieldObject="FieldObjectForDirectory"
+                                           Form="Form"
+                                           StateHasChangedHandler="StateHasChangedHandler" />
             break;
         case (int)TypesFieldsFormsEnum.Text:
-            <TextFieldFormUIComponent @ref="FieldTextUI" FieldObject="FieldObjectStandard" />
+            <TextFieldFormUIComponent @ref="FieldTextUI"
+                                      FieldObject="FieldObjectStandard"
+                                      StateHasChangedHandler="StateHasChangedHandler" />
             break;
         case (int)TypesFieldsFormsEnum.ProgramCalculationDouble:
             <div class="col-auto">
-                <ProgramCalculationFieldFormUIComponent @ref="FieldProgramCalculationDouble" FieldObject="FieldObjectStandard" />
+                <ProgramCalculationFieldFormUIComponent @ref="FieldProgramCalculationDouble"
+                                                        FieldObject="FieldObjectStandard"
+                                                        StateHasChangedHandler="StateHasChangedHandler" />
             </div>
             break;
         case (int)TypesFieldsFormsEnum.Generator:
             <div class="col-auto">
-                <GeneratorFieldFormUIComponent @ref="FieldGeneratorUI" FieldObject="FieldObjectStandard" />
+                <GeneratorFieldFormUIComponent @ref="FieldGeneratorUI"
+                                               FieldObject="FieldObjectStandard"
+                                               StateHasChangedHandler="StateHasChangedHandler" />
             </div>
             break;
     }

@@ -20,7 +20,7 @@ public partial class ElementsOfDirectoryListViewComponent : BlazorBusyComponentB
     /// <inheritdoc/>
     [Parameter, EditorRequired]
     public required int SelectedDirectoryId { get; set; }
-    
+
     /// <inheritdoc/>
     [Parameter, EditorRequired]
     public required bool CanEdit { get; set; }
@@ -48,9 +48,9 @@ public partial class ElementsOfDirectoryListViewComponent : BlazorBusyComponentB
         }
 
         await SetBusyAsync();
-        
+
         TResponseModel<List<EntryStandardModel>> rest = await ConstructorRepo.GetElementsOfDirectoryAsync(SelectedDirectoryId);
-        
+
         if (!rest.Success())
             SnackBarRepo.ShowMessagesResponse(rest.Messages);
 

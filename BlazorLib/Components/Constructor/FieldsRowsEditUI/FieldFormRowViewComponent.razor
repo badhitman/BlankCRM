@@ -67,27 +67,27 @@
                                                     ReadOnly="@(!CanEdit)" />
                         </div>
                     </div>
-                    <CascadingValue Value="SetFieldAction">
-                        @if (_field_master is FieldFormConstructorModelDB sf)
-                        {
-                            <FieldFormRowEditComponent Field="sf" @ref="FieldEditUI_ref"
-                                                       Form="Form"
-                                                       CanEdit="CanEdit"
-                                                       PresetTypes="PresetTypes" />
-                        }
-                        else if (_field_master is FieldFormAkaDirectoryConstructorModelDB df)
-                        {
-                            <FieldDirectoryFormRowEditComponent Field="df" @ref="FieldDirUI_ref"
-                                                                Form="Form"
-                                                                CanEdit="CanEdit" />
-                        }
-                        else
-                        {
-                            <div class="alert alert-danger" role="alert">
-                                `@(_field_master.GetType().Name)`. Ошибка 66CB949A-9E66-4312-899E-DCA358E8574B
-                            </div>
-                        }
-                    </CascadingValue>
+
+                    @if (_field_master is FieldFormConstructorModelDB sf)
+                    {
+                        <FieldFormRowEditComponent Field="sf" @ref="FieldEditUI_ref"
+                                                   Form="Form"
+                                                   CanEdit="CanEdit"
+                                                   PresetTypes="PresetTypes" StateHasChangedHandler="SetFieldAction" />
+                    }
+                    else if (_field_master is FieldFormAkaDirectoryConstructorModelDB df)
+                    {
+                        <FieldDirectoryFormRowEditComponent Field="df" @ref="FieldDirUI_ref"
+                                                            Form="Form"
+                                                            CanEdit="CanEdit" StateHasChangedHandler="SetFieldAction" />
+                    }
+                    else
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            `@(_field_master.GetType().Name)`. Ошибка 66CB949A-9E66-4312-899E-DCA358E8574B
+                        </div>
+                    }
+
                     <div class="col-12">
                         <div class="hstack mt-3">
                             <div></div>

@@ -101,11 +101,7 @@
 </div>
 
 @code {
-    // [Inject]
-    // IManufactureService ManufactureRepo { get; set; } = default!;
-
-
-    [CascadingParameter, EditorRequired]
+    [Parameter, EditorRequired]
     public required ManufactureComponent ManufactureParentView { get; set; }
 
 

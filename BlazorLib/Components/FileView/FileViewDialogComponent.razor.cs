@@ -18,8 +18,9 @@ public partial class FileViewDialogComponent : BlazorBusyComponentBaseModel
     IStorageTransmission StorageRepo { get; set; } = default!;
 
 
-    [CascadingParameter]
-    IMudDialogInstance MudDialog { get; set; } = default!;
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required IMudDialogInstance MudDialog { get; set; }
 
     /// <inheritdoc/>
     [Parameter, EditorRequired]

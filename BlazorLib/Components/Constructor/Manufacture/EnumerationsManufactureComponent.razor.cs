@@ -3,7 +3,6 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
-using BlazorLib;
 using MudBlazor;
 using SharedLib;
 
@@ -15,7 +14,7 @@ namespace BlazorLib.Components.Constructor.Manufacture;
 public partial class EnumerationsManufactureComponent : BlazorBusyComponentBaseModel
 {
     /// <inheritdoc/>
-    [CascadingParameter, EditorRequired]
+    [Parameter, EditorRequired]
     public required ManufactureComponent ManufactureParentView { get; set; }
 
 
@@ -31,7 +30,7 @@ public partial class EnumerationsManufactureComponent : BlazorBusyComponentBaseM
     /// </summary>
     public void ReloadTree()
     {
-        if (ManufactureParentView.ParentFormsPage.SystemNamesManufacture is null)
+        if (ManufactureParentView.SystemNamesManufacture is null)
             return;
 
         ArgumentNullException.ThrowIfNull(ManufactureParentView.CurrentProject.Directories);
@@ -51,7 +50,7 @@ public partial class EnumerationsManufactureComponent : BlazorBusyComponentBaseM
 
                 TreeItemDataModel _ti = new(_et, icon_element)
                 {
-                    SystemName = ManufactureParentView.ParentFormsPage.SystemNamesManufacture.GetSystemName(_et.Id, _et.Tag),
+                    SystemName = ManufactureParentView.SystemNamesManufacture.GetSystemName(_et.Id, _et.Tag),
                 };
 
                 return _ti;
@@ -60,7 +59,7 @@ public partial class EnumerationsManufactureComponent : BlazorBusyComponentBaseM
             EntryTagModel _et = EntryTagModel.Build(dir.Id, dir.Name, ManufactureComponent.DirectoryTypeName);
             TreeItemDataModel _ti = new(_et, icon_directory)
             {
-                SystemName = ManufactureParentView.ParentFormsPage.SystemNamesManufacture.GetSystemName(dir.Id, ManufactureComponent.DirectoryTypeName),
+                SystemName = ManufactureParentView.SystemNamesManufacture.GetSystemName(dir.Id, ManufactureComponent.DirectoryTypeName),
                 Children = dir.Elements is null ? null : [.. dir.Elements.Select(ElementOfDirectoryToTreeItem)],
                 ErrorMessage = dir.Elements!.Count == 0 ? $"Список/справочник '{dir.Name}' не имеет элементов перечисления" : null,
             };

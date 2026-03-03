@@ -19,6 +19,7 @@ public partial class TabOfDocumentMainViewComponent : BlazorBusyComponentBaseAut
     [Inject]
     IConstructorTransmission ConstructorRepo { get; set; } = default!;
 
+
     /// <inheritdoc/>
     [Parameter, EditorRequired]
     public required bool CanEdit { get; set; }
@@ -58,7 +59,10 @@ public partial class TabOfDocumentMainViewComponent : BlazorBusyComponentBaseAut
     /// <inheritdoc/>
     [Parameter, EditorRequired]
     public required bool InUse { get; set; }
-
+   
+    /// <inheritdoc/>
+    [Parameter]
+    public SessionOfDocumentDataModelDB? SessionDocument { get; set; }
 
 
     /// <inheritdoc/>

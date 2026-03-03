@@ -11,12 +11,13 @@
                 <div class="col-auto">
                     <label for="inputName" class="col-form-label">Добавить поле</label>
                 </div>
-                <CascadingValue Value="AddingFieldStateHasChangedAction">
-                    <AddingFieldFormViewComponent @ref="field_creating_field_ref"
-                                                  FieldObject="_field_master"
-                                                  PresetTypes="PresetTypes"
-                                                  Form="Form" />
-                </CascadingValue>
+
+                <AddingFieldFormViewComponent @ref="field_creating_field_ref"
+                                              FieldObject="_field_master"
+                                              PresetTypes="PresetTypes"
+                                              Form="Form"
+                                              StateHasChangedHandler="AddingFieldStateHasChangedAction" />
+
                 @if (field_creating_field_ref?.SelectedTypeFieldForAdding > 0)
                 {
                     <div class="col-auto">

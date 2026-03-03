@@ -22,7 +22,7 @@ public partial class ProjectEditDialogComponent : BlazorBusyComponentBaseModel
 
 
     /// <inheritdoc/>
-    [CascadingParameter]
+    [Parameter,EditorRequired]
     public required IMudDialogInstance MudDialog { get; set; }
 
     /// <inheritdoc/>

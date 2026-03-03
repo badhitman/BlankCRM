@@ -12,11 +12,19 @@
 </div>
 @if (SelectedTypeFieldForEditRow == TypesFieldsFormsEnum.Text)
 {
-    <TextFieldFormRowEditUIComponent Field="Field" @ref="FieldTextUI" Form="Form" CanEdit="CanEdit" />
+    <TextFieldFormRowEditUIComponent Field="Field"
+                                     @ref="FieldTextUI"
+                                     Form="Form"
+                                     CanEdit="CanEdit"
+                                     StateHasChangedHandler="StateHasChangedHandler" />
 }
 else if (SelectedTypeFieldForEditRow == TypesFieldsFormsEnum.Generator)
 {
-    <GeneratorFieldFormRowEditUIComponent Field="Field" @ref="FieldGeneratorUI" Form="Form" CanEdit="CanEdit" />
+    <GeneratorFieldFormRowEditUIComponent Field="Field"
+                                          @ref="FieldGeneratorUI"
+                                          Form="Form"
+                                          CanEdit="CanEdit"
+                                          StateHasChangedHandler="StateHasChangedHandler" />
 }
 else if (SelectedTypeFieldForEditRow == TypesFieldsFormsEnum.ProgramCalculationDouble)
 {

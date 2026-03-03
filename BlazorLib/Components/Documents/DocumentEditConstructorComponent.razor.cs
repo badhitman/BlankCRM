@@ -3,7 +3,6 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
-using BlazorLib;
 using SharedLib;
 
 namespace BlazorLib.Components.Documents;
@@ -35,10 +34,10 @@ public partial class DocumentEditConstructorComponent : DocumentEditBaseComponen
             return;
 
         await SetBusyAsync();
-        TResponseModel<DocumentSchemeConstructorModelDB[]?> ds = await JournalRepo.FindDocumentSchemes(DocumentNameOrId, ProjectId);
-        SnackBarRepo.ShowMessagesResponse(ds.Messages);
+        TResponseModel<DocumentSchemeConstructorModelDB[]?> docSchs = await JournalRepo.FindDocumentSchemes(DocumentNameOrId, ProjectId);
+        SnackBarRepo.ShowMessagesResponse(docSchs.Messages);
 
-        schemes = ds.Response;
+        schemes = docSchs.Response;
 
         if (schemes?.Length == 1 && DocumentKey > 0)
         {

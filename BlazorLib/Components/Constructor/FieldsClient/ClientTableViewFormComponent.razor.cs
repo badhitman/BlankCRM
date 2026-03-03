@@ -28,33 +28,29 @@ public partial class ClientTableViewFormComponent : BlazorBusyComponentBaseModel
     public string? Title { get; set; }
 
     /// <inheritdoc/>
-    [CascadingParameter, EditorRequired]
+    [Parameter, EditorRequired]
     public required FormToTabJoinConstructorModelDB PageJoinForm { get; set; }
 
     /// <inheritdoc/>
-    [CascadingParameter]
+    [Parameter]
     public SessionOfDocumentDataModelDB? SessionDocument { get; set; }
 
     /// <inheritdoc/>
-    [CascadingParameter]
+    [Parameter]
     public bool? InUse { get; set; }
 
     /// <inheritdoc/>
-    [CascadingParameter]
+    [Parameter]
     public TabOfDocumentSchemeConstructorModelDB? DocumentPage { get; set; }
 
     /// <inheritdoc/>
     [Parameter, EditorRequired]
     public required FormConstructorModelDB Form { get; set; }
 
-    /// <inheritdoc/>
-    [CascadingParameter, EditorRequired]
-    public required ConstructorMainManageComponent ParentFormsPage { get; set; }
-
     /// <summary>
     /// Текущий пользователь (сессия)
     /// </summary>
-    [CascadingParameter]
+    [Parameter]
     public UserInfoModel? CurrentUser { get; set; }
 
 
@@ -74,7 +70,6 @@ public partial class ClientTableViewFormComponent : BlazorBusyComponentBaseModel
             { x => x.SessionDocument, SessionDocument },
             { x => x.DocumentPage, DocumentPage },
             { x => x.PageJoinForm, PageJoinForm },
-            { x => x.ParentFormsPage, ParentFormsPage }
         };
 
         DialogOptions options = new() { MaxWidth = MaxWidth.ExtraExtraLarge, FullWidth = true, CloseOnEscapeKey = true };
@@ -147,7 +142,6 @@ public partial class ClientTableViewFormComponent : BlazorBusyComponentBaseModel
             { x => x.SessionDocument, SessionDocument },
             { x => x.DocumentPage, DocumentPage },
             { x => x.PageJoinForm, PageJoinForm },
-            { x => x.ParentFormsPage, ParentFormsPage }
         };
         DialogOptions options = new() { MaxWidth = MaxWidth.ExtraExtraLarge, FullWidth = true, CloseOnEscapeKey = true };
         IDialogReference result = await DialogServiceRepo.ShowAsync<ClientTableRowEditDialogComponent>($"Созданная строка данных №{rest.Response}", parameters, options);

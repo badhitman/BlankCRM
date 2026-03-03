@@ -14,11 +14,11 @@ public partial class TextFieldFormUIComponent : ComponentBase
 {
     /// <inheritdoc/>
     [Parameter, EditorRequired]
-    public FieldFormConstructorModelDB FieldObject { get; set; } = default!;
+    public FieldFormConstructorModelDB FieldObject { get; set; }
 
     /// <inheritdoc/>
-    [CascadingParameter, EditorRequired]
-    public Action<FieldFormBaseLowConstructorModel, Type> StateHasChangedHandler { get; set; } = default!;
+    [Parameter, EditorRequired]
+    public required Action<FieldFormBaseLowConstructorModel, Type> StateHasChangedHandler { get; set; }
 
     /// <inheritdoc/>
     public bool IsMultiline

@@ -43,7 +43,9 @@
                 <tbody>
                     @foreach (ProjectViewModel pr in ProjectsOfUser)
                     {
-                        <ProjectTableRowComponent ProjectRow="pr" />
+                        <ProjectTableRowComponent ProjectRow="pr"
+                                                  ParentProjectsList="this"
+                                                  ParentFormsPage="ParentFormsPage" />
                     }
                 </tbody>
             </CascadingValue>

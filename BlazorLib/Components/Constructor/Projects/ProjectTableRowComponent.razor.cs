@@ -31,11 +31,11 @@ public partial class ProjectTableRowComponent : BlazorBusyComponentBaseAuthModel
     /// <summary>
     /// Ссылка на 
     /// </summary>
-    [CascadingParameter, EditorRequired]
+    [Parameter, EditorRequired]
     public required ProjectsListComponent ParentProjectsList { get; set; }
 
     /// <inheritdoc/>
-    [CascadingParameter, EditorRequired]
+    [Parameter, EditorRequired]
     public required ConstructorMainManageComponent ParentFormsPage { get; set; }
 
 

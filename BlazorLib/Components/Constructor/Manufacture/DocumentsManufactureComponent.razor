@@ -9,7 +9,7 @@
             <ItemTemplate Context="item">
                 <MudTreeViewItem Items="@item.Children" Icon="@item.Icon" IconColor="@GetColor(item.Icon)">
                     <BodyContent>
-                        <SystemNameManufactureComponent Item="item" />
+                        <SystemNameManufactureComponent Item="item" ManufactureParentView="ManufactureParentView" />
                     </BodyContent>
                 </MudTreeViewItem>
             </ItemTemplate>

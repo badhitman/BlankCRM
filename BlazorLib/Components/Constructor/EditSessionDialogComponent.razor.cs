@@ -29,8 +29,8 @@ public partial class EditSessionDialogComponent : BlazorBusyComponentBaseModel
 
 
     /// <inheritdoc/>
-    [CascadingParameter]
-    public IMudDialogInstance MudDialog { get; set; } = default!;
+    [Parameter, EditorRequired]
+    public required IMudDialogInstance MudDialog { get; set; }
 
     /// <inheritdoc/>
     [Parameter, EditorRequired]
@@ -107,7 +107,7 @@ public partial class EditSessionDialogComponent : BlazorBusyComponentBaseModel
     {
         await SetBusyAsync();
         TResponseModel<SessionOfDocumentDataModelDB> rest = await ConstructorRepo.UpdateOrCreateSessionDocumentAsync(session_origin);
-        
+
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {

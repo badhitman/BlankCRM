@@ -37,11 +37,11 @@ public class FieldFormEditFormBaseComponent : ComponentBase, IDomBaseComponent
     public bool CanEdit { get; set; }
 
     /// <inheritdoc/>
-    [CascadingParameter, EditorRequired]
+    [Parameter, EditorRequired]
     public required Action<FieldFormConstructorModelDB> StateHasChangedHandler { get; set; }
 
     /// <inheritdoc/>
-    [CascadingParameter]
+    [Parameter]
     public SessionOfDocumentDataModelDB? SessionDocument { get; set; }
 
 

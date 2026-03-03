@@ -13,7 +13,7 @@ namespace BlazorLib.Components.Constructor.FieldsClient;
 public partial class FieldBaseClientComponent : FieldComponentBaseModel
 {
     /// <inheritdoc/>
-    [CascadingParameter, EditorRequired]
+    [Parameter, EditorRequired]
     public FieldFormConstructorModelDB Field { get; set; } = default!;
 
 

@@ -21,7 +21,7 @@ public partial class IssueBodyComponent : IssueWrapBaseModel
     /// <summary>
     /// IssueSource
     /// </summary>
-    [Parameter, CascadingParameter]
+    [Parameter]
     public IssueHelpDeskModelDB? IssueSource { get; set; }
 
     bool CanSave =>

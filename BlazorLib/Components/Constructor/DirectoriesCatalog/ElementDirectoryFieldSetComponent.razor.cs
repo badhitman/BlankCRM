@@ -21,15 +21,11 @@ public partial class ElementDirectoryFieldSetComponent : BlazorBusyComponentBase
     public required int SelectedDirectoryId { get; set; }
 
     /// <inheritdoc/>
-    [CascadingParameter, EditorRequired]
-    public EntryStandardModel ElementObject { get; set; } = default!;
+    [Parameter, EditorRequired]
+    public required EntryStandardModel ElementObject { get; set; }
 
     /// <inheritdoc/>
-    [CascadingParameter, EditorRequired]
-    public Action<int> DeleteElementOfDirectoryHandler { get; set; } = default!;
-
-    /// <inheritdoc/>
-    [CascadingParameter, EditorRequired]
+    [Parameter, EditorRequired]
     public required ElementsOfDirectoryListViewComponent ParentDirectoryElementsList { get; set; }
 
     /// <inheritdoc/>
