@@ -1,17 +1,6 @@
 ﻿@using BlazorLib.Components.Constructor.Document
 
-@if (SessionOfDocumentData is null || SessionOfDocumentData.Id < 1)
-{
-    <figure class="text-center">
-        <blockquote class="blockquote">
-            <p>Ошибка 2490B8C9-270C-4E84-8C3E-D5342CDC456E.</p>
-        </blockquote>
-        <figcaption class="blockquote-footer">
-            попробуйте <cite title="F5">перезагрузить страницу</cite>
-        </figcaption>
-    </figure>
-}
-else if (SessionOfDocumentData.Owner?.Tabs is null)
+@if (SessionOfDocumentData.Owner?.Tabs is null)
 {
     <div class="alert alert-dark" role="alert">
         SessionDocument.Owner?.Pages is null! ошибка 58539246-ACB4-46F0-A9E9-7EF06EEE10E6
@@ -58,13 +47,12 @@ else
                              Text="@tab_of_document_scheme.Name"
                              ShowCloseIcon="@(tab_of_document_scheme.Id < 1)"
                              BadgeDot="@(tab_of_document_scheme.Id < 1)">
-                    <TabsOfDocumentViewComponent CanEdit="CanEdit"
-                                                 InUse="InUse"
-                                                 ReloadHandler="ReloadHandler"
-                                                 TabOfDocumentScheme="tab_of_document_scheme" />
+                    <TabsOfDocumentViewComponent ReloadHandler="ReloadHandler"
+                                                 TabOfDocumentScheme="tab_of_document_scheme"
+                                                 SessionOfDocumentData="SessionOfDocumentData" />
                 </MudTabPanel>
             }
         }
     </MudTabs>
-    <DoneClientViewComponent SessionDocument="SessionOfDocumentData" InUse="InUse"  />
+    <DoneClientViewComponent SessionDocument="SessionOfDocumentData" />
 }

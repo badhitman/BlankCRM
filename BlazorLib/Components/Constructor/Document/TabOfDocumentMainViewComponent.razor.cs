@@ -21,8 +21,8 @@ public partial class TabOfDocumentMainViewComponent : BlazorBusyComponentBaseAut
 
 
     /// <inheritdoc/>
-    [Parameter, EditorRequired]
-    public required bool CanEdit { get; set; }
+    [Parameter]
+    public bool CanEdit { get; set; }
 
     /// <inheritdoc/>
     [Parameter, EditorRequired]

@@ -21,11 +21,7 @@ public partial class DocumentClientViewComponent : ComponentBase
     /// Session questionnaire
     /// </summary>
     [Parameter, EditorRequired]
-    public required SessionOfDocumentDataModelDB? SessionOfDocumentData { get; set; }
-
-    /// <inheritdoc/>
-    [Parameter, EditorRequired]
-    public bool CanEdit { get; set; }
+    public required SessionOfDocumentDataModelDB SessionOfDocumentData { get; set; }
 
     /// <inheritdoc/>
     [Parameter, EditorRequired]
@@ -35,10 +31,5 @@ public partial class DocumentClientViewComponent : ComponentBase
     /// <summary>
     /// Информация
     /// </summary>
-    protected MarkupString Information => (MarkupString)(!string.IsNullOrWhiteSpace(SessionOfDocumentData?.Description) ? SessionOfDocumentData.Description : SessionOfDocumentData?.Owner!.Description ?? "");
-
-    /// <summary>
-    /// В зависимости режима (InUse) стили, которые добавятся к кнопке добавления: Если документ используется для реального заполнения, то кнопка скрывается.
-    /// </summary>
-    protected string AddIconStyleInUse => SessionOfDocumentData is null ? "display:none;" : "";
+    protected MarkupString Information => (MarkupString)(!string.IsNullOrWhiteSpace(SessionOfDocumentData.Description) ? SessionOfDocumentData.Description : SessionOfDocumentData.Owner!.Description ?? "");
 }

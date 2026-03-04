@@ -27,6 +27,11 @@ public partial class DocumentClientViewPage : BlazorBusyComponentBaseModel
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
+        ReloadHandler();
+    }
+
+    async void ReloadHandler()
+    {
         await SetBusyAsync();
 
         TResponseModel<SessionOfDocumentDataModelDB> rest = await ConstructorRepo.GetSessionDocumentDataAsync(DocumentGuid.ToString());
@@ -36,12 +41,12 @@ public partial class DocumentClientViewPage : BlazorBusyComponentBaseModel
 
         SessionDocument = rest.Response;
         if (SessionDocument.DataSessionValues is not null && SessionDocument.DataSessionValues.Count != 0)
-            SessionDocument.DataSessionValues.ForEach(x => { x.Owner ??= SessionDocument; x.OwnerId = SessionDocument.Id; });
+            SessionDocument.DataSessionValues.ForEach(x =>
+            {
+                x.Owner ??= SessionDocument;
+                x.OwnerId = SessionDocument.Id;
+            });
 
         await SetBusyAsync(false);
-    }
-    void ReloadHandler()
-    {
-
     }
 }

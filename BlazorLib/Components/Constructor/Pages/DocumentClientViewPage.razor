@@ -5,7 +5,7 @@
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 @inherits BlazorBusyComponentBaseModel
 
-<span>Опрос/анкета</span>
+<h5>Опрос/анкета</h5>
 
 @if (IsBusyProgress || SessionDocument.Id < 1)
 {
@@ -18,6 +18,5 @@
 else
 {
     <DocumentClientViewComponent SessionOfDocumentData="SessionDocument"
-                                 ReloadHandler="ReloadHandler"
-                                 CanEdit />
+                                 ReloadHandler="ReloadHandler" />
 }

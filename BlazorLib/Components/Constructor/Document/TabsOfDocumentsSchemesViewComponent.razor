@@ -33,7 +33,9 @@ else if (!CanEdit)
                 <MudTabPanel ID="@($"document-scheme_{questionnaire_page.Id}")"
                              Text="@questionnaire_page.Name"
                              BadgeDot="@(questionnaire_page.Id < 1)">
-                    <TabsOfDocumentViewComponent CanEdit="CanEdit" ReloadHandler="ReloadHandler" TabOfDocumentScheme="questionnaire_page" InUse="InUse" />
+                    <TabsOfDocumentViewComponent ReloadHandler="ReloadHandler"
+                                                 TabOfDocumentScheme="questionnaire_page"
+                                                 SessionOfDocumentData="null" />
                 </MudTabPanel>
             }
         }
@@ -41,7 +43,15 @@ else if (!CanEdit)
 }
 else
 {
-    <MudDynamicTabs @bind-ActivePanelIndex="@DocumentIndex" AddTab="@AddTab" AddIconClass="mud-secondary-text" AddIconToolTip="Добавить страницу анкеты/опроса" CloseTab="@CloseTabCallback" CloseIconToolTip="Close tab. All data will be lost" PanelClass="px-4 py-6" Elevation="4" Rounded ApplyEffectsToContainer>
+    <MudDynamicTabs @bind-ActivePanelIndex="@DocumentIndex"
+                    AddTab="@AddTab"
+                    AddIconClass="mud-secondary-text"
+                    AddIconToolTip="Добавить страницу анкеты/опроса"
+                    CloseTab="@CloseTabCallback"
+                    CloseIconToolTip="Close tab. All data will be lost"
+                    PanelClass="px-4 py-6"
+                    Elevation="4"
+                    Rounded ApplyEffectsToContainer>
         @if (!DocumentScheme.Tabs.Any())
         {
             <figure class="text-center mt-3">
