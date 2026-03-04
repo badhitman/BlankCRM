@@ -326,6 +326,12 @@ public partial class RetailService : IRetailService
             .Skip(req.PageNum * req.PageSize)
             .Take(req.PageSize);
 
+        List<WalletConversionRetailDocumentModelDB> res = await pq.ToListAsync(cancellationToken: token);
+        int[] walletsIds = [.. res.Select(x => x.FromWalletId).Union(res.Select(y => y.ToWalletId)).Distinct()];
+        List<WalletRetailModelDB> walletsDb = await context.WalletsRetail.Where(x => walletsIds.Contains(x.Id)).ToListAsync(cancellationToken: token);
+        int[] walletsTypesIds = [.. walletsDb.Select(x => x.WalletTypeId).Distinct()];
+        List<WalletRetailTypeModelDB> walletsTypesDb = await context.WalletsRetailTypes.Where(x => walletsTypesIds.Contains(x.Id)).ToListAsync(cancellationToken: token);
+
         return new()
         {
             PageNum = req.PageNum,
@@ -333,10 +339,16 @@ public partial class RetailService : IRetailService
             SortingDirection = req.SortingDirection,
             SortBy = req.SortBy,
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
-            Response = await pq
-                .Include(x => x.FromWallet).ThenInclude(x => x!.WalletType).Include(x => x.Orders)
-                .Include(x => x.ToWallet).ThenInclude(x => x!.WalletType).Include(x => x.Orders)
-                .ToListAsync(cancellationToken: token)
+            Response = [.. res.Select(x =>
+             {
+                 x.FromWallet = walletsDb.First(y => y.Id == x.FromWalletId);
+                 x.FromWallet.WalletType = walletsTypesDb.First(y => y.Id == x.FromWallet.WalletTypeId);
+
+                 x.ToWallet = walletsDb.First(y => y.Id == x.ToWalletId);
+                 x.ToWallet.WalletType = walletsTypesDb.First(y => y.Id == x.ToWallet.WalletTypeId);
+
+                 return x;
+             })]
         };
     }
 
