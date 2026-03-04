@@ -158,14 +158,15 @@ public partial class FieldsFormViewComponent : BlazorBusyComponentBaseAuthModel
     /// <inheritdoc/>
     protected void AddingFieldStateHasChangedAction(FieldFormBaseLowConstructorModel _sender, Type initiator)
     {
-        if (_field_master is null)
-        {
+        //if (_field_master is null)
+        //{
             _field_master = _sender;
             field_creating_field_ref?.Update(_sender);
             StateHasChanged();
-            return;
-        }
-
+        //    return;
+        //}
+        
+        /*
         bool change_type = _field_master.GetType() != _sender.GetType();
 
         field_creating_field_ref?.Update(_sender);
@@ -209,5 +210,6 @@ public partial class FieldsFormViewComponent : BlazorBusyComponentBaseAuthModel
         }
 
         StateHasChanged();
+        */
     }
 }

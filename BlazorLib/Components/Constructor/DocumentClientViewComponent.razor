@@ -1,4 +1,5 @@
 ﻿@using BlazorLib.Components.Constructor.Document
+
 @if (SessionOfDocumentData.Id < 1)
 {
     <figure class="text-center">
@@ -23,10 +24,10 @@ else
         {
             <figure class="text-center mt-3">
                 <blockquote class="blockquote">
-                    <p>Нет ни одной страницы</p>
+                    <p>Добавьте страницу в документ</p>
                 </blockquote>
                 <figcaption class="blockquote-footer">
-                    добавьте первую <cite>страницу</cite>
+                    В схеме нет ни одной <cite>страницы</cite>
                 </figcaption>
             </figure>
         }
@@ -57,7 +58,10 @@ else
                              Text="@tab_of_document_scheme.Name"
                              ShowCloseIcon="@(tab_of_document_scheme.Id < 1)"
                              BadgeDot="@(tab_of_document_scheme.Id < 1)">
-                    <TabsOfDocumentViewComponent CanEdit="CanEdit" InUse="InUse" ReloadHandler="ReloadHandler" TabOfDocumentScheme="tab_of_document_scheme" />
+                    <TabsOfDocumentViewComponent CanEdit="CanEdit"
+                                                 InUse="InUse"
+                                                 ReloadHandler="ReloadHandler"
+                                                 TabOfDocumentScheme="tab_of_document_scheme" />
                 </MudTabPanel>
             }
         }

@@ -35,8 +35,8 @@ public partial class SessionsViewComponent : BlazorBusyComponentBaseAuthModel
         set
         {
             _selectedDocumentSchemeId = value;
-            if (table is not null)
-                InvokeAsync(table.ReloadServerData);
+            if (tableSessions is not null)
+                InvokeAsync(tableSessions.ReloadServerData);
         }
     }
 
@@ -79,14 +79,16 @@ public partial class SessionsViewComponent : BlazorBusyComponentBaseAuthModel
             ProjectId = ProjectId
         };
         await SetBusyAsync(token: token);
-        
+
         TPaginationResponseStandardModel<SessionOfDocumentDataModelDB> rest = await ConstructorRepo.RequestSessionsDocumentsAsync(req, token);
 
         if (rest.Response is null)
         {
-            SnackBarRepo.Error($"rest.Content.Sessions is null. error B1F8BCC4-952B-4C5E-B573-6FA5AD7F3A8A");
+            if (!token.IsCancellationRequested)
+                SnackBarRepo.Error($"rest.Content.Sessions is null. error B1F8BCC4-952B-4C5E-B573-6FA5AD7F3A8A");
+
             await SetBusyAsync(false, token);
-            return new TableData<SessionOfDocumentDataModelDB>() { TotalItems = totalItems, Items = sessions };
+            return new TableData<SessionOfDocumentDataModelDB>();
         }
 
         totalItems = rest.TotalRowsCount;
@@ -116,8 +118,8 @@ public partial class SessionsViewComponent : BlazorBusyComponentBaseAuthModel
         };
         DialogOptions options = new() { MaxWidth = MaxWidth.ExtraExtraLarge, FullWidth = true, CloseOnEscapeKey = true };
         IDialogReference result = await DialogServiceRepo.ShowAsync<EditSessionDialogComponent>($"Редактирование сессии. Опрос/анкета: '{rest.Response?.Owner?.Name}'", parameters, options);
-        if (table is not null)
-            await table.ReloadServerData();
+        if (tableSessions is not null)
+            await tableSessions.ReloadServerData();
 
         await SetBusyAsync(false);
     }
@@ -133,20 +135,20 @@ public partial class SessionsViewComponent : BlazorBusyComponentBaseAuthModel
         if (!rest.Success())
             return;
 
-        if (table is not null)
-            await table.ReloadServerData();
+        if (tableSessions is not null)
+            await tableSessions.ReloadServerData();
     }
 
     /// <inheritdoc/>
     protected async Task OnSearch(string text)
     {
         searchString = text;
-        if (table is not null)
-            await table.ReloadServerData();
+        if (tableSessions is not null)
+            await tableSessions.ReloadServerData();
     }
 
     /// <inheritdoc/>
-    protected MudTable<SessionOfDocumentDataModelDB>? table;
+    protected MudTable<SessionOfDocumentDataModelDB>? tableSessions;
 
     /// <inheritdoc/>
     protected int totalItems;
@@ -197,13 +199,13 @@ public partial class SessionsViewComponent : BlazorBusyComponentBaseAuthModel
         else
             sessions.Add(rest.Response);
 
-        SelectedDocumentSchemeId = 0;
+        _selectedDocumentSchemeId = 0;
         NameSessionForCreate = null;
 
-        if (table is not null)
-            await table.ReloadServerData();
-
         await SetBusyAsync(false);
+
+        if (tableSessions is not null)
+            await tableSessions.ReloadServerData();
     }
 
     async Task RestUpdate()
@@ -242,8 +244,8 @@ public partial class SessionsViewComponent : BlazorBusyComponentBaseAuthModel
         await RestUpdate();
         tableLoadReady = true;
 
-        if (table is not null)
-            await table.ReloadServerData();
+        if (tableSessions is not null)
+            await tableSessions.ReloadServerData();
 
         await SetBusyAsync(false);
     }

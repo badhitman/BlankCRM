@@ -3,12 +3,23 @@
 <MudTable Class="d-flex flex-column flex-grow-1"
           Loading="IsBusyProgress"
           ServerData="@(new Func<TableState, CancellationToken, Task<TableData<DocumentSchemeConstructorModelDB>>>(ServerReload))"
-          Dense Hover Striped @ref="table">
+          Dense Hover Striped 
+          @ref="table">
     <ToolBarContent>
-        <MudText Typo="Typo.h6">Questionnaires</MudText>
-        <MudIconButton Disabled="@(!CanEdit)" title="Create a new survey/questionnaire" OnClick="() => DocumentOpenDialog()" Icon="@Icons.Material.Filled.AddBox"></MudIconButton>
+        <MudText Typo="Typo.h6">Схемы</MudText>
+        <MudIconButton Disabled="@(!CanEdit)"
+                       title="Создать новый опрос/анкету"
+                       OnClick="() => DocumentOpenDialog()"
+                       Icon="@Icons.Material.Filled.AddBox"></MudIconButton>
         <MudSpacer />
-        <MudTextField Disabled="IsBusyProgress" T="string" ValueChanged="@(async s => await OnSearch(s))" Placeholder="Search by survey, tab or form name" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        <MudTextField Disabled="IsBusyProgress"
+                      T="string"
+                      ValueChanged="@(async s => await OnSearch(s))"
+                      Placeholder="Поиск по названию опроса, вкладки или формы."
+                      Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search"
+                      IconSize="Size.Medium"
+                      Class="mt-0"></MudTextField>
     </ToolBarContent>
     <HeaderContent>
         <MudTh>Name</MudTh>
@@ -20,7 +31,7 @@
     <RowTemplate>
         <MudTd>
             <div class="d-flex">
-                <span class="flex-grow-1" @onclick="() => DocumentOpenDialog(context)" style="cursor:pointer;">
+                <span class="flex-grow-1 text-decoration-underline" @onclick="() => DocumentOpenDialog(context)" style="cursor:pointer;">
                     @context.Name
                     <sup>#@context.Id</sup>
                 </span>
@@ -58,13 +69,17 @@
                     <div>&nbsp;</div>
 
                     <MudSpacer />
-                    <MudIconButton title="Delete survey/questionnaire" OnClick="() => DeleteDocument(context.Id)" Icon="@Icons.Material.Filled.Delete" aria-label="Delete" Size="Size.Small"></MudIconButton>
+                    <MudIconButton title="Удалить опрос/анкету"
+                                   OnClick="() => DeleteDocument(context.Id)"
+                                   Icon="@Icons.Material.Filled.Delete"
+                                   aria-label="Delete"
+                                   Size="Size.Small"></MudIconButton>
                 </div>
             </MudTd>
         }
     </RowTemplate>
     <NoRecordsContent>
-        <MudText>There are no questionnaires/surveys</MudText>
+        <MudText>Анкеты/опросы отсутствуют.</MudText>
     </NoRecordsContent>
     <LoadingContent>
         <MudText>Loading...</MudText>

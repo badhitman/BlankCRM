@@ -3,9 +3,7 @@
 ////////////////////////////////////////////////
 
 using BlazorLib.Components.Constructor.Document;
-using BlazorLib.Components.Constructor;
 using Microsoft.AspNetCore.Components;
-using BlazorLib;
 using MudBlazor;
 using SharedLib;
 
@@ -103,7 +101,7 @@ public partial class EditDocumentSchemeDialogComponent : BlazorBusyComponentBase
             },
             SenderActionUserId = CurrentUserSession.UserId
         });
-
+        ReloadHandler();
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {

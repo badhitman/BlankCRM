@@ -48,7 +48,15 @@ public partial class DocumentsSchemesTableComponent : BlazorBusyComponentBaseAut
 
         await SetBusyAsync();
 
-        ResponseBaseModel rest = await ConstructorRepo.DeleteDocumentSchemeAsync(new() { Payload = new() { DeleteDocumentSchemeId = questionnaire_id }, SenderActionUserId = CurrentUserSession.UserId });
+        ResponseBaseModel rest = await ConstructorRepo.DeleteDocumentSchemeAsync(new()
+        {
+            Payload = new()
+            {
+                DeleteDocumentSchemeId = questionnaire_id
+            },
+            SenderActionUserId = CurrentUserSession.UserId
+        });
+
         await SetBusyAsync(false);
 
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
@@ -68,7 +76,7 @@ public partial class DocumentsSchemesTableComponent : BlazorBusyComponentBaseAut
     protected async Task<TableData<DocumentSchemeConstructorModelDB>> ServerReload(TableState state, CancellationToken token)
     {
         if (ProjectId < 1)
-            throw new Exception("No main/used project selected");
+            throw new Exception("Основной/используемый проект не выбран");
 
         SimplePaginationRequestStandardModel req = new();
         await SetBusyAsync(token: token);
@@ -89,17 +97,25 @@ public partial class DocumentsSchemesTableComponent : BlazorBusyComponentBaseAut
     protected async Task DocumentOpenDialog(DocumentSchemeConstructorModelDB? document_scheme = null)
     {
         if (ProjectId < 1)
-            throw new Exception("No main/used project selected");
+            throw new Exception("Основной/используемый проект не выбран");
 
         document_scheme ??= DocumentSchemeConstructorModelDB.BuildEmpty(ProjectId);
         DialogParameters<EditDocumentSchemeDialogComponent> parameters = new()
         {
             { x => x.DocumentScheme, document_scheme },
             { x => x.ProjectId, ProjectId },
+            { x => x.CanEdit, CanEdit },
+            { x => x.ReloadHandler, () => InvokeAsync(ReloadTable) },
         };
 
         DialogOptions options = new() { MaxWidth = MaxWidth.ExtraExtraLarge, FullWidth = true, CloseOnEscapeKey = true };
-        IDialogReference result = await DialogServiceRepo.ShowAsync<EditDocumentSchemeDialogComponent>(document_scheme.Id < 1 ? "Creating a new questionnaire/survey" : $"Editing a questionnaire/survey #{document_scheme.Id}", parameters, options);
+        IDialogReference result = await DialogServiceRepo.ShowAsync<EditDocumentSchemeDialogComponent>(document_scheme.Id < 1 ? "Создание новой анкеты/опросника" : $"Редактирование анкеты/опросника #{document_scheme.Id}", parameters, options);
+        if (table is not null)
+            await table.ReloadServerData();
+    }
+
+    async Task ReloadTable()
+    {
         if (table is not null)
             await table.ReloadServerData();
     }

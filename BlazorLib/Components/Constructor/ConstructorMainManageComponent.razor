@@ -62,7 +62,7 @@ else
         <MudTabPanel Disabled="@(MainProject is null || IsBusyProgress)" Text="Формы">
             <FormsViewComponent CanEdit="CanEditProject" MainProject="MainProject" />
         </MudTabPanel>
-        <MudTabPanel Disabled="@(MainProject is null || IsBusyProgress)" Text="Документы">
+        <MudTabPanel Disabled="@(MainProject is null || IsBusyProgress)" Text="Схемы">
             <DocumentsSchemesTableComponent CanEdit="CanEditProject" ProjectId="MainProject!.Id" />
         </MudTabPanel>
         <MudTabPanel Disabled="@(MainProject is null || IsBusyProgress)" Text="Ссылки" ToolTip="Доступ к заполнению данными документов (в т.ч. анонимные пользователи)">

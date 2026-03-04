@@ -3,6 +3,10 @@
     if (Field is FieldFormAkaDirectoryConstructorModelDB _fd)
     {
         <span title="словарь/список" class="position-absolute top-0 start-100 translate-middle p-2 bg-success border border-light rounded-circle">
+            @if (_fd.IsMultiSelect)
+            {
+                <span class="text-danger">ml</span>
+            }
             <span class="visually-hidden">Directory ID: @_fd.DirectoryId</span>
         </span>
     }

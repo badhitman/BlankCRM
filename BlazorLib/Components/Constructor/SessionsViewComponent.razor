@@ -35,7 +35,7 @@
     <div class="card-body">
         <MudTable ServerData="@(new Func<TableState, CancellationToken, Task<TableData<SessionOfDocumentDataModelDB>>>(ServerReload))"
                   Loading="IsBusyProgress" Dense Hover Striped
-                  @ref="table">
+                  @ref="tableSessions">
             <ToolBarContent>
                 <MudText Typo="Typo.h6">Ссылки/сессии</MudText>
                 <MudSpacer />
@@ -99,9 +99,9 @@
                         {
                             <div class="hstack">
                                 <div>
-                                    <NavLink class="nav-link" href="@($"{Routes.QUESTIONNAIRE_CONTROLLER_NAME}/{Routes.SESSION_CONTROLLER_NAME}/{context.SessionToken}")">
+                                    <MudLink Href="@($"{Routes.QUESTIONNAIRE_CONTROLLER_NAME}/{Routes.SESSION_CONTROLLER_NAME}/{context.SessionToken}")">
                                         В работе <sup title="дата/время создания" class="ms-3"> (<LastUpdateViewComponent LastUpdateDate="context.DeadlineDate" Reverse />)</sup>
-                                    </NavLink>
+                                    </MudLink>
                                 </div>
                                 <div class="ms-2">
                                     @if (context.LastDocumentUpdateActivity is not null)
