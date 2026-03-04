@@ -46,7 +46,7 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
     /// <inheritdoc/>
     [Parameter, EditorRequired]
     public required Action ReloadHandler { get; set; }
-    
+
     /// <inheritdoc/>
     [Parameter]
     public TypesFieldsFormsEnum[]? PresetTypes { get; set; }
@@ -336,10 +336,10 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
             return;
         }
 
+        ReloadHandler();
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
-            ReloadHandler();
             await SetBusyAsync(false);
             return;
         }
@@ -464,10 +464,10 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
         }
 
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
+        ReloadHandler();
 
         if (!rest.Success())
         {
-            ReloadHandler();
             await SetBusyAsync(false);
             return;
         }
@@ -541,9 +541,9 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
 
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
 
+        ReloadHandler();
         if (!rest.Success())
         {
-            ReloadHandler();
             await SetBusyAsync(false);
             return;
         }
@@ -582,9 +582,9 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
 
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
 
+        ReloadHandler();
         if (!rest.Success())
         {
-            ReloadHandler();
             await SetBusyAsync(false);
             return;
         }

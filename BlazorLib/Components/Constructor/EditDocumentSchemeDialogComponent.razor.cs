@@ -22,8 +22,8 @@ public partial class EditDocumentSchemeDialogComponent : BlazorBusyComponentBase
 
 
     /// <inheritdoc/>
-    [Parameter, EditorRequired]
-    public IMudDialogInstance MudDialog { get; set; }
+    [CascadingParameter]
+    IMudDialogInstance MudDialog { get; set; } = default!;
 
     /// <inheritdoc/>
     [Parameter, EditorRequired]

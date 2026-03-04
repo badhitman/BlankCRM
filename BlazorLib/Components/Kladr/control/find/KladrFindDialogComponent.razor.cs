@@ -15,7 +15,7 @@ public partial class KladrFindDialogComponent : BlazorBusyComponentBaseModel
 {
     /// <inheritdoc/>
     [CascadingParameter]
-    public IMudDialogInstance MudDialog { get; set; } = default!;
+    IMudDialogInstance MudDialog { get; set; } = default!;
 
     /// <inheritdoc/>
     [Parameter]

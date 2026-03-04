@@ -17,6 +17,7 @@ public partial class InstrumentsForRubricDialogComponent : BlazorBusyComponentBa
     IDataStockSharpService SsRepo { get; set; } = default!;
 
 
+    /// <inheritdoc/>
     [CascadingParameter]
     IMudDialogInstance MudDialog { get; set; } = default!;
 

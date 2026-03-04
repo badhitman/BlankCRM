@@ -29,11 +29,9 @@ public partial class SyncDirectoryDialogComponent : BlazorBusyComponentBaseModel
     [Parameter, EditorRequired]
     public int SyncRuleId { get; set; }
 
-    /// <summary>
-    /// MudDialog
-    /// </summary>
-    [CascadingParameter, EditorRequired]
-    public required IMudDialogInstance MudDialog { get; set; }
+    /// <inheritdoc/>
+    [CascadingParameter]
+    IMudDialogInstance MudDialog { get; set; } = default!;
 
 
     string? Name { get; set; }

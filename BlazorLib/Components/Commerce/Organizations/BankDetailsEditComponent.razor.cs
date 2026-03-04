@@ -18,8 +18,8 @@ public partial class BankDetailsEditComponent : BlazorBusyComponentBaseAuthModel
 
 
     /// <inheritdoc/>
-    [CascadingParameter, EditorRequired]
-    public required IMudDialogInstance MudDialog { get; set; }
+    [CascadingParameter]
+    IMudDialogInstance MudDialog { get; set; } = default!;
 
     /// <inheritdoc/>
     [Parameter, EditorRequired]

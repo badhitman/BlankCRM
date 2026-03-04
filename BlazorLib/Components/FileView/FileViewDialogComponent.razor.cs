@@ -19,8 +19,8 @@ public partial class FileViewDialogComponent : BlazorBusyComponentBaseModel
 
 
     /// <inheritdoc/>
-    [Parameter, EditorRequired]
-    public required IMudDialogInstance MudDialog { get; set; }
+    [CascadingParameter]
+    IMudDialogInstance MudDialog { get; set; } = default!;
 
     /// <inheritdoc/>
     [Parameter, EditorRequired]

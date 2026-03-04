@@ -152,6 +152,7 @@ public partial class FieldsFormViewComponent : BlazorBusyComponentBaseAuthModel
             await client_standard_ref.Update(Form);
 
         await SetBusyAsync(false);
+        ReloadHandler();
     }
 
     /// <inheritdoc/>

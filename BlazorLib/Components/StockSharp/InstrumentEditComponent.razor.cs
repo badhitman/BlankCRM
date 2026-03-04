@@ -16,6 +16,7 @@ public partial class InstrumentEditComponent : BlazorBusyComponentBaseModel
     IDataStockSharpService StockSharpDataRepo { get; set; } = default!;
 
 
+    /// <inheritdoc/>
     [CascadingParameter]
     IMudDialogInstance MudDialog { get; set; } = default!;
 

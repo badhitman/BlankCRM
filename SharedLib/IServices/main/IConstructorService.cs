@@ -126,31 +126,11 @@ public interface IConstructorService : IConstructorBaseService
     #endregion
 
     #region поля форм    
-    /// <summary>
-    /// Сдвинуть поле формы (простой тип)
-    /// </summary>
-    public Task<TResponseModel<FormConstructorModelDB>> FieldFormMoveAsync(TAuthRequestStandardModel<MoveObjectModel> req, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Сдвинуть поле формы (тип: список/справочник)
-    /// </summary>
-    public Task<TResponseModel<FormConstructorModelDB>> FieldDirectoryFormMoveAsync(TAuthRequestStandardModel<MoveObjectModel> req, CancellationToken cancellationToken = default);
-
-
+    
     /// <summary>
     /// Проверить сортировку и нормализовать в случае рассинхрона
     /// </summary>
     public Task<TResponseModel<FormConstructorModelDB>> CheckAndNormalizeSortIndexFrmFieldsAsync(int form_id, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Обновить/создать поле формы (простой тип)
-    /// </summary>
-    public Task<ResponseBaseModel> FormFieldUpdateOrCreateAsync(TAuthRequestStandardModel<FieldFormConstructorModelDB> req, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Обновить/создать поле формы (тип: справочник/список)
-    /// </summary>
-    public Task<ResponseBaseModel> FormFieldDirectoryUpdateOrCreateAsync(TAuthRequestStandardModel<FieldFormAkaDirectoryConstructorModelDB> req, CancellationToken cancellationToken = default);
     #endregion
 
     /////////////// Документ. Описывается/настраивается конечный результат, который будет использоваться.

@@ -2,11 +2,9 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
-using BlazorLib.Components.Shared.tabs;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using SharedLib;
-using System.ComponentModel.DataAnnotations;
 
 namespace BlazorLib.Components.Constructor.Form;
 
@@ -20,8 +18,8 @@ public partial class EditFormDialogComponent : BlazorBusyComponentBaseAuthModel
 
 
     /// <inheritdoc/>
-    [Parameter, Required]
-    public required IMudDialogInstance MudDialog { get; set; }
+    [CascadingParameter]
+    IMudDialogInstance MudDialog { get; set; } = default!;
 
     /// <inheritdoc/>
     [Parameter, EditorRequired]

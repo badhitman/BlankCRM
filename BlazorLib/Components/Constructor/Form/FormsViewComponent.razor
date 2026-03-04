@@ -24,8 +24,9 @@
     </HeaderContent>
     <RowTemplate>
         <MudTd>
-            <p style="cursor:pointer;" @onclick="async () => { await OpenForm(context); }" class="position-relative">
+            <p style="cursor:pointer;" @onclick="async () => { await OpenForm(context); }" class="position-relative text-decoration-underline">
                 @context.Name
+                <sup class="ms-1" title="CSS класс формы. default: css='row'">@context.Css</sup>
             </p>
             <div class="d-flex flex-wrap">
                 @foreach (FieldFormBaseLowConstructorModel fb in context.AllFields)

@@ -119,28 +119,6 @@ public interface IConstructorTransmission : IConstructorBaseService
     /// </summary>
     public Task<ResponseBaseModel> FormDeleteAsync(TAuthRequestStandardModel<FormDeleteRequestModel> req, CancellationToken cancellationToken = default);
     #endregion
-    #region поля форм    
-    /// <summary>
-    /// Сдвинуть поле формы (простой тип)
-    /// </summary>
-    public Task<TResponseModel<FormConstructorModelDB>> FieldFormMoveAsync(TAuthRequestStandardModel<MoveObjectModel> req, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Сдвинуть поле формы (тип: список/справочник)
-    /// </summary>
-    public Task<TResponseModel<FormConstructorModelDB>> FieldDirectoryFormMoveAsync(TAuthRequestStandardModel<MoveObjectModel> req, CancellationToken cancellationToken = default);
-
-
-    /// <summary>
-    /// Обновить/создать поле формы (простой тип)
-    /// </summary>
-    public Task<ResponseBaseModel> FormFieldUpdateOrCreateAsync(TAuthRequestStandardModel<FieldFormConstructorModelDB> req, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Обновить/создать поле формы (тип: справочник/список)
-    /// </summary>
-    public Task<ResponseBaseModel> FormFieldDirectoryUpdateOrCreateAsync(TAuthRequestStandardModel<FieldFormAkaDirectoryConstructorModelDB> req, CancellationToken cancellationToken = default);
-    #endregion
 
     /////////////// Документ. Описывается/настраивается конечный результат, который будет использоваться.
     // Может содержать одну или несколько вкладок/табов. На каждом табе/вкладке может располагаться одна или больше форм

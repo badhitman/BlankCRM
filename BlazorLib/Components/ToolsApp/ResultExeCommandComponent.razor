@@ -16,6 +16,7 @@
     [Parameter, EditorRequired]
     public required ExeCommandModelDB CurrentCommand { get; set; }
 
+    /// <inheritdoc/>
     [CascadingParameter]
-    private IMudDialogInstance MudDialog { get; set; } = default!;
+    IMudDialogInstance MudDialog { get; set; } = default!;
 }
