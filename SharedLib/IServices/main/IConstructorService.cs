@@ -18,7 +18,7 @@ public interface IConstructorService : IConstructorBaseService
     /// <summary>
     /// Установить значение свойства сессии
     /// </summary>
-    public Task<TResponseModel<SessionOfDocumentDataModelDB?>> SetValueFieldSessionDocumentDataAsync(SetValueFieldDocumentDataModel req, CancellationToken cancellationToken = default);
+    public Task<TResponseModel<SessionOfDocumentDataModelDB>> SetValueFieldSessionDocumentDataAsync(SetValueFieldDocumentDataModel req, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Отправить опрос на проверку (от клиента)
@@ -27,7 +27,7 @@ public interface IConstructorService : IConstructorBaseService
 
     /// <summary>
     /// Удалить набор значений сессии опроса/анкеты по номеру строки [GroupByRowNum].
-    /// Если индекс ниже нуля - удаляются все значения для указанной JoinForm (полная очистка таблицы или очистка всех значений всех поллей стандартной формы)
+    /// Если индекс ниже нуля - удаляются все значения для указанной JoinForm (полная очистка таблицы или очистка всех значений всех полей стандартной формы)
     /// </summary>
     public Task<ResponseBaseModel> DeleteValuesFieldsByGroupSessionDocumentDataByRowNumAsync(ValueFieldSessionDocumentDataBaseModel req, CancellationToken cancellationToken = default);
 

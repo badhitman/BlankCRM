@@ -1,10 +1,6 @@
 ﻿@inherits BlazorBusyComponentBaseModel
 
-@if (!InUse)
-{
-    <span class="invisible">demo mode</span>
-}
-else if (SessionDocument.SessionStatus >= SessionsStatusesEnum.Sended)
+@if (SessionDocument.SessionStatus >= SessionsStatusesEnum.Sended)
 {
     <div class="alert alert-warning mt-3" role="alert">
         Форма в статусе [@(SessionDocument.SessionStatus.DescriptionInfo())]. Последнее обновление: @SessionDocument.LastDocumentUpdateActivity

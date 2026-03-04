@@ -23,9 +23,6 @@ public partial class DoneClientViewComponent : BlazorBusyComponentBaseModel
     [Parameter, EditorRequired]
     public required SessionOfDocumentDataModelDB SessionDocument { get; set; }
 
-    /// <inheritdoc/>
-    [Parameter,EditorRequired]
-    public required bool InUse { get; set; }
 
 
     bool InitSend = false;

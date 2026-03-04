@@ -24,10 +24,6 @@ public partial class TabsOfDocumentViewComponent : BlazorBusyComponentBaseModel
     /// <inheritdoc/>
     [Parameter, EditorRequired]
     public required bool CanEdit { get; set; }
-
-    /// <inheritdoc/>
-    [Parameter, EditorRequired]
-    public required bool InUse { get; set; }
     
     /// <inheritdoc/>
     [Parameter, EditorRequired]

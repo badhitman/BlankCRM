@@ -1,6 +1,6 @@
 ﻿@using BlazorLib.Components.Constructor.Document
 
-@if (SessionOfDocumentData.Id < 1)
+@if (SessionOfDocumentData is null || SessionOfDocumentData.Id < 1)
 {
     <figure class="text-center">
         <blockquote class="blockquote">
@@ -66,5 +66,5 @@ else
             }
         }
     </MudTabs>
-    <DoneClientViewComponent SessionDocument="SessionOfDocumentData" InUse="InUse" />
+    <DoneClientViewComponent SessionDocument="SessionOfDocumentData" InUse="InUse"  />
 }
