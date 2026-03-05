@@ -23,6 +23,16 @@ public partial class EditFormDialogComponent : BlazorBusyComponentBaseAuthModel
 
     /// <inheritdoc/>
     [Parameter, EditorRequired]
+    public required SessionOfDocumentDataModelDB? SessionOfDocumentData { get; set; }
+
+    /// <summary>
+    /// Связь формы со страницей опроса/анкеты. В режиме DEMO тут NULL
+    /// </summary>
+    [Parameter, EditorRequired]
+    public FormToTabJoinConstructorModelDB? PageJoinForm { get; set; }
+
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
     public FormConstructorModelDB Form { get; set; }
 
     /// <inheritdoc/>
@@ -32,6 +42,12 @@ public partial class EditFormDialogComponent : BlazorBusyComponentBaseAuthModel
     /// <inheritdoc/>
     [Parameter, EditorRequired]
     public required Action ReloadHandler { get; set; }
+
+    /// <summary>
+    /// Страница/Таб документа
+    /// </summary>
+    [Parameter, EditorRequired]
+    public required TabOfDocumentSchemeConstructorModelDB? DocumentPage { get; set; }
 
 
     /// <inheritdoc/>

@@ -35,8 +35,8 @@ public abstract class FieldComponentBaseModel : BlazorBusyComponentBaseModel, ID
     /// <summary>
     /// Документ/сессия
     /// </summary>
-    [Parameter]
-    public SessionOfDocumentDataModelDB? SessionOfDocumentData { get; set; }
+    [Parameter, EditorRequired]
+    public required SessionOfDocumentDataModelDB? SessionOfDocumentData { get; set; }
 
     /// <summary>
     /// Страница/Таб документа
@@ -47,8 +47,8 @@ public abstract class FieldComponentBaseModel : BlazorBusyComponentBaseModel, ID
     /// <summary>
     /// Связь формы со страницей опроса/анкеты. В режиме DEMO тут NULL
     /// </summary>
-    [Parameter]
-    public FormToTabJoinConstructorModelDB? PageJoinForm { get; set; }
+    [Parameter, EditorRequired]
+    public required FormToTabJoinConstructorModelDB? PageJoinForm { get; set; }
 
 
     /// <summary>

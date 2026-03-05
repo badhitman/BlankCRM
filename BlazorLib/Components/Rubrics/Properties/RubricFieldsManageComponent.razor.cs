@@ -14,9 +14,25 @@ public partial class RubricFieldsManageComponent : BlazorBusyComponentBaseAuthMo
     IConstructorTransmission ConstructorRepo { get; set; } = default!;
 
 
+    /// <summary>
+    /// Связь формы со страницей опроса/анкеты. В режиме DEMO тут NULL
+    /// </summary>
+    [Parameter, EditorRequired]
+    public FormToTabJoinConstructorModelDB? PageJoinForm { get; set; }
+
     /// <inheritdoc/>
     [Parameter, EditorRequired]
     public required int ProjectId { get; set; }
+
+    /// <summary>
+    /// Страница/Таб документа
+    /// </summary>
+    [Parameter, EditorRequired]
+    public required TabOfDocumentSchemeConstructorModelDB? DocumentPage { get; set; }
+
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required SessionOfDocumentDataModelDB? SessionOfDocumentData { get; set; }
 
 
     List<FormConstructorModelDB> allForms = [];

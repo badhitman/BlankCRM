@@ -20,7 +20,13 @@
 
         @if (Form is not null)
         {
-            <FieldsFormViewComponent CanEdit ReloadHandler="ReloadHandleAction" Form="Form" PresetTypes="[TypesFieldsFormsEnum.Bool, TypesFieldsFormsEnum.Int]" />
+            <FieldsFormViewComponent CanEdit
+                                     ReloadHandler="ReloadHandleAction"
+                                     Form="Form"
+                                     PresetTypes="[TypesFieldsFormsEnum.Bool, TypesFieldsFormsEnum.Int]"
+                                     DocumentPage="DocumentPage"
+                                     SessionOfDocumentData="SessionOfDocumentData"
+                                     PageJoinForm="PageJoinForm" />
         }
         else
         {

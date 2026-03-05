@@ -28,6 +28,12 @@ public partial class ClientStandardViewFormComponent : BlazorBusyComponentBaseMo
     /// <inheritdoc/>
     [Parameter]
     public SessionOfDocumentDataModelDB? SessionOfDocumentData { get; set; }
+    
+    /// <summary>
+    /// Страница/Таб документа
+    /// </summary>
+    [Parameter,EditorRequired]
+    public required TabOfDocumentSchemeConstructorModelDB? DocumentPage { get; set; }
 
 
     /// <summary>

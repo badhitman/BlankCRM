@@ -36,12 +36,18 @@ public partial class FieldsFormViewComponent : BlazorBusyComponentBaseAuthModel
     /// <summary>
     /// Связь формы со страницей опроса/анкеты. В режиме DEMO тут NULL
     /// </summary>
-    [Parameter]
+    [Parameter,EditorRequired]
     public FormToTabJoinConstructorModelDB? PageJoinForm { get; set; }
 
     /// <inheritdoc/>
-    [Parameter]
-    public SessionOfDocumentDataModelDB? SessionOfDocumentData { get; set; }
+    [Parameter, EditorRequired]
+    public required SessionOfDocumentDataModelDB? SessionOfDocumentData { get; set; }
+
+    /// <summary>
+    /// Страница/Таб документа
+    /// </summary>
+    [Parameter, EditorRequired]
+    public required TabOfDocumentSchemeConstructorModelDB? DocumentPage { get; set; }
 
 
     FieldFormBaseLowConstructorModel? _field_master;
@@ -170,12 +176,12 @@ public partial class FieldsFormViewComponent : BlazorBusyComponentBaseAuthModel
     {
         //if (_field_master is null)
         //{
-            _field_master = _sender;
-            field_creating_field_ref?.Update(_sender);
-            StateHasChanged();
+        _field_master = _sender;
+        field_creating_field_ref?.Update(_sender);
+        StateHasChanged();
         //    return;
         //}
-        
+
         /*
         bool change_type = _field_master.GetType() != _sender.GetType();
 
