@@ -9,7 +9,7 @@
             switch (Descriptor)
             {
                 case nameof(PropsTypesMDFieldsEnum.TextMask):
-                    <MudTextField ReadOnly="@(SessionDocument is null)"
+                    <MudTextField ReadOnly="@(SessionOfDocumentData is null)"
                                   Required="@Field.Required"
                                   Placeholder="@Parameter"
                                   Class="mb-3"
@@ -50,7 +50,7 @@
                         else
                         {
                             <input type="text"
-                                   readonly="@(SessionDocument is null)"
+                                   readonly="@(SessionOfDocumentData is null)"
                                    class="form-control"
                                    id="@DomID"
                                    @bind="@StringFieldValue"
@@ -103,7 +103,7 @@
             {
                 <textarea @bind-value="StringFieldValue"
                           @bind-value:event="oninput"
-                          readonly="@(SessionDocument is null)"
+                          readonly="@(SessionOfDocumentData is null)"
                           disabled="@_disabled"
                           class="@css_class"
                           id="@DomID"
@@ -116,7 +116,7 @@
             {
                 <input @bind-value="StringFieldValue"
                        @bind-value:event="oninput"
-                       readonly="@(SessionDocument is null)"
+                       readonly="@(SessionOfDocumentData is null)"
                        disabled="@_disabled"
                        placeholder="@Field.GetMetadataValue(MetadataExtensionsFormFieldsEnum.Placeholder, "")"
                        type="@Field.TypeField.ToString()"
@@ -139,7 +139,7 @@
         }
         break;
     case TypesFieldsFormsEnum.Int:
-        <MudNumericField ReadOnly="@(SessionDocument is null)"
+        <MudNumericField ReadOnly="@(SessionOfDocumentData is null)"
                          Required="@Field.Required"
                          @bind-Value="IntFieldValue"
                          Placeholder="@(Field.GetMetadataValue(MetadataExtensionsFormFieldsEnum.Placeholder, "")?.ToString())"
@@ -151,7 +151,7 @@
                          HideSpinButtons />
         break;
     case TypesFieldsFormsEnum.Double:
-        <MudNumericField ReadOnly="@(SessionDocument is null)"
+        <MudNumericField ReadOnly="@(SessionOfDocumentData is null)"
                          Required="@Field.Required"
                          @bind-Value="DoubleFieldValue"
                          Placeholder="@(Field.GetMetadataValue(MetadataExtensionsFormFieldsEnum.Placeholder, "")?.ToString())"
@@ -163,13 +163,13 @@
                          HideSpinButtons />
         break;
     case TypesFieldsFormsEnum.Bool:
-        <MudCheckBox ReadOnly="@(SessionDocument is null)"
+        <MudCheckBox ReadOnly="@(SessionOfDocumentData is null)"
                      Required="@Field.Required"
                      Class="mb-3" @bind-Value="@BoolFieldValue"
                      Label="@Field.Name"></MudCheckBox>
         break;
     case TypesFieldsFormsEnum.DateTime:
-        <MudTextField ReadOnly="@(SessionDocument is null)"
+        <MudTextField ReadOnly="@(SessionOfDocumentData is null)"
                       Required="@Field.Required"
                       @bind-Value="DateTimeFieldValue"
                       Placeholder="@(Field.GetMetadataValue(MetadataExtensionsFormFieldsEnum.Placeholder, "")?.ToString())"
@@ -180,7 +180,7 @@
                       InputType="InputType.DateTimeLocal" />
         break;
     case TypesFieldsFormsEnum.Date:
-        <MudTextField ReadOnly="@(SessionDocument is null)"
+        <MudTextField ReadOnly="@(SessionOfDocumentData is null)"
                       Required="@Field.Required"
                       @bind-Value="DateTimeFieldValue"
                       Placeholder="@(Field.GetMetadataValue(MetadataExtensionsFormFieldsEnum.Placeholder, "")?.ToString())"
@@ -191,7 +191,7 @@
                       InputType="InputType.Date" />
         break;
     case TypesFieldsFormsEnum.Time:
-        <MudTextField ReadOnly="@(SessionDocument is null)"
+        <MudTextField ReadOnly="@(SessionOfDocumentData is null)"
                       Required="@Field.Required"
                       @bind-Value="StringFieldValue"
                       Placeholder="@(Field.GetMetadataValue(MetadataExtensionsFormFieldsEnum.Placeholder, "")?.ToString())"
@@ -230,17 +230,17 @@
         </div>
         break;
     case TypesFieldsFormsEnum.Generator:
-        <GeneratorClientViewComponent ReadOnly="@(SessionDocument is null)"
+        <GeneratorClientViewComponent ReadOnly="@(SessionOfDocumentData is null)"
                                       GroupByRowNum="GroupByRowNum"
                                       Form="Form"
                                       DocumentPage="DocumentPage"
                                       Field="Field"
-                                      SessionDocument="SessionDocument"
+                                      SessionOfDocumentData="SessionOfDocumentData"
                                       CurrentUser="CurrentUser"
                                       PageJoinForm="PageJoinForm" />
         break;
     case TypesFieldsFormsEnum.AddressKladrRussia:
-        <KladrInputComponent @bind-KladrObject="KladrObject" ReadOnly="@(SessionDocument is null)" />
+        <KladrInputComponent @bind-KladrObject="KladrObject" ReadOnly="@(SessionOfDocumentData is null)" />
         break;
     default:
         <div class="alert alert-warning mb-2" role="alert">

@@ -42,7 +42,7 @@ public partial class GeneratorClientViewComponent : FieldComponentBaseModel
         return Task.FromResult(Elements.Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase)));
     }
 
-    string? FieldValue => SessionDocument?.DataSessionValues?.FirstOrDefault(x => x.Name.Equals(Field.Name, StringComparison.OrdinalIgnoreCase) && x.RowNum == GroupByRowNum)?.Value;
+    string? FieldValue => SessionOfDocumentData?.DataSessionValues?.FirstOrDefault(x => x.Name.Equals(Field.Name, StringComparison.OrdinalIgnoreCase) && x.RowNum == GroupByRowNum)?.Value;
 
     /// <inheritdoc/>
     public override string DomID => $"form-{Form.Id}_{Field.GetType().FullName}-{DocumentPage?.Id}-{Field.Id}";
@@ -62,9 +62,9 @@ public partial class GeneratorClientViewComponent : FieldComponentBaseModel
             return;
         }
 
-        if (SessionDocument is not null)
+        if (SessionOfDocumentData is not null)
         {
-            TResponseModel<string[]> res_elements = _gen.GetListElements(Field, SessionDocument, PageJoinForm, GroupByRowNum);
+            TResponseModel<string[]> res_elements = _gen.GetListElements(Field, SessionOfDocumentData, PageJoinForm, GroupByRowNum);
             SnackBarRepo.ShowMessagesResponse(res_elements.Messages);
             if (res_elements.Success() && res_elements.Response is not null)
                 Elements = res_elements.Response;

@@ -33,8 +33,11 @@ else
             <div class="@fb.Css mb-3">
                 @if (fb is FieldFormConstructorModelDB fs)
                 {
-                    <FieldBaseClientComponent GroupByRowNum="@RowNum" FieldsReferring="FieldsReferring" Form="Form" Field="fs"   />
-
+                    <FieldBaseClientComponent GroupByRowNum="@RowNum"
+                                              FieldsReferring="FieldsReferring"
+                                              Form="Form"
+                                              Field="fs"
+                                              SessionOfDocumentData="SessionOfDocumentData" />
                 }
                 else if (fb is FieldFormAkaDirectoryConstructorModelDB fd)
                 {
@@ -42,7 +45,8 @@ else
                                                    GroupByRowNum="@RowNum"
                                                    Form="Form"
                                                    FieldsReferring="FieldsReferring"
-                                                   Field="fd" />
+                                                   Field="fd"
+                                                   SessionOfDocumentData="SessionOfDocumentData" />
                 }
                 else
                 {

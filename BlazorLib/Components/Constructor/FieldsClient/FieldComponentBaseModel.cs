@@ -36,7 +36,7 @@ public abstract class FieldComponentBaseModel : BlazorBusyComponentBaseModel, ID
     /// Документ/сессия
     /// </summary>
     [Parameter]
-    public SessionOfDocumentDataModelDB? SessionDocument { get; set; }
+    public SessionOfDocumentDataModelDB? SessionOfDocumentData { get; set; }
 
     /// <summary>
     /// Страница/Таб документа
@@ -71,7 +71,7 @@ public abstract class FieldComponentBaseModel : BlazorBusyComponentBaseModel, ID
     /// <summary>
     /// Признак того, что поле находится в состоянии реального использования, а не в конструкторе или режим demo
     /// </summary>
-    public bool InUse => PageJoinForm is not null && SessionDocument is not null;
+    public bool InUse => PageJoinForm is not null && SessionOfDocumentData is not null;
 
     /// <inheritdoc/>
     public abstract string DomID { get; }
@@ -81,14 +81,14 @@ public abstract class FieldComponentBaseModel : BlazorBusyComponentBaseModel, ID
     /// </summary>
     /// <param name="valAsString">Значение поля</param>
     /// <param name="fieldName">Имя поля</param>
-    /// <exception cref="InvalidOperationException">В процессе установки значения не был возвращён объект сессии/документа, который необходим для обновления состояния <see cref="SessionDocument" />.</exception>
-    /// <exception cref="NullReferenceException">Ошибка в случае если отсутствует <cref cref="PageJoinForm">связь</cref> (например: в режиме 'demo'). Полноценно инициированное поле формы должно так же иметь объект сессии <see cref="SessionDocument" />.</exception>
+    /// <exception cref="InvalidOperationException">В процессе установки значения не был возвращён объект сессии/документа, который необходим для обновления состояния <see cref="SessionOfDocumentData" />.</exception>
+    /// <exception cref="NullReferenceException">Ошибка в случае если отсутствует <cref cref="PageJoinForm">связь</cref> (например: в режиме 'demo'). Полноценно инициированное поле формы должно так же иметь объект сессии <see cref="SessionOfDocumentData" />.</exception>
     public async Task SetValue(string? valAsString, string fieldName)
     {
         if (!InUse)
             throw new NullReferenceException("Форма не инициализирована.");
 
-        if (SessionDocument?.Project is null)
+        if (SessionOfDocumentData?.Project is null)
             throw new NullReferenceException("Версия проекта не установлена.");
 
         SetValueFieldDocumentDataModel req = new()
@@ -97,8 +97,8 @@ public abstract class FieldComponentBaseModel : BlazorBusyComponentBaseModel, ID
             GroupByRowNum = GroupByRowNum,
             JoinFormId = PageJoinForm!.Id,
             NameField = fieldName,
-            SessionId = SessionDocument!.Id,
-            ProjectVersionStamp = SessionDocument.Project.SchemeLastUpdated,
+            SessionId = SessionOfDocumentData!.Id,
+            ProjectVersionStamp = SessionOfDocumentData.Project.SchemeLastUpdated,
         };
         await SetBusyAsync();
         
@@ -113,7 +113,7 @@ public abstract class FieldComponentBaseModel : BlazorBusyComponentBaseModel, ID
         if (rest.Response is null)
             throw new InvalidOperationException($"Данные сессии 'SessionDocument': IsNull");
 
-        SessionDocument.Reload(rest.Response);
+        SessionOfDocumentData.Reload(rest.Response);
 
         FieldsReferring?
             .Where(x => x?.DomID.Equals(DomID, StringComparison.Ordinal) != true)
