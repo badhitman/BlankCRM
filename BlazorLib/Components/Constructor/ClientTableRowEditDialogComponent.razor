@@ -15,11 +15,13 @@
         {
             <ClientStandardViewFormComponent Form="PageJoinForm.Form"
                                              RowNum="RowNum"
-                                             PageJoinForm="PageJoinForm" 
+                                             PageJoinForm="PageJoinForm"
                                              SessionOfDocumentData="SessionOfDocumentData" />
         }
     </DialogContent>
     <DialogActions>
-        <MudButton Disabled="@IsBusyProgress" Color="Color.Primary" OnClick="Close">@(IsBusyProgress ? "Отправка данных..." : "Применить")</MudButton>
+        <MudButton Disabled="@IsBusyProgress"
+                   Color="Color.Primary"
+                   OnClick="Close">@(IsBusyProgress ? "Отправка данных..." : "Применить")</MudButton>
     </DialogActions>
 </MudDialog>

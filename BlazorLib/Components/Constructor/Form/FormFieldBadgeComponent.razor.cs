@@ -22,4 +22,6 @@ public partial class FormFieldBadgeComponent : ComponentBase
     /// Описание в формате HTML/Markup
     /// </summary>
     protected static MarkupString Descr(string? html) => (MarkupString)(html ?? "");
+
+    static MetadataExtensionsFormFieldsEnum[] systemSkip = [MetadataExtensionsFormFieldsEnum.Descriptor, MetadataExtensionsFormFieldsEnum.Parameter];
 }

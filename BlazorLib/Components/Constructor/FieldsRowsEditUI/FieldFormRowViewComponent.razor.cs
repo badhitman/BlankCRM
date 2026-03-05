@@ -51,6 +51,11 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
     [Parameter]
     public TypesFieldsFormsEnum[]? PresetTypes { get; set; }
 
+    /// <inheritdoc/>
+    [Parameter]
+    public SessionOfDocumentDataModelDB? SessionOfDocumentData { get; set; }
+
+
 
     FieldFormBaseLowConstructorModel _field_master = default!;
 
