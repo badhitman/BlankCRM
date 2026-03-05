@@ -58,13 +58,13 @@ public partial class TabOfDocumentMainViewComponent : BlazorBusyComponentBaseAut
 
     /// <inheritdoc/>
     [Parameter]
-    public SessionOfDocumentDataModelDB? SessionDocument { get; set; }
+    public SessionOfDocumentDataModelDB? SessionOfDocumentData { get; set; }
 
 
     /// <summary>
     /// Признак того, что поле находится в состоянии реального использования, а не в конструкторе или режим demo
     /// </summary>
-    public bool InUse => PageJoinForm is not null && SessionDocument is not null;
+    public bool InUse => PageJoinForm is not null && SessionOfDocumentData is not null;
 
     /// <inheritdoc/>
     protected async Task DeleteJoinForm()

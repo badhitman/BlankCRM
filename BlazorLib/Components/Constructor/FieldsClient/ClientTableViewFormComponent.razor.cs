@@ -30,11 +30,7 @@ public partial class ClientTableViewFormComponent : BlazorBusyComponentBaseModel
 
     /// <inheritdoc/>
     [Parameter]
-    public SessionOfDocumentDataModelDB? SessionDocument { get; set; }
-
-    /// <inheritdoc/>
-    [Parameter]
-    public bool? InUse { get; set; }
+    public SessionOfDocumentDataModelDB? SessionOfDocumentData { get; set; }
 
     /// <inheritdoc/>
     [Parameter]
@@ -48,7 +44,7 @@ public partial class ClientTableViewFormComponent : BlazorBusyComponentBaseModel
     /// Текущий пользователь (сессия)
     /// </summary>
     [Parameter]
-    public UserInfoModel? CurrentUser { get; set; }
+    public UserInfoModel? CurrentUserSession { get; set; }
 
 
 
@@ -64,7 +60,7 @@ public partial class ClientTableViewFormComponent : BlazorBusyComponentBaseModel
         DialogParameters<ClientTableRowEditDialogComponent> parameters = new()
         {
             { x => x.RowNum, row_num },
-            { x => x.SessionDocument, SessionDocument },
+            { x => x.SessionDocument, SessionOfDocumentData },
             { x => x.DocumentPage, DocumentPage },
             { x => x.PageJoinForm, PageJoinForm },
         };
@@ -81,7 +77,7 @@ public partial class ClientTableViewFormComponent : BlazorBusyComponentBaseModel
     /// <inheritdoc/>
     protected void DeleteRowAction(uint row_num)
     {
-        if (SessionDocument is null)
+        if (SessionOfDocumentData is null)
         {
             SnackBarRepo.Error("SessionDocument is null. error 6146B0D1-0BF3-4CA5-BBF5-5EA64ACA709E");
             return;
@@ -92,7 +88,7 @@ public partial class ClientTableViewFormComponent : BlazorBusyComponentBaseModel
         {
             await SetBusyAsync();
             StateHasChanged();
-            ValueFieldSessionDocumentDataBaseModel req = new() { GroupByRowNum = row_num, JoinFormId = PageJoinForm.Id, SessionId = SessionDocument.Id };
+            ValueFieldSessionDocumentDataBaseModel req = new() { GroupByRowNum = row_num, JoinFormId = PageJoinForm.Id, SessionId = SessionOfDocumentData.Id };
             ResponseBaseModel rest = await ConstructorRepo.DeleteValuesFieldsByGroupSessionDocumentDataByRowNumAsync(req);
             
             SnackBarRepo.ShowMessagesResponse(rest.Messages);
@@ -110,7 +106,7 @@ public partial class ClientTableViewFormComponent : BlazorBusyComponentBaseModel
     /// <inheritdoc/>
     protected async Task AddRowToTable()
     {
-        if (SessionDocument is null)
+        if (SessionOfDocumentData is null)
         {
             SnackBarRepo.Error("SessionDocument is null. error DDD591F2-F3DE-4BF1-91DB-B0C4E5D7C93C");
             return;
@@ -119,7 +115,7 @@ public partial class ClientTableViewFormComponent : BlazorBusyComponentBaseModel
         FieldSessionDocumentDataBaseModel row_obj = new()
         {
             JoinFormId = PageJoinForm.Id,
-            SessionId = SessionDocument.Id
+            SessionId = SessionOfDocumentData.Id
         };
         await SetBusyAsync();
 
@@ -136,7 +132,7 @@ public partial class ClientTableViewFormComponent : BlazorBusyComponentBaseModel
         DialogParameters<ClientTableRowEditDialogComponent> parameters = new()
         {
             { x => x.RowNum, row_num },
-            { x => x.SessionDocument, SessionDocument },
+            { x => x.SessionDocument, SessionOfDocumentData },
             { x => x.DocumentPage, DocumentPage },
             { x => x.PageJoinForm, PageJoinForm },
         };
@@ -146,7 +142,7 @@ public partial class ClientTableViewFormComponent : BlazorBusyComponentBaseModel
         {
             GroupByRowNum = row_num,
             JoinFormId = PageJoinForm.Id,
-            SessionId = SessionDocument.Id,
+            SessionId = SessionOfDocumentData.Id,
             IsSelf = true
         };
         _ = await ConstructorRepo.DeleteValuesFieldsByGroupSessionDocumentDataByRowNumAsync(req);
@@ -156,15 +152,15 @@ public partial class ClientTableViewFormComponent : BlazorBusyComponentBaseModel
 
     async Task ReloadSession()
     {
-        if (SessionDocument is null)
+        if (SessionOfDocumentData is null)
         {
             SnackBarRepo.Error("SessionDocument is null. error BCBB2599-4CC1-433A-A5BC-21114935105F");
             return;
         }
         await SetBusyAsync();
-        TResponseModel<SessionOfDocumentDataModelDB> rest = string.IsNullOrWhiteSpace(SessionDocument.SessionToken)
-        ? await ConstructorRepo.GetSessionDocumentAsync(new() { SessionId = SessionDocument.Id, IncludeExtra = false })
-        : await ConstructorRepo.GetSessionDocumentDataAsync(SessionDocument.SessionToken);
+        TResponseModel<SessionOfDocumentDataModelDB> rest = string.IsNullOrWhiteSpace(SessionOfDocumentData.SessionToken)
+        ? await ConstructorRepo.GetSessionDocumentAsync(new() { SessionId = SessionOfDocumentData.Id, IncludeExtra = false })
+        : await ConstructorRepo.GetSessionDocumentDataAsync(SessionOfDocumentData.SessionToken);
         
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
@@ -175,7 +171,7 @@ public partial class ClientTableViewFormComponent : BlazorBusyComponentBaseModel
         }
 
         if (rest.Response is not null)
-            SessionDocument.Reload(rest.Response);
+            SessionOfDocumentData.Reload(rest.Response);
 
         _table_kit_ref?.Update();
         await SetBusyAsync(false);

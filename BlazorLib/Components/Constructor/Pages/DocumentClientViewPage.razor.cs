@@ -21,7 +21,7 @@ public partial class DocumentClientViewPage : BlazorBusyComponentBaseModel
     public Guid DocumentGuid { get; set; } = default!;
 
 
-    SessionOfDocumentDataModelDB SessionDocument = default!;
+    SessionOfDocumentDataModelDB SessionOfDocumentData = default!;
 
 
     /// <inheritdoc/>
@@ -42,12 +42,12 @@ public partial class DocumentClientViewPage : BlazorBusyComponentBaseModel
         if (rest.Response is null)
             throw new Exception("rest.SessionDocument is null. error 5E20961A-3F1A-4409-9481-FA623F818918");
 
-        SessionDocument = rest.Response;
-        if (SessionDocument.DataSessionValues is not null && SessionDocument.DataSessionValues.Count != 0)
-            SessionDocument.DataSessionValues.ForEach(x =>
+        SessionOfDocumentData = rest.Response;
+        if (SessionOfDocumentData.DataSessionValues is not null && SessionOfDocumentData.DataSessionValues.Count != 0)
+            SessionOfDocumentData.DataSessionValues.ForEach(x =>
             {
-                x.Owner ??= SessionDocument;
-                x.OwnerId = SessionDocument.Id;
+                x.Owner ??= SessionOfDocumentData;
+                x.OwnerId = SessionOfDocumentData.Id;
             });
 
         await SetBusyAsync(false);

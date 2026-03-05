@@ -7,7 +7,7 @@
 
 <h5>Опрос/анкета</h5>
 
-@if (IsBusyProgress || SessionDocument.Id < 1)
+@if (IsBusyProgress || SessionOfDocumentData.Id < 1)
 {
     <div class="text-center">
         <div class="spinner-border" role="status">
@@ -17,6 +17,6 @@
 }
 else
 {
-    <DocumentClientViewComponent SessionOfDocumentData="SessionDocument"
+    <DocumentClientViewComponent SessionOfDocumentData="SessionOfDocumentData"
                                  ReloadSessionHandler="ReloadSessionAction" />
 }

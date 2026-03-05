@@ -125,13 +125,15 @@ else
                                               Form="PageJoinForm.Form"
                                               DocumentPage="DocumentPage"
                                               InUse="InUse"
-                                              SessionDocument="SessionDocument"
+                                              SessionOfDocumentData="SessionOfDocumentData"
                                               PageJoinForm="PageJoinForm"
-                                              CurrentUser="CurrentUserSession" />
+                                              CurrentUserSession="CurrentUserSession" />
             }
             else
             {
-                <ClientStandardViewFormComponent Title="@TitleFormJoin" Form="PageJoinForm.Form" />
+                <ClientStandardViewFormComponent Title="@TitleFormJoin"
+                                                 Form="PageJoinForm.Form"
+                                                 SessionOfDocumentData="SessionOfDocumentData" />
             }
         </div>
     </div>

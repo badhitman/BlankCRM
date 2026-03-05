@@ -30,6 +30,10 @@ public partial class ClientStandardViewFormComponent : BlazorBusyComponentBaseMo
     [Parameter, EditorRequired]
     public FormConstructorModelDB Form { get; set; }
 
+    /// <inheritdoc/>
+    [Parameter]
+    public SessionOfDocumentDataModelDB? SessionOfDocumentData { get; set; }
+
 
     /// <summary>
     /// Доступ к перечню полей формы. Каждое поле формы добавляет себя к этому перечню при инициализации (в <c>OnInitialized()</c>) базового <cref name="FieldBaseClientComponent">компонента</cref>

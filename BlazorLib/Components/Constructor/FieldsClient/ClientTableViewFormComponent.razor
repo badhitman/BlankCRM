@@ -31,11 +31,11 @@ else
         </thead>
         <tbody>
             @{
-                if (InUse == true && SessionDocument?.QueryCurrentTablePageFormValues(PageJoinForm.Id)?.Any() == true)
+                if (SessionOfDocumentData?.QueryCurrentTablePageFormValues(PageJoinForm.Id)?.Any() == true)
                 {
-                    foreach (IGrouping<uint, ValueDataForSessionOfDocumentModelDB> row in SessionDocument.RowsData(PageJoinForm.Id)!)
+                    foreach (IGrouping<uint, ValueDataForSessionOfDocumentModelDB> row in SessionOfDocumentData.RowsData(PageJoinForm.Id)!)
                     {
-                        <ClientTableRowViewComponent SessionDocument="SessionDocument"
+                        <ClientTableRowViewComponent SessionOfDocumentData="SessionOfDocumentData"
                                                      OpenHandle="OpenEditRowAction"
                                                      DeleteHandle="DeleteRowAction"
                                                      PageJoinForm="PageJoinForm"
@@ -51,7 +51,7 @@ else
                         <td colspan="@(PageJoinForm.Form!.AllFields.Count())">
                             <figure class="text-center">
                                 <blockquote class="blockquote">
-                                    <p>@(InUse == true ? "В таблице нет данных." : "Режим демонстрации")</p>
+                                    <p>@(SessionOfDocumentData is not null ? "В таблице нет данных." : "Режим демонстрации")</p>
                                 </blockquote>
                             </figure>
                         </td>
@@ -60,14 +60,14 @@ else
             }
         </tbody>
     </table>
-    @if (InUse == true)
+    @if (SessionOfDocumentData is not null)
     {
         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
             @if (PageJoinForm.Form.Fields?.Any(x => x.TypeField == TypesFieldsFormsEnum.Double || x.TypeField == TypesFieldsFormsEnum.Int || x.TypeField == TypesFieldsFormsEnum.ProgramCalculationDouble) == true)
             {
                 <button @onclick="() => { TableCalculationKit = !TableCalculationKit; }" class="btn btn-link oi oi-calculator" type="button"></button>
             }
-            @if (SessionDocument is not null)
+            @if (SessionOfDocumentData is not null)
             {
                 <button @onclick="AddRowToTable"
                         class="btn btn-outline-primary"
@@ -81,7 +81,7 @@ else
     {
         <div class="alert alert-warning alert-dismissible fade show mt-3" role="alert">
             <button type="button" class="btn-close" aria-label="Close" @onclick="() => { TableCalculationKit = !TableCalculationKit; }"></button>
-            <TableCalculationKitComponent SessionDocument="SessionDocument"
+            <TableCalculationKitComponent SessionDocument="SessionOfDocumentData"
                                           PageJoinForm="PageJoinForm"
                                           @ref="_table_kit_ref" />
         </div>
