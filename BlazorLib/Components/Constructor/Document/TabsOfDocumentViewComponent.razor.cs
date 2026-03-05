@@ -20,16 +20,16 @@ public partial class TabsOfDocumentViewComponent : BlazorBusyComponentBaseModel
     /// <inheritdoc/>
     [Parameter, EditorRequired]
     public required TabOfDocumentSchemeConstructorModelDB TabOfDocumentScheme { get; set; }
-        
-    /// <inheritdoc/>
-    [Parameter, EditorRequired]
-    public required Action ReloadHandler { get; set; }
 
     /// <summary>
     /// Session questionnaire
     /// </summary>
     [Parameter, EditorRequired]
     public required SessionOfDocumentDataModelDB? SessionOfDocumentData { get; set; }
+
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required Action ReloadHandler { get; set; }
 
 
     int _join_form_id;

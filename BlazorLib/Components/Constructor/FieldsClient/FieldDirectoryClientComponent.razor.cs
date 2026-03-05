@@ -24,7 +24,7 @@ public partial class FieldDirectoryClientComponent : FieldComponentBaseModel
     public required EntryNestedModel DirectoryObject { get; set; }
 
     EntryStandardModel? _detect_value;
-    EntryStandardModel? detect_value
+    EntryStandardModel? DetectValue
     {
         get => _detect_value;
         set
@@ -34,7 +34,7 @@ public partial class FieldDirectoryClientComponent : FieldComponentBaseModel
     }
 
     IEnumerable<EntryStandardModel> _options = [];
-    IEnumerable<EntryStandardModel> options
+    IEnumerable<EntryStandardModel> Options
     {
         get => _options;
         set
@@ -57,6 +57,7 @@ public partial class FieldDirectoryClientComponent : FieldComponentBaseModel
     /// <inheritdoc/>
     public override string DomID => $"form-{Form.Id}_{Field.GetType().FullName}-{DocumentPage?.Id}-{Field.Id}";
 
+
     /// <inheritdoc/>
     protected override void OnInitialized()
     {
@@ -71,10 +72,10 @@ public partial class FieldDirectoryClientComponent : FieldComponentBaseModel
                 }
                 else
                 {
-                    detect_value = DirectoryObject.Childs.Any() ? DirectoryObject.Childs.FirstOrDefault(x => selectedIds.Contains(x.Id)) : null;
+                    DetectValue = DirectoryObject.Childs.Any() ? DirectoryObject.Childs.FirstOrDefault(x => selectedIds.Contains(x.Id)) : null;
 
-                    if (detect_value is null)
-                        SnackBarRepo.Error($"{nameof(detect_value)} is null for '{FieldValue}'. error 2357552A-D878-4849-ADC5-98C070EC279F");
+                    if (DetectValue is null)
+                        SnackBarRepo.Error($"{nameof(DetectValue)} is null for '{FieldValue}'. error 2357552A-D878-4849-ADC5-98C070EC279F");
                 }
             }
         }

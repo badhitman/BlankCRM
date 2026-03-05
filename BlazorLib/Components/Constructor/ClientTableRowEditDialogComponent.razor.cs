@@ -22,16 +22,16 @@ public partial class ClientTableRowEditDialogComponent : BlazorBusyComponentBase
     public uint RowNum { get; set; }
 
     /// <inheritdoc/>
-    [Parameter]
-    public SessionOfDocumentDataModelDB SessionOfDocumentData { get; set; } = default!;
-
-    /// <inheritdoc/>
-    [Parameter]
-    public TabOfDocumentSchemeConstructorModelDB DocumentPage { get; set; } = default!;
+    [Parameter, EditorRequired]
+    public required SessionOfDocumentDataModelDB SessionOfDocumentData { get; set; }
 
     /// <inheritdoc/>
     [Parameter, EditorRequired]
-    public FormToTabJoinConstructorModelDB PageJoinForm { get; set; } = default!;
+    public required TabOfDocumentSchemeConstructorModelDB DocumentPage { get; set; }
+
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required FormToTabJoinConstructorModelDB PageJoinForm { get; set; }
 
 
     /// <inheritdoc/>

@@ -1,8 +1,16 @@
 ﻿@inherits FieldComponentBaseModel
 
-<MudSelect Disabled="@(SessionOfDocumentData is null)" T="EntryStandardModel" Label="@Field.Name" MultiSelection="@Field.IsMultiSelect" @bind-Value="detect_value" @bind-SelectedValues="options" HelperText="@Field.Hint" ToStringFunc="@converter" ReadOnly="IsBusyProgress">
+<MudSelect Disabled="@(SessionOfDocumentData is null)"
+           T="EntryStandardModel"
+           Label="@Field.Name"
+           MultiSelection="@Field.IsMultiSelect"
+           @bind-Value="DetectValue"
+           @bind-SelectedValues="Options"
+           HelperText="@Field.Hint"
+           ToStringFunc="@converter"
+           ReadOnly="IsBusyProgress">
     @if (DirectoryObject?.Childs.Any() == true)
-    {        
+    {
         @foreach (EntryStandardModel d in DirectoryObject.Childs)
         {
             <MudSelectItem T="EntryStandardModel" Value="@d">@d.Name</MudSelectItem>
