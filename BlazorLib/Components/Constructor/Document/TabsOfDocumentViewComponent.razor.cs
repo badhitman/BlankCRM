@@ -29,7 +29,7 @@ public partial class TabsOfDocumentViewComponent : BlazorBusyComponentBaseModel
     /// Session questionnaire
     /// </summary>
     [Parameter, EditorRequired]
-    public required SessionOfDocumentDataModelDB SessionOfDocumentData { get; set; }
+    public required SessionOfDocumentDataModelDB? SessionOfDocumentData { get; set; }
 
 
     int _join_form_id;

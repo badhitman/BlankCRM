@@ -27,10 +27,13 @@ public partial class DocumentClientViewPage : BlazorBusyComponentBaseModel
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
-        ReloadHandler();
+        await SetBusyAsync();
+        await base.OnInitializedAsync();
+        ReloadSessionAction();
+        await SetBusyAsync(false);
     }
 
-    async void ReloadHandler()
+    async void ReloadSessionAction()
     {
         await SetBusyAsync();
 

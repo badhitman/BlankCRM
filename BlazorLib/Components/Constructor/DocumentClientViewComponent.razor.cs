@@ -9,8 +9,11 @@ using SharedLib;
 namespace BlazorLib.Components.Constructor;
 
 /// <summary>
-/// DocumentScheme client view
+/// Client view
 /// </summary>
+/// <remarks>
+/// Конечные пользователи (клиенты) будт заполнять  данными документ в контексте отдельной сессии
+/// </remarks>
 public partial class DocumentClientViewComponent : ComponentBase
 {
     [Inject]
@@ -18,14 +21,16 @@ public partial class DocumentClientViewComponent : ComponentBase
 
 
     /// <summary>
-    /// Session questionnaire
+    /// Сессия для заполнения данными документа конечным пользователем (клиентом)
     /// </summary>
     [Parameter, EditorRequired]
     public required SessionOfDocumentDataModelDB SessionOfDocumentData { get; set; }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Вызов команды для перезагрузки данных сессии
+    /// </summary>
     [Parameter, EditorRequired]
-    public required Action ReloadHandler { get; set; }
+    public required Action ReloadSessionHandler { get; set; }
 
 
     /// <summary>
