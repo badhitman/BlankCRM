@@ -10,7 +10,7 @@ namespace SharedLib;
 /// <summary>
 /// Признак проекта как используемого
 /// </summary>
-[Index(nameof(UserId), nameof(ProjectId), IsUnique = true)]
+[Index(nameof(UserId), nameof(ProjectId))]
 public class ProjectUseConstructorModelDb
 {
     /// <summary>
