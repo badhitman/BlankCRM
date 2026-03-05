@@ -23,7 +23,7 @@ public partial class ClientTableRowEditDialogComponent : BlazorBusyComponentBase
 
     /// <inheritdoc/>
     [Parameter]
-    public SessionOfDocumentDataModelDB SessionDocument { get; set; } = default!;
+    public SessionOfDocumentDataModelDB SessionOfDocumentData { get; set; } = default!;
 
     /// <inheritdoc/>
     [Parameter]

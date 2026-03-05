@@ -60,7 +60,7 @@ public partial class ClientTableViewFormComponent : BlazorBusyComponentBaseModel
         DialogParameters<ClientTableRowEditDialogComponent> parameters = new()
         {
             { x => x.RowNum, row_num },
-            { x => x.SessionDocument, SessionOfDocumentData },
+            { x => x.SessionOfDocumentData, SessionOfDocumentData },
             { x => x.DocumentPage, DocumentPage },
             { x => x.PageJoinForm, PageJoinForm },
         };
@@ -132,7 +132,7 @@ public partial class ClientTableViewFormComponent : BlazorBusyComponentBaseModel
         DialogParameters<ClientTableRowEditDialogComponent> parameters = new()
         {
             { x => x.RowNum, row_num },
-            { x => x.SessionDocument, SessionOfDocumentData },
+            { x => x.SessionOfDocumentData, SessionOfDocumentData },
             { x => x.DocumentPage, DocumentPage },
             { x => x.PageJoinForm, PageJoinForm },
         };

@@ -19,6 +19,16 @@ public partial class ClientStandardViewFormComponent : BlazorBusyComponentBaseMo
     [Parameter]
     public string? Title { get; set; }
 
+    /// <summary>
+    /// Связь формы со страницей опроса/анкеты. В режиме DEMO тут NULL
+    /// </summary>
+    [Parameter]
+    public FormToTabJoinConstructorModelDB? PageJoinForm { get; set; }
+
+    /// <inheritdoc/>
+    [Parameter]
+    public SessionOfDocumentDataModelDB? SessionOfDocumentData { get; set; }
+
 
     /// <summary>
     /// Номер строки таблицы данных (0 - если форма обычная, а не не таблица/многострочная)
@@ -29,10 +39,6 @@ public partial class ClientStandardViewFormComponent : BlazorBusyComponentBaseMo
     /// <inheritdoc/>
     [Parameter, EditorRequired]
     public FormConstructorModelDB Form { get; set; }
-
-    /// <inheritdoc/>
-    [Parameter]
-    public SessionOfDocumentDataModelDB? SessionOfDocumentData { get; set; }
 
 
     /// <summary>

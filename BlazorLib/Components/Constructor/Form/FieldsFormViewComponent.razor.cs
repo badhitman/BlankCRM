@@ -33,6 +33,16 @@ public partial class FieldsFormViewComponent : BlazorBusyComponentBaseAuthModel
     [Parameter, EditorRequired]
     public required FormConstructorModelDB Form { get; set; }
 
+    /// <summary>
+    /// Связь формы со страницей опроса/анкеты. В режиме DEMO тут NULL
+    /// </summary>
+    [Parameter]
+    public FormToTabJoinConstructorModelDB? PageJoinForm { get; set; }
+
+    /// <inheritdoc/>
+    [Parameter]
+    public SessionOfDocumentDataModelDB? SessionOfDocumentData { get; set; }
+
 
     FieldFormBaseLowConstructorModel? _field_master;
 

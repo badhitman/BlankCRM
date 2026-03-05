@@ -1,5 +1,5 @@
-﻿@using BlazorLib.Components.Constructor.FieldsClient
-@using BlazorLib.Components.Constructor.FieldsRowsEditUI
+﻿@using BlazorLib.Components.Constructor.FieldsRowsEditUI
+@using BlazorLib.Components.Constructor.FieldsClient
 
 @inherits BlazorBusyComponentBaseAuthModel
 
@@ -65,7 +65,10 @@
         <h6 class="card-subtitle mb-2 text-muted">Как это увидит пользователь</h6>
         <div class="card">
             <div class="card-body">
-                <ClientStandardViewFormComponent @ref="client_standard_ref" Form="Form" />
+                <ClientStandardViewFormComponent @ref="client_standard_ref"
+                                                 Form="Form"
+                                                 PageJoinForm="PageJoinForm"
+                                                 SessionOfDocumentData="SessionOfDocumentData" />
             </div>
         </div>
     </div>
