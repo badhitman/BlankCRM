@@ -3,7 +3,9 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Logging;
 using MudBlazor;
+using Newtonsoft.Json;
 using SharedLib;
 
 namespace BlazorLib.Components.Retail.Orders;
@@ -13,6 +15,9 @@ namespace BlazorLib.Components.Retail.Orders;
 /// </summary>
 public partial class RetailOrdersListComponent : BlazorBusyComponentBaseAuthModel
 {
+    [Inject]
+    ILogger<RetailOrdersListComponent> loggerRepo { get; set; } = default!;
+
     [Inject]
     IRetailService RetailRepo { get; set; } = default!;
 
@@ -193,7 +198,16 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseAuthMode
         if (users.Success() && users.Response is not null && users.Response.Length != 0)
             lock (UsersCache)
             {
-                UsersCache.AddRange(users.Response.Where(x => !UsersCache.Any(y => y.UserId == x.UserId)));
+                try
+                {
+                    UsersCache.AddRange(users.Response.Where(x => !UsersCache.Any(y => y.UserId == x.UserId)));
+                }
+                catch (Exception ex)
+                {
+                    string msg = $"{nameof(UsersCache)}: {JsonConvert.SerializeObject(UsersCache)}\n{nameof(users)}:{JsonConvert.SerializeObject(users)}";
+                    loggerRepo.LogError(ex, msg);
+                    SnackBarRepo.Error(msg);
+                }
             }
     }
 
