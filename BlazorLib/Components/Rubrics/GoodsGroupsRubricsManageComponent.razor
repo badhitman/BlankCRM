@@ -21,7 +21,7 @@
                                     ContextName="@($"{Routes.GOODS_CONTROLLER_NAME}-{Routes.CATEGORIES_CONTROLLER_NAME}")" />
         </MudTabPanel>
         <MudTabPanel Text="Поля" Disabled="@(IsBusyProgress || currentProjectId < 1)">
-            <RubricFieldsManageComponent ProjectId="currentProjectId" />
+            <RubricFieldsManageComponent ProjectId="currentProjectId"  />
         </MudTabPanel>
         <MudTabPanel Text="Списки" Disabled="@(IsBusyProgress || currentProjectId < 1)">
             <DirectoryViewComponent ProjectId="currentProjectId" ReloadHandler="ReloadAction" />
