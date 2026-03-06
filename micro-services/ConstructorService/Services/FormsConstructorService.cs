@@ -7,9 +7,6 @@ using Microsoft.EntityFrameworkCore.Query;
 using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using System.Linq.Expressions;
-using System.Net.Mail;
-using Newtonsoft.Json;
 using SharedLib;
 using DbcLib;
 
