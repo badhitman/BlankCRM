@@ -23,7 +23,7 @@ public static class RegisterMqListenerExtension
             .RegisterListenerRabbitMQ<ClaimsUserFlushReceive, string, TResponseModel<bool>>()
             .RegisterListenerRabbitMQ<GetUsersIdentityByEmailReceive, string[], TResponseModel<UserInfoModel[]?>>()
             .RegisterListenerRabbitMQ<GetUserIdentityByTelegramReceive, long[], TResponseModel<UserInfoModel[]?>>()
-            .RegisterListenerRabbitMQ<GetUsersOfIdentityReceive, string[], TResponseModel<UserInfoModel[]?>>()
+            .RegisterListenerRabbitMQ<GetUsersOfIdentityReceive, string[], TResponseModel<UserInfoModel[]>>()
             .RegisterListenerRabbitMQ<SendEmailReceive, SendEmailRequestModel, ResponseBaseModel>()
             .RegisterListenerRabbitMQ<ReadToken2FAReceive, string, TResponseModel<string?>>()
             .RegisterListenerRabbitMQ<CheckToken2FAReceive, CheckToken2FARequestModel, TResponseModel<string>>()

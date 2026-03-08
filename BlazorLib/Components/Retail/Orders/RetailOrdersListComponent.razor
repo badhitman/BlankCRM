@@ -136,12 +136,12 @@
                 @if (RowClickEventHandler is null)
                 {
                     <MudLink Color="Color.Success" title="Переход в карточку клиента" Href="@($"/retail/client-card/{context.BuyerIdentityUserId}")">
-                        @(UsersCache.FirstOrDefault(x => x.UserId == context.BuyerIdentityUserId)?.ToString() ?? $"#{context.BuyerIdentityUserId}")
+                        @(UsersCache.FirstOrDefault(x => x.Key == context.BuyerIdentityUserId).Value.ToString() ?? $"#{context.BuyerIdentityUserId}")
                     </MudLink>
                 }
                 else
                 {
-                    <span>@(UsersCache.FirstOrDefault(x => x.UserId == context.BuyerIdentityUserId)?.ToString() ?? $"#{context.BuyerIdentityUserId}")</span>
+                    <span>@(UsersCache.FirstOrDefault(x => x.Key == context.BuyerIdentityUserId).Value.ToString() ?? $"#{context.BuyerIdentityUserId}")</span>
                 }
             </MudTd>
         }

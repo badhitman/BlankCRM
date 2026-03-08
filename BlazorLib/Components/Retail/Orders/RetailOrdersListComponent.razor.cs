@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using MudBlazor;
 using Newtonsoft.Json;
 using SharedLib;
+using System.Collections.Concurrent;
 
 namespace BlazorLib.Components.Retail.Orders;
 
@@ -80,7 +81,7 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseAuthMode
     /// <summary>
     /// UsersCache
     /// </summary>
-    protected List<UserInfoModel> UsersCache = [];
+    protected ConcurrentDictionary<string, UserInfoModel> UsersCache = [];
 
 
     MudTable<DocumentRetailModelDB>? tableRef;
@@ -189,26 +190,15 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseAuthMode
     /// </summary>
     protected async Task CacheUsersUpdate(string[] usersIds, CancellationToken token)
     {
-        usersIds = [.. usersIds.Where(x => !string.IsNullOrWhiteSpace(x) && !UsersCache.Any(y => y.UserId == x)).Distinct()];
+        usersIds = [.. usersIds.Where(x => !string.IsNullOrWhiteSpace(x) && !UsersCache.Any(y => y.Key == x)).Distinct()];
         if (usersIds.Length == 0)
             return;
 
         TResponseModel<UserInfoModel[]> users = await IdentityRepo.GetUsersOfIdentityAsync(usersIds, token);
         SnackBarRepo.ShowMessagesResponse(users.Messages);
         if (users.Success() && users.Response is not null && users.Response.Length != 0)
-            lock (UsersCache)
-            {
-                try
-                {
-                    UsersCache.AddRange(users.Response.Where(x => !UsersCache.Any(y => y.UserId == x.UserId)));
-                }
-                catch (Exception ex)
-                {
-                    string msg = $"{nameof(UsersCache)}: {JsonConvert.SerializeObject(UsersCache)}\n{nameof(users)}:{JsonConvert.SerializeObject(users)}";
-                    loggerRepo.LogError(ex, msg);
-                    SnackBarRepo.Error(msg);
-                }
-            }
+            foreach (var _u in users.Response.Where(x => !UsersCache.Any(y => y.Key == x.UserId)))
+                UsersCache.TryAdd(_u.UserId, _u);
     }
 
     /// <summary>

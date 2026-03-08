@@ -2,10 +2,9 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
-using DbcLib;
 using Microsoft.EntityFrameworkCore;
 using SharedLib;
-using static SharedLib.GlobalStaticConstantsRoutes;
+using DbcLib;
 
 namespace CommerceService;
 

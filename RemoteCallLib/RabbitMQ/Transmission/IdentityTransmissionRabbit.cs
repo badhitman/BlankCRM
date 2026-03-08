@@ -6,13 +6,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Caching.Memory;
 using System.Collections.Concurrent;
 using SharedLib;
+using Microsoft.Extensions.Logging;
 
 namespace RemoteCallLib;
 
 /// <summary>
 /// [remote]: Identity
 /// </summary>
-public class IdentityTransmissionRabbit([FromKeyedServices(nameof(RabbitClient))] IMQStandardClientRPC rabbitClient, IMemoryCache cache) : IIdentityTransmission
+public class IdentityTransmissionRabbit([FromKeyedServices(nameof(RabbitClient))] IMQStandardClientRPC rabbitClient, IMemoryCache cache, ILogger<IdentityTransmissionRabbit> loggerRepo) : IIdentityTransmission
 {
     static readonly TimeSpan _ts = TimeSpan.FromMinutes(1);
 
@@ -190,10 +191,15 @@ public class IdentityTransmissionRabbit([FromKeyedServices(nameof(RabbitClient))
             }))];
             await Task.WhenAll(tasks);
         }
+        IQueryable<KeyValuePair<string, UserInfoModel?>> _qn = usersRes.Where(x => x.Value is null).AsQueryable();
+        if (_qn.Any())
+        {
+            loggerRepo.LogError($"users identity get-error for: {string.Join(", ", _qn.Select(y => y.Key))}");
+        }
 
         return new()
         {
-            Response = [.. usersRes.Select(x => x.Value)!]
+            Response = [.. usersRes.Where(x => x.Value is not null).Select(x => x.Value)!]
         };
     }
 
