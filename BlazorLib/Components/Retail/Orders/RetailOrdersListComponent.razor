@@ -3,6 +3,7 @@
 @inherits BlazorBusyComponentBaseAuthModel
 
 <MudStack AlignItems="AlignItems.Center" Row>
+
     @if (PresetStatusesDocuments is null || PresetStatusesDocuments.Count == 0)
     {
         <MudChipSet @bind-SelectedValues="SelectedStatuses"
@@ -15,8 +16,12 @@
             {
                 <MudChip Value="@sd" Text="@sd.DescriptionInfo()" />
             }
+            <MudChip T="string"
+                     Icon="@(includeUnsetStatus? @Icons.Material.Filled.Check : "")"
+                     Selected=includeUnsetStatus
+                     OnClick="OnChipClicked"
+                     Color="Color.Default">Не обработанные</MudChip>
         </MudChipSet>
-        <MudChip T="string" Icon="@(includeUnsetStatus? @Icons.Material.Filled.Check : "")" Selected=includeUnsetStatus OnClick="OnChipClicked" Color="Color.Default">Не обработанные</MudChip>
     }
     else
     {
@@ -29,6 +34,7 @@
             </div>
         </div>
     }
+
     <MudSpacer />
     <MudDateRangePicker PickerVariant="@PickerVariant.Inline" @bind-DateRange="@DateRangeProp" Margin="Margin.Dense" Clearable />
 </MudStack>
