@@ -2,7 +2,7 @@
 @using MudBlazor
 @inherits LayoutComponentBase
 
-<MudThemeProvider @bind-IsDarkMode="@_isDarkMode" @rendermode="new InteractiveServerRenderMode(prerender: false)" />
+<MudThemeProvider @bind-IsDarkMode="@(WebConfig.Value.IsDarkMode)" @rendermode="new InteractiveServerRenderMode(prerender: false)" />
 <MudDialogProvider @rendermode="new InteractiveServerRenderMode(prerender: false)" />
 <MudSnackbarProvider @rendermode="new InteractiveServerRenderMode(prerender: false)" />
 <MudPopoverProvider @rendermode="new InteractiveServerRenderMode(prerender: false)" />
@@ -49,7 +49,4 @@
 
     [CascadingParameter, EditorRequired]
     public required NavMainMenuModel NavMainMenu { get; set; }
-
-
-    private bool _isDarkMode = true;
 }

@@ -53,4 +53,7 @@ public class ServerConfigModel
     /// Папки (или файлы) для отображения в инструментах
     /// </summary>
     public string[]? DirectoriesReadList { get; set; }
+
+    /// <inheritdoc/>
+    public bool IsDarkMode { get; set; }
 }

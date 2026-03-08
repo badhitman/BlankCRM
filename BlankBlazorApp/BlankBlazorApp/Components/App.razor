@@ -5,14 +5,14 @@
 @using SharedLib
 
 <!DOCTYPE html>
-<html lang="@CultureInfo.CurrentCulture.Parent.Name" data-bs-theme="dark">
+<html lang="@CultureInfo.CurrentCulture.Parent.Name" data-bs-theme="@(ServerConfig.Value.IsDarkMode ? "dark" : "light")">
 
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <base href="/" />
     <ResourcePreloader />
-    
+
     <link rel="stylesheet" href="@Assets["lib/jquery-toast-plugin/jquery.toast.css"]" />
     @* <link rel="stylesheet" href="/lib/jquery-toast-plugin/jquery.toast.css?version=@GlobalStaticConstants.InitSalt" /> *@
 
@@ -113,7 +113,7 @@
 
     <script src="@Assets["js/JivoSite.js"]"></script>
     @* <script src="/js/JivoSite.js?version=@GlobalStaticConstants.InitSalt"></script> *@
-    
+
     <script src="@Assets["lib/jquery-toast-plugin/jquery.toast.js"]"></script>
     @* <script src="/lib/jquery-toast-plugin/jquery.toast.js?version=@GlobalStaticConstants.InitSalt"></script> *@
 

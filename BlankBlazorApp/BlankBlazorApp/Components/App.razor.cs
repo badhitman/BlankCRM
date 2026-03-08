@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Options;
-using Microsoft.JSInterop;
-using MudBlazor;
 using SharedLib;
 
 namespace BlankBlazorApp.Components;
