@@ -137,7 +137,7 @@ else
                 }
             </p>
             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                <button @onclick=SaveDocument class="btn btn-primary me-md-2" type="button" disabled="@CannotSave">Save</button>
+                <button @onclick=SaveDocument class="btn btn-primary me-md-2" type="button" disabled="@(CannotSave || IsBusyProgress)">Save</button>
             </div>
         </div>
     </div>
