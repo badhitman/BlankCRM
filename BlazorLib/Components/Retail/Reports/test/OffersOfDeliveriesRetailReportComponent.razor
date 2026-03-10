@@ -13,8 +13,12 @@
         {
             <MudChip Value="@sd" Text="@sd.DescriptionInfo()" />
         }
+        <MudChip T="string"
+                 Icon="@(includeUnset? @Icons.Material.Filled.Check : "")"
+                 Selected=includeUnset
+                 OnClick="OnChipClicked"
+                 Color="Color.Default">Не обработанные</MudChip>
     </MudChipSet>
-    <MudChip T="string" Icon="@(includeUnset? @Icons.Material.Filled.Check : "")" Selected=includeUnset OnClick="OnChipClicked" Color="Color.Default">Не обработанные</MudChip>
     <MudSpacer />
     <MudDateRangePicker PickerVariant="@PickerVariant.Inline"
                         @bind-DateRange="@DateRangeProp"

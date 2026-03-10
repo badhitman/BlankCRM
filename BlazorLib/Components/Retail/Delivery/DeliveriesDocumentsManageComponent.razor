@@ -31,13 +31,13 @@
                         {
                             <MudChip Value="@ds" Text="@ds.DescriptionInfo()" />
                         }
+                        <MudChip T="string"
+                                 Icon="@(includeUnsetStatus? @Icons.Material.Filled.Check : "")"
+                                 Selected=includeUnsetStatus
+                                 OnClick="OnChipClicked"
+                                 SelectedColor="Color.Primary"
+                                 Color="Color.Default">Не обработанные</MudChip>
                     </MudChipSet>
-                    <MudChip T="string"
-                             Icon="@(includeUnsetStatus? @Icons.Material.Filled.Check : "")"
-                             Selected=includeUnsetStatus
-                             OnClick="OnChipClicked"
-                             SelectedColor="Color.Primary"
-                             Color="Color.Default">Не обработанные</MudChip>
                 }
                 else
                 {
