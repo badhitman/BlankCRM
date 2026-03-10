@@ -2,10 +2,11 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using RemoteCallLib;
 using SharedLib;
+
+namespace ServerLib;
 
 /// <summary>
 /// EventNotifyExtensions
