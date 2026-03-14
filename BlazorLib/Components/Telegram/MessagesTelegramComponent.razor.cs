@@ -74,8 +74,16 @@ public partial class MessagesTelegramComponent : BlazorBusyComponentBaseModel
         await SetBusyAsync(false, token);
 
         if (rest_message.Response is null)
-            return new TableData<MessageTelegramStandardModel>() { TotalItems = 0, Items = [] };
+            return new TableData<MessageTelegramStandardModel>()
+            {
+                TotalItems = 0,
+                Items = []
+            };
 
-        return new TableData<MessageTelegramStandardModel>() { TotalItems = rest_message.TotalRowsCount, Items = rest_message.Response };
+        return new TableData<MessageTelegramStandardModel>()
+        {
+            TotalItems = rest_message.TotalRowsCount,
+            Items = rest_message.Response
+        };
     }
 }

@@ -1,7 +1,7 @@
-﻿@using System.Globalization
-@using System.Reflection
+﻿@using BlazorLib.Components.Shared.Layouts
 @using BlankBlazorApp.Components.Layout
-@using BlazorLib.Components.Shared.Layouts
+@using System.Globalization
+@using System.Reflection
 @using SharedLib
 
 <!DOCTYPE html>
@@ -14,31 +14,17 @@
     <ResourcePreloader />
 
     <link rel="stylesheet" href="@Assets["lib/jquery-toast-plugin/jquery.toast.css"]" />
-    @* <link rel="stylesheet" href="/lib/jquery-toast-plugin/jquery.toast.css?version=@GlobalStaticConstants.InitSalt" /> *@
-
     <link rel="stylesheet" href="@Assets["lib/bootstrap/css/bootstrap.min.css"]" />
-    @* <link rel="stylesheet" href="/lib/bootstrap/css/bootstrap.min.css?version=@GlobalStaticConstants.InitSalt" /> *@
-
-    <link rel="stylesheet" href="@Assets["app.css"]" />
-    @* <link rel="stylesheet" href="app.css?version=@GlobalStaticConstants.InitSalt" /> *@
-
     <link rel="stylesheet" href="@Assets["BlankBlazorApp.styles.css"]" />
-    @* <link rel="stylesheet" href="BlankBlazorApp.styles.css" /> *@
+    <link rel="stylesheet" href="@Assets["app.css"]" />
 
     <ImportMap />
 
     <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="@Assets["lib/bootstrap-icons/font/bootstrap-icons.min.css"]">
-    @* <link rel="stylesheet" href="/lib/bootstrap-icons/font/bootstrap-icons.min.css?version=@GlobalStaticConstants.InitSalt"> *@
-
-    <link rel="stylesheet" href="@Assets["lib/jqueryui/jquery-ui.min.css"]" />
-    @* <link rel="stylesheet" href="/lib/jqueryui/jquery-ui.min.css?version=@GlobalStaticConstants.InitSalt" /> *@
-
+    <link rel="stylesheet" href="@Assets["lib/bootstrap-icons/font/bootstrap-icons.min.css"]" />
     <link rel="stylesheet" href="@Assets["lib/highlight.js/styles/dark.min.css"]" />
-    @* <link rel="stylesheet" href="/lib/highlight.js/styles/dark.min.css?version=@GlobalStaticConstants.InitSalt" /> *@
-
+    <link rel="stylesheet" href="@Assets["lib/jqueryui/jquery-ui.min.css"]" />
     <link rel="stylesheet" href="@Assets["js/ckeditor5/ckeditor5.css"]" />
-    @* <link rel="stylesheet" href="/js/ckeditor5/ckeditor5.css?version=@GlobalStaticConstants.InitSalt" /> *@
 
     @if (ServerConfig.Value.StylesInject is not null && ServerConfig.Value.StylesInject.Length != 0)
     {
@@ -49,22 +35,22 @@
     }
     <link rel="icon" type="image/png" href="favicon.png" />
     <script type="text/javascript">
-        window.downloadFileFromStream = async (fileName, contentStreamReference) => {
-            const arrayBuffer = await contentStreamReference.arrayBuffer();
-            const blob = new Blob([arrayBuffer]);
-            const url = URL.createObjectURL(blob);
-            triggerFileDownload(fileName, url);
-            URL.revokeObjectURL(url);
-        };
-        window.triggerFileDownload = (fileName, url) => {
-            const anchorElement = document.createElement('a');
-            anchorElement.href = url;
-            anchorElement.download = fileName ?? '';
-            anchorElement.click();
-            anchorElement.remove();
-        };
+            window.downloadFileFromStream = async (fileName, contentStreamReference) => {
+                const arrayBuffer = await contentStreamReference.arrayBuffer();
+                const blob = new Blob([arrayBuffer]);
+                const url = URL.createObjectURL(blob);
+                triggerFileDownload(fileName, url);
+                URL.revokeObjectURL(url);
+            };
+            window.triggerFileDownload = (fileName, url) => {
+                const anchorElement = document.createElement('a');
+                anchorElement.href = url;
+                anchorElement.download = fileName ?? '';
+                anchorElement.click();
+                anchorElement.remove();
+            };
     </script>
-    <HeadOutlet />
+    <HeadOutlet @rendermode="InteractiveServer" />
 </head>
 
 <body>
@@ -74,48 +60,22 @@
     <script>
         document.addEventListener("DOMContentLoaded", function()
         {
-            DOMContentLoaded();
+        DOMContentLoaded();
         });
     </script>
 
     <script src="@Assets["lib/jquery/jquery.min.js"]"></script>
-    @* <script src="/lib/jquery/jquery.min.js?version=@GlobalStaticConstants.InitSalt"></script> *@
-
     <script src="@Assets["lib/jqueryui/jquery-ui.min.js"]"></script>
-    @* <script src="/lib/jqueryui/jquery-ui.min.js?version=@GlobalStaticConstants.InitSalt"></script> *@
-
     <script src="@Assets["js/ckeditor5/ckeditor.js"]"></script>
-    @* 
-        <script src="/lib/ckeditor5/ckeditor.js?version=@GlobalStaticConstants.InitSalt"></script> 
-        <script src="/js/ckeditor5/ckeditor.js?version=@GlobalStaticConstants.InitSalt"></script>
-    *@
-
     <script src="@Assets["js/CKEditorInterop.js"]"></script>
-    @* <script src="/js/CKEditorInterop.js?version=@GlobalStaticConstants.InitSalt"></script> *@
-
     <script src="@Assets["lib/tinymce/tinymce.min.js"]"></script>
-    @* <script src="/lib/tinymce/tinymce.min.js"></script> *@
-
     <script src="@Assets["lib/highlight.js/highlight.min.js"]"></script>
-    @* <script src="/lib/highlight.js/highlight.min.js"></script> *@
-
     <script src="@Assets["_content/MudBlazor/MudBlazor.min.js"]"></script>
-    @* <script src="_content/MudBlazor/MudBlazor.min.js?v=@(Assembly.GetAssembly(typeof(MudBlazor.AbstractLocalizationInterceptor))?.GetName().Version?.ToString())"></script> *@
-
     <script src="@Assets["js/scriptLoader.js"]"></script>
-    @* <script src="/js/scriptLoader.js?version=@GlobalStaticConstants.InitSalt"></script> *@
-
     <script src="@Assets["js/JsOfReCAPTCHA.js"]"></script>
-    @* <script src="/js/JsOfReCAPTCHA.js?version=@GlobalStaticConstants.InitSalt"></script> *@
-
     <script src="@Assets["js/site.js"]"></script>
-    @* <script src="/js/site.js?version=@GlobalStaticConstants.InitSalt"></script> *@
-
     <script src="@Assets["js/JivoSite.js"]"></script>
-    @* <script src="/js/JivoSite.js?version=@GlobalStaticConstants.InitSalt"></script> *@
-
     <script src="@Assets["lib/jquery-toast-plugin/jquery.toast.js"]"></script>
-    @* <script src="/lib/jquery-toast-plugin/jquery.toast.js?version=@GlobalStaticConstants.InitSalt"></script> *@
 
     @* <script src="https://www.google.com/recaptcha/api.js" async defer></script> *@
     @if (_includeTelegramBotWebAppScript)
@@ -123,14 +83,8 @@
         <script src="https://telegram.org/js/telegram-web-app.js"></script>
     }
     <script>
-        window.onBlazorReady = () => {
-            $(document).tooltip({
-                track: true
-            });
-        };
-        window.tooltipeHide = () => {
-            $("div.ui-tooltip").hide();
-        };
+        window.onBlazorReady = () => { $(document).tooltip({ track: true }); };
+        window.tooltipeHide = () => { $("div.ui-tooltip").hide(); };
     </script>
     <div id="components-reconnect-modal">
         Возникла проблема со связью!
