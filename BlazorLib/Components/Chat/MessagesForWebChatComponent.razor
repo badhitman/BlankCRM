@@ -72,6 +72,9 @@
         <MudTh>#</MudTh>
     </HeaderContent>
     <RowTemplate>
+        @{
+            DateTime _cdt = context.CreatedAtUTC.GetCustomTime();
+        }
         <MudTd DataLabel="#">
             @if (context.SenderUserIdentityId == GlobalStaticConstantsRoles.Roles.System)
             {
@@ -80,33 +83,66 @@
                         @context.Text
                     </blockquote>
                     <figcaption class="blockquote-footer">
-                        уведомление <cite title="система оповещения">system</cite>
+                        уведомление <cite title="система оповещения">system</cite> | @($"{_cdt.ToString("d", GlobalStaticConstants.RU)} {@_cdt.ToString("t", GlobalStaticConstants.RU)}")
                     </figcaption>
                 </figure>
             }
             else
             {
-                ChatBubblePosition position = context.InitiatorMessageSender ? ChatBubblePosition.Start : ChatBubblePosition.End;
-                <MudChat ChatPosition="@position">
-                    <MudAvatar>@(position == ChatBubblePosition.Start ? "" : "US")</MudAvatar>
-                    <MudChatHeader Name="@(position == ChatBubblePosition.Start ? "00" : (UsersCache.FirstOrDefault(x => x.UserId == context.SenderUserIdentityId)?.ToString() ?? context.SenderUserIdentityId))" Time="@context.CreatedAtUTC.GetCustomTime().ToString()" />
-                    <MudChatBubble>
-                        @context.Text
-                    </MudChatBubble>
-                    @if (context.AttachesFiles is not null && context.AttachesFiles.Count != 0)
-                    {
-                        <MudChatFooter>
-                            Файлы:
-                            @foreach (AttachesMessageWebChatModelDB _fa in context.AttachesFiles)
+                if (context.InitiatorMessageSender)
+                {
+                    <div class="d-flex flex-row justify-content-start">
+                        <MudAvatar Color="Color.Info" Variant="Variant.Outlined">M</MudAvatar>
+                        <div>
+                            <p class="small ms-3 mb-0 rounded-3 text-muted">
+                                00 | @($"{_cdt.ToString("d", GlobalStaticConstants.RU)} {@_cdt.ToString("t", GlobalStaticConstants.RU)}")
+                            </p>
+                            <p class="small p-2 ms-3 mb-1 rounded-3 bg-body-tertiary">
+                                @context.Text
+                            </p>
+                            @if (context.AttachesFiles is not null && context.AttachesFiles.Count != 0)
                             {
-                                <a class="ms-2 link-primary"
-                                   href="@_fa.GetURI()">
-                                    @_fa.FileAttachName ( @GlobalToolsStandard.SizeDataAsString(_fa.FileLength) )
-                                </a>
+                                <p class="small me-3 mb-3 rounded-3 text-muted d-flex justify-content-end">
+                                    Файлы:
+                                    @foreach (AttachesMessageWebChatModelDB _fa in context.AttachesFiles)
+                                    {
+                                        <a class="ms-2 link-primary"
+                                               href="@_fa.GetURI()">
+                                            @_fa.FileAttachName ( @GlobalToolsStandard.SizeDataAsString(_fa.FileLength) )
+                                        </a>
+                                    }
+                                </p>
                             }
-                        </MudChatFooter>
-                    }
-                </MudChat>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="d-flex flex-row justify-content-end pt-1">
+                        <div>
+                            <p class="small me-3 mb-0 rounded-3 text-muted d-flex justify-content-end">
+                                @(UsersCache.FirstOrDefault(x => x.UserId == context.SenderUserIdentityId)?.ToString() ?? context.SenderUserIdentityId)) | @($"{_cdt.ToString("d", GlobalStaticConstants.RU)} {@_cdt.ToString("t", GlobalStaticConstants.RU)}")
+                            </p>
+                            <p class="small p-2 me-3 mb-1 text-white rounded-3 bg-primary">
+                                @context.Text
+                            </p>
+                            @if (context.AttachesFiles is not null && context.AttachesFiles.Count != 0)
+                            {
+                                <p class="small me-3 mb-3 rounded-3 text-muted d-flex justify-content-end">
+                                    Файлы:
+                                    @foreach (AttachesMessageWebChatModelDB _fa in context.AttachesFiles)
+                                    {
+                                        <a class="ms-2 link-primary"
+                                               href="@_fa.GetURI()">
+                                            @_fa.FileAttachName ( @GlobalToolsStandard.SizeDataAsString(_fa.FileLength) )
+                                        </a>
+                                    }
+                                </p>
+                            }
+                        </div>
+                        <MudAvatar Color="Color.Success" Variant="Variant.Outlined">U</MudAvatar>
+                    </div>
+                }
             }
         </MudTd>
     </RowTemplate>

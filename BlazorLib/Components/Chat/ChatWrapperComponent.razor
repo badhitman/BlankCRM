@@ -90,32 +90,77 @@
                         @ref="virtualizeComponent">
                 <ItemContent>
                     @{
-                        ChatBubblePosition position = message.InitiatorMessageSender
-                        ? ChatBubblePosition.Start
-                        : ChatBubblePosition.End;
+                        DateTime _cdt = message.CreatedAtUTC.GetCustomTime();
                         UserInfoModel? senderUser = UsersCache.FirstOrDefault(x => x.UserId == message.SenderUserIdentityId);
-
                     }
-                    <MudChat ChatPosition="@position">
-                        <MudAvatar>@(position == ChatBubblePosition.Start ? "Вы" : "US")</MudAvatar>
-                        <MudChatHeader Name="@(position == ChatBubblePosition.Start ? "Вы" : senderUser?.UserName ?? message.SenderUserIdentityId)"
-                                       Time="@message.CreatedAtUTC.GetCustomTime().ToString()" />
-                        <MudChatBubble>
-                            @message.Text
-                        </MudChatBubble>
-                        @if (message.AttachesFiles is not null && message.AttachesFiles.Count != 0)
+                    @if (message.SenderUserIdentityId == GlobalStaticConstantsRoles.Roles.System)
+                    {
+                        <figure class="text-center">
+                            <blockquote class="blockquote">
+                                @message.Text
+                            </blockquote>
+                            <figcaption class="blockquote-footer">
+                                уведомление <cite title="система оповещения">system</cite> | @($"{_cdt.ToString("d", GlobalStaticConstants.RU)} {@_cdt.ToString("t", GlobalStaticConstants.RU)}")
+                            </figcaption>
+                        </figure>
+                    }
+                    else
+                    {
+                        if (message.InitiatorMessageSender)
                         {
-                            <MudChatFooter>
-                                Файлы:
-                                @foreach (AttachesMessageWebChatModelDB _fa in message.AttachesFiles)
-                                {
-                                    <a href="@_fa.GetURI()" class="ms-2 link-primary">
-                                        @_fa.FileAttachName ( @GlobalToolsStandard.SizeDataAsString(_fa.FileLength) )
-                                    </a>
-                                }
-                            </MudChatFooter>
+                            <div class="d-flex flex-row justify-content-start">
+                                <MudAvatar Color="Color.Info" Variant="Variant.Outlined">M</MudAvatar>
+                                <div>
+                                    <p class="small ms-3 mb-0 rounded-3 text-muted">
+                                        00 | @($"{_cdt.ToString("d", GlobalStaticConstants.RU)} {@_cdt.ToString("t", GlobalStaticConstants.RU)}")
+                                    </p>
+                                    <p class="small p-2 ms-3 mb-1 rounded-3 bg-body-tertiary">
+                                        @message.Text
+                                    </p>
+                                    @if (message.AttachesFiles is not null && message.AttachesFiles.Count != 0)
+                                    {
+                                        <p class="small me-3 mb-3 rounded-3 text-muted d-flex justify-content-end">
+                                            Файлы:
+                                            @foreach (AttachesMessageWebChatModelDB _fa in message.AttachesFiles)
+                                            {
+                                                <a class="ms-2 link-primary"
+                                                       href="@_fa.GetURI()">
+                                                    @_fa.FileAttachName ( @GlobalToolsStandard.SizeDataAsString(_fa.FileLength) )
+                                                </a>
+                                            }
+                                        </p>
+                                    }
+                                </div>
+                            </div>
                         }
-                    </MudChat>
+                        else
+                        {
+                            <div class="d-flex flex-row justify-content-end pt-1">
+                                <div>
+                                    <p class="small me-3 mb-0 rounded-3 text-muted d-flex justify-content-end">
+                                        @(UsersCache.FirstOrDefault(x => x.UserId == message.SenderUserIdentityId)?.ToString() ?? message.SenderUserIdentityId)) | @($"{_cdt.ToString("d", GlobalStaticConstants.RU)} {@_cdt.ToString("t", GlobalStaticConstants.RU)}")
+                                    </p>
+                                    <p class="small p-2 me-3 mb-1 text-white rounded-3 bg-primary">
+                                        @message.Text
+                                    </p>
+                                    @if (message.AttachesFiles is not null && message.AttachesFiles.Count != 0)
+                                    {
+                                        <p class="small me-3 mb-3 rounded-3 text-muted d-flex justify-content-end">
+                                            Файлы:
+                                            @foreach (AttachesMessageWebChatModelDB _fa in message.AttachesFiles)
+                                            {
+                                                <a class="ms-2 link-primary"
+                                                       href="@_fa.GetURI()">
+                                                    @_fa.FileAttachName ( @GlobalToolsStandard.SizeDataAsString(_fa.FileLength) )
+                                                </a>
+                                            }
+                                        </p>
+                                    }
+                                </div>
+                                <MudAvatar Color="Color.Success" Variant="Variant.Outlined">U</MudAvatar>
+                            </div>
+                        }
+                    }
                 </ItemContent>
                 <Placeholder>
                     <p>
