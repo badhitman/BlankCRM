@@ -32,7 +32,9 @@ public partial class WebChatService : IWebChatService
             await notifyWebChatRepo.NewMessageWebChatAsync(new() { DialogId = req.DialogOwnerId, TextMessage = req.Text }, token);
 
         string _baseUri = await q.Select(x => x.BaseUri).FirstAsync(cancellationToken: token);
-        IQueryable<UserJoinDialogWebChatModelDB> q2 = context.UsersDialogsJoins.Where(x => x.DialogJoinId == req.DialogOwnerId && (x.OutDateUTC == null || x.OutDateUTC == default));
+        IQueryable<UserJoinDialogWebChatModelDB> q2 = context.UsersDialogsJoins
+            .Where(x => x.DialogJoinId == req.DialogOwnerId && (x.OutDateUTC == null || x.OutDateUTC == default));
+
         if (req.InitiatorMessageSender)
         {
             if (!await q2.AnyAsync(cancellationToken: token))
@@ -46,7 +48,10 @@ public partial class WebChatService : IWebChatService
                         Message = $"Сообщение в [без-хозном] чате: {_baseUri}web-chats/room-{req.DialogOwnerId}\n`{req.Text}`",
                         UserTelegramId = notifyTg.Response.Value,
                     };
-                    await tgRepo.SendTextMessageTelegramAsync(tgMsgSend, waitResponse: false, token: token);
+
+                    await Task.WhenAll([
+                        Task.Run(async () => { await tgRepo.SendTextMessageTelegramAsync(tgMsgSend, waitResponse: false, token: token); }, token),
+                        Task.Run(async () => { await mailRepo.SendEmailAsync(new SendEmailRequestModel(){ Email = "*", Subject = "Уведомление", TextMessage = $"Сообщение в [без-хозном] чате: {_baseUri}web-chats/room-{req.DialogOwnerId}\n`{req.Text}`" }, waitResponse: false, token: token ); }, token)]);
                 }
             }
             else
@@ -63,7 +68,10 @@ public partial class WebChatService : IWebChatService
                             Message = $"Сообщение в [наблюдаемом] чате: {_baseUri}web-chats/room-{req.DialogOwnerId}\n`{req.Text.Replace("<", " ").Replace(">", " ")}`",
                             UserTelegramId = usr.TelegramId!.Value,
                         };
-                        await tgRepo.SendTextMessageTelegramAsync(tgMsgSend, waitResponse: false, token: token);
+
+                        await Task.WhenAll([
+                            Task.Run(async () => { await tgRepo.SendTextMessageTelegramAsync(tgMsgSend, waitResponse: false, token: token); }, token),
+                            Task.Run(async () => { await mailRepo.SendEmailAsync(new SendEmailRequestModel(){ Email = usr.UserName, Subject = "Уведомление", TextMessage = $"Сообщение в [наблюдаемом] чате: {_baseUri}web-chats/room-{req.DialogOwnerId}\n`{req.Text.Replace("<", " ").Replace(">", " ")}`" }, waitResponse: false, token: token ); }, token)]);
                     }
             }
         }

@@ -5,9 +5,9 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MailKit.Net.Smtp;
-using MimeKit;
 using MimeKit.Text;
 using SharedLib;
+using MimeKit;
 
 namespace ServerLib;
 

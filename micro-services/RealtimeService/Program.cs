@@ -109,11 +109,6 @@ public class Program
         logger.Warn($"mqtt config: {JsonConvert.SerializeObject(_confMQTT)}");
         builder.Services.AddSingleton(sp => _confMQTT);
 
-        //foreach (KeyValuePair<string, string?> _kvp in builder.Configuration.AsEnumerable())
-        //{
-        //    logger.Warn($"global config: {JsonConvert.SerializeObject(_kvp)}");
-        //}
-
         builder.WebHost.ConfigureKestrel((b, o) =>
         {
             // This will allow MQTT connections based on TCP port 1883.
@@ -134,11 +129,14 @@ public class Program
         builder.Services.AddDbContextFactory<RealtimeContext>(opt =>
             opt.UseNpgsql(connectionRealtime));
 
-        builder.Services.AddStackExchangeRedisCache(options =>
-        {
-            options.Configuration = builder.Configuration.GetConnectionString($"RedisConnectionString{_modePrefix}");
-        })
-        .AddSingleton<IManualCustomCacheService, ManualCustomCacheService>();
+        builder.Services
+            .AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = builder.Configuration.GetConnectionString($"RedisConnectionString{_modePrefix}");
+            })
+            .AddSingleton<IManualCustomCacheService, ManualCustomCacheService>()
+            .AddSingleton<IIdentityTransmission, IdentityTransmissionRabbit>()
+        ;
 
         builder.Services.AddSingleton(sp => _confMQTT);
 

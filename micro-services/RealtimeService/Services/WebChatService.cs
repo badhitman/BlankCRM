@@ -17,6 +17,7 @@ public partial class WebChatService(
     IIdentityTransmission identityRepo,
     IEventsWebChatsNotifies notifyWebChatRepo,
     ITelegramTransmission tgRepo,
+    IIdentityTransmission mailRepo,
     IParametersStorageTransmission StorageRepo,
     MqttServer mqttServerRepo)
     : IWebChatService
@@ -88,7 +89,10 @@ public partial class WebChatService(
                     Message = $"Создан новый чат: {req.BaseUri}web-chats/room-{readSession.Id}",
                     UserTelegramId = notifyTg.Response.Value,
                 };
-                await tgRepo.SendTextMessageTelegramAsync(tgMsgSend, waitResponse: false, token: cancellationToken);
+
+                await Task.WhenAll([
+                    Task.Run(async () => { await tgRepo.SendTextMessageTelegramAsync(tgMsgSend, waitResponse: false, token: cancellationToken); }, cancellationToken),
+                    Task.Run(async () => { await mailRepo.SendEmailAsync(new SendEmailRequestModel(){ Email = "*", Subject = "Уведомление", TextMessage = $"Создан новый чат: {req.BaseUri}web-chats/room-{readSession.Id}" }, waitResponse: false, token: cancellationToken ); }, cancellationToken)]);
             }
         }
         else

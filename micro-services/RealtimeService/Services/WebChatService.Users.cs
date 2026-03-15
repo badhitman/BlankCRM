@@ -133,7 +133,10 @@ public partial class WebChatService : IWebChatService
                 Message = $"Вы покинули чат: {await q.Select(x => x.DialogJoin!.BaseUri).FirstAsync(cancellationToken: token)}web-chats/room-{req.Payload}",
                 UserTelegramId = userData.TelegramId.Value,
             };
-            await tgRepo.SendTextMessageTelegramAsync(tgMsgSend, waitResponse: false, token: token);
+
+            await Task.WhenAll([
+                Task.Run(async () => { await tgRepo.SendTextMessageTelegramAsync(tgMsgSend, waitResponse: false, token: token); }, token),
+                Task.Run(async () => { await mailRepo.SendEmailAsync(new SendEmailRequestModel(){ Email = userData.UserName, Subject = "Уведомление", TextMessage = $"Вы покинули чат: {await q.Select(x => x.DialogJoin!.BaseUri).FirstAsync(cancellationToken: token)}web-chats/room-{req.Payload}" }, waitResponse: false, token: token ); }, token)]);
         }
 
         return ResponseBaseModel.CreateSuccess("Ok");
