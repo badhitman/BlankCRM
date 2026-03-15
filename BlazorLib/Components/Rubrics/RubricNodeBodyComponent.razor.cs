@@ -19,7 +19,7 @@ public partial class RubricNodeBodyComponent : BlazorBusyComponentBaseModel
 
     /// <inheritdoc/>
     [Parameter, EditorRequired]
-    public required TreeItemData<RubricNestedModel?> Node { get; set; }
+    public required ITreeItemData<RubricNestedModel?> Node { get; set; }
 
     /// <inheritdoc/>
     [Parameter, EditorRequired]

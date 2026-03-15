@@ -12,7 +12,11 @@
         <MudText Typo="Typo.h6">Переводы (розница)</MudText>
         <div class="form-check form-switch form-check-inline ms-2">
             <MudTooltip Text="Отображение удалённых документов">
-                <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault" @bind=ShowDeleted>
+                <input class="form-check-input"
+                       type="checkbox"
+                       role="switch"
+                       id="switchCheckDefault"
+                       @bind=ShowDeleted />
                 <label class="form-check-label" for="switchCheckDefault">удалённые @(ShowDeleted ? "отображаются (скрыть?)" : "скрыты (отобразить?)")</label>
             </MudTooltip>
         </div>

@@ -421,11 +421,7 @@ public partial class MainRetailReportComponent : BlazorBusyComponentBaseModel
         AllPaymentsTypes = await RubricsRepo.RubricsChildListAsync(new() { ContextName = ctx });
 
         if (Owner?.SelectedWeek is not null)
-            _dateRange = new()
-            {
-                Start = Owner.SelectedWeek.Value.Start,
-                End = Owner.SelectedWeek.Value.End,
-            };
+            _dateRange = new(Owner.SelectedWeek.Value.Start, Owner.SelectedWeek.Value.End);
 
         await ReloadServerData();
         await SetBusyAsync(false);
@@ -440,11 +436,7 @@ public partial class MainRetailReportComponent : BlazorBusyComponentBaseModel
             throw new ArgumentNullException(nameof(Owner));
         }
 
-        _dateRange = new()
-        {
-            Start = Owner.SelectedWeek.Value.Start,
-            End = Owner.SelectedWeek.Value.End,
-        };
+        _dateRange = new(Owner.SelectedWeek.Value.Start, Owner.SelectedWeek.Value.End);
 
         string _prefix = $"y:{Owner.SelectedYear};w:{Owner.SelectedWeek.Value.NumWeekOfYear}";
 
@@ -513,7 +505,7 @@ public partial class MainRetailReportComponent : BlazorBusyComponentBaseModel
             SelectedYear = Owner.SelectedYear,
         };
         TPaginationResponseStandardModel<DocumentRetailModelDB> res = await RetailRepo.SelectRowsDocumentsForMainReportRetailAsync(new() { PageNum = state.Page, PageSize = state.PageSize, Payload = req }, token);
-       
+
         return new TableData<DocumentRetailModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };
     }
 

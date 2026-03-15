@@ -12,14 +12,14 @@
            type="text"
            placeholder="ClaimType"
            aria-label="Claim type"
-           class="form-control">
+           class="form-control" />
 
     <input @bind-value="claimValue"
            @bind-value:event="oninput"
            type="text"
            placeholder="ClaimValue"
            aria-label="Claim value"
-           class="form-control">
+           class="form-control" />
 
     <button @onclick="AddClaim"
             disabled="@CannotAddClaim"

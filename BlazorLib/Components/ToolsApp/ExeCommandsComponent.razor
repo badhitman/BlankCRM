@@ -24,9 +24,25 @@ else
         <div class="card-body">
             <div class="input-group my-2 border border-warning">
                 <span class="input-group-text">Новая команда:</span>
-                <input @bind-value="@newCommand.FileName" @bind-value:event="oninput" type="text" aria-label="File Name" placeholder="FileName" class="form-control">
-                <input @bind-value="@newCommand.Arguments" @bind-value:event="oninput" type="text" aria-label="Arguments" placeholder="Arguments" class="form-control">
-                <button @onclick="AddNewCommand" disabled="@(string.IsNullOrEmpty(newCommand.FileName))" class="btn btn-outline-secondary" type="button" id="button-addon2">Создать</button>
+                <input @bind-value="@newCommand.FileName"
+                       @bind-value:event="oninput"
+                       type="text"
+                       aria-label="File Name"
+                       placeholder="FileName"
+                       class="form-control" />
+                <input @bind-value="@newCommand.Arguments"
+                       @bind-value:event="oninput"
+                       type="text"
+                       aria-label="Arguments"
+                       placeholder="Arguments"
+                       class="form-control" />
+                <button @onclick="AddNewCommand"
+                        disabled="@(string.IsNullOrEmpty(newCommand.FileName))"
+                        class="btn btn-outline-secondary"
+                        type="button"
+                        id="button-addon2">
+                    Создать
+                </button>
             </div>
             <hr />
             @if (ExeCommands.Length == 0)

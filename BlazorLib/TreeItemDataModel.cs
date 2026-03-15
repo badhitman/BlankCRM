@@ -4,7 +4,7 @@ using SharedLib;
 namespace BlazorLib;
 
 /// <inheritdoc/>
-public class TreeItemDataModel : TreeItemData<EntryTagModel>
+public class TreeItemDataModel : ITreeItemData<EntryTagModel>
 {
     /// <summary>
     /// Системное имя объекта
@@ -42,16 +42,39 @@ public class TreeItemDataModel : TreeItemData<EntryTagModel>
     /// </summary>
     public string? Information { get; set; }
 
+    /// <inheritdoc/>
+    public string? Text { get; set; }
 
     /// <inheritdoc/>
-    public TreeItemDataModel(EntryTagModel entry, string icon) : base(entry)
+    public string? Icon { get; set; }
+
+    /// <inheritdoc/>
+    public bool Expanded { get; set; }
+    /// <inheritdoc/>
+    public bool Expandable { get; set; }
+    /// <inheritdoc/>
+    public bool Selected { get; set; }
+    /// <inheritdoc/>
+    public bool Visible { get; set; }
+    /// <inheritdoc/>
+    public IReadOnlyCollection<ITreeItemData<EntryTagModel>>? Children { get; set; }
+
+    /// <inheritdoc/>
+    public bool HasChildren => Children?.Any() == true;
+
+    /// <inheritdoc/>
+    public EntryTagModel? Value { get; }
+
+    /// <inheritdoc/>
+    public TreeItemDataModel(EntryTagModel entry, string icon)
     {
+        Value = entry;
         Text = entry.Name;
         Icon = icon;
     }
 
     /// <inheritdoc/>
-    public TreeItemDataModel(TreeItemData<EntryTagModel> x)
+    public TreeItemDataModel(ITreeItemData<EntryTagModel> x)
     {
         TreeItemDataModel _sender = (TreeItemDataModel)x;
         Value = _sender.Value;

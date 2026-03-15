@@ -38,7 +38,7 @@ else
                                        disabled="@(IsDisabled || !CanEdit)"
                                        class="form-check-input"
                                        type="checkbox"
-                                       id="@($"setFormTitleCheck_{DocumentPage.Id}")">
+                                       id="@($"setFormTitleCheck_{DocumentPage.Id}")" />
                                 <label class="form-check-label" for="@($"setFormTitleCheck_{DocumentPage.Id}")">
                                     Отображать заголовок
                                 </label>
@@ -55,7 +55,7 @@ else
                                        id="@($"autoSizingInput_{DocumentPage.Id}")"
                                        placeholder="Отображаемое имя"
                                        aria-describedby="@($"nameFormHelpInline_{DocumentPage.Id}")"
-                                       readonly="@(!CanEdit)">
+                                       readonly="@(!CanEdit)" />
                             </div>
                             @if (string.IsNullOrWhiteSpace(PageJoinFormName))
                             {
@@ -74,7 +74,7 @@ else
                                                disabled="@(IsDisabled || !CanEdit)"
                                                class="form-check-input"
                                                type="checkbox"
-                                               id="@($"setFormAsTable_{DocumentPage.Id}")">
+                                               id="@($"setFormAsTable_{DocumentPage.Id}")" />
                                         <label class="form-check-label" for="@($"setFormAsTable_{DocumentPage.Id}")">
                                             Таблица
                                         </label>

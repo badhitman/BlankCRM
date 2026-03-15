@@ -53,17 +53,17 @@ public partial class BanksListDetailsOrganizationComponent : BlazorBusyComponent
             throw new ArgumentNullException(nameof(CurrentUserSession));
 
         await SetBusyAsync();
-        bool? result = await DialogService.ShowMessageBox(
+        bool? result = await DialogService.ShowMessageBoxAsync(
             "Внимание",
             "Подтверждаете удаление?",
             yesText: "Удалить!", cancelText: "Нет");
 
         if (result == true)
         {
-            ResponseBaseModel res = await CommerceRepo.BankDetailsForOrganizationDeleteAsync(new TAuthRequestStandardModel<BankDetailsForOrganizationDeleteRequestModel>() 
-            { 
-                Payload = new() { BankDetailsForOrganizationId = sender.Id }, 
-                SenderActionUserId = CurrentUserSession.UserId 
+            ResponseBaseModel res = await CommerceRepo.BankDetailsForOrganizationDeleteAsync(new TAuthRequestStandardModel<BankDetailsForOrganizationDeleteRequestModel>()
+            {
+                Payload = new() { BankDetailsForOrganizationId = sender.Id },
+                SenderActionUserId = CurrentUserSession.UserId
             });
             SnackBarRepo.ShowMessagesResponse(res.Messages);
 

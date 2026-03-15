@@ -60,7 +60,7 @@
                            id="exampleInputHumanName1"
                            aria-describedby="humanNameHelp"
                            @bind-value="dialogEdit.InitiatorHumanName"
-                           @bind-value:event="oninput">
+                           @bind-value:event="oninput" />
                     <div id="humanNameHelp" class="form-text">Имя для обращения.</div>
                 </MudItem>
                 <MudItem xs=12 md=6>
@@ -70,7 +70,7 @@
                            id="exampleInputContacts1"
                            aria-describedby="contactsHelp"
                            @bind-value="dialogEdit.InitiatorContacts"
-                           @bind-value:event="oninput">
+                           @bind-value:event="oninput" />
                     <div id="contactsHelp" class="form-text">Контакты для связи (Email).</div>
                 </MudItem>
             </MudGrid>
@@ -141,8 +141,7 @@
                     Записать
                 </button>
             </div>
-
-            <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-6">
+            <MudTabs Elevation="2" Rounded ApplyEffectsToContainer TabPanelsClass="pa-6">
                 <MudTabPanel Text="Переписка">
                     <MessagesForWebChatComponent DialogWebChat="dialogEdit" @ref="messagesRef" />
                 </MudTabPanel>

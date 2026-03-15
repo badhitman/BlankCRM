@@ -5,16 +5,38 @@
         <form class="row g-3">
             <div class="col-md-3">
                 <label for="inputName4" class="form-label">Название</label>
-                <input disabled="@IsBusyProgress" @bind-value="session_origin.Name" @bind-value:event="oninput" type="text" class="form-control" id="inputName4" aria-describedby="nameHelp">
+                <input disabled="@IsBusyProgress"
+                       @bind-value="session_origin.Name"
+                       @bind-value:event="oninput"
+                       type="text"
+                       class="form-control"
+                       id="inputName4"
+                       aria-describedby="nameHelp" />
                 <div id="nameHelp" class="form-text">Опционально.</div>
             </div>
             <div class="col-md-2">
-                <MudTextField @bind-Value="session_origin.DeadlineDate" T="DateTime?" Style="margin-top: 27px;" Format="s" InputType="InputType.DateTimeLocal" Label="Действует до" HelperText="@GetHelperTextForDeadlineDate" />
+                <MudTextField @bind-Value="session_origin.DeadlineDate"
+                              T="DateTime?"
+                              Style="margin-top: 27px;"
+                              Format="s"
+                              InputType="InputType.DateTimeLocal"
+                              Label="Действует до"
+                              HelperText="@GetHelperTextForDeadlineDate" />
             </div>
             <div class="col-md-7">
                 <label for="inputEmailsNotify4" class="form-label">Наблюдатели</label>
-                <input disabled="@IsBusyProgress" @bind-value="session_origin.EmailsNotifications" @bind-value:event="oninput" type="text" class="form-control" id="inputEmailsNotify4" aria-describedby="emailsNotifyHelp">
-                <div title="Адреса email через любой разделитель" id="emailsNotifyHelp" class="form-text">Адреса Email для уведомлений изменений.</div>
+                <input disabled="@IsBusyProgress"
+                       @bind-value="session_origin.EmailsNotifications"
+                       @bind-value:event="oninput"
+                       type="text"
+                       class="form-control"
+                       id="inputEmailsNotify4"
+                       aria-describedby="emailsNotifyHelp" />
+                <div title="Адреса email через любой разделитель"
+                     id="emailsNotifyHelp"
+                     class="form-text">
+                    Адреса Email для уведомлений изменений.
+                </div>
             </div>
             <div class="col-md-6">
                 @if (Session.SessionStatus == SessionsStatusesEnum.None)
@@ -34,9 +56,24 @@
                     <label for="basic-url" class="form-label">Доступ к опросу (ссылка)</label>
                     <div class="input-group mb-3">
                         <button @onclick="ClipboardCopyHandle" class="btn btn-outline-primary" type="button">Copy</button>
-                        <input type="text" readonly class="form-control" id="basic-url" aria-describedby="basic-addon3" value="@UrlSession">
-                        <button @onclick="DestroyLinkAccess" title="Удалене токена заблокирует доступ к текущему опросу" class="btn btn-outline-dark" type="button">Очистить</button>
-                        <button @onclick="ReGenerate" title="Выпустить новый токен для доступа к текущему опросу" class="btn btn-outline-success" type="button">Перевыпуск</button>
+                        <input type="text"
+                               readonly
+                               class="form-control"
+                               id="basic-url"
+                               aria-describedby="basic-addon3"
+                               value="@UrlSession" />
+                        <button @onclick="DestroyLinkAccess"
+                                title="Удалене токена заблокирует доступ к текущему опросу"
+                                class="btn btn-outline-dark"
+                                type="button">
+                            Очистить
+                        </button>
+                        <button @onclick="ReGenerate"
+                                title="Выпустить новый токен для доступа к текущему опросу"
+                                class="btn btn-outline-success"
+                                type="button">
+                            Перевыпуск
+                        </button>
                     </div>
                 }
             </div>
@@ -51,7 +88,13 @@
             </div>
             <div class="col-12">
                 <div class="form-check">
-                    <input disabled="@(IsBusyProgress || (string.IsNullOrWhiteSpace(session_origin.Description) && string.IsNullOrWhiteSpace(Session.Owner?.Description) && !session_origin.ShowDescriptionAsStartPage))" @bind="session_origin.ShowDescriptionAsStartPage" class="form-check-input" type="checkbox" value="" id="flexCheckDefault" aria-describedby="infoPageHelp">
+                    <input disabled="@(IsBusyProgress || (string.IsNullOrWhiteSpace(session_origin.Description) && string.IsNullOrWhiteSpace(Session.Owner?.Description) && !session_origin.ShowDescriptionAsStartPage))"
+                           @bind="session_origin.ShowDescriptionAsStartPage"
+                           class="form-check-input"
+                           type="checkbox"
+                           value=""
+                           id="flexCheckDefault"
+                           aria-describedby="infoPageHelp" />
                     <label style="margin-top: 2px;" class="form-check-label" for="flexCheckDefault">
                         Добавить информационную вкладку (из описания)
                     </label>

@@ -58,8 +58,16 @@
             <div class="mt-2" title="adding observers to a request">
                 <label for="exampleFormControlInput1" class="form-label">Invite a participant</label>
                 <div class="input-group">
-                    <input @bind-value="addingSubscriber" @bind-value:event="oninput" id="exampleFormControlInput1" class="form-control form-control-sm" placeholder="Email member" type="email">
-                    <button @onclick="AddSubscriber" disabled="@(!MailAddress.TryCreate(addingSubscriber,out _))" title="add" class="btn btn-outline-secondary bi bi-person-plus-fill" type="button"></button>
+                    <input @bind-value="addingSubscriber"
+                           @bind-value:event="oninput"
+                           id="exampleFormControlInput1"
+                           class="form-control form-control-sm"
+                           placeholder="Email member"
+                           type="email" />
+                    <button @onclick="AddSubscriber" disabled="@(!MailAddress.TryCreate(addingSubscriber, out _))"
+                            title="add"
+                            class="btn btn-outline-secondary bi bi-person-plus-fill"
+                            type="button"></button>
                 </div>
             </div>
         </div>

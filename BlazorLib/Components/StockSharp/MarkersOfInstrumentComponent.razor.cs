@@ -28,9 +28,9 @@ public partial class MarkersOfInstrumentComponent : BlazorBusyComponentBaseModel
     readonly MarkersInstrumentStockSharpEnum[] AllMarkers = Enum.GetValues<MarkersInstrumentStockSharpEnum>();
 
     IEnumerable<MarkersInstrumentStockSharpEnum>? _selectedOptions;
-    private IEnumerable<MarkersInstrumentStockSharpEnum>? SelectedOptions
+    private IReadOnlyCollection<MarkersInstrumentStockSharpEnum>? SelectedOptions
     {
-        get => _selectedOptions?.Order();
+        get => _selectedOptions is null ? null : [.. _selectedOptions.Order()];
         set
         {
             _selectedOptions = value?.Order();

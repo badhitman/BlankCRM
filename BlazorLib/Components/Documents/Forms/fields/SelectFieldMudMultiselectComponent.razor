@@ -41,9 +41,9 @@
 
 
     IEnumerable<EntryStandardModel>? _entriesValues;
-    IEnumerable<EntryStandardModel>? EntriesValues
+    IReadOnlyCollection<EntryStandardModel>? EntriesValues
     {
-        get => _entriesValues ?? Entries?.Where(x => Value?.Contains(x.Id) == true);
+        get => [.. _entriesValues ?? Entries.Where(x => Value?.Contains(x.Id) == true)];
         set
         {
             _entriesValues = value;
@@ -58,7 +58,7 @@
 
     public override void Reset()
     {
-        EntriesValues = Entries.Where(x => _value?.Contains(x.Id) == true);
+        EntriesValues = [.. Entries.Where(x => _value?.Contains(x.Id) == true)];
     }
 
     public override void CommitChange()

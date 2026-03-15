@@ -25,14 +25,14 @@ public partial class SettingsStockSharpComponent : BlazorBusyComponentBaseModel
     readonly List<BoardStockSharpMetaModel> Boards = [];
 
     IEnumerable<int>? _selectedBoards;
-    IEnumerable<BoardStockSharpMetaModel> SelectedBoards
+    IReadOnlyCollection<BoardStockSharpMetaModel> SelectedBoards
     {
         get
         {
             if (_selectedBoards is null)
                 return [];
 
-            return Boards.Where(x => _selectedBoards.Any(y => x.Id == y));
+            return [.. Boards.Where(x => _selectedBoards.Any(y => x.Id == y))];
         }
         set
         {
@@ -45,10 +45,10 @@ public partial class SettingsStockSharpComponent : BlazorBusyComponentBaseModel
         }
     }
 
-    IEnumerable<MarkersInstrumentStockSharpEnum?>? _markersSelected = [];
-    IEnumerable<MarkersInstrumentStockSharpEnum?> MarkersSelected
+    IEnumerable<MarkersInstrumentStockSharpEnum?> _markersSelected = [];
+    IReadOnlyCollection<MarkersInstrumentStockSharpEnum?> MarkersSelected
     {
-        get => _markersSelected ?? [];
+        get => [.. _markersSelected];
         set
         {
             _markersSelected = value;

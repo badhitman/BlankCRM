@@ -38,7 +38,7 @@
                                type="number"
                                class="form-control"
                                id="exampleFormControlInputFromWalletSum"
-                               placeholder="@(editDoc.FromWalletId <= 0 ? "Укажите кошелёк" : "Сумма списания")">
+                               placeholder="@(editDoc.FromWalletId <= 0 ? "Укажите кошелёк" : "Сумма списания")" />
                     </div>
                 </MudItem>
                 <MudItem xs="12" lg="6">
@@ -58,7 +58,7 @@
                                type="number"
                                class="form-control"
                                id="exampleFormControlInputToWalletSum"
-                               placeholder="@(editDoc.ToWalletId <= 0 ? "Укажите кошелёк" : "Сумма зачисления")">
+                               placeholder="@(editDoc.ToWalletId <= 0 ? "Укажите кошелёк" : "Сумма зачисления")" />
                     </div>
                 </MudItem>
             </MudGrid>
@@ -97,7 +97,7 @@
         }
         @if (ConversionDocumentId > 0)
         {
-            <MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-2">
+            <MudTabs Elevation="2" Rounded ApplyEffectsToContainer TabPanelsClass="pa-2">
                 <MudTabPanel Text="Связи с заказами">
                     <OrdersConversionsLinksTableComponent ConversionId="ConversionDocumentId"
                                                           ReloadOrdersLinks="ReloadOrdersLinksAction" />
@@ -110,7 +110,7 @@
         @if (currentChatTelegrams.Count != 0)
         {
             <MudExpansionPanel Text="Telegram" Class="mt-2">
-                <MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-2">
+                <MudTabs Elevation="2" Rounded ApplyEffectsToContainer TabPanelsClass="pa-2">
                     @foreach (ChatTelegramStandardModel _chat in currentChatTelegrams)
                     {
                         <MudTabPanel Text="@_chat.ToString()">

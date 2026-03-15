@@ -28,23 +28,43 @@ else
     <div class="row g-3 mt-2">
         <div class="col-md-6">
             <label for="inputLogin4" class="form-label">Login</label>
-            <input type="text" class="form-control" id="inputLogin4" @bind-value="editAdapter.Login" @bind-value:event="oninput">
+            <input type="text"
+                   class="form-control"
+                   id="inputLogin4"
+                   @bind-value="editAdapter.Login"
+                   @bind-value:event="oninput" />
         </div>
         <div class="col-md-6">
             <label for="inputPassword4" class="form-label">Password</label>
-            <input type="password" class="form-control" id="inputPassword4" @bind-value="editAdapter.Password" @bind-value:event="oninput">
+            <input type="password"
+                   class="form-control"
+                   id="inputPassword4"
+                   @bind-value="editAdapter.Password"
+                   @bind-value:event="oninput" />
         </div>
         <div class="col-6">
             <label for="inputName" class="form-label">Name</label>
-            <input type="text" class="form-control" id="inputName" @bind-value="editAdapter.Name" @bind-value:event="oninput">
+            <input type="text"
+                   class="form-control"
+                   id="inputName"
+                   @bind-value="editAdapter.Name"
+                   @bind-value:event="oninput" />
         </div>
         <div class="col-6">
             <label for="inputAddress" class="form-label">Address</label>
-            <input type="text" class="form-control" id="inputAddress" placeholder="127.0.0.1:5001" @bind-value="editAdapter.Address" @bind-value:event="oninput">
+            <input type="text"
+                   class="form-control"
+                   id="inputAddress"
+                   placeholder="127.0.0.1:5001"
+                   @bind-value="editAdapter.Address"
+                   @bind-value:event="oninput" />
         </div>
         <div class="col-6">
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="gridCheckIsDemo" @bind="editAdapter.IsDemo">
+                <input class="form-check-input"
+                       type="checkbox"
+                       id="gridCheckIsDemo"
+                       @bind="editAdapter.IsDemo" />
                 <label class="form-check-label" for="gridCheckIsDemo">
                     Demo mode
                 </label>
@@ -52,7 +72,11 @@ else
         </div>
         <div class="col-6">
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="gridCheckIsOnline" @bind="editAdapter.IsOnline" disabled="@(editAdapter.Id < 1)">
+                <input class="form-check-input"
+                       type="checkbox"
+                       id="gridCheckIsOnline"
+                       @bind="editAdapter.IsOnline"
+                       disabled="@(editAdapter.Id < 1)" />
                 <label class="form-check-label" for="gridCheckIsOnline">
                     @(editAdapter.IsOnline ? "Активный. Отключить?" : "Отключён. Включить?")
                 </label>

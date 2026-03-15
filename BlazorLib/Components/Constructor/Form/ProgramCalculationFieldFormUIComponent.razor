@@ -11,7 +11,12 @@
     </select>
     <div class="ms-1">
         <MudTooltip Text="Массив имён полей в формате JSON">
-            <input @bind-value="FieldsNames" @bind-value:event="oninput" placeholder='["Имя поля 1", "Ещё", ...]' type="text" id="inputName" class="form-control">
+            <input @bind-value="FieldsNames"
+                   @bind-value:event="oninput"
+                   placeholder='["Имя поля 1", "Ещё", ...]'
+                   type="text"
+                   id="inputName"
+                   class="form-control" />
         </MudTooltip>
     </div>
 </div>

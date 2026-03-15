@@ -37,9 +37,9 @@ public partial class GoodsFilesConfigsComponent : BlazorBusyComponentBaseAuthMod
     List<FileGoodsConfigModelDB>? FilesConfigs;
 
     IEnumerable<StorageFileModelDB> _selectedFiles = new HashSet<StorageFileModelDB>();
-    IEnumerable<StorageFileModelDB> SelectedFiles
+    IReadOnlyCollection<StorageFileModelDB> SelectedFiles
     {
-        get => _selectedFiles;
+        get => [.. _selectedFiles];
         set
         {
             _selectedFiles = value;

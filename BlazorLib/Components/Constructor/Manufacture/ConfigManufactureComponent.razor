@@ -21,7 +21,13 @@
         {
             <div class="mb-3">
                 <label for="namespaceFormControlInput1" class="form-label">Пространство имён (базовое)</label>
-                <input @bind-value="manufactureEdit.Namespace" @bind-value:event="oninput" type="text" class="form-control" id="namespaceFormControlInput1" placeholder="Your project system name" aria-describedby="namespaceHelpBlock">
+                <input @bind-value="manufactureEdit.Namespace"
+                       @bind-value:event="oninput"
+                       type="text"
+                       class="form-control"
+                       id="namespaceFormControlInput1"
+                       placeholder="Your project system name"
+                       aria-describedby="namespaceHelpBlock" />
             </div>
             @if (manufactureEdit.Namespace.Equals(GlobalTools.TranslateToSystemName(ManufactureParentView.CurrentProject.Name)))
             {
@@ -45,7 +51,11 @@
                     </label>
                 </div>
                 <div class="col-sm-10">
-                    <input @bind-value="manufactureEdit.EnumDirectoryPath" @bind-value:event="oninput" type="text" id="inputEnumDirectoryPath" class="form-control">
+                    <input @bind-value="manufactureEdit.EnumDirectoryPath"
+                           @bind-value:event="oninput"
+                           type="text"
+                           id="inputEnumDirectoryPath"
+                           class="form-control" />
                 </div>
             </div>
             <div class="row align-items-center mt-2" title="Обязательно для заполнения">
@@ -56,7 +66,11 @@
                     </label>
                 </div>
                 <div class="col-sm-10">
-                    <input @bind-value="manufactureEdit.DocumentsMastersDbDirectoryPath" @bind-value:event="oninput" type="text" id="inputDocumentsMastersDbDirectoryPath" class="form-control">
+                    <input @bind-value="manufactureEdit.DocumentsMastersDbDirectoryPath"
+                           @bind-value:event="oninput"
+                           type="text"
+                           id="inputDocumentsMastersDbDirectoryPath"
+                           class="form-control" />
                 </div>
             </div>
             <div class="row align-items-center mt-2" title="Обязательно для заполнения">
@@ -67,7 +81,11 @@
                     </label>
                 </div>
                 <div class="col-sm-10">
-                    <input @bind-value="manufactureEdit.AccessDataDirectoryPath" @bind-value:event="oninput" type="text" id="inputAccessDataDirectoryPath" class="form-control">
+                    <input @bind-value="manufactureEdit.AccessDataDirectoryPath"
+                           @bind-value:event="oninput"
+                           type="text"
+                           id="inputAccessDataDirectoryPath"
+                           class="form-control" />
                 </div>
             </div>
             <div class="row align-items-center mt-2" title="Обязательно для заполнения">
@@ -78,11 +96,18 @@
                     </label>
                 </div>
                 <div class="col-sm-8">
-                    <input @bind-value="manufactureEdit.BlazorDirectoryPath" @bind-value:event="oninput" type="text" id="inputBlazorDirectoryPath" class="form-control">
+                    <input @bind-value="manufactureEdit.BlazorDirectoryPath"
+                           @bind-value:event="oninput"
+                           type="text"
+                           id="inputBlazorDirectoryPath"
+                           class="form-control" />
                 </div>
                 <div class="col-sm-2">
                     <div class="form-check" title="Раздельные файлы: *.razor + *.razor.cs">
-                        <input class="form-check-input" type="checkbox" id="autoSizingCheck" @bind="manufactureEdit.BlazorSplitFiles">
+                        <input class="form-check-input"
+                               type="checkbox"
+                               id="autoSizingCheck"
+                               @bind="manufactureEdit.BlazorSplitFiles" />
                         <label class="form-check-label" for="autoSizingCheck">
                             split classes
                         </label>
@@ -90,10 +115,20 @@
                 </div>
             </div>
             <div class="d-grid gap-2 mt-4">
-                <button disabled="@Manufacture.Equals(manufactureEdit)" @onclick="UpdateManufacture" class="btn btn-@(Manufacture.Equals(manufactureEdit) ? "outline-secondary" : "primary")" type="button">Сохранить</button>
+                <button disabled="@Manufacture.Equals(manufactureEdit)"
+                        @onclick="UpdateManufacture"
+                        class="btn btn-@(Manufacture.Equals(manufactureEdit) ? "outline-secondary" : "primary")"
+                        type="button">
+                    Сохранить
+                </button>
                 @if (!Manufacture.Equals(manufactureEdit))
                 {
-                    <button title="Сбросить изменения и вернуть исходные значения настроек" @onclick="() => { manufactureEdit = GlobalTools.CreateDeepCopy(Manufacture) ?? throw new Exception(); }" class="btn btn-outline-info" type="button">Отмена</button>
+                    <button title="Сбросить изменения и вернуть исходные значения настроек"
+                            @onclick="() => { manufactureEdit = GlobalTools.CreateDeepCopy(Manufacture) ?? throw new Exception(); }"
+                            class="btn btn-outline-info"
+                            type="button">
+                        Отмена
+                    </button>
                 }
             </div>
         }

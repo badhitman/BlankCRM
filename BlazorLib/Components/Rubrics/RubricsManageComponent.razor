@@ -108,7 +108,7 @@ else if (InitialTreeItems.Count == 0)
 
 
     MudTreeView<RubricNestedModel>? _treeRef;
-    IDictionary<string, object?> parameters(TreeItemData<RubricNestedModel?> _node)
+    IDictionary<string, object?> parameters(ITreeItemData<RubricNestedModel?> _node)
     {
         Dictionary<string, object?> _res = new();
         _res.Add("Node", _node);
@@ -137,9 +137,9 @@ else if (InitialTreeItems.Count == 0)
         SelectedValuesChanged?.SelectedValuesChangedHandler(SelectedValues);
     }
 
-    void ExtractSelected(IEnumerable<TreeItemData<RubricNestedModel>> sender, List<RubricNestedModel> src)
+    void ExtractSelected(IEnumerable<ITreeItemData<RubricNestedModel>> sender, List<RubricNestedModel> src)
     {
-        foreach (TreeItemData<RubricNestedModel> _n in sender)
+        foreach (ITreeItemData<RubricNestedModel> _n in sender)
         {
             if (_n.Selected)
                 src.Add(_n.Value!);
@@ -149,13 +149,13 @@ else if (InitialTreeItems.Count == 0)
         }
     }
 
-    List<TreeItemData<RubricNestedModel>> ConvertRubrics(IEnumerable<RubricNestedModel> rubrics)
+    List<ITreeItemData<RubricNestedModel>> ConvertRubrics(IEnumerable<RubricNestedModel> rubrics)
     {
         (uint min, uint max) = rubrics.Any(x => x.SortIndex != uint.MaxValue)
             ? (rubrics.Min(x => x.SortIndex), rubrics.Where(x => x.SortIndex != uint.MaxValue).Max(x => x.SortIndex))
             : (0, 0);
 
-        List<TreeItemData<RubricNestedModel>> res = [];
+        List<ITreeItemData<RubricNestedModel>> res = [];
 
         foreach (RubricNestedModel x in rubrics)
         {
@@ -217,13 +217,13 @@ else if (InitialTreeItems.Count == 0)
         if (res is not null)
             return res;
 
-        TreeItemDataRubricModel? FindChildNode(List<TreeItemData<RubricNestedModel?>> children)
+        TreeItemDataRubricModel? FindChildNode(IReadOnlyCollection<ITreeItemData<RubricNestedModel?>> children)
         {
-            TreeItemData<RubricNestedModel?>? res_child = children.FirstOrDefault(x => x.Value?.Id == parent_id);
+            ITreeItemData<RubricNestedModel?>? res_child = children.FirstOrDefault(x => x.Value?.Id == parent_id);
             if (res_child is not null)
                 return (TreeItemDataRubricModel?)res_child;
 
-            foreach (TreeItemData<RubricNestedModel?> c in children)
+            foreach (ITreeItemData<RubricNestedModel?> c in children)
             {
                 if (c.Children is not null)
                 {
@@ -272,7 +272,17 @@ else if (InitialTreeItems.Count == 0)
 
         findNode.Children = ConvertRubrics(rubrics)!;
         await SetBusyAsync(false);
-        return findNode.Children;
+        return [..findNode.Children.Select(x => new TreeItemData<RubricNestedModel?>()
+        {
+             Children = x.Children,
+             Expandable = x.Expandable,
+             Expanded = x.Expanded,
+             Icon = x.Icon,
+             Selected = x.Selected,
+             Text = x.Text,
+             Value = x.Value,
+             Visible = x.Visible,
+        })];
     }
 
     async Task<List<RubricNestedModel>> RequestRubrics(int? parent_id = null)

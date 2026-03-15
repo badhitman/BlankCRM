@@ -13,7 +13,7 @@
 }
 else if (!CanEdit)
 {
-    <MudTabs @bind-ActivePanelIndex="@DocumentIndex" PanelClass="px-4 py-6" Elevation="4" Rounded ApplyEffectsToContainer>
+    <MudTabs @bind-ActivePanelIndex="@DocumentIndex" TabPanelsClass="px-4 py-6" Elevation="4" Rounded ApplyEffectsToContainer>
         @if (!DocumentScheme.Tabs.Any())
         {
             <figure class="text-center mt-3">
@@ -49,7 +49,7 @@ else
                     AddIconToolTip="Добавить страницу анкеты/опроса"
                     CloseTab="@CloseTabCallback"
                     CloseIconToolTip="Close tab. All data will be lost"
-                    PanelClass="px-4 py-6"
+                    TabPanelsClass="px-4 py-6"
                     Elevation="4"
                     Rounded ApplyEffectsToContainer>
         @if (!DocumentScheme.Tabs.Any())

@@ -41,7 +41,7 @@
                                    @bind:event="oninput"
                                    @bind="dialogSessionEdit.InitiatorHumanName"
                                    class="form-control"
-                                   id="exampleFormControlText1"></input>
+                                   id="exampleFormControlText1" />
                             <button @onclick="SevaDialog"
                                     disabled="@string.IsNullOrWhiteSpace(dialogSessionEdit.InitiatorHumanName)"
                                     class="btn btn-outline-@(string.IsNullOrWhiteSpace(_textSendMessage) ? "secondary" : "success") bi bi-check-circle"

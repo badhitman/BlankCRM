@@ -18,7 +18,6 @@ else
     <div title="@GetType().Name">
         <MudSelect Label="Регион(ы) поиска"
                    Clearable
-                   OnClose="() => InvokeAsync(tableRef!.ReloadServerData)"
                    OnClearButtonClick="() => InvokeAsync(tableRef!.ReloadServerData)"
                    MultiSelection @bind-SelectedValues="_regionsSelected"
                    Disabled="IsBusyProgress"

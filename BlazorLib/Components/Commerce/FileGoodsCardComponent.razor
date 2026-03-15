@@ -13,7 +13,7 @@
                    placeholder="@FileObject.FileName"
                    class="form-control"
                    id="exampleInputEmail1"
-                   aria-describedby="emailHelp">
+                   aria-describedby="emailHelp" />
             <div id="emailHelp" class="form-text">Для отображения в карточке</div>
         </div>
         <div class="mb-3">
@@ -24,7 +24,7 @@
                    disabled="@IsBusyProgress"
                    class="form-control"
                    id="exampleInputEmail2"
-                   aria-describedby="emailHelp2">
+                   aria-describedby="emailHelp2" />
             <div id="emailHelp2" class="form-text">Примечание к файлу (если требуется).</div>
         </div>
         @* <div class="mb-3">
@@ -32,7 +32,7 @@
             <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" @oninput="HandleOnChange">@fileObjectEdit.FullDescription</textarea>
         </div> *@
         <div class="mb-3 form-check" title="Добавить файл в публичную галерею объекта">
-            <input @bind="fileObjectEdit.IsGallery" type="checkbox" class="form-check-input" id="exampleCheck1">
+            <input @bind="fileObjectEdit.IsGallery" type="checkbox" class="form-check-input" id="exampleCheck1" />
             <label class="form-check-label" for="exampleCheck1">Галерея</label>
         </div>
         @if (IsBusyProgress)

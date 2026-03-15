@@ -4,7 +4,11 @@
     <TabComponent Tooltip="Базовые параметры" Title="Настройки" SystemName="bese">
         <div class="input-group mb-3">
             <span class="input-group-text">Имя страницы</span>
-            <input @bind-value="Name" @bind-value:event="oninput" type="text" class="form-control" aria-label="Имя страницы опроса/анкеты">
+            <input @bind-value="Name"
+                   @bind-value:event="oninput"
+                   type="text"
+                   class="form-control"
+                   aria-label="Имя страницы опроса/анкеты" />
         </div>
         <div class="mb-3">
             <label for="@(_currentTemplateInputRichText_ref?.UID)" class="form-label">Описание</label>
@@ -45,7 +49,10 @@
             }
         </div>
     </TabComponent>
-    <TabComponent IsDisabled="@(DocumentPage.Id < 1)" Tooltip="Формы на странице" Title="Формы" SystemName="@DocumentPage.Id.ToString()">
+    <TabComponent IsDisabled="@(DocumentPage.Id < 1)"
+                  Tooltip="Формы на странице"
+                  Title="Формы"
+                  SystemName="@DocumentPage.Id.ToString()">
         <div class="input-group mb-3">
             <label class="input-group-text" for="inputGroupSelect01">Добавление формы</label>
             <select @bind="SelectedFormForAdding" disabled="@(DocumentPage.Id < 1)" class="form-select" id="inputGroupSelect01">
@@ -57,10 +64,24 @@
             </select>
             @if (SelectedFormForAdding > 0)
             {
-                <input @bind-value="addingFormToTabPageName" @bind-value:event="oninput" placeholder="Название" type="text" class="form-control" autocomplete="off">
-                <button @onclick="() => { SelectedFormForAdding = 0; }" class="btn btn-outline-secondary" type="button">Отмена</button>
+                <input @bind-value="addingFormToTabPageName"
+                       @bind-value:event="oninput"
+                       placeholder="Название"
+                       type="text"
+                       class="form-control"
+                       autocomplete="off" />
+                <button @onclick="() => { SelectedFormForAdding = 0; }"
+                        class="btn btn-outline-secondary"
+                        type="button">
+                    Отмена
+                </button>
             }
-            <button @onclick="AddFormToPage" disabled="@(SelectedFormForAdding < 1)" class="btn btn-outline-success" type="button">Добавить</button>
+            <button @onclick="AddFormToPage"
+                    disabled="@(SelectedFormForAdding < 1)"
+                    class="btn btn-outline-success"
+                    type="button">
+                Добавить
+            </button>
         </div>
         <TabsOfDocumentViewComponent ReloadHandler="ReloadHandler" TabOfDocumentScheme="DocumentPage" SessionOfDocumentData="null" />
     </TabComponent>

@@ -33,11 +33,21 @@
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label for="nameFormControlInput1" class="form-label">Название</label>
-                                    <input @bind-value:event="oninput" @bind-value="addingName" type="text" class="form-control" id="nameFormControlInput1" placeholder="Наименование">
+                                    <input @bind-value:event="oninput"
+                                           @bind-value="addingName"
+                                           type="text"
+                                           class="form-control"
+                                           id="nameFormControlInput1"
+                                           placeholder="Наименование" />
                                 </div>
                                 <div class="col-md-6">
                                     <label for="telFormControlInput" class="form-label">Контакты</label>
-                                    <input @bind-value:event="oninput" @bind-value="addingContacts" type="tel" class="form-control" id="telFormControlInput" placeholder="Номер телефона, email...">
+                                    <input @bind-value:event="oninput"
+                                           @bind-value="addingContacts"
+                                           type="tel"
+                                           class="form-control"
+                                           id="telFormControlInput"
+                                           placeholder="Номер телефона, email..." />
                                 </div>
                             </div>
                             <KladrInputComponent @bind-KladrObject="SelectedKladrObject" />

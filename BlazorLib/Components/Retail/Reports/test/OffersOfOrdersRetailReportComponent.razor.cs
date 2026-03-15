@@ -67,12 +67,8 @@ public partial class OffersOfOrdersRetailReportComponent : BlazorBusyComponentBa
     public async Task Reload()
     {
         if (Owner?.SelectedWeek is not null)
-            _dateRange = new()
-            {
-                Start = Owner.SelectedWeek.Value.Start,
-                End = Owner.SelectedWeek.Value.End,
-            };
-        
+            _dateRange = new(Owner.SelectedWeek.Value.Start, Owner.SelectedWeek.Value.End);
+
         if (tableRef is not null)
             await tableRef.ReloadServerData();
     }
@@ -82,11 +78,7 @@ public partial class OffersOfOrdersRetailReportComponent : BlazorBusyComponentBa
     {
         await base.OnInitializedAsync();
         if (Owner?.SelectedWeek is not null)
-            _dateRange = new()
-            {
-                Start = Owner.SelectedWeek.Value.Start,
-                End = Owner.SelectedWeek.Value.End,
-            };
+            _dateRange = new(Owner.SelectedWeek.Value.Start, Owner.SelectedWeek.Value.End);
     }
 
     async Task OnChipClicked()

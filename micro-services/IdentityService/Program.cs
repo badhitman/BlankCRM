@@ -205,13 +205,14 @@ public class Program
                 Password = rabbitConf.Value.Password
             };
         });
-        builder.Services.AddSingleton(sp => {
+        builder.Services.AddSingleton(sp =>
+        {
 
             RabbitMQ.Client.ConnectionFactory factory = sp.GetRequiredService<RabbitMQ.Client.ConnectionFactory>();
             return factory.CreateConnectionAsync().Result;
         });
 
-        IMQStandardClientRPC rabbitImplement(IServiceProvider provider, object arg2)
+        IMQStandardClientRPC rabbitImplement(IServiceProvider provider, object? arg2)
         {
             return new RabbitClient(
                 provider.GetRequiredService<IOptions<RabbitMQConfigModel>>(),

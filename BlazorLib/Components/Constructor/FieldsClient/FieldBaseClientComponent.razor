@@ -9,11 +9,12 @@
             switch (Descriptor)
             {
                 case nameof(PropsTypesMDFieldsEnum.TextMask):
+                    string? getMd = Field.GetMetadataValue(MetadataExtensionsFormFieldsEnum.Parameter, "")?.ToString();
                     <MudTextField ReadOnly="@(SessionOfDocumentData is null)"
                                   Required="@Field.Required"
                                   Placeholder="@Parameter"
                                   Class="mb-3"
-                                  Mask="@(new PatternMask(Field.GetMetadataValue(MetadataExtensionsFormFieldsEnum.Parameter, "")?.ToString()))"
+                                  Mask="@(string.IsNullOrWhiteSpace(getMd) ? null : new PatternMask(getMd))"
                                   Label="@Field.Name"
                                   HelperText="@Field.Hint"
                                   @bind-Value="StringFieldValue"
@@ -38,14 +39,24 @@
                     EntryAltDescriptionStandardModel? _current_agent = Entries.FirstOrDefault(x => $"{x.Name} #{x.Id}".Equals(Parameter, StringComparison.OrdinalIgnoreCase));
                     if (_current_agent is null)
                     {
-                        <input type="text" readonly class="form-control-plaintext" id="@DomID" value="@Parameter" aria-describedby="@($"{DomID}Help")">
+                        <input type="text"
+                               readonly
+                               class="form-control-plaintext"
+                               id="@DomID"
+                               value="@Parameter"
+                               aria-describedby="@($"{DomID}Help")" />
                     }
                     else
                     {
                         DeclarationAbstraction? _declaration = DeclarationAbstraction.GetHandlerService(_current_agent.Id);
                         @if (_declaration is null)
                         {
-                            <input type="text" readonly class="form-control-plaintext" id="@DomID" value="@Parameter" aria-describedby="@($"{DomID}Help")">
+                            <input type="text"
+                                   readonly
+                                   class="form-control-plaintext"
+                                   id="@DomID"
+                                   value="@Parameter"
+                                   aria-describedby="@($"{DomID}Help")" />
                         }
                         else
                         {
@@ -54,7 +65,7 @@
                                    class="form-control"
                                    id="@DomID"
                                    @bind="@StringFieldValue"
-                                   aria-describedby="@($"{DomID}Help")">
+                                   aria-describedby="@($"{DomID}Help")" />
                         }
                     }
                     <div id="@($"{DomID}Help")" class="form-text">
@@ -123,7 +134,7 @@
                        class="@css_class"
                        name="@DomID"
                        id="@DomID"
-                       aria-describedby="@($"{DomID}Help")">
+                       aria-describedby="@($"{DomID}Help")" />
             }
 
             <div id="@($"{DomID}Help")" class="form-text" hidden="@string.IsNullOrEmpty(Field.Hint)">
@@ -173,7 +184,7 @@
                       Required="@Field.Required"
                       @bind-Value="DateTimeFieldValue"
                       Placeholder="@(Field.GetMetadataValue(MetadataExtensionsFormFieldsEnum.Placeholder, "")?.ToString())"
-                      T="DateTime ?"
+                      T="DateTime?"
                       Format="s"
                       Label="@Field.Name"
                       HelperText="@Field.Hint"
@@ -184,7 +195,7 @@
                       Required="@Field.Required"
                       @bind-Value="DateTimeFieldValue"
                       Placeholder="@(Field.GetMetadataValue(MetadataExtensionsFormFieldsEnum.Placeholder, "")?.ToString())"
-                      T="DateTime ?"
+                      T="DateTime?"
                       Format="yyyy-MM-dd"
                       Label="@Field.Name"
                       HelperText="@Field.Hint"
@@ -217,7 +228,14 @@
                 <sup class="text-danger">*</sup>
             }
         </label>
-        <input value="@CalculateFieldValue" type="text" readonly class="form-control-plaintext" title="@AboutCalculationFieldValue" name="@DomID" id="@DomID" aria-describedby="@($"{DomID}Help")">
+        <input value="@CalculateFieldValue"
+               type="text"
+               readonly
+               class="form-control-plaintext"
+               title="@AboutCalculationFieldValue"
+               name="@DomID"
+               id="@DomID"
+               aria-describedby="@($"{DomID}Help")" />
         <div id="@($"{DomID}Help")" class="form-text" hidden="@string.IsNullOrEmpty(Field.Hint)">
             @if (string.IsNullOrEmpty(Field.Hint))
             {

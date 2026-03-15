@@ -25,13 +25,13 @@ public partial class FiltersUniversalComponent
     [Parameter, EditorRequired]
     public required Action CheckedChangedHandle { get; set; }
 
-    IEnumerable<string>? options = [];
-    IEnumerable<string>? _options
+    IEnumerable<string>? _options = [];
+    IReadOnlyCollection<string>? Options
     {
-        get => options;
+        get => _options is null ? null : [.. _options];
         set
         {
-            options = value;
+            _options = value;
             CheckedChangedHandle();
         }
     }
@@ -44,7 +44,7 @@ public partial class FiltersUniversalComponent
     /// </summary>
     public List<string> GetSelected()
     {
-        return _options?.ToList() ?? [];
+        return Options?.ToList() ?? [];
     }
 
 }

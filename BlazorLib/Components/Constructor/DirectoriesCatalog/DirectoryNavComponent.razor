@@ -58,7 +58,7 @@ else
                        class="form-control"
                        size="100"
                        placeholder="Directory name"
-                       disabled="@IsBusyProgress">
+                       disabled="@IsBusyProgress" />
                 <button disabled="@( !ValidateReport.IsValid)"
                         @onclick="CreateDirectory"
                         class="btn btn-outline-success"
@@ -92,9 +92,18 @@ else
                    class="form-control"
                    size="100"
                    placeholder="Directory name"
-                   disabled="@IsBusyProgress">
-            <button @onclick="SaveRenameDirectory" disabled="@( !GlobalTools.ValidateObject(directoryObject).IsValid)" class="btn btn-outline-secondary" type="button">Save</button>
-            <button @onclick="() => ResetNavForm()" class="btn btn-outline-secondary" type="button">Cancel</button>
+                   disabled="@IsBusyProgress" />
+            <button @onclick="SaveRenameDirectory"
+                    disabled="@( !GlobalTools.ValidateObject(directoryObject).IsValid)"
+                    class="btn btn-outline-secondary"
+                    type="button">
+                Save
+            </button>
+            <button @onclick="() => ResetNavForm()"
+                    class="btn btn-outline-secondary"
+                    type="button">
+                Cancel
+            </button>
         </div>
         <InputRichTextComponent @bind-Value="Description" @ref="_currentTemplateInputRichText_ref" />
     }
@@ -102,9 +111,20 @@ else
     {
         <div class="input-group me-4">
             <span class="input-group-text">Directory</span>
-            <input disabled type="text" value="@allDirectories.First(x => x.Id == SelectedDirectoryId).Name" class="form-control">
-            <button @onclick="DeleteSelectedDirectory" class="btn btn-outline-danger" type="button">Confirm deletion</button>
-            <button @onclick="() => { DirectoryNavState = DirectoryNavStatesEnum.None; }" class="btn btn-outline-secondary" type="button">Cancel</button>
+            <input disabled
+                   type="text"
+                   value="@allDirectories.First(x => x.Id == SelectedDirectoryId).Name"
+                   class="form-control" />
+            <button @onclick="DeleteSelectedDirectory"
+                    class="btn btn-outline-danger"
+                    type="button">
+                Confirm deletion
+            </button>
+            <button @onclick="() => { DirectoryNavState = DirectoryNavStatesEnum.None; }"
+                    class="btn btn-outline-secondary"
+                    type="button">
+                Cancel
+            </button>
         </div>
     }
 }

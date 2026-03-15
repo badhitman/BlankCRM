@@ -3,8 +3,18 @@
 
 <div class="input-group mb-3">
     <span class="input-group-text" id="inputGroup-sizing-default">Добавить участника к проекту</span>
-    <input type="email" class="form-control" @bind-value="emailForAddMember" @bind-value:event="oninput" aria-label="email пользователя для добавления" placeholder="Email пользователя">
-    <button @onclick="AddMember" class="btn btn-outline-secondary" type="button" disabled="@(!MailAddress.TryCreate(emailForAddMember, out _))">Добавить</button>
+    <input type="email"
+           class="form-control"
+           @bind-value="emailForAddMember"
+           @bind-value:event="oninput"
+           aria-label="email пользователя для добавления"
+           placeholder="Email пользователя" />
+    <button @onclick="AddMember"
+            class="btn btn-outline-secondary"
+            type="button"
+            disabled="@(!MailAddress.TryCreate(emailForAddMember, out _))">
+        Добавить
+    </button>
 </div>
 
 @if (IsBusyProgress)

@@ -34,9 +34,9 @@ public partial class FieldDirectoryClientComponent : FieldComponentBaseModel
     }
 
     IEnumerable<EntryStandardModel> _options = [];
-    IEnumerable<EntryStandardModel> Options
+    IReadOnlyCollection<EntryStandardModel> Options
     {
-        get => _options;
+        get => [.. _options];
         set
         {
             _options = value;

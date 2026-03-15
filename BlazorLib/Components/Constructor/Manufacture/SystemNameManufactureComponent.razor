@@ -40,7 +40,7 @@
                            @bind-value:event="oninput"
                            type="text"
                            class="form-control form-control-sm@(string.IsNullOrWhiteSpace(itemSystemName) ? " border border-warning-subtle" : "")"
-                           placeholder="auto: @(GlobalTools.TranslateToSystemName(Item.Value!.Name))">
+                           placeholder="auto: @(GlobalTools.TranslateToSystemName(Item.Value!.Name))" />
                 </div>
                 <div class="col-auto">
                     <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">

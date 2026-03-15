@@ -4,7 +4,7 @@
 
 @inherits BlazorBusyComponentBaseAuthModel
 
-<MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-2">
+<MudTabs Elevation="2" Rounded ApplyEffectsToContainer TabPanelsClass="pa-2">
     <MudTabPanel Disabled="IsBusyProgress" Text="Информация">
         @if (IsBusyProgress || editArticle is null)
         {
@@ -14,7 +14,11 @@
         {
             <div class="mb-3">
                 <label for="artInputName" class="form-label">Название</label>
-                <input @bind-value="editArticle.Name" @bind-value:event="oninput" type="text" class="form-control" id="artInputName">
+                <input @bind-value="editArticle.Name"
+                       @bind-value:event="oninput"
+                       type="text"
+                       class="form-control"
+                       id="artInputName" />
             </div>
 
             @if (ArticleId < 1)

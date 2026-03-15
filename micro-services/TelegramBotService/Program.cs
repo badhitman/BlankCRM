@@ -172,7 +172,7 @@ public class Program
             return factory.CreateConnectionAsync().Result;
         });
 
-        IMQStandardClientRPC rabbitImplement(IServiceProvider provider, object arg2)
+        IMQStandardClientRPC rabbitImplement(IServiceProvider provider, object? arg2)
         {
             return new RabbitClient(
                 provider.GetRequiredService<IOptions<RabbitMQConfigModel>>(),

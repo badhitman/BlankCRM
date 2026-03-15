@@ -2,8 +2,19 @@
     <div class="mb-3">
         <label for="basic-url" class="form-label">Путь к папке с файлами</label>
         <div class="input-group">
-            <input @bind-value="dirData" @bind-value:event="oninput" type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3 basic-addon4">
-            <button @onclick=ScanDirectory class="btn btn-outline-secondary" type="button" id="button-addon2" disabled="@(IsValidList || string.IsNullOrWhiteSpace(dirData) || !Directory.Exists(dirData))">Scan</button>
+            <input @bind-value="dirData"
+                   @bind-value:event="oninput"
+                   type="text"
+                   class="form-control"
+                   id="basic-url"
+                   aria-describedby="basic-addon3 basic-addon4" />
+            <button @onclick=ScanDirectory
+                    class="btn btn-outline-secondary"
+                    type="button"
+                    id="button-addon2"
+                    disabled="@(IsValidList || string.IsNullOrWhiteSpace(dirData) || !Directory.Exists(dirData))">
+                Scan
+            </button>
         </div>
     </div>
 </div>

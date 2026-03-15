@@ -40,7 +40,7 @@
 @code {
     /// <inheritdoc/>
     [Parameter, EditorRequired]
-    public required TreeItemData<RubricNestedModel?> Node { get; set; }
+    public required ITreeItemData<RubricNestedModel?> Node { get; set; }
 
     bool IsOpenDialog { get; set; }
 }

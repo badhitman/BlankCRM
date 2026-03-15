@@ -19,7 +19,12 @@
         {
             <div class="row">
                 <div class="col-auto">
-                    <input autocomplete="off" title="" @bind-value="rubricName" @bind-value:event="oninput" type="text" class="form-control form-control-sm@(string.IsNullOrWhiteSpace(rubricName) ? " border border-warning-subtle" : "")" placeholder="имя нового элемента">
+                    <input autocomplete="off"
+                           @bind-value="rubricName"
+                           @bind-value:event="oninput"
+                           type="text"
+                           class="form-control form-control-sm@(string.IsNullOrWhiteSpace(rubricName) ? " border border-warning-subtle" : "")"
+                           placeholder="имя нового элемента" />
                 </div>
                 <div class="col-auto">
                     <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
@@ -50,7 +55,7 @@
 
     /// <inheritdoc/>
     [CascadingParameter, EditorRequired]
-    public required TreeItemData<RubricNestedModel> Item { get; set; }
+    public required ITreeItemData<RubricNestedModel> Item { get; set; }
 
     /// <summary>
     /// Имя контекста

@@ -22,7 +22,7 @@ public partial class SystemNameManufactureComponent : BlazorBusyComponentBaseMod
 
     /// <inheritdoc/>
     [Parameter, EditorRequired]
-    public required TreeItemData<EntryTagModel> Item { get; set; }
+    public required ITreeItemData<EntryTagModel> Item { get; set; }
 
     /// <inheritdoc/>
     [Parameter, EditorRequired]

@@ -69,7 +69,7 @@
 }
 else
 {
-    <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-2">
+    <MudTabs Elevation="2" Rounded ApplyEffectsToContainer TabPanelsClass="pa-2">
         <MudTabPanel Text="Сводка">
             <MudCard>
                 <MudCardHeader>
@@ -233,13 +233,13 @@ else
                                     <input type="number"
                                            class="form-control"
                                            @bind-value:event="oninput"
-                                           @bind-value="TransferToCompanyBankAccount">
+                                           @bind-value="TransferToCompanyBankAccount" />
                                 </td>
                                 <td>
                                     <input type="text"
                                            class="form-control"
                                            @bind-value:event="oninput"
-                                           @bind-value="TransferToCompanyBankAccountFootNote">
+                                           @bind-value="TransferToCompanyBankAccountFootNote" />
                                 </td>
                             </tr>
                             <tr>
@@ -250,7 +250,7 @@ else
                                         <input type="number"
                                                class="form-control"
                                                @bind-value:event="oninput"
-                                               @bind-value="TransferBonusesCompany">
+                                               @bind-value="TransferBonusesCompany" />
                                         <span class="input-group-text" id="basic-addon2">(@(TransferBonusesCompany * 42))</span>
                                     </div>
                                 </td>
@@ -258,7 +258,7 @@ else
                                     <input type="text"
                                            class="form-control"
                                            @bind-value:event="oninput"
-                                           @bind-value="TransferBonusesCompanyFootNote">
+                                           @bind-value="TransferBonusesCompanyFootNote" />
                                 </td>
                             </tr>
                             <tr>
@@ -267,13 +267,13 @@ else
                                     <input type="number"
                                            class="form-control"
                                            @bind-value:event="oninput"
-                                           @bind-value="CashPayment">
+                                           @bind-value="CashPayment" />
                                 </td>
                                 <td>
                                     <input type="text"
                                            class="form-control"
                                            @bind-value:event="oninput"
-                                           @bind-value="CashPaymentFootNote">
+                                           @bind-value="CashPaymentFootNote" />
                                 </td>
                             </tr>
                             <tr>
@@ -282,13 +282,13 @@ else
                                     <input type="number"
                                            class="form-control"
                                            @bind-value:event="oninput"
-                                           @bind-value="Debt">
+                                           @bind-value="Debt" />
                                 </td>
                                 <td>
                                     <input type="text"
                                            class="form-control"
                                            @bind-value:event="oninput"
-                                           @bind-value="DebtFootNote">
+                                           @bind-value="DebtFootNote" />
                                 </td>
                             </tr>
                         </tbody>

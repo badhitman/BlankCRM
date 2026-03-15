@@ -13,7 +13,13 @@
     {
         <div class="ms-1">
             <MudTooltip Text="Словарь опций генерации списка">
-                <input style="width: max-content;" @bind-value="OptionsGeneration" @bind-value:event="oninput" placeholder='{"Поле1":"xxx", "Поле2":"yyy", ...}' type="text" id="inputName" class="form-control">
+                <input style="width: max-content;"
+                       @bind-value="OptionsGeneration"
+                       @bind-value:event="oninput"
+                       placeholder='{"Поле1":"xxx", "Поле2":"yyy", ...}'
+                       type="text"
+                       id="inputName"
+                       class="form-control" />
             </MudTooltip>
         </div>
     }

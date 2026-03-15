@@ -24,9 +24,9 @@ public partial class KladrFindTableResultComponent : BlazorBusyComponentBaseMode
 
 
     List<KladrResponseModel>? PartData;
-    IEnumerable<string> _regionsSelected = [];
+    IReadOnlyCollection<string> _regionsSelected = [];
     MudTable<KladrResponseModel>? tableRef;
-    List<RootKLADREquatableModel> regions = [];
+    readonly List<RootKLADREquatableModel> regions = [];
 
 
     /// <inheritdoc/>
@@ -42,7 +42,7 @@ public partial class KladrFindTableResultComponent : BlazorBusyComponentBaseMode
     /// <summary>
     /// Here we simulate getting the paged, filtered and ordered data from the server
     /// </summary>
-    private async Task<TableData<KladrResponseModel>> ServerReload(TableState state, CancellationToken token)
+    async Task<TableData<KladrResponseModel>> ServerReload(TableState state, CancellationToken token)
     {
         KladrFindRequestModel req = new()
         {
@@ -64,7 +64,7 @@ public partial class KladrFindTableResultComponent : BlazorBusyComponentBaseMode
         };
     }
 
-    private string GetMultiSelectionText(List<string> selectedValues)
+    string GetMultiSelectionText(List<string> selectedValues)
     {
         return $"Выбран{(selectedValues.Count > 1 ? "о" : "")}: {string.Join(", ", selectedValues.Select(x => regions.First(y => y.Code == x).ToString()))}";
     }

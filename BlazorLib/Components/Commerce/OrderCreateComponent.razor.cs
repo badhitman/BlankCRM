@@ -4,7 +4,6 @@
 
 using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json;
-using BlazorLib;
 using MudBlazor;
 using SharedLib;
 
@@ -67,7 +66,7 @@ public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
     /// </summary>
     IEnumerable<OfficeOrganizationModelDB>? _prevSelectedAddresses;
     List<OfficeOrganizationModelDB>? _selectedAddresses = [];
-    IEnumerable<OfficeOrganizationModelDB>? SelectedAddresses
+    IReadOnlyCollection<OfficeOrganizationModelDB>? SelectedAddresses
     {
         get => _selectedAddresses ?? [];
         set

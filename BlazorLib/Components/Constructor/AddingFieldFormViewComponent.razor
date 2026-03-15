@@ -20,7 +20,13 @@
 else
 {
     <div class="col-auto">
-        <input @bind-value="FieldName" @bind-value:event="oninput" placeholder="Название" type="text" id="inputName" class="form-control" autocomplete="off">
+        <input @bind-value="FieldName"
+               @bind-value:event="oninput"
+               placeholder="Название"
+               type="text"
+               id="inputName"
+               class="form-control"
+               autocomplete="off" />
     </div>
 
     switch (SelectedTypeFieldForAdding)
@@ -56,7 +62,11 @@ else
     {
         <div class="col-auto">
             <div class="form-check form-switch mt-2">
-                <input @bind="FieldIsRequired" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                <input @bind="FieldIsRequired"
+                       class="form-check-input"
+                       type="checkbox"
+                       role="switch"
+                       id="flexSwitchCheckDefault" />
                 <label class="form-check-label" for="flexSwitchCheckDefault">Обязательный</label>
             </div>
         </div>

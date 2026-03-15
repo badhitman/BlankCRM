@@ -65,11 +65,7 @@ public partial class PaymentsRetailReportComponent : BlazorBusyComponentBaseMode
         await SetBusyAsync(false);
 
         if (Owner?.SelectedWeek is not null)
-            _dateRange = new()
-            {
-                Start = Owner.SelectedWeek.Value.Start,
-                End = Owner.SelectedWeek.Value.End,
-            };
+            _dateRange = new(Owner.SelectedWeek.Value.Start, Owner.SelectedWeek.Value.End);
     }
 
     async Task OnChipClicked()
@@ -83,11 +79,7 @@ public partial class PaymentsRetailReportComponent : BlazorBusyComponentBaseMode
     public async Task Reload()
     {
         if (Owner?.SelectedWeek is not null)
-            _dateRange = new()
-            {
-                Start = Owner.SelectedWeek.Value.Start,
-                End = Owner.SelectedWeek.Value.End,
-            };
+            _dateRange = new(Owner.SelectedWeek.Value.Start, Owner.SelectedWeek.Value.End);
 
         if (_tableRef is not null)
             await _tableRef.ReloadServerData();

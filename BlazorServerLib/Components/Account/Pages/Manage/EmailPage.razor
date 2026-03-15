@@ -24,7 +24,11 @@
             @if (isEmailConfirmed)
             {
                 <div class="form-floating mb-3 input-group">
-                    <input type="text" value="@email" class="form-control" placeholder="Пожалуйста, введите свой адрес электронной почты." disabled />
+                    <input type="text"
+                           value="@email"
+                           class="form-control"
+                           placeholder="Пожалуйста, введите свой адрес электронной почты."
+                           disabled />
                     <div class="input-group-append">
                         <span class="h-100 input-group-text text-success font-weight-bold">✓</span>
                     </div>
@@ -34,7 +38,11 @@
             else
             {
                 <div class="form-floating mb-3">
-                    <input type="text" value="@email" class="form-control" placeholder="Пожалуйста, введите свой адрес электронной почты." disabled />
+                    <input type="text"
+                           value="@email"
+                           class="form-control"
+                           placeholder="Пожалуйста, введите свой адрес электронной почты."
+                           disabled />
                     <label for="email" class="form-label">Email</label>
                     <button type="submit" class="btn btn-link" form="send-verification-form">Отправить письмо с подтверждением</button>
                 </div>
@@ -42,7 +50,11 @@
             @if (Input is not null)
             {
                 <div class="form-floating mb-3">
-                    <InputText @bind-Value="Input.NewEmail" class="form-control" autocomplete="email" aria-required="true" placeholder="Пожалуйста, введите новый адрес электронной почты." />
+                    <InputText @bind-Value="Input.NewEmail"
+                               class="form-control"
+                               autocomplete="email"
+                               aria-required="true"
+                               placeholder="Пожалуйста, введите новый адрес электронной почты." />
                     <label for="new-email" class="form-label">Новый E-mail</label>
                     <ValidationMessage For="() => Input.NewEmail" class="text-danger" />
                 </div>

@@ -15,7 +15,14 @@
         <form @onsubmit="SendMessage">
             <div class="input-group input-group-sm">
                 <span class="input-group-text" id="inputGroup-sizing-sm">Сообщение</span>
-                <input disabled="@IsBusyProgress" @bind-value="messageText" @bind-value:event="oninput" type="text" placeholder="@placeholder" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                <input disabled="@IsBusyProgress"
+                       @bind-value="messageText"
+                       @bind-value:event="oninput"
+                       type="text"
+                       placeholder="@placeholder"
+                       class="form-control"
+                       aria-label="Sizing example input"
+                       aria-describedby="inputGroup-sizing-sm" />
                 <button disabled="@(string.IsNullOrWhiteSpace(messageText) || IsBusyProgress)" class="btn btn-outline-secondary" type="submit" id="button-addon2">Отправить</button>
                 <button disabled="@IsBusyProgress" title="Закрыть форму" @onclick="ToggleShow" class="btn btn-outline-secondary" type="button" id="button-addon2">
                     @if (IsBusyProgress)

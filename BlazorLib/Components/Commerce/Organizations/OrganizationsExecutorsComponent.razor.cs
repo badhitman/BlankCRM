@@ -46,9 +46,9 @@ public partial class OrganizationsExecutorsComponent : BlazorBusyComponentUsersC
     readonly Dictionary<string, UsersOrganizationsStatusesEnum> UsersOrganizationsStatuses = [];
 
     private IEnumerable<string>? _options = [UsersOrganizationsStatusesEnum.None.DescriptionInfo()];
-    private IEnumerable<string>? Options
+    private IReadOnlyCollection<string>? Options
     {
-        get => _options;
+        get => _options is null ? null : [.. _options];
         set
         {
             _options = value;

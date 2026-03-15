@@ -3,7 +3,7 @@
 @inherits BlazorBusyComponentBaseAuthModel
 
 <div class="input-group mb-3">
-    <input disabled="@IsBusyProgress" type="date" class="form-control" id="inputDate" @bind="createdDate">
+    <input disabled="@IsBusyProgress" type="date" class="form-control" id="inputDate" @bind="createdDate" />
     <select disabled="@IsBusyProgress" class="form-select" aria-label="Default select example" @bind=newStatus>
         <option selected="@WithoutStatus" value="@((StatusesDocumentsEnum?)null)"></option>
         @foreach (StatusesDocumentsEnum _st in Enum.GetValues<StatusesDocumentsEnum>())
@@ -11,7 +11,7 @@
             <option value="@_st">@_st.DescriptionInfo()</option>
         }
     </select>
-    <input disabled="@IsBusyProgress" type="text" class="form-control" id="inputName" placeholder="Примечание" @bind=createdName>
+    <input disabled="@IsBusyProgress" type="text" class="form-control" id="inputName" placeholder="Примечание" @bind=createdName />
     <button @onclick="AddNewStatus"
             type="button"
             class="btn btn-primary"

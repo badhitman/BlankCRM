@@ -37,7 +37,7 @@ public partial class DocumentsManufactureComponent : BlazorBusyComponentBaseMode
     /// <summary>
     /// Дерево/структура
     /// </summary>
-    public List<TreeItemData<EntryTagModel>> TreeItems { get; private set; } = [];
+    public List<ITreeItemData<EntryTagModel>> TreeItems { get; private set; } = [];
     MudTreeView<EntryTagModel>? TreeView_ref;
 
     static Color GetColor(string? icon)

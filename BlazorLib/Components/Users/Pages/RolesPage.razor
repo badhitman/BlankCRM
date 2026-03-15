@@ -24,7 +24,11 @@
             @(UserInfo is null ? "Новая" : "Добавить") роль
             Новая роль
         </span>
-        <input @bind-value="added_role_name" @bind-value:event="oninput" type="text" class="form-control" aria-label="Имя создаваемой роли">
+        <input @bind-value="added_role_name"
+               @bind-value:event="oninput"
+               type="text"
+               class="form-control"
+               aria-label="Имя создаваемой роли" />
         <button disabled="@string.IsNullOrWhiteSpace(added_role_name)" @onclick="AddNewRole" class="btn btn-outline-secondary" type="button">
             @(UserInfo is null ? "Создать новую роль" : "Добавить роль пользователю")
         </button>

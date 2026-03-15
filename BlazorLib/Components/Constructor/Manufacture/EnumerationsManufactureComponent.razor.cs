@@ -22,7 +22,7 @@ public partial class EnumerationsManufactureComponent : BlazorBusyComponentBaseM
     const string icon_element = Icons.Material.Filled.Label;
 
     /// <inheritdoc/>
-    public List<TreeItemData<EntryTagModel>> TreeItems { get; private set; } = [];
+    public List<ITreeItemData<EntryTagModel>> TreeItems { get; private set; } = [];
     MudTreeView<EntryTagModel>? TreeView_ref;
 
     /// <summary>

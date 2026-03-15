@@ -12,7 +12,12 @@
     @if (IsLarge)
     {
         <div class="ms-auto">
-            <input @bind-value="SearchQuery" @bind-value:event="oninput" title="Search for requests by topic, description and section name" type="text" class="form-control" placeholder="Search">
+            <input @bind-value="SearchQuery"
+                   @bind-value:event="oninput"
+                   title="Search for requests by topic, description and section name"
+                   type="text"
+                   class="form-control"
+                   placeholder="Search" />
         </div>
     }
 </div>
@@ -52,7 +57,7 @@ else
                     <a title="open an issue" href="/issue-card/@issue_element.Id" class="card-link">Goto</a>
                     <MudSpacer />
                     <code title="Date of last update">
-                        @(IsLarge ? issue_element.LastUpdateAt.ToString("dd.MM.yy HH:mm") : issue_element.LastUpdateAt.GetCustomTime().ToString("d", GlobalStaticConstants.RU))
+                        @(IsLarge? issue_element.LastUpdateAt.ToString("dd.MM.yy HH:mm") : issue_element.LastUpdateAt.GetCustomTime().ToString("d", GlobalStaticConstants.RU))
                     </code>
                 </MudStack>
             </div>

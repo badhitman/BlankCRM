@@ -73,7 +73,7 @@
                            type="text"
                            class="form-control"
                            id="exampleFormControlInput-@_walletCopy.Id"
-                           placeholder="Name">
+                           placeholder="Name" />
                 </div>
                 <div class="mb-3">
                     <label for="exampleFormControlTextarea-@_walletCopy.Id" class="form-label">
@@ -92,7 +92,7 @@
                            disabled="@IsBusyProgress"
                            type="checkbox"
                            role="switch"
-                           id="switchCheckDefaultIsDisabled-@_walletCopy.Id">
+                           id="switchCheckDefaultIsDisabled-@_walletCopy.Id" />
                     <label class="form-check-label"
                            for="switchCheckDefaultIsDisabled-@_walletCopy.Id">
                         @(_walletCopy.IsDisabled ? "Выключено (включить?)" : "Включено (выключить?)")
@@ -102,7 +102,7 @@
                     <input @bind="_walletCopy.IsSystem"
                            class="form-check-input"
                            type="checkbox"
-                           id="checkDefaultIsSystem-@_walletCopy.Id">
+                           id="checkDefaultIsSystem-@_walletCopy.Id" />
                     <label class="form-check-label" for="checkDefaultIsSystem-@_walletCopy.Id">
                         Системный
                     </label>
@@ -111,7 +111,7 @@
                     <input @bind="_walletCopy.IgnoreBalanceChanges"
                            class="form-check-input"
                            type="checkbox"
-                           id="checkDefaultIgnoreBalanceChanges-@_walletCopy.Id">
+                           id="checkDefaultIgnoreBalanceChanges-@_walletCopy.Id" />
                     <label class="form-check-label" for="checkDefaultIgnoreBalanceChanges-@_walletCopy.Id">
                         Игнорировать движения
                     </label>

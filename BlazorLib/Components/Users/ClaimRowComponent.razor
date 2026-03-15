@@ -15,7 +15,7 @@
                        type="text"
                        placeholder="ClaimType"
                        aria-label="Claim type"
-                       class="form-control">
+                       class="form-control" />
 
                 <input disabled="@IsBusyProgress"
                        @bind-value="claimValue"
@@ -23,7 +23,7 @@
                        type="text"
                        placeholder="ClaimValue"
                        aria-label="Claim value"
-                       class="form-control">
+                       class="form-control" />
 
                 <button @onclick="SaveClaim"
                         disabled="@CannotSveClaim"
@@ -47,8 +47,8 @@
             @Claim.ClaimValue
 
             @if (Claim.ClaimType != GlobalStaticConstants.TelegramIdClaimName &&
-                    Claim.ClaimType != ClaimTypes.GivenName &&
-                    Claim.ClaimType != ClaimTypes.Surname)
+                                            Claim.ClaimType != ClaimTypes.GivenName &&
+                                            Claim.ClaimType != ClaimTypes.Surname)
             {
                 <span class="ms-1 badge text-bg-@(IsBusyProgress ? "secondary" : "primary") my-btn" @onclick="() => { if (!IsBusyProgress) { isEdit = true; } }">изменить</span>
                 <span class="ms-1 badge text-bg-@(IsBusyProgress ? "secondary" : (initRemoveClaim ? "danger" : "warning")) my-btn" @onclick="async () => { if (!IsBusyProgress) { await RemoveClaim(); } }">@(initRemoveClaim ? "подтвердить удаление?" : "удалить")</span>

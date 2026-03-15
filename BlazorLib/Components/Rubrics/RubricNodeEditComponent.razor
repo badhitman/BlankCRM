@@ -8,13 +8,21 @@
         {
             <div class="row">
                 <div class="col-auto">
-                    <input @bind-value="itemSystemName" @bind-value:event="oninput" class="form-control form-control-sm@(string.IsNullOrWhiteSpace(itemSystemName) ? " border border-warning-subtle" : "")" autocomplete="off" placeholder="Имя">
+                    <input @bind-value="itemSystemName"
+                           @bind-value:event="oninput"
+                           class="form-control form-control-sm@(string.IsNullOrWhiteSpace(itemSystemName) ? " border border-warning-subtle" : "")"
+                           autocomplete="off"
+                           placeholder="Имя" />
                 </div>
                 <div class="col-auto">
                     <button @onclick="SaveRubric" disabled="@(!IsEditedName)" type="button" class="btn btn-outline-info btn-sm">Сохранить</button>
                 </div>
                 <div class="col-auto">
-                    <button @onclick="() => { itemSystemName = ItemModel?.Name; IsRenameMode = false; }" type="button" class="btn btn-outline-info btn-sm">Отмена</button>
+                    <button @onclick="() => { itemSystemName = ItemModel?.Name; IsRenameMode = false; }"
+                            type="button"
+                            class="btn btn-outline-info btn-sm">
+                        Отмена
+                    </button>
                 </div>
             </div>
         }

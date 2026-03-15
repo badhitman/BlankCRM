@@ -18,8 +18,14 @@
         {
             <h6 class="card-subtitle mb-6 text-body-secondary">
                 Запрос на @(string.IsNullOrWhiteSpace(currentUser.PhoneNumber) ? "установку" : "изменение") номера телефона: @currentUser.RequestChangePhone
-                <span @onclick="() => SetPhone(currentUser.RequestChangePhone)" title="кликните для подтверждения" style="cursor:pointer" class="badge rounded-pill text-bg-success ms-2">подтвердить?</span>
-                <span @onclick="() => SetPhone(currentUser.PhoneNumber)" title="кликните для того что бы аннулировать запрос" style="cursor:pointer" class="badge rounded-pill text-bg-secondary ms-2">отклонить?</span>
+                <span @onclick="() => SetPhone(currentUser.RequestChangePhone)"
+                      title="кликните для подтверждения"
+                      style="cursor:pointer"
+                      class="badge rounded-pill text-bg-success ms-2">подтвердить?</span>
+                <span @onclick="() => SetPhone(currentUser.PhoneNumber)"
+                      title="кликните для того что бы аннулировать запрос"
+                      style="cursor:pointer"
+                      class="badge rounded-pill text-bg-secondary ms-2">отклонить?</span>
             </h6>
             <hr />
         }
@@ -46,32 +52,51 @@
                     <MudItem xs="12" sm=6 md="3">
                         <div class="mb-3">
                             <label for="exampleInputSurname" class="form-label">Фамилия</label>
-                            <input type="text" class="form-control" id="exampleInputSurname" @bind-value="editClientCopy.GivenName" @bind-value:event="oninput">
+                            <input type="text"
+                                   class="form-control"
+                                   id="exampleInputSurname"
+                                   @bind-value="editClientCopy.GivenName"
+                                   @bind-value:event="oninput" />
                         </div>
                     </MudItem>
                     <MudItem xs="12" sm=6 md="3">
                         <div class="mb-3">
                             <label for="exampleInputLastName" class="form-label">Имя</label>
-                            <input type="text" class="form-control" id="exampleInputLastName" @bind-value="editClientCopy.Surname" @bind-value:event="oninput">
+                            <input type="text"
+                                   class="form-control"
+                                   id="exampleInputLastName"
+                                   @bind-value="editClientCopy.Surname"
+                                   @bind-value:event="oninput" />
                         </div>
                     </MudItem>
                     <MudItem xs="12" sm=6 md="3">
                         <div class="mb-3">
                             <label for="exampleInputPatronymic" class="form-label">Отчество</label>
-                            <input type="text" class="form-control" id="exampleInputPatronymic" @bind-value="editClientCopy.Patronymic" @bind-value:event="oninput">
+                            <input type="text"
+                                   class="form-control"
+                                   id="exampleInputPatronymic"
+                                   @bind-value="editClientCopy.Patronymic"
+                                   @bind-value:event="oninput" />
                         </div>
                     </MudItem>
                     <MudItem xs="12" sm=6 md="3">
                         <div class="mb-3">
                             <label for="exampleInputExternalUserId" class="form-label">Идентификатор (внешний)</label>
-                            <input type="text" class="form-control" id="exampleInputExternalUserId" @bind-value="editClientCopy.ExternalUserId" @bind-value:event="oninput">
+                            <input type="text"
+                                   class="form-control"
+                                   id="exampleInputExternalUserId"
+                                   @bind-value="editClientCopy.ExternalUserId"
+                                   @bind-value:event="oninput" />
                         </div>
                     </MudItem>
                     <MudItem xs="12">
                         <KladrInputComponent @bind-KladrObject="SelectedKladrObject" />
                         <div class="mb-3">
                             <label for="detailsAddressControlTextarea" class="form-label">уточнение адреса (если требуется)</label>
-                            <textarea class="form-control" id="detailsAddressControlTextarea" rows="3" @oninput="AddressUserCommentHandleOnChange">@editClientCopy.AddressUserComment</textarea>
+                            <textarea class="form-control"
+                                      id="detailsAddressControlTextarea"
+                                      rows="3"
+                                      @oninput="AddressUserCommentHandleOnChange">@editClientCopy.AddressUserComment</textarea>
                         </div>
                     </MudItem>
                 </MudGrid>
