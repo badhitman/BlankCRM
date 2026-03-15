@@ -9,7 +9,6 @@ function SetDotNetHelper(dotNetHelper) {
 }
 
 function js_upload_handler(blobInfo, success, failure, progress) {
-    // console.log(JSON.stringify(blobInfo));
     window.dotNetHelper.invokeMethodAsync('UploadHandler', blobInfo.base64(), blobInfo.filename())
         .then((data) => {
             success(data);
@@ -110,7 +109,6 @@ window.autoGrowManage = (() => {
 
 window.methods = {
     CreateCookie: function (name, value, seconds, path) {
-        // console.warn(`call -> methods.CreateCookie(name:${name}, value:${value}, seconds:${seconds}, path:${path})`);
         var expires;
         if (seconds) {
             var date = new Date();
@@ -125,11 +123,9 @@ window.methods = {
     },
     UpdateCookie: function (name, seconds, path) {
         let value = window.methods.ReadCookie(name);
-        //console.warn(`call -> methods.UpdateCookie(name:${name}, seconds:${seconds}, path:${path}); set:${value}`);
         window.methods.CreateCookie(name, value, seconds, path);
     },
     ReadCookie: function (cname) {
-        // console.warn(`call -> methods.ReadCookie(cname:${cname})`);
         var name = cname + "=";
         var decodedCookie = decodeURIComponent(document.cookie);
         var ca = decodedCookie.split(';');
@@ -146,7 +142,6 @@ window.methods = {
         return resValue;
     },
     DeleteCookie: function (name) {
-        // console.warn(`call -> methods.DeleteCookie(name:${name})`);
         if (window.methods.ReadCookie(name)) {
             document.cookie = name + "=" +
                 //((path) ? ";path=" + path : "") +
@@ -276,11 +271,45 @@ function DOMContentLoaded() {
             contentType: "application/json"
         });
     }
-
-    // console.warn(JSON.stringify(tg));
-    //Blazor.start().then(function () { console.warn("Blazor started!") });
-
-    /*
-    Blazor.start({ssr: { }, circuit: { }, webAssembly: { }});
-    */
 }
+window.downloadFileFromStream = async (fileName, contentStreamReference) => {
+    const arrayBuffer = await contentStreamReference.arrayBuffer();
+    const blob = new Blob([arrayBuffer]);
+    const url = URL.createObjectURL(blob);
+    triggerFileDownload(fileName, url);
+    URL.revokeObjectURL(url);
+};
+window.triggerFileDownload = (fileName, url) => {
+    const anchorElement = document.createElement('a');
+    anchorElement.href = url;
+    anchorElement.download = fileName ?? '';
+    anchorElement.click();
+    anchorElement.remove();
+};
+
+(function (history) {
+    var pushState = history.pushState;
+    history.pushState = function (state, title, url) {
+        // Call the original pushState function
+        var ret = pushState.apply(this, arguments);
+        // Dispatch a custom event after the history change
+        window.dispatchEvent(new Event('locationchange'));
+        return ret;
+    };
+    // Also handle replaceState
+    var replaceState = history.replaceState;
+    history.replaceState = function (state, title, url) {
+        var ret = replaceState.apply(this, arguments);
+        window.dispatchEvent(new Event('locationchange'));
+        return ret;
+    };
+    // Listen for the native popstate event and dispatch the custom event
+    window.addEventListener('popstate', function () {
+        window.dispatchEvent(new Event('locationchange'));
+    });
+})(window.history);
+
+// Now you can listen for the custom 'locationchange' event
+window.addEventListener('locationchange', function () {
+    console.log('URL has changed to:', window.location.href);
+});

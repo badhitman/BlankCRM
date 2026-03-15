@@ -5,7 +5,7 @@
 @using SharedLib
 
 <!DOCTYPE html>
-<html lang="@CultureInfo.CurrentCulture.Parent.Name" data-bs-theme="@(ServerConfig.Value.IsDarkMode ? "dark" : "light")">
+<html lang="@CultureInfo.CurrentCulture.Parent.Name" data-bs-theme="@(WebConfig.Value.IsDarkMode ? "dark" : "light")">
 
 <head>
     <meta charset="utf-8" />
@@ -26,30 +26,14 @@
     <link rel="stylesheet" href="@Assets["lib/jqueryui/jquery-ui.min.css"]" />
     <link rel="stylesheet" href="@Assets["js/ckeditor5/ckeditor5.css"]" />
 
-    @if (ServerConfig.Value.StylesInject is not null && ServerConfig.Value.StylesInject.Length != 0)
+    @if (WebConfig.Value.StylesInject is not null && WebConfig.Value.StylesInject.Length != 0)
     {
-        foreach (InjectionBaseModel styleSrc in ServerConfig.Value.StylesInject.Where(x => FilterLocalPathsForInject(x.LocalPathsForInject)))
+        foreach (InjectionBaseModel styleSrc in WebConfig.Value.StylesInject.Where(x => FilterLocalPathsForInject(x.LocalPathsForInject)))
         {
             <link rel="stylesheet" href="@styleSrc.Src?version=@GlobalStaticConstants.InitSalt" />
         }
     }
     <link rel="icon" type="image/png" href="favicon.png" />
-    <script type="text/javascript">
-            window.downloadFileFromStream = async (fileName, contentStreamReference) => {
-                const arrayBuffer = await contentStreamReference.arrayBuffer();
-                const blob = new Blob([arrayBuffer]);
-                const url = URL.createObjectURL(blob);
-                triggerFileDownload(fileName, url);
-                URL.revokeObjectURL(url);
-            };
-            window.triggerFileDownload = (fileName, url) => {
-                const anchorElement = document.createElement('a');
-                anchorElement.href = url;
-                anchorElement.download = fileName ?? '';
-                anchorElement.click();
-                anchorElement.remove();
-            };
-    </script>
     <HeadOutlet @rendermode="InteractiveServer" />
 </head>
 
@@ -89,9 +73,9 @@
         <span id="components-reconnect-current-attempt"></span> /
         <span id="components-reconnect-max-retries"></span>)
     </div>
-    @if (ServerConfig.Value.ScriptsInject is not null && ServerConfig.Value.ScriptsInject.Length != 0)
+    @if (WebConfig.Value.ScriptsInject is not null && WebConfig.Value.ScriptsInject.Length != 0)
     {
-        foreach (InjectionBaseModel scriptSrc in ServerConfig.Value.ScriptsInject.Where(x => FilterLocalPathsForInject(x.LocalPathsForInject)))
+        foreach (InjectionBaseModel scriptSrc in WebConfig.Value.ScriptsInject.Where(x => FilterLocalPathsForInject(x.LocalPathsForInject)))
         {
             <script src="@scriptSrc.Src"></script>
         }

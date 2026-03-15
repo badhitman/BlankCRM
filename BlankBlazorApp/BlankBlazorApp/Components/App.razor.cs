@@ -16,13 +16,18 @@ public partial class App
     ITelegramTransmission TgRemoteCall { get; set; } = default!;
 
     [Inject]
-    IOptions<TelegramBotConfigModel> WebConfig { get; set; } = default!;
+    IOptions<TelegramBotConfigModel> TGConfig { get; set; } = default!;
 
     [Inject]
-    IOptions<ServerConfigModel> ServerConfig { get; set; } = default!;
+    IOptions<ServerConfigModel> WebConfig { get; set; } = default!;
 
     [Inject]
     NavigationManager NavigatorRepo { get; set; } = default!;
+
+
+    /// <inheritdoc/>
+    [CascadingParameter, EditorRequired]
+    public required NavMainMenuModel NavMainMenu { get; set; }
 
 
     static bool _isLoaded = false;
@@ -39,11 +44,11 @@ public partial class App
 
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
-    {//
+    {
         _uri = new(NavigatorRepo.Uri);
 
-        if (WebConfig.Value.BaseUri is null)
-            WebConfig.Value.BaseUri = NavigatorRepo.BaseUri;
+        if (TGConfig.Value.BaseUri is null)
+            TGConfig.Value.BaseUri = NavigatorRepo.BaseUri;
 
         if (!_isLoaded)
         {
@@ -55,12 +60,13 @@ public partial class App
             if (ServiceProviderExtensions.SetRemoteConf?.Success() != true)
             {
                 _tasks.AddRange([
-                    TgRemoteCall.SetWebConfigTelegramAsync(WebConfig.Value, false),
-                    TgRemoteCall.SetWebConfigHelpDeskAsync(WebConfig.Value, false),
-                    TgRemoteCall.SetWebConfigStorageAsync(WebConfig.Value, false)]);
+                    TgRemoteCall.SetWebConfigTelegramAsync(TGConfig.Value, false),
+                    TgRemoteCall.SetWebConfigHelpDeskAsync(TGConfig.Value, false),
+                    TgRemoteCall.SetWebConfigStorageAsync(TGConfig.Value, false)]);
 
                 await Task.WhenAll(_tasks);
             }
         }
+        await StoreRepo.SaveParameterAsync(WebConfig.Value.IsDarkMode, GlobalStaticCloudStorageMetadata.ThemeMode, true);
     }
 }

@@ -62,7 +62,7 @@
     [CascadingParameter, EditorRequired]
     public required NavMainMenuModel NavMainMenu { get; set; }
 
-    private string? currentUrl;
+    string? currentUrl;
     string _textValue = "App";
 
     protected override async Task OnInitializedAsync()
@@ -77,7 +77,7 @@
         _textValue = res.Response ?? "App";
     }
 
-    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    void OnLocationChanged(object? sender, LocationChangedEventArgs e)
     {
         currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
         StateHasChanged();

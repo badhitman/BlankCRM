@@ -2,9 +2,9 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
-using BlazorLib.Components.Chat;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Options;
+using BlazorLib.Components.Chat;
 using Microsoft.JSInterop;
 using SharedLib;
 
@@ -47,6 +47,7 @@ public partial class RealtimeCoreComponent
 
     ChatWrapperComponent? chatWrapperRef;
     readonly List<PongClientsWebChatEventModel> UsersEcho = [];
+    bool isDarkTheme;
 
     /// <inheritdoc/>
     public string LayoutContainerId { get; private set; } = Guid.NewGuid().ToString();
@@ -115,7 +116,7 @@ public partial class RealtimeCoreComponent
         await base.OnInitializedAsync();
         await PingClientsWebChatEventRepo.RegisterAction(GlobalStaticConstantsTransmission.TransmissionQueues.PingClientsWebChatNotifyReceive, PingClientsWebChatHandler, LayoutContainerId, CurrentUserSessionBytes, isMute: true);
         await PongClientsWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.PongClientWebChatNotifyReceive, LayoutContainerId.ToString()), PongClientsWebChatHandler, LayoutContainerId, CurrentUserSessionBytes, isMute: true);
-        
+
         await ConnectionCloseWebChatRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.ConnectionCloseWebChatNotifyReceive, "#"), ConnectionCloseWebChatHandler, LayoutContainerId, CurrentUserSessionBytes, isMute: true);
         await ConnectionOpenWebChatRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.ConnectionOpenWebChatNotifyReceive, "#"), ConnectionOpenWebChatHandler, LayoutContainerId, CurrentUserSessionBytes, isMute: WebConfig.Value.WebChatEnable);
     }
@@ -128,6 +129,11 @@ public partial class RealtimeCoreComponent
     async void ConnectionOpenWebChatHandler(ConnectionOpenWebChatEventModel model)
     {
         await PingAllUsers();
+    }
+    async Task ToggleTheme(Microsoft.AspNetCore.Components.Web.MouseEventArgs args)
+    {
+        isDarkTheme = !isDarkTheme;
+        NavMainMenu.ThemeChangeHandle(isDarkTheme);
     }
 
     /// <inheritdoc/>

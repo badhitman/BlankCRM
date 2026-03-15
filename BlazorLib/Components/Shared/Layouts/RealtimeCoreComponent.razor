@@ -11,6 +11,9 @@
             <CultureSelector />
         </li>
     }
+    <li class="nav-item" role="presentation">
+        <button class="nav-link bi bi-@(isDarkTheme ? "moon-fill" : "sun")" type="button" @onclick="ToggleTheme"></button>
+    </li>
     @if (NavMainMenu.TopNavMenuItems?.Any() == true)
     {
         foreach (NavItemModel nav_item in NavMainMenu.TopNavMenuItems)
@@ -30,6 +33,3 @@
         <a href="@GetRootDomain()" title="Документация" target="_blank" class="nav-link @(CurrentUserSession?.IsAdmin == true ? "" : "visually-hidden")">API</a>
     </li>
 </ul>
-@* <span class="navbar-text">
-    @LayoutContainerId
-</span> *@

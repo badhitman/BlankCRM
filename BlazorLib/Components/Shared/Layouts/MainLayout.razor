@@ -2,7 +2,7 @@
 @using MudBlazor
 @inherits LayoutComponentBase
 
-<MudThemeProvider @bind-IsDarkMode="@(WebConfig.Value.IsDarkMode)" @rendermode="new InteractiveServerRenderMode(prerender: false)" />
+<MudThemeProvider @bind-IsDarkMode="@(WebConfig.Value.IsDarkMode)" @rendermode="new InteractiveServerRenderMode()" />
 <MudDialogProvider @rendermode="new InteractiveServerRenderMode(prerender: false)" />
 <MudSnackbarProvider @rendermode="new InteractiveServerRenderMode(prerender: false)" />
 <MudPopoverProvider @rendermode="new InteractiveServerRenderMode(prerender: false)" />
@@ -38,9 +38,19 @@
 
 @code {
     [Inject]
+    IParametersStorageTransmission StoreRepo { get; set; } = default!;
+
+    [Inject]
     IOptions<ServerConfigModel> WebConfig { get; set; } = default!;
 
 
     [CascadingParameter, EditorRequired]
     public required NavMainMenuModel NavMainMenu { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await StoreRepo.SaveParameterAsync(WebConfig.Value.IsDarkMode, GlobalStaticCloudStorageMetadata.ThemeMode, true);
+    }
 }
