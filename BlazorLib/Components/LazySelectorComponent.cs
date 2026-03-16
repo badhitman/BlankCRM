@@ -130,9 +130,9 @@ public abstract class LazySelectorComponent<TRow> : BlazorBusyComponentBaseModel
         {
             HeightToggleBtn = await JS.InvokeAsync<int>("BoundingClientRect.Height", toggleBtnId);
         }
-        catch
+        catch (Exception ex)
         {
-
+            Console.WriteLine(ex.ToString());
             return;
         }
 

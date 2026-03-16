@@ -36,6 +36,29 @@ window.HighlightBlock = (() => {
 
 window.BoundingClientRect = (() => {
     return {
+        Full(id) {
+            var _d = $(`#${id}`);
+            if (_d.length == 0)
+                return null;
+
+            let height = _d.height();
+            let width = _d.width();
+
+            let _p = _d.position();
+            let left = _p.left;
+            let top = _p.top;
+
+            if (isNaN(height) || isNaN(width) || isNaN(left) || isNaN(top)) {
+                return null;
+            }
+
+            return {
+                Height: height,
+                Width: width,
+                Left: left,
+                Top: top
+            };
+        },
         Height(id) {
             var _d = $(`#${id}`);
             if (_d.length == 0)
