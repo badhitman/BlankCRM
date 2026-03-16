@@ -96,7 +96,7 @@ public abstract class LazySelectorComponent<TRow> : BlazorBusyComponentBaseModel
     }
 
     /// <inheritdoc/>
-    protected string StyleIfEditing => IsEditing ? $"position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate(0px, {(int)HeightToggleBtn}px);" : "";
+    protected string StyleIfEditing => IsEditing ? $"position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate(0px, {HeightToggleBtn.ToString().Replace(",", ".")}px);" : "";
     /// <inheritdoc/>
     protected string ShowIfEditing => IsEditing ? " show" : "";
 
