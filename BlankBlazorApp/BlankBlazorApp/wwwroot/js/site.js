@@ -238,11 +238,11 @@ window.getSelectedText = (element) => {
     return gs.toString(gs);
 };
 
-window.bootstrapTheme = {
-    IsDark: function () {
+window.BootstrapTheme = {
+    DarkThemeSet: function (isDarkTheme) {
         let attrName = 'data-bs-theme';
-        var is_dark = document.documentElement.getAttribute(attrName);
-        if (is_dark == 'light')
+        // var isDarkTheme = document.documentElement.getAttribute(attrName);
+        if (isDarkTheme == true)
             document.documentElement.setAttribute(attrName, 'dark');
         else
             document.documentElement.setAttribute(attrName, 'light');

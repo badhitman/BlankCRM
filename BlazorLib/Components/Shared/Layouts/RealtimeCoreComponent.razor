@@ -11,9 +11,24 @@
             <CultureSelector />
         </li>
     }
-    <li class="nav-item" role="presentation">
-        <button class="nav-link bi bi-@(isDarkTheme ? "moon-fill" : "sun")" type="button" @onclick="ToggleTheme"></button>
-    </li>
+    <AuthorizeView>
+        <Authorized>
+            <li class="nav-item" role="presentation">
+                @if (changeThemeProcessing)
+                {
+                    <button class="nav-link" type="button">
+                        <div class="spinner-border spinner-border-sm" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </button>
+                }
+                else if (IsDarkMode is not null)
+                {
+                    <button class="nav-link bi bi-@(IsDarkMode.Value ? "moon-fill" : "sun")" type="button" @onclick="ToggleTheme"></button>
+                }
+            </li>
+        </Authorized>
+    </AuthorizeView>
     @if (NavMainMenu.TopNavMenuItems?.Any() == true)
     {
         foreach (NavItemModel nav_item in NavMainMenu.TopNavMenuItems)

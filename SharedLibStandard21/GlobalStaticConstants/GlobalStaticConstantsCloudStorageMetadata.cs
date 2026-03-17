@@ -14,10 +14,11 @@ namespace SharedLib;
 public static partial class GlobalStaticCloudStorageMetadata
 {
     /// <inheritdoc/>
-    public static StorageMetadataModel ThemeMode => new()
+    public static StorageMetadataModel ThemeMode(string? userId) => new()
     {
         ApplicationName = Path.Combine(Routes.THEME_CONTROLLER_NAME, Routes.MODE_CONTROLLER_NAME),
         PropertyName = "DARK",
+        PrefixPropertyName = userId
     };
 
     /// <inheritdoc/>

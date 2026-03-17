@@ -166,7 +166,8 @@ builder.Services.AddMudServices();
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
-    .AddInteractiveWebAssemblyComponents();
+    //.AddInteractiveWebAssemblyComponents()
+    ;
 
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<IdentityRedirectManager>();
@@ -380,7 +381,7 @@ app.Map("/cloud-fs/read", ma => ma.UseMiddleware<ReadCloudFileMiddleware>());
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
-    .AddInteractiveWebAssemblyRenderMode()
+    //.AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(BlankBlazorApp.Client._Imports).Assembly, typeof(BlazorWebLib._Imports).Assembly, typeof(BlazorLib._Imports).Assembly);
 
 // Add additional endpoints required by the Identity /Account Razor components.

@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using BlazorLib;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Options;
 using SharedLib;
 
@@ -24,15 +26,26 @@ public partial class App
     [Inject]
     NavigationManager NavigatorRepo { get; set; } = default!;
 
+    [Inject]
+    AuthenticationStateProvider AuthRepo { get; set; } = default!;
+
 
     /// <inheritdoc/>
     [CascadingParameter, EditorRequired]
     public required NavMainMenuModel NavMainMenu { get; set; }
 
 
+    bool IsDarkMode { get; set; }
     static bool _isLoaded = false;
     static bool _includeTelegramBotWebAppScript = false;
     Uri? _uri;
+    UserInfoMainModel? CurrentUserSession;
+
+    async Task ReadCurrentUser()
+    {
+        AuthenticationState state = await AuthRepo.GetAuthenticationStateAsync();
+        CurrentUserSession = state.User.ReadCurrentUserInfo();
+    }
 
     bool FilterLocalPathsForInject(string[]? localPathsForInject)
     {
@@ -45,6 +58,13 @@ public partial class App
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
+        await base.OnInitializedAsync();
+        await ReadCurrentUser();
+
+        TResponseModel<bool> themeStore = await StoreRepo.ReadParameterAsync<bool>(GlobalStaticCloudStorageMetadata.ThemeMode(CurrentUserSession?.UserId));
+
+        IsDarkMode = themeStore.Response == true;
+
         _uri = new(NavigatorRepo.Uri);
 
         if (TGConfig.Value.BaseUri is null)
@@ -67,6 +87,5 @@ public partial class App
                 await Task.WhenAll(_tasks);
             }
         }
-        await StoreRepo.SaveParameterAsync(WebConfig.Value.IsDarkMode, GlobalStaticCloudStorageMetadata.ThemeMode, true);
     }
 }

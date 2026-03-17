@@ -13,10 +13,13 @@ namespace BlazorLib.Components.Shared.Layouts;
 /// <summary>
 /// RealtimeCoreComponent
 /// </summary>
-public partial class RealtimeCoreComponent
+public partial class RealtimeCoreComponent : BlazorBusyComponentUsersCachedModel
 {
     [Inject]
     IJSRuntime JsRuntime { get; set; } = default!;
+
+    [Inject]
+    IParametersStorageTransmission StoreRepo { get; set; } = default!;
 
     [Inject]
     NavigationManager NavRepo { get; set; } = default!;
@@ -47,7 +50,8 @@ public partial class RealtimeCoreComponent
 
     ChatWrapperComponent? chatWrapperRef;
     readonly List<PongClientsWebChatEventModel> UsersEcho = [];
-    bool isDarkTheme;
+    bool? IsDarkMode { get; set; }
+    bool changeThemeProcessing;
 
     /// <inheritdoc/>
     public string LayoutContainerId { get; private set; } = Guid.NewGuid().ToString();
@@ -88,7 +92,6 @@ public partial class RealtimeCoreComponent
             return;
         }
 
-
         if (req.LayoutContainerId.Equals(LayoutContainerId))
             return;
 
@@ -113,12 +116,22 @@ public partial class RealtimeCoreComponent
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
+        NavRepo.LocationChanged += NavRepo_LocationChanged;
         await base.OnInitializedAsync();
         await PingClientsWebChatEventRepo.RegisterAction(GlobalStaticConstantsTransmission.TransmissionQueues.PingClientsWebChatNotifyReceive, PingClientsWebChatHandler, LayoutContainerId, CurrentUserSessionBytes, isMute: true);
         await PongClientsWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.PongClientWebChatNotifyReceive, LayoutContainerId.ToString()), PongClientsWebChatHandler, LayoutContainerId, CurrentUserSessionBytes, isMute: true);
 
         await ConnectionCloseWebChatRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.ConnectionCloseWebChatNotifyReceive, "#"), ConnectionCloseWebChatHandler, LayoutContainerId, CurrentUserSessionBytes, isMute: true);
         await ConnectionOpenWebChatRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.ConnectionOpenWebChatNotifyReceive, "#"), ConnectionOpenWebChatHandler, LayoutContainerId, CurrentUserSessionBytes, isMute: WebConfig.Value.WebChatEnable);
+
+        TResponseModel<bool> themeStore = await StoreRepo.ReadParameterAsync<bool>(GlobalStaticCloudStorageMetadata.ThemeMode(CurrentUserSession?.UserId));
+        IsDarkMode = themeStore.Response == true;
+    }
+
+    private void NavRepo_LocationChanged(object? sender, Microsoft.AspNetCore.Components.Routing.LocationChangedEventArgs e)
+    {
+        changeThemeProcessing = false;
+        StateHasChanged();
     }
 
     async void ConnectionCloseWebChatHandler(ConnectionCloseWebChatEventModel model)
@@ -132,8 +145,10 @@ public partial class RealtimeCoreComponent
     }
     async Task ToggleTheme(Microsoft.AspNetCore.Components.Web.MouseEventArgs args)
     {
-        isDarkTheme = !isDarkTheme;
-        NavMainMenu.ThemeChangeHandle(isDarkTheme);
+        changeThemeProcessing = true;
+        IsDarkMode = !IsDarkMode;
+        await StoreRepo.SaveParameterAsync(IsDarkMode, GlobalStaticCloudStorageMetadata.ThemeMode(CurrentUserSession?.UserId), true);
+        NavRepo.NavigateTo(NavRepo.Uri);
     }
 
     /// <inheritdoc/>
