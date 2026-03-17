@@ -13,7 +13,7 @@
 }
 else if (!CanEdit)
 {
-    <MudTabs @bind-ActivePanelIndex="@DocumentIndex" TabPanelsClass="px-4 py-6" Elevation="4" Rounded ApplyEffectsToContainer>
+    <MudTabs @bind-ActivePanelIndex="@DocumentIndex" TabPanelsClass="pa-1" Elevation="4" Rounded ApplyEffectsToContainer>
         @if (!DocumentScheme.Tabs.Any())
         {
             <figure class="text-center mt-3">

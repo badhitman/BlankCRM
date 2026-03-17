@@ -97,7 +97,7 @@
         }
         @if (ConversionDocumentId > 0)
         {
-            <MudTabs Elevation="2" Rounded ApplyEffectsToContainer TabPanelsClass="pa-2">
+            <MudTabs Elevation="2" Rounded ApplyEffectsToContainer TabPanelsClass="pa-1">
                 <MudTabPanel Text="Связи с заказами">
                     <OrdersConversionsLinksTableComponent ConversionId="ConversionDocumentId"
                                                           ReloadOrdersLinks="ReloadOrdersLinksAction" />
@@ -110,7 +110,7 @@
         @if (currentChatTelegrams.Count != 0)
         {
             <MudExpansionPanel Text="Telegram" Class="mt-2">
-                <MudTabs Elevation="2" Rounded ApplyEffectsToContainer TabPanelsClass="pa-2">
+                <MudTabs Elevation="2" Rounded ApplyEffectsToContainer TabPanelsClass="pa-1">
                     @foreach (ChatTelegramStandardModel _chat in currentChatTelegrams)
                     {
                         <MudTabPanel Text="@_chat.ToString()">

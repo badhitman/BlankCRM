@@ -3,7 +3,7 @@
 @using static SharedLib.GlobalStaticConstantsRoutes
 @inherits BlazorBusyComponentBaseAuthModel
 
-<MudTabs Elevation="2" Rounded ApplyEffectsToContainer @bind-ActivePanelIndex="WrapperActiveIndex" Style="width: 100%;">
+<MudTabs Elevation="2" Rounded ApplyEffectsToContainer @bind-ActivePanelIndex="WrapperActiveIndex" Style="width: 100%;" TabPanelsClass="pa-1">
     <MudTabPanel Text="Настройки">
         <CascadingValue Value="GetMode">
             <NomenclatureEditComponent NomenclatureId="NomenclatureId" />
@@ -28,7 +28,13 @@
                         }
                         else
                         {
-                            <MudTabs Outlined Position="@Position.Left" Rounded Border ApplyEffectsToContainer @bind-ActivePanelIndex="GoodsRubricsActiveIndex" @ref="panelRef" Style="width: 100%;">
+                            <MudTabs Outlined
+                                     Position="@Position.Left"
+                                     Rounded Border ApplyEffectsToContainer
+                                     @bind-ActivePanelIndex="GoodsRubricsActiveIndex"
+                                     @ref="panelRef"
+                                     Style="width: 100%;"
+                                     TabPanelsClass="pa-1">
                                 <MudTabPanel Text="По умолчанию" Style="width: 100%;">
                                     <RubricsManageComponent TEntity="RubricNodeBodyNomenclatureComponent"
                                                             FullChildsLoad

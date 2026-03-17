@@ -68,7 +68,7 @@ else
     {
         <div class="card mt-3">
             <div class="card-body">
-                <MudTabs Elevation="2" Rounded ApplyEffectsToContainer TabPanelsClass="pa-2">
+                <MudTabs Elevation="2" Rounded ApplyEffectsToContainer TabPanelsClass="pa-1">
                     @foreach (OfficeOrganizationModelDB add in SelectedAddresses)
                     {
                         TabOfficeForOrderModelDb current_tab = CurrentCart.OfficesTabs!.First(x => x.OfficeId == add.Id);

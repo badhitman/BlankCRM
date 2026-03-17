@@ -18,7 +18,7 @@
 }
 else if (_q?.Any() != true)
 {
-    <MudTabs Elevation="2" Rounded ApplyEffectsToContainer>
+    <MudTabs Elevation="2" Rounded ApplyEffectsToContainer TabPanelsClass="pa-1">
         <MudTabPanel Text="Группы">
             <RubricsManageComponent TEntity="RubricNodeBodyNomenclatureConfigComponent"
                                     ProjectId="currentProjectId"
@@ -34,9 +34,14 @@ else if (_q?.Any() != true)
 }
 else
 {
-    <MudTabs Outlined Position="@Position.Left" Rounded Border ApplyEffectsToContainer @bind-ActivePanelIndex="ActiveIndex" @ref="panelRef" Style="width:100%">
+    <MudTabs Outlined
+             Position="@Position.Left"
+             Rounded Border ApplyEffectsToContainer
+             @bind-ActivePanelIndex="ActiveIndex"
+             @ref="panelRef"
+             Style="width:100%" TabPanelsClass="pa-1">
         <MudTabPanel Text="По умолчанию" Style="width: 100%;">
-            <MudTabs Elevation="2" Rounded ApplyEffectsToContainer>
+            <MudTabs Elevation="2" Rounded ApplyEffectsToContainer TabPanelsClass="pa-1">
                 <MudTabPanel Text="Группы">
                     <RubricsManageComponent TEntity="RubricNodeBodyNomenclatureConfigComponent"
                                             ProjectId="currentProjectId"
@@ -53,7 +58,7 @@ else
         @foreach (string _prefixName in _q)
         {
             <MudTabPanel Text="@_prefixName" ID="_prefixName" Style="width:100%">
-                <MudTabs Elevation="2" Rounded ApplyEffectsToContainer>
+                <MudTabs Elevation="2" Rounded ApplyEffectsToContainer TabPanelsClass="pa-1">
                     <MudTabPanel Text="Группы">
                         <RubricsManageComponent TEntity="RubricNodeBodyNomenclatureConfigComponent"
                                                 ProjectId="currentProjectId"

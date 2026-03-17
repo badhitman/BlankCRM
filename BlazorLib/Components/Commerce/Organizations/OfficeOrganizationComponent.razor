@@ -8,7 +8,7 @@
     <div class="card-body">
         <h5 class="card-title">Офис `@OfficeCurrent?.Organization?.Name`<sup class="ms-1"><a class="card-subtitle mb-2 text-body-secondary" href="/organizations/edit/@OfficeCurrent?.OrganizationId" title="в карточку компании">вернуться</a></sup></h5>
 
-        <MudTabs Elevation="2" Rounded ApplyEffectsToContainer TabPanelsClass="pa-2">
+        <MudTabs Elevation="2" Rounded ApplyEffectsToContainer TabPanelsClass="pa-1">
             <MudTabPanel Text="Параметры">
                 @if (IsBusyProgress || OfficeEdit is null)
                 {

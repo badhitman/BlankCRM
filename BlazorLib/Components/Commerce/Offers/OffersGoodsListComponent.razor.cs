@@ -61,19 +61,19 @@ public partial class OffersGoodsListComponent : BlazorRegistersComponent
         List<Task> tasks = [
             Task.Run(async () =>
             {
-                TResponseModel<bool?> res = await StorageTransmissionRepo.ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.HideWorthOffers);
-                if (!res.Success())
-                    SnackBarRepo.ShowMessagesResponse(res.Messages);
+                TResponseModel<bool?> res1 = await StorageTransmissionRepo.ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.HideWorthOffers);
+                if (!res1.Success())
+                    SnackBarRepo.ShowMessagesResponse(res1.Messages);
                 else
-                    _showWorth = res.Response != true;
+                    _showWorth = res1.Response != true;
             }),
             Task.Run(async () =>
             {
-                TResponseModel<bool?> res = await StorageTransmissionRepo.ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.HideMultiplicityOffers);
-                if (!res.Success())
-                    SnackBarRepo.ShowMessagesResponse(res.Messages);
+                TResponseModel<bool?> res2 = await StorageTransmissionRepo.ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.HideMultiplicityOffers);
+                if (!res2.Success())
+                    SnackBarRepo.ShowMessagesResponse(res2.Messages);
                 else
-                    _showMultiplicity = res.Response != true;})];
+                    _showMultiplicity = res2.Response != true;})];
 
         await Task.WhenAll(tasks);
         await SetBusyAsync(false);

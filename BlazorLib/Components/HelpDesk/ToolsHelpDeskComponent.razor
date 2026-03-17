@@ -11,7 +11,7 @@
 @using MudBlazor
 @using SharedLib
 
-<MudTabs Style="overflow: auto;" Elevation="2" Rounded ApplyEffectsToContainer TabPanelsClass="pa-2">
+<MudTabs Style="overflow: auto;" Elevation="2" Rounded ApplyEffectsToContainer TabPanelsClass="pa-1">
     <MudTabPanel ToolTip="Regions, districts, cities" Text="Addresses" Icon="@Icons.Material.Filled.LocationCity">
         <MudPaper Class="ma-2" Elevation="3">
             <div class="card">
@@ -28,7 +28,7 @@
         </AuthorizeView>
     </MudTabPanel>
     <MudTabPanel Text="Розница">
-        <MudTabs Style="overflow: auto;" Elevation="2" Rounded ApplyEffectsToContainer TabPanelsClass="pa-2">
+        <MudTabs Style="overflow: auto;" Elevation="2" Rounded ApplyEffectsToContainer TabPanelsClass="pa-1">
             <MudTabPanel Text="Типы кошельков">
                 <WalletRetailTypesComponent />
             </MudTabPanel>
@@ -124,7 +124,7 @@
                              RolesManageKit="@rolesKit" />
     </MudTabPanel>
     <MudTabPanel Text="Notification templates">
-        <MudTabs Elevation="2" Rounded ApplyEffectsToContainer TabPanelsClass="pa-2">
+        <MudTabs Elevation="2" Rounded ApplyEffectsToContainer TabPanelsClass="pa-1">
             <MudTabPanel Text="Email">
                 <div class="card my-3">
                     <div class="card-body">
@@ -143,7 +143,7 @@
                                 </p>
                             </div>
                         </div>
-                        <MudTabs Elevation="2" Rounded ApplyEffectsToContainer TabPanelsClass="pa-2">
+                        <MudTabs Elevation="2" Rounded ApplyEffectsToContainer TabPanelsClass="pa-1">
                             @foreach (StatusesDocumentsEnum stepEnum in Enum.GetValues(typeof(StatusesDocumentsEnum)).Cast<StatusesDocumentsEnum>())
                             {
                                 <MudTabPanel Text="@stepEnum.DescriptionInfo()">
@@ -199,7 +199,7 @@
                                 </p>
                             </div>
                         </div>
-                        <MudTabs Elevation="2" Rounded ApplyEffectsToContainer TabPanelsClass="pa-2">
+                        <MudTabs Elevation="2" Rounded ApplyEffectsToContainer TabPanelsClass="pa-1">
                             @foreach (StatusesDocumentsEnum stepEnum in Enum.GetValues(typeof(StatusesDocumentsEnum)).Cast<StatusesDocumentsEnum>())
                             {
                                 <MudTabPanel Text="@stepEnum.DescriptionInfo()">
@@ -280,7 +280,7 @@
                                 </li>
                             </ul>
                         </div>
-                        <MudTabs Elevation="2" Rounded ApplyEffectsToContainer TabPanelsClass="pa-2">
+                        <MudTabs Elevation="2" Rounded ApplyEffectsToContainer TabPanelsClass="pa-1">
                             @foreach (StatusesDocumentsEnum stepEnum in Enum.GetValues(typeof(StatusesDocumentsEnum)).Cast<StatusesDocumentsEnum>())
                             {
                                 <MudTabPanel Text="@stepEnum.DescriptionInfo()">

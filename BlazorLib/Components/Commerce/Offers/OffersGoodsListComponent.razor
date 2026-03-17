@@ -12,7 +12,10 @@
 <MudPaper Class="pa-4 mt-3 position-relative">
     <AuthorizeView Roles="@($"{GlobalStaticConstantsRoles.Roles.Admin}")">
         <Authorized>
-            <span title="Настройка отображения" @onclick="CancelChangeConfig" style="cursor:pointer;" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bi bi-gear-fill">
+            <span title="Настройка отображения"
+                  @onclick="CancelChangeConfig"
+                  style="cursor:pointer;"
+                  class="position-absolute top-0 start-100 translate-middle badge rounded-pill bi bi-gear-fill text-secondary">
                 <span class="visually-hidden">view config</span>
             </span>
         </Authorized>
