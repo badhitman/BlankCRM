@@ -20,7 +20,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Magick.NET-Q16-AnyCPU" Version="14.10.4" />
+		<PackageReference Include="Magick.NET-Q16-AnyCPU" Version="14.11.0" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.5" />
 		<PackageReference Include="NLog" Version="6.1.1" />
 		<PackageReference Include="NLog.Extensions.Logging" Version="6.1.2" />
