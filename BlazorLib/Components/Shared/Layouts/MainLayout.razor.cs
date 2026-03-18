@@ -44,6 +44,7 @@ public partial class MainLayout : LayoutComponentBase
         await base.OnInitializedAsync();
         await ReadCurrentUser();
         TResponseModel<bool> themeStore = await StoreRepo.ReadParameterAsync<bool>(GlobalStaticCloudStorageMetadata.ThemeMode(CurrentUserSession?.UserId));
+        IsDarkMode = themeStore.Response == true;
         _theme = new()
         {
             PaletteLight = _lightPalette,
@@ -51,7 +52,6 @@ public partial class MainLayout : LayoutComponentBase
             LayoutProperties = new LayoutProperties()
         };
 
-        IsDarkMode = themeStore.Response == true;
     }
 
     readonly PaletteLight _lightPalette = new()

@@ -61,18 +61,14 @@ public partial class App
         await base.OnInitializedAsync();
         await ReadCurrentUser();
 
-        TResponseModel<bool> themeStore = await StoreRepo.ReadParameterAsync<bool>(GlobalStaticCloudStorageMetadata.ThemeMode(CurrentUserSession?.UserId));
-
-        IsDarkMode = themeStore.Response == true;
-
         _uri = new(NavigatorRepo.Uri);
 
         if (TGConfig.Value.BaseUri is null)
             TGConfig.Value.BaseUri = NavigatorRepo.BaseUri;
-
+        List<Task> _tasks = [];
         if (!_isLoaded)
         {
-            List<Task> _tasks = [Task.Run(async () => {
+            _tasks = [Task.Run(async () => {
                 TResponseModel<bool> tgWebAppInclude = await StoreRepo.ReadParameterAsync<bool>(GlobalStaticCloudStorageMetadata.ParameterIncludeTelegramBotWebApp);
                 _includeTelegramBotWebAppScript = tgWebAppInclude.Success() && tgWebAppInclude.Response == true;
             })];
@@ -82,10 +78,15 @@ public partial class App
                 _tasks.AddRange([
                     TgRemoteCall.SetWebConfigTelegramAsync(TGConfig.Value, false),
                     TgRemoteCall.SetWebConfigHelpDeskAsync(TGConfig.Value, false),
-                    TgRemoteCall.SetWebConfigStorageAsync(TGConfig.Value, false)]);
-
-                await Task.WhenAll(_tasks);
+                    TgRemoteCall.SetWebConfigStorageAsync(TGConfig.Value, false)
+                ]);
             }
         }
+        _tasks.Add(Task.Run(async () =>
+        {
+            TResponseModel<bool> themeStore = await StoreRepo.ReadParameterAsync<bool>(GlobalStaticCloudStorageMetadata.ThemeMode(CurrentUserSession?.UserId));
+            IsDarkMode = themeStore.Response == true;
+        }));
+        await Task.WhenAll(_tasks);
     }
 }
