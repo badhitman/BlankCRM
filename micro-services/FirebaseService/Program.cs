@@ -1,16 +1,18 @@
+using DbcLib;
+using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using System.Diagnostics.Metrics;
+using Newtonsoft.Json;
+using NLog;
 using NLog.Extensions.Logging;
+using OpenTelemetry;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
-using Newtonsoft.Json;
 using RemoteCallLib;
-using OpenTelemetry;
-using System.Text;
 using SharedLib;
-using DbcLib;
-using NLog;
+using System.Diagnostics.Metrics;
+using System.Text;
 
 namespace FirebaseService;
 
@@ -88,6 +90,12 @@ public class Program
         builder.Configuration.AddEnvironmentVariables();
         builder.Configuration.AddCommandLine(args);
         builder.Services.AddOptions();
+
+        FirebaseApp.Create(new AppOptions()
+        {
+            Credential = GoogleCredential.GetApplicationDefault(),
+            ProjectId = "evident-ethos-230204",
+        });
 
         ITraceRabbitActionsService.TracesFilter = builder.Configuration.GetSection(nameof(ITraceRabbitActionsService.TracesFilter)).Get<string[]>();
         _confMQTT.Reload(builder.Configuration.GetSection(RealtimeMQTTClientConfigModel.Configuration).Get<RealtimeMQTTClientConfigModel>()!);
