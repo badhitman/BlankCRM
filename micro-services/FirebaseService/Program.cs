@@ -1,0 +1,180 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using System.Diagnostics.Metrics;
+using NLog.Extensions.Logging;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Trace;
+using Newtonsoft.Json;
+using RemoteCallLib;
+using OpenTelemetry;
+using System.Text;
+using SharedLib;
+using DbcLib;
+using NLog;
+
+namespace FirebaseService;
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        RealtimeMQTTClientConfigModel _confMQTT = RealtimeMQTTClientConfigModel.BuildEmpty();
+        Console.OutputEncoding = Encoding.UTF8;
+        HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
+
+        Logger logger = LogManager.GetCurrentClassLogger();
+        builder.AddServiceDefaults();
+
+        // NLog: Setup NLog for Dependency injection
+        builder.Logging
+            .ClearProviders()
+            .AddNLog()
+            .AddOpenTelemetry(logging =>
+            {
+                logging.IncludeFormattedMessage = true; logging.IncludeScopes = true;
+            });
+
+        string _environmentName = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT") ?? "Other";
+        logger.Warn($"init main: {_environmentName}");
+        string _modePrefix = Environment.GetEnvironmentVariable(nameof(GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix)) ?? "";
+        if (!string.IsNullOrWhiteSpace(_modePrefix) && !GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix.EndsWith(_modePrefix))
+        {
+            GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix += _modePrefix.Trim();
+            GlobalStaticConstantsTransmission.TransmissionQueueNamePrefixMQTT += _modePrefix.Trim();
+        }
+        logger.Warn($"{nameof(GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix)}: {Environment.GetEnvironmentVariable(nameof(GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix))}");
+
+        string curr_dir = Directory.GetCurrentDirectory();
+
+        builder.Configuration.SetBasePath(curr_dir);
+        string path_load = Path.Combine(curr_dir, "appsettings.json");
+        if (Path.Exists(path_load))
+            builder.Configuration.AddJsonFile(path_load, optional: true, reloadOnChange: false);
+
+        path_load = Path.Combine(curr_dir, $"appsettings.{_environmentName}.json");
+        if (Path.Exists(path_load))
+            builder.Configuration.AddJsonFile(path_load, optional: true, reloadOnChange: false);
+        else
+            logger.Debug($"отсутствует: {path_load}");
+
+        // Secrets
+        void ReadSecrets(string dirName)
+        {
+            string secretPath = Path.Combine("..", dirName);
+            DirectoryInfo di = new(secretPath);
+            for (int i = 0; i < 5 && !di.Exists; i++)
+            {
+                logger.Debug($"файл секретов не найден (продолжение следует...): {di.FullName}");
+                secretPath = Path.Combine("..", secretPath);
+                di = new(secretPath);
+            }
+
+            if (Directory.Exists(secretPath))
+            {
+                foreach (string secret in Directory.GetFiles(secretPath, $"*.json"))
+                {
+                    path_load = Path.GetFullPath(secret);
+                    logger.Debug($"!secret load: {path_load}");
+                    builder.Configuration.AddJsonFile(path_load, optional: true, reloadOnChange: false);
+                }
+            }
+            else
+                logger.Debug($"секреты `{dirName}` не найдены (совсем)");
+        }
+        ReadSecrets("secrets");
+        if (!string.IsNullOrWhiteSpace(_modePrefix))
+            ReadSecrets($"secrets{_modePrefix}");
+
+        builder.Configuration.AddEnvironmentVariables();
+        builder.Configuration.AddCommandLine(args);
+        builder.Services.AddOptions();
+
+        ITraceRabbitActionsService.TracesFilter = builder.Configuration.GetSection(nameof(ITraceRabbitActionsService.TracesFilter)).Get<string[]>();
+        _confMQTT.Reload(builder.Configuration.GetSection(RealtimeMQTTClientConfigModel.Configuration).Get<RealtimeMQTTClientConfigModel>()!);
+        logger.Warn($"mqtt config: {JsonConvert.SerializeObject(_confMQTT)}");
+        builder.Services.AddSingleton(sp => _confMQTT);
+
+        builder.Services
+            .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
+            ;
+
+        builder.Services.AddMemoryCache();
+
+        RabbitMQConfigModel _mqConf = builder.Configuration.GetSection(RabbitMQConfigModel.Configuration).Get<RabbitMQConfigModel>() ?? throw new Exception("RabbitMQ not config");
+
+        string connectionStorage = builder.Configuration.GetConnectionString($"FirebaseConnection{_modePrefix}") ?? throw new InvalidOperationException($"Connection string 'FirebaseConnection{_modePrefix}' not found.");
+        builder.Services.AddDbContextFactory<FirebaseContext>(opt =>
+            opt.UseNpgsql(connectionStorage));
+
+        string appName = typeof(Program).Assembly.GetName().Name ?? "AssemblyName";
+        #region MQ Transmission (remote methods call)
+        builder.Services.AddSingleton<RabbitMQ.Client.ConnectionFactory>(sp =>
+        {
+            IOptions<RabbitMQConfigModel> rabbitConf = sp.GetRequiredService<IOptions<RabbitMQConfigModel>>();
+
+            return new()
+            {
+                ClientProvidedName = rabbitConf.Value.ClientProvidedName,
+                HostName = rabbitConf.Value.HostName,
+                UserName = rabbitConf.Value.UserName,
+                Password = rabbitConf.Value.Password
+            };
+        });
+        builder.Services.AddSingleton(sp =>
+        {
+
+            RabbitMQ.Client.ConnectionFactory factory = sp.GetRequiredService<RabbitMQ.Client.ConnectionFactory>();
+            return factory.CreateConnectionAsync().Result;
+        });
+
+        IMQStandardClientRPC rabbitImplement(IServiceProvider provider, object? arg2)
+        {
+            return new RabbitClient(
+                provider.GetRequiredService<IOptions<RabbitMQConfigModel>>(),
+                provider.GetRequiredService<ILogger<RabbitClient>>(),
+                provider.GetRequiredService<ITraceRabbitActionsServiceTransmission>(),
+                _confMQTT,
+                appName);
+        }
+
+        builder.Services
+            .AddKeyedSingleton(nameof(RabbitClient), rabbitImplement)
+            ;
+        builder.Services
+            .AddSingleton<IMQStandardClientExtRPC>(x => new ClientMQTT(x.GetRequiredService<RealtimeMQTTClientConfigModel>(), x.GetRequiredService<ILogger<ClientMQTT>>(), appName))
+            ;
+
+        builder.Services.FirebaseRegisterMqListeners();
+        builder.Services
+            .AddSingleton<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
+            ;
+        #endregion
+
+
+        // Custom metrics for the application
+        Meter greeterMeter = new($"OTel.{appName}", "1.0.0");
+        OpenTelemetryBuilder otel = builder.Services.AddOpenTelemetry();
+
+        // Add Metrics for ASP.NET Core and our custom metrics and export via OTLP
+        otel.WithMetrics(metrics =>
+        {
+            // Metrics provider from OpenTelemetry
+            metrics.AddAspNetCoreInstrumentation();
+            //Our custom metrics
+            metrics.AddMeter(greeterMeter.Name);
+            // Metrics provides by ASP.NET Core in .NET 8
+            metrics.AddMeter("Microsoft.AspNetCore.Hosting");
+        });
+
+        // Add Tracing for ASP.NET Core and our custom ActivitySource and export via OTLP
+        otel.WithTracing(tracing =>
+        {
+            tracing.AddAspNetCoreInstrumentation();
+            tracing.AddHttpClientInstrumentation();
+            tracing.AddSource($"OTel.{appName}");
+        });
+
+        IHost host = builder.Build();
+        host.Run();
+    }
+}

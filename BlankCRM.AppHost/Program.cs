@@ -133,7 +133,7 @@ public class Program
 
         IResourceBuilder<IResourceWithConnectionString> redisConnectionStr = builder.AddConnectionString($"RedisConnectionString{_modePrefix}");
         IResourceBuilder<IResourceWithConnectionString> identityConnectionStr = builder.AddConnectionString($"IdentityConnection{_modePrefix}");
-        
+
 #if OUTER_DATA
         IResourceBuilder<ProjectResource> apiBreezRuService = builder.AddProject<Projects.ApiBreezRuService>("apibreezrueservice")
             .WithEnvironment(act => rabbitConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
@@ -170,7 +170,7 @@ public class Program
             .WithEnvironment(act => rabbitConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
             .WithEnvironment(act => mongoConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
             .WithReference(builder.AddConnectionString($"IndexingServiceConnection{_modePrefix}"))
-            
+
             .WithReference(realtimeService)
             .WaitFor(realtimeService)
             ;
@@ -179,6 +179,15 @@ public class Program
             .WithEnvironment(act => rabbitConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
             .WithEnvironment(act => mongoConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
             .WithReference(builder.AddConnectionString($"KladrConnection{_modePrefix}"))
+
+            .WithReference(realtimeService)
+            .WaitFor(realtimeService)
+            ;
+
+        IResourceBuilder<ProjectResource> firebaseService = builder.AddProject<Projects.FirebaseService>("firebaseeservice")
+            .WithEnvironment(act => rabbitConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
+            .WithEnvironment(act => mongoConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
+            .WithReference(builder.AddConnectionString($"FirebaseConnection{_modePrefix}"))
 
             .WithReference(realtimeService)
             .WaitFor(realtimeService)
@@ -258,18 +267,21 @@ public class Program
 
             .WithReference(apiRestService)
             .WaitFor(apiRestService)
-            
+
             .WithReference(commerceService)
             .WaitFor(commerceService)
-            
+
             .WithReference(bankService)
             .WaitFor(bankService)
-            
+
             //.WithReference(constructorService)
             //.WaitFor(constructorService)
-            
+
             .WithReference(kladrService)
             .WaitFor(kladrService)
+
+            .WithReference(firebaseService)
+            .WaitFor(firebaseService)
 # if OUTER_DATA
             .WithReference(apiBreezRuService)
             .WaitFor(apiBreezRuService)
