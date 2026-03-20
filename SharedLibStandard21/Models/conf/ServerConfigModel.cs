@@ -56,4 +56,9 @@ public class ServerConfigModel
 
     /// <inheritdoc/>
     public bool IsDarkMode { get; set; }
+
+    /// <summary>
+    /// ServerConfig
+    /// </summary>
+    public static readonly string Configuration = "ServerConfig";
 }

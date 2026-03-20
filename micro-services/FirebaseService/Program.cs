@@ -1,18 +1,18 @@
-using DbcLib;
-using FirebaseAdmin;
-using Google.Apis.Auth.OAuth2;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
-using NLog;
+using System.Diagnostics.Metrics;
+using Google.Apis.Auth.OAuth2;
 using NLog.Extensions.Logging;
-using OpenTelemetry;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
+using Newtonsoft.Json;
+using FirebaseAdmin;
+using OpenTelemetry;
 using RemoteCallLib;
-using SharedLib;
-using System.Diagnostics.Metrics;
 using System.Text;
+using SharedLib;
+using DbcLib;
+using NLog;
 
 namespace FirebaseService;
 
@@ -91,12 +91,6 @@ public class Program
         builder.Configuration.AddCommandLine(args);
         builder.Services.AddOptions();
 
-        FirebaseApp.Create(new AppOptions()
-        {
-            Credential = GoogleCredential.GetApplicationDefault(),
-            ProjectId = builder.Configuration["GOOGLE_APPLICATION_PROJECT_ID"],
-        });
-
         ITraceRabbitActionsService.TracesFilter = builder.Configuration.GetSection(nameof(ITraceRabbitActionsService.TracesFilter)).Get<string[]>();
         _confMQTT.Reload(builder.Configuration.GetSection(RealtimeMQTTClientConfigModel.Configuration).Get<RealtimeMQTTClientConfigModel>()!);
         logger.Warn($"mqtt config: {JsonConvert.SerializeObject(_confMQTT)}");
@@ -104,15 +98,30 @@ public class Program
 
         builder.Services
             .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
+            .Configure<FirebaseSDKConfigModel>(builder.Configuration.GetSection(FirebaseSDKConfigModel.Configuration))
             ;
 
         builder.Services.AddMemoryCache();
+
+        FirebaseSDKConfigModel _firebaseConf = builder.Configuration.GetSection(FirebaseSDKConfigModel.Configuration).Get<FirebaseSDKConfigModel>() ?? throw new Exception("FirebaseSDK not config");
+        if (!_firebaseConf.IsValid())
+            throw new Exception("FirebaseSDK config: not valid!");
+
+        FirebaseApp.Create(new AppOptions()
+        {
+            Credential = GoogleCredential.GetApplicationDefault(),
+            ProjectId = _firebaseConf.ProjectId,
+        });
 
         RabbitMQConfigModel _mqConf = builder.Configuration.GetSection(RabbitMQConfigModel.Configuration).Get<RabbitMQConfigModel>() ?? throw new Exception("RabbitMQ not config");
 
         string connectionStorage = builder.Configuration.GetConnectionString($"FirebaseConnection{_modePrefix}") ?? throw new InvalidOperationException($"Connection string 'FirebaseConnection{_modePrefix}' not found.");
         builder.Services.AddDbContextFactory<FirebaseContext>(opt =>
             opt.UseNpgsql(connectionStorage));
+
+        builder.Services
+            .AddScoped<IFirebaseService, FirebaseServiceImplement>()
+            ;
 
         string appName = typeof(Program).Assembly.GetName().Name ?? "AssemblyName";
         #region MQ Transmission (remote methods call)

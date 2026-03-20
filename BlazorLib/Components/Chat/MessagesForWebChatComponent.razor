@@ -121,7 +121,7 @@
                     <div class="d-flex flex-row justify-content-end pt-1">
                         <div>
                             <p class="small me-3 mb-0 rounded-3 text-muted d-flex justify-content-end">
-                                @(UsersCache.FirstOrDefault(x => x.UserId == context.SenderUserIdentityId)?.ToString() ?? context.SenderUserIdentityId)) | @($"{_cdt.ToString("d", GlobalStaticConstants.RU)} {@_cdt.ToString("t", GlobalStaticConstants.RU)}")
+                                @(UsersCache.FirstOrDefault(x => x.UserId == context.SenderUserIdentityId)?.ToString() ?? context.SenderUserIdentityId) | @($"{_cdt.ToString("d", GlobalStaticConstants.RU)} {@_cdt.ToString("t", GlobalStaticConstants.RU)}")
                             </p>
                             <p class="small p-2 me-3 mb-1 text-white rounded-3 bg-primary">
                                 @context.Text

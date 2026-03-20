@@ -1422,6 +1422,11 @@ public static partial class GlobalStaticConstantsTransmission
         public static readonly string DeleteToggleMessageWebChatReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, $"{Routes.WEB_CONTROLLER_NAME}-{Routes.CHATS_CONTROLLER_NAME}", Routes.MESSAGE_CONTROLLER_NAME, Routes.DELETE_ACTION_NAME, Routes.TOGGLE_ACTION_NAME);
         #endregion
 
+        #region FirebaseSDK
+        /// <inheritdoc/>
+        public static readonly string GetFirebaseConfigReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.FIREBASESDK_CONTROLLER_NAME, Routes.CONFIGURATION_CONTROLLER_NAME, Routes.GET_ACTION_NAME);
+        #endregion
+
         /// <inheritdoc/>
         public static readonly string TraceRabbitActionSystemsReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, $"{Routes.RABBIT_CONTROLLER_NAME}-{Routes.ACTION_CONTROLLER_NAME}", $"{Routes.SYSTEM_CONTROLLER_NAME}-{Routes.TRACE_ACTION_NAME}");
 

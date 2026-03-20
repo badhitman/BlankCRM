@@ -1,8 +1,8 @@
-﻿using BlazorLib;
+﻿using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Options;
 using SharedLib;
+using BlazorLib;
 
 namespace BlankBlazorApp.Components;
 
@@ -12,16 +12,19 @@ namespace BlankBlazorApp.Components;
 public partial class App
 {
     [Inject]
-    IParametersStorageTransmission StoreRepo { get; set; } = default!;
-
-    [Inject]
-    ITelegramTransmission TgRemoteCall { get; set; } = default!;
+    IFirebaseServiceTransmission FirebaseRepo { get; set; } = default!;
 
     [Inject]
     IOptions<TelegramBotConfigModel> TGConfig { get; set; } = default!;
 
     [Inject]
     IOptions<ServerConfigModel> WebConfig { get; set; } = default!;
+
+    [Inject]
+    IParametersStorageTransmission StoreRepo { get; set; } = default!;
+
+    [Inject]
+    ITelegramTransmission TgRemoteCall { get; set; } = default!;
 
     [Inject]
     NavigationManager NavigatorRepo { get; set; } = default!;
@@ -40,6 +43,7 @@ public partial class App
     static bool _includeTelegramBotWebAppScript = false;
     Uri? _uri;
     UserInfoMainModel? CurrentUserSession;
+    static FirebaseSDKConfigModel? _firebaseConf;
 
     async Task ReadCurrentUser()
     {
@@ -60,6 +64,12 @@ public partial class App
     {
         await base.OnInitializedAsync();
         await ReadCurrentUser();
+
+        if (_firebaseConf is null)
+        {
+            TResponseModel<FirebaseSDKConfigModel> getFirebaseConfig = await FirebaseRepo.GetFirebaseConfigAsync();
+            _firebaseConf = getFirebaseConfig.Response;
+        }
 
         _uri = new(NavigatorRepo.Uri);
 

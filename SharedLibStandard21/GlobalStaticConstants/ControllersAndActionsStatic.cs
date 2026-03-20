@@ -420,6 +420,11 @@ public static partial class GlobalStaticConstantsRoutes
         public const string TELEGRAM_CONTROLLER_NAME = "telegram";
 
         /// <summary>
+        /// Telegram check-user
+        /// </summary>
+        public const string FIREBASESDK_CONTROLLER_NAME = "firebase-sdk";
+
+        /// <summary>
         /// Bot
         /// </summary>
         public const string BOT_CONTROLLER_NAME = "bot";

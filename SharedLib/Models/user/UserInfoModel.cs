@@ -70,7 +70,13 @@ public record UserInfoModel : UserInfoMainModel
 
         return _res;
     }
+    /// <inheritdoc/>
+    public string GetName()
+    {
+        string _res = $"{GivenName} {Surname} {Patronymic}".Trim();
 
+        return string.IsNullOrWhiteSpace(_res) ? ToString() : _res;
+    }
     /// <inheritdoc/>
     public static UserInfoModel Build(
                 string userId,

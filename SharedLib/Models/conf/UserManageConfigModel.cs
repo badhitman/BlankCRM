@@ -46,4 +46,9 @@ public class UserManageConfigModel
         return MailAddress.TryCreate(userEmail, out _) &&
             (DenyRegistration?.IsDeny != true || UpdatesUsersRoles?.Any(x => x.EmailUser.Equals(userEmail) && x.SetRoles?.Any(y => y.Equals(GlobalStaticConstantsRoles.Roles.Admin, StringComparison.OrdinalIgnoreCase) || y.Equals("administrator", StringComparison.OrdinalIgnoreCase)) == true) == true);
     }
+
+    /// <summary>
+    /// UserManage
+    /// </summary>
+    public static readonly string Configuration = "UserManage";
 }

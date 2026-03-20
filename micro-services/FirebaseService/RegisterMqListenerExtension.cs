@@ -4,6 +4,7 @@
 
 using Newtonsoft.Json.Linq;
 using SharedLib;
+using Transmission.Receives.firebase;
 
 namespace FirebaseService;
 
@@ -18,7 +19,7 @@ public static class RegisterMqListenerExtension
     public static IServiceCollection FirebaseRegisterMqListeners(this IServiceCollection services)
     {
         return services
-            
+            .RegisterListenerRabbitMQ<GetFirebaseConfigReceive, object, TResponseModel<FirebaseSDKConfigModel>>()
             ;
     }
 }

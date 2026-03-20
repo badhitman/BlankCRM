@@ -12,6 +12,8 @@ public class CommerceConfigModel
     /// <inheritdoc/>
     public string[]? NomenclaturesRubricsPrefixes { get; set; }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// CommerceConfig
+    /// </summary>
     public static readonly string Configuration = "CommerceConfig";
 }

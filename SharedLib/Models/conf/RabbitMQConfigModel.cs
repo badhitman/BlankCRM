@@ -10,9 +10,6 @@ namespace SharedLib;
 public class RabbitMQConfigModel
 {
     /// <inheritdoc/>
-    public static readonly string Configuration = "RabbitMQConfig";
-
-    /// <inheritdoc/>
     public required string UserName { get; set; } = "guest";
 
     /// <inheritdoc/>
@@ -88,4 +85,9 @@ public class RabbitMQConfigModel
     /// Очередь удаляется только если к ней нет подключений (потребителей) и запросов Basic.Get в течение указанного времени.
     /// </remarks>
     public int? ExpiresResponseQueue { get; set; }
+
+    /// <summary>
+    /// RabbitMQConfig
+    /// </summary>
+    public static readonly string Configuration = "RabbitMQConfig";
 }

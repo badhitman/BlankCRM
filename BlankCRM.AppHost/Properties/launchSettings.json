@@ -8,8 +8,7 @@
         "DOTNET_ENVIRONMENT": "Development",
         "DOTNET_DASHBOARD_OTLP_ENDPOINT_URL": "https://localhost:21254",
         "DOTNET_RESOURCE_SERVICE_ENDPOINT_URL": "https://localhost:22284",
-        "GOOGLE_APPLICATION_CREDENTIALS": "../../../../evident-ethos-firebase-adminsdk.json", // TODO: change this
-        "GOOGLE_APPLICATION_PROJECT_ID": "evident-ethos-230204" // TODO: change this
+        "GOOGLE_APPLICATION_CREDENTIALS": "../../../../evident-ethos-firebase-adminsdk.json" // TODO: change this
       },
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:17009;http://localhost:15055",
@@ -23,8 +22,7 @@
         "DOTNET_ENVIRONMENT": "Development",
         "DOTNET_DASHBOARD_OTLP_ENDPOINT_URL": "http://localhost:19106",
         "DOTNET_RESOURCE_SERVICE_ENDPOINT_URL": "http://localhost:20114",
-        "GOOGLE_APPLICATION_CREDENTIALS": "../../../../evident-ethos-firebase-adminsdk.json", // TODO: change this
-        "GOOGLE_APPLICATION_PROJECT_ID": "evident-ethos-230204" // TODO: change this
+        "GOOGLE_APPLICATION_CREDENTIALS": "../../../../evident-ethos-firebase-adminsdk.json" // TODO: change this
       },
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:15055"

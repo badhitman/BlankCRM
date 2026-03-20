@@ -188,7 +188,6 @@ public class Program
             .WithEnvironment(act => rabbitConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
             .WithEnvironment(act => mongoConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
             .WithEnvironment("GOOGLE_APPLICATION_CREDENTIALS", Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS"))
-            .WithEnvironment("GOOGLE_APPLICATION_PROJECT_ID", Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_PROJECT_ID"))
             .WithReference(builder.AddConnectionString($"FirebaseConnection{_modePrefix}"))
 
             .WithReference(realtimeService)

@@ -2,17 +2,19 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
+using System.Collections.Generic;
+
 namespace SharedLib;
 
 /// <summary>
 /// InjectionBaseModel
 /// </summary>
-public class InjectionBaseModel()
+public class InjectionBaseModel
 {
     /// <summary>
     /// Ссылка к скрипту
     /// </summary>
-    public required string Src { get; set; }
+    public string? Src { get; set; }
 
     /// <summary>
     /// Пути для инъекции ссылки
@@ -21,4 +23,7 @@ public class InjectionBaseModel()
     /// Если не указано, тогда инъекция для всех страниц.
     /// </remarks>
     public string[]? LocalPathsForInject { get; set; }
+
+    /// <inheritdoc/>
+    public Dictionary<string, object>? Attributes { get; set; }
 }

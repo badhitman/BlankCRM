@@ -3,7 +3,6 @@
 ////////////////////////////////////////////////
 
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json.Linq;
 using SharedLib;
 
 namespace RemoteCallLib;
@@ -44,7 +43,7 @@ public class WebChatTransmissionRabbit([FromKeyedServices(nameof(RabbitClient))]
     /// <inheritdoc/>
     public async Task<TPaginationResponseStandardModel<DialogWebChatModelDB>> SelectDialogsWebChatsAsync(TPaginationRequestStandardModel<SelectDialogsWebChatsRequestModel> req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TPaginationResponseStandardModel<DialogWebChatModelDB>>(GlobalStaticConstantsTransmission.TransmissionQueues.SelectDialogsWebChatsReceive, req, token: token) ?? new();
-    
+
     /// <inheritdoc/>
     public async Task<TPaginationResponseStandardModel<MessageWebChatModelDB>> SelectMessagesForRoomWebChatAsync(TPaginationRequestAuthModel<SelectMessagesForWebChatRoomRequestModel> req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TPaginationResponseStandardModel<MessageWebChatModelDB>>(GlobalStaticConstantsTransmission.TransmissionQueues.SelectMessagesForRoomWebChatReceive, req, token: token) ?? new();

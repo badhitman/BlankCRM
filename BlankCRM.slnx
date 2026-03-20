@@ -116,9 +116,6 @@
     <File Path="devops/etc/systemd/system/tg.app.stage.service" />
     <File Path="devops/etc/systemd/system/web.app.stage.service" />
   </Folder>
-  <Folder Name="/Solution Items/secrets/">
-    <File Path="../secrets/web-conf.json" />
-  </Folder>
   <Folder Name="/Solution Items/secrets/AppHost/">
     <File Path="../secrets-BlankCRM.AppHost/api-access.json" />
     <File Path="../secrets-BlankCRM.AppHost/connections-strings.Development.json" />
@@ -138,6 +135,7 @@
     <File Path="../secrets/rabbitmq-conf.Development.json" />
     <File Path="../secrets/telegram-bot.Development.json" />
     <File Path="../secrets/top-menu.Development.json" />
+    <File Path="../secrets/web-conf.json" />
   </Folder>
   <Project Path="BlankCRM.AppHost/BlankCRM.AppHost.csproj" />
   <Project Path="BlankCRM.ServiceDefaults/BlankCRM.ServiceDefaults.csproj" />

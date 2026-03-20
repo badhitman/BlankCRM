@@ -30,7 +30,14 @@
     {
         foreach (InjectionBaseModel styleSrc in WebConfig.Value.StylesInject.Where(x => FilterLocalPathsForInject(x.LocalPathsForInject)))
         {
-            <link rel="stylesheet" href="@styleSrc.Src?version=@GlobalStaticConstants.InitSalt" />
+            if (styleSrc.Attributes is null || styleSrc.Attributes.Count == 0)
+            {
+                <link rel="stylesheet" href="@styleSrc.Src?version=@GlobalStaticConstants.InitSalt" />
+            }
+            else
+            {
+                <link rel="stylesheet" href="@styleSrc.Src?version=@GlobalStaticConstants.InitSalt" @attributes="styleSrc.Attributes" />
+            }
         }
     }
     <link rel="icon" type="image/png" href="favicon.png" />
@@ -44,19 +51,48 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() { DOMContentLoaded(); });
     </script>
-
+    
+    <script src="@Assets["lib/firebase/firebase-messaging-sw.js"]" type="module"></script>
     <script src="@Assets["lib/jquery/jquery.min.js"]"></script>
     <script src="@Assets["lib/jqueryui/jquery-ui.min.js"]"></script>
-    <script src="@Assets["js/ckeditor5/ckeditor.js"]"></script>
-    <script src="@Assets["js/CKEditorInterop.js"]"></script>
     <script src="@Assets["lib/tinymce/tinymce.min.js"]"></script>
+    <script src="@Assets["lib/jquery-toast-plugin/jquery.toast.js"]"></script>
     <script src="@Assets["lib/highlight.js/highlight.min.js"]"></script>
     <script src="@Assets["_content/MudBlazor/MudBlazor.min.js"]"></script>
     <script src="@Assets["js/scriptLoader.js"]"></script>
     <script src="@Assets["js/JsOfReCAPTCHA.js"]"></script>
+    
+    @if (_firebaseConf is not null)
+    {
+        <script type="module">
+            // Import the functions you need from the SDKs you need
+            import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+            import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-analytics.js";
+            // TODO: Add SDKs for Firebase products that you want to use
+            // https://firebase.google.com/docs/web/setup#available-libraries
+
+            // Your web app's Firebase configuration
+            // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+            const firebaseConfig = {
+            apiKey: '@_firebaseConf.ApiKey',
+            authDomain: '@_firebaseConf.AuthDomain',
+            databaseURL: '@_firebaseConf.DatabaseURL',
+            projectId: '@_firebaseConf.ProjectId',
+            storageBucket: '@_firebaseConf.StorageBucket',
+            messagingSenderId: '@_firebaseConf.MessagingSenderId',
+            appId: '@_firebaseConf.AppId',
+            measurementId: '@_firebaseConf.MeasurementId'
+            };
+
+            // Initialize Firebase
+            const app = initializeApp(firebaseConfig);
+            const analytics = getAnalytics(app);
+        </script>
+    }
+    
     <script src="@Assets["js/site.js"]"></script>
-    <script src="@Assets["js/JivoSite.js"]"></script>
-    <script src="@Assets["lib/jquery-toast-plugin/jquery.toast.js"]"></script>
+    <script src="@Assets["js/ckeditor5/ckeditor.js"]"></script>
+    <script src="@Assets["js/CKEditorInterop.js"]"></script>
 
     @* <script src="https://www.google.com/recaptcha/api.js" async defer></script> *@
     @if (_includeTelegramBotWebAppScript)
@@ -67,6 +103,7 @@
         window.onBlazorReady = () => { $(document).tooltip({ track: true }); };
         window.tooltipeHide = () => { $("div.ui-tooltip").hide(); };
     </script>
+    
     <div id="components-reconnect-modal">
         Возникла проблема со связью!
         (Текущая попытка пере-подключения:
@@ -77,7 +114,14 @@
     {
         foreach (InjectionBaseModel scriptSrc in WebConfig.Value.ScriptsInject.Where(x => FilterLocalPathsForInject(x.LocalPathsForInject)))
         {
-            <script src="@scriptSrc.Src"></script>
+            if (scriptSrc.Attributes is null || scriptSrc.Attributes.Count == 0)
+            {
+                <script src="@scriptSrc.Src"></script>
+            }
+            else
+            {
+                <script src="@scriptSrc.Src" @attributes="scriptSrc.Attributes"></script>
+            }
         }
     }
 </body>

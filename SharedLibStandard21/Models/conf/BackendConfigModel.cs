@@ -12,7 +12,7 @@ public class BackendConfigModel
     /// <summary>
     /// CORS параметры (хосты)
     /// </summary>
-    public string[] ClientOrignsCORS { get; set; } = [];
+    public string[] ClientOriginsCORS { get; set; } = [];
 
     /// <summary>
     /// Разрешённые хосты запросов к web серверу (* - любые)

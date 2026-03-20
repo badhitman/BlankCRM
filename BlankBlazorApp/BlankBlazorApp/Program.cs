@@ -13,6 +13,7 @@ using OpenTelemetry.Metrics;
 using System.Globalization;
 using OpenTelemetry.Trace;
 using MudBlazor.Services;
+using Newtonsoft.Json;
 using BlankBlazorApp;
 using RemoteCallLib;
 using OpenTelemetry;
@@ -25,7 +26,6 @@ using BlazorLib;
 using NLog.Web;
 using DbcLib;
 using NLog;
-using Newtonsoft.Json;
 #if !DEBUG
 using System.Reflection;
 #endif
@@ -142,11 +142,11 @@ builder.Services.AddIdleCircuitHandler(options =>
     options.IdleTimeout = TimeSpan.FromMinutes(5));
 
 builder.Services
-    .Configure<UserManageConfigModel>(builder.Configuration.GetSection("UserManage"))
-    .Configure<ServerConfigModel>(builder.Configuration.GetSection("ServerConfig"))
+    .Configure<UserManageConfigModel>(builder.Configuration.GetSection(UserManageConfigModel.Configuration))
     .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
-    .Configure<TelegramBotConfigModel>(builder.Configuration.GetSection(WebConfigModel.Configuration))
     .Configure<CommerceConfigModel>(builder.Configuration.GetSection(CommerceConfigModel.Configuration))
+    .Configure<TelegramBotConfigModel>(builder.Configuration.GetSection(WebConfigModel.Configuration))
+    .Configure<ServerConfigModel>(builder.Configuration.GetSection(ServerConfigModel.Configuration))
 ;
 
 NavMainMenuModel? mainNavMenu = builder.Configuration.GetSection("NavMenuConfig").Get<NavMainMenuModel>();
@@ -248,7 +248,8 @@ builder.Services.AddSingleton<RabbitMQ.Client.ConnectionFactory>(sp =>
         Password = rabbitConf.Value.Password
     };
 });
-builder.Services.AddSingleton(sp => {
+builder.Services.AddSingleton(sp =>
+{
 
     RabbitMQ.Client.ConnectionFactory factory = sp.GetRequiredService<RabbitMQ.Client.ConnectionFactory>();
     return factory.CreateConnectionAsync().Result;
@@ -307,6 +308,7 @@ builder.Services
     .AddScoped<IHistoryIndexing, HistoryTransmissionRabbit>()
     .AddScoped<IKladrService, KladrServiceTransmissionRabbit>()
     .AddScoped<IKladrParseService, ParseImplementDBF>()
+    .AddScoped<IFirebaseServiceTransmission, FirebaseTransmissionRabbit>()
     ;
 
 builder.Services.WebAppRegisterMqListeners();
