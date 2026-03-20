@@ -187,7 +187,7 @@ public class Program
         IResourceBuilder<ProjectResource> firebaseService = builder.AddProject<Projects.FirebaseService>("firebaseeservice")
             .WithEnvironment(act => rabbitConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
             .WithEnvironment(act => mongoConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
-            .WithEnvironment("GOOGLE_APPLICATION_CREDENTIALS", Environment.GetEnvironmentVariable("FIREBASE_ADMIN_SDK_EVIDENT_ETHOS"))
+            .WithEnvironment("GOOGLE_APPLICATION_CREDENTIALS", Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS"))
             .WithReference(builder.AddConnectionString($"FirebaseConnection{_modePrefix}"))
 
             .WithReference(realtimeService)

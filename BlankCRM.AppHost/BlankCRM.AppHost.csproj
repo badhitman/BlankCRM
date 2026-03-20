@@ -28,10 +28,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\micro-services\RealtimeService\RealtimeService.csproj" />
-		<ProjectReference Include="..\micro-services\RealtimeService\RealtimeService.csproj" />
 		<ProjectReference Include="..\SharedLib\SharedLib.csproj" IsAspireProjectResource="false" />
 		<ProjectReference Include="..\BlankBlazorApp\BlankBlazorApp\BlankBlazorApp.csproj" />
+		<ProjectReference Include="..\micro-services\RealtimeService\RealtimeService.csproj" />
+		<ProjectReference Include="..\micro-services\RealtimeService\RealtimeService.csproj" />
 		<ProjectReference Include="..\micro-services\ApiRestService\ApiRestService.csproj" />
 		<ProjectReference Include="..\micro-services\CommerceService\CommerceService.csproj" />
 		<ProjectReference Include="..\micro-services\BankService\BankService.csproj" />
