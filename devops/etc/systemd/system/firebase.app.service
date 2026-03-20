@@ -1,0 +1,16 @@
+[Unit]
+Description=firebase.app.service
+
+[Service]
+WorkingDirectory=/srv/services/FirebaseService
+ExecStart=/usr/bin/dotnet /srv/services/FirebaseService/FirebaseService.dll
+Restart=always
+RestartSec=10
+KillSignal=SIGINT
+SyslogIdentifier=dotnet-firebase-app
+User=www-data
+Environment=DOTNET_ENVIRONMENT=Production
+Environment=DOTNET_PRINT_TELEMETRY_MESSAGE=false
+
+[Install]
+WantedBy=multi-user.target

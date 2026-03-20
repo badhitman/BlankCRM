@@ -152,6 +152,7 @@ dotnet publish -c Debug --output /srv/git/builds/HelpDeskService /srv/git/BlankC
 dotnet publish -c Debug --output /srv/git/builds/ConstructorService /srv/git/BlankCRM/micro-services/ConstructorService/ConstructorService.csproj
 dotnet publish -c Debug --output /srv/git/builds/TelegramBotService /srv/git/BlankCRM/micro-services/TelegramBotService/TelegramBotService.csproj
 dotnet publish -c Debug --output /srv/git/builds/KladrService /srv/git/BlankCRM/micro-services/KladrService/KladrService.csproj
+dotnet publish -c Debug --output /srv/git/builds/FirebaseService /srv/git/BlankCRM/micro-services/FirebaseService/FirebaseService.csproj
 dotnet publish -c Debug --output /srv/git/builds/LdapService /srv/git/BlankCRM/micro-services/LdapService/LdapService.csproj
 dotnet publish -c Debug --output /srv/git/builds/IdentityService /srv/git/BlankCRM/micro-services/IdentityService/IdentityService.csproj
 dotnet publish -c Debug --output /srv/git/builds/BlankBlazorApp /srv/git/BlankCRM/BlankBlazorApp/BlankBlazorApp/BlankBlazorApp.csproj
@@ -172,7 +173,7 @@ chmod -R 755 /srv/stage-builds.update.sh
 #### Systemd
 ```
 cd /srv/git/BlankCRM/devops/etc/systemd/system/
-cp docker-compose-app.service api.app.stage.service bus.app.stage.service comm.app.stage.service bank.app.stage.service constructor.app.stage.service hd.app.stage.service identity.app.stage.service kladr.app.stage.service ldap.app.stage.service tg.app.stage.service web.app.stage.service indexing.app.stage.service realtime.app.stage.service /etc/systemd/system/
+cp docker-compose-app.service api.app.stage.service firebase.app.stage.service bus.app.stage.service comm.app.stage.service bank.app.stage.service constructor.app.stage.service hd.app.stage.service identity.app.stage.service kladr.app.stage.service ldap.app.stage.service tg.app.stage.service web.app.stage.service indexing.app.stage.service realtime.app.stage.service /etc/systemd/system/
 
 systemctl daemon-reload
 
@@ -180,6 +181,7 @@ systemctl enable docker-compose-app.service
 systemctl start docker-compose-app.service
 
 systemctl enable api.app.stage.service
+systemctl enable firebase.app.stage.service
 systemctl enable web.app.stage.service
 systemctl enable comm.app.stage.service
 systemctl enable bank.app.stage.service
@@ -194,6 +196,7 @@ systemctl enable indexing.app.service
 systemctl enable realtime.app.service
 
 systemctl start api.app.stage.service
+systemctl start firebase.app.stage.service
 systemctl start bus.app.stage.service
 systemctl start comm.app.stage.service
 systemctl start bank.app.stage.service

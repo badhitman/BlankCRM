@@ -1,6 +1,7 @@
 rm -r /srv/tmp/dumps/*
 docker exec -t srv-postgres-1 pg_dump -c -U dev NLogsContext --format=p --encoding=UTF-8 --inserts --column-inserts | gzip > /srv/tmp/dumps/dump_NLogs_`date +%Y-%m-%d"_"%H_%M_%S`.sql.gz
 docker exec -t srv-postgres-1 pg_dump -c -U dev KladrContext --format=p --encoding=UTF-8 --inserts --column-inserts | gzip > /srv/tmp/dumps/dump_Kladr_`date +%Y-%m-%d"_"%H_%M_%S`.sql.gz
+docker exec -t srv-postgres-1 pg_dump -c -U dev FirebaseContext --format=p --encoding=UTF-8 --inserts --column-inserts | gzip > /srv/tmp/dumps/dump_Firebase_`date +%Y-%m-%d"_"%H_%M_%S`.sql.gz
 docker exec -t srv-postgres-1 pg_dump -c -U dev MainAppContext --format=p --encoding=UTF-8 --inserts --column-inserts | gzip > /srv/tmp/dumps/dump_MainApp_`date +%Y-%m-%d"_"%H_%M_%S`.sql.gz
 docker exec -t srv-postgres-1 pg_dump -c -U dev CommerceContext --format=p --encoding=UTF-8 --inserts --column-inserts | gzip > /srv/tmp/dumps/dump_Commerce_`date +%Y-%m-%d"_"%H_%M_%S`.sql.gz
 docker exec -t srv-postgres-1 pg_dump -c -U dev BankContext --format=p --encoding=UTF-8 --inserts --column-inserts | gzip > /srv/tmp/dumps/dump_Bank_`date +%Y-%m-%d"_"%H_%M_%S`.sql.gz

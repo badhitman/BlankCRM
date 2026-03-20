@@ -91,6 +91,7 @@
     <File Path="devops/etc/systemd/system/comm.app.service" />
     <File Path="devops/etc/systemd/system/constructor.app.service" />
     <File Path="devops/etc/systemd/system/filesindexing.app.service" />
+    <File Path="devops/etc/systemd/system/firebase.app.service" />
     <File Path="devops/etc/systemd/system/hd.app.service" />
     <File Path="devops/etc/systemd/system/identity.app.service" />
     <File Path="devops/etc/systemd/system/kladr.app.service" />
@@ -105,6 +106,7 @@
     <File Path="devops/etc/systemd/system/bus.app.stage.service" />
     <File Path="devops/etc/systemd/system/comm.app.stage.service" />
     <File Path="devops/etc/systemd/system/constructor.app.stage.service" />
+    <File Path="devops/etc/systemd/system/firebase.app.stage.service" />
     <File Path="devops/etc/systemd/system/hd.app.stage.service" />
     <File Path="devops/etc/systemd/system/identity.app.stage.service" />
     <File Path="devops/etc/systemd/system/indexing.app.stage.service" />

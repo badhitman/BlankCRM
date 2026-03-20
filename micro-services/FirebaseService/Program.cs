@@ -94,7 +94,7 @@ public class Program
         FirebaseApp.Create(new AppOptions()
         {
             Credential = GoogleCredential.GetApplicationDefault(),
-            ProjectId = "evident-ethos-230204",
+            ProjectId = builder.Configuration["GOOGLE_APPLICATION_PROJECT_ID"],
         });
 
         ITraceRabbitActionsService.TracesFilter = builder.Configuration.GetSection(nameof(ITraceRabbitActionsService.TracesFilter)).Get<string[]>();
