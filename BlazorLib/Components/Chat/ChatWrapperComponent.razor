@@ -207,7 +207,7 @@
                     Операторы <sup>(online)</sup>:
                     @foreach (PongClientsWebChatEventModel _userClient in UsersSessions.Where(x => !string.IsNullOrWhiteSpace(x.CurrentUserSession?.UserName)).DistinctBy(x => x.CurrentUserSession!.UserName))
                     {
-                        <span class="badge text-bg-light">@_userClient.CurrentUserSession!.UserName</span>
+                        <span class="badge text-bg-light">@_userClient.CurrentUserSession!.GetName()</span>
                     }
                 </p>
             }
