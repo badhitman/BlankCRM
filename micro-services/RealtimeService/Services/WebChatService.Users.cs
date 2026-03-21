@@ -101,7 +101,7 @@ public partial class WebChatService : IWebChatService
         TResponseModel<UserInfoModel[]> getUser = await identityRepo.GetUsersOfIdentityAsync([req.SenderActionUserId], token);
         UserInfoModel? userData = getUser.Response?.FirstOrDefault(x => x.UserId == req.SenderActionUserId);
         int dialogId = await q.Select(x => x.DialogJoinId).FirstAsync(cancellationToken: token);
-        string textMsg = $"Из чата вышел `{getUser.Response?.FirstOrDefault(x => x.UserId == req.SenderActionUserId)?.UserName ?? req.SenderActionUserId}`";
+        string textMsg = $"Из чата вышел `{getUser.Response?.FirstOrDefault(x => x.UserId == req.SenderActionUserId)?.GetName() ?? req.SenderActionUserId}`";
 
         MessageWebChatModelDB newMsgDb = new()
         {
