@@ -38,7 +38,7 @@ public partial class MessagesForWebChatComponent : BlazorBusyComponentUsersCache
     public required DialogWebChatModelDB DialogWebChat { get; set; }
 
 
-    private string _inputFileId = Guid.NewGuid().ToString();
+    string _inputFileId = Guid.NewGuid().ToString();
     string? _textSendMessage;
     MudTable<MessageWebChatModelDB>? tableRef;
 
@@ -47,7 +47,7 @@ public partial class MessagesForWebChatComponent : BlazorBusyComponentUsersCache
 
     readonly string LayoutContainerId = Guid.NewGuid().ToString();
 
-    private readonly List<IBrowserFile> loadedFiles = [];
+    readonly List<IBrowserFile> loadedFiles = [];
     bool CanNotSendMessage => string.IsNullOrWhiteSpace(_textSendMessage) || IsBusyProgress;
 
 

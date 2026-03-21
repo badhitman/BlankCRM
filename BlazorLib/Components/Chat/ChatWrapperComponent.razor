@@ -69,6 +69,13 @@
                         @dialogSession.InitiatorHumanName
                         @(string.IsNullOrWhiteSpace(dialogSession.InitiatorContacts) ? "" : $" ({dialogSession.InitiatorContacts})")
                     </div>
+                    <AuthorizeView>
+                        <Authorized>
+                            <div class="input-group mb-3">
+                                <InputFile @key=@(_inputFileId) class="form-control" OnChange="SelectFilesChange" />
+                            </div>
+                        </Authorized>
+                    </AuthorizeView>
                 }
             </div>
             <hr />

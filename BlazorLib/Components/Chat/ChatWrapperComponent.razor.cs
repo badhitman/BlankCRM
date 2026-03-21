@@ -2,14 +2,15 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
-using Microsoft.AspNetCore.Components.Web.Virtualization;
-using static SharedLib.GlobalStaticConstantsRoutes;
 using BlazorLib.Components.Shared.Layouts;
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Components.Web.Virtualization;
 using Microsoft.JSInterop;
 using MudBlazor;
 using SharedLib;
+using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace BlazorLib.Components.Chat;
 
@@ -18,6 +19,9 @@ namespace BlazorLib.Components.Chat;
 /// </summary>
 public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
 {
+    [Inject]
+    IStorageTransmission StorageRepo { get; set; } = default!;
+
     [Inject]
     IJSRuntime JsRuntime { get; set; } = default!;
 
@@ -56,6 +60,8 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
     static readonly int virtualCacheSize = 50;
     readonly List<PongClientsWebChatEventModel> UsersSessions = [];
     readonly string LayoutContainerId = Guid.NewGuid().ToString();
+    string _inputFileId = Guid.NewGuid().ToString();
+    readonly List<IBrowserFile> loadedFiles = [];
 
     /// <inheritdoc/>
     public bool ChatDialogOpen { get; private set; }
@@ -78,6 +84,16 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
                 DialogId = dialogSession.Id,
                 UserIdentityId = CurrentUserSession?.UserId,
             });
+    }
+
+    void SelectFilesChange(InputFileChangeEventArgs e)
+    {
+        loadedFiles.Clear();
+
+        foreach (IBrowserFile file in e.GetMultipleFiles())
+        {
+            loadedFiles.Add(file);
+        }
     }
 
     async ValueTask<ItemsProviderResult<MessageWebChatModelDB>> LoadMessages(ItemsProviderRequest request)
@@ -131,11 +147,72 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
             SenderUserIdentityId = CurrentUserSession?.UserId,
             DialogOwnerId = dialogSession.Id,
             InitiatorMessageSender = true,
+            AttachesFiles = loadedFiles.Count == 0 ? null : []
         };
 
         muteSound = true;
         await SetBusyAsync();
-        await WebChatRepo.CreateMessageWebChatAsync(req);
+        TResponseModel<int> res = await WebChatRepo.CreateMessageWebChatAsync(req);
+        req.Id = res.Response;
+        if (!string.IsNullOrWhiteSpace(CurrentUserSession?.UserId))
+        {
+            List<StorageFileModelDB> filesUpd = [];
+            MemoryStream ms;
+            if (loadedFiles.Count != 0 && res.Response > 0)
+            {
+                req.AttachesFiles = [];
+
+                foreach (var fileBrowser in loadedFiles)
+                {
+                    ms = new();
+                    await fileBrowser.OpenReadStream(maxAllowedSize: 1024 * 18 * 1024).CopyToAsync(ms);
+                    TAuthRequestStandardModel<StorageFileMetadataModel> reqF = new()
+                    {
+                        SenderActionUserId = CurrentUserSession.UserId,
+                        Payload = new()
+                        {
+                            Payload = ms.ToArray(),
+                            FileName = fileBrowser.Name,
+                            ContentType = fileBrowser.ContentType,
+                            OwnerPrimaryKey = res.Response,
+                            ApplicationName = Path.Combine($"{GlobalStaticConstantsRoutes.Routes.WEB_CONTROLLER_NAME}-{GlobalStaticConstantsRoutes.Routes.CHAT_CONTROLLER_NAME}"),
+                            PrefixPropertyName = dialogSession.Id.ToString(),
+                            PropertyName = GlobalStaticConstantsRoutes.Routes.ATTACHMENT_CONTROLLER_NAME,
+                            Referrer = NavRepo.Uri,
+                            RulesTypes = new() { { FileAccessRulesTypesEnum.Token, [Guid.NewGuid().ToString()] } },
+                        }
+                    };
+                    TResponseModel<StorageFileModelDB> storeFile = await StorageRepo.SaveFileAsync(reqF);
+                    SnackBarRepo.ShowMessagesResponse(storeFile.Messages);
+                    if (storeFile.Response is not null)
+                        filesUpd.Add(storeFile.Response);
+                    await ms.DisposeAsync();
+                }
+            }
+
+            if (filesUpd.Count != 0)
+            {
+                req.AttachesFiles = [.. filesUpd.Select(x => new AttachesMessageWebChatModelDB()
+                {
+                    FileAttachId = x.Id,
+                    FileAttachName = x.FileName,
+                    FileLength = x.FileLength,
+                    MessageOwnerId = req.Id,
+                    FileTokenAccess = x.AccessRules?.First(x => x.AccessRuleType == FileAccessRulesTypesEnum.Token).Option,
+                })];
+
+                ResponseBaseModel _updFiles = await WebChatRepo.UpdateMessageWebChatAsync(new()
+                {
+                    SenderActionUserId = CurrentUserSession.UserId,
+                    Payload = req
+                });
+                SnackBarRepo.ShowMessagesResponse(_updFiles.Messages);
+            }
+
+            loadedFiles.Clear();
+            _inputFileId = Guid.NewGuid().ToString();
+        }
+
         _textSendMessage = null;
 
         await SetBusyAsync(false);
