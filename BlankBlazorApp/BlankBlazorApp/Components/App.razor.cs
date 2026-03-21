@@ -65,11 +65,11 @@ public partial class App
         await base.OnInitializedAsync();
         await ReadCurrentUser();
 
-        if (_firebaseConf is null)
-        {
-            TResponseModel<FirebaseSDKConfigModel> getFirebaseConfig = await FirebaseRepo.GetFirebaseConfigAsync();
-            _firebaseConf = getFirebaseConfig.Response;
-        }
+        //if (_firebaseConf is null)
+        //{
+        //    TResponseModel<FirebaseSDKConfigModel> getFirebaseConfig = await FirebaseRepo.GetFirebaseConfigAsync();
+        //    _firebaseConf = getFirebaseConfig.Response;
+        //}
 
         _uri = new(NavigatorRepo.Uri);
 
