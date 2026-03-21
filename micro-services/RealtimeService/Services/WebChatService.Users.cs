@@ -59,7 +59,7 @@ public partial class WebChatService : IWebChatService
 
         TResponseModel<UserInfoModel[]> getUser = await identityRepo.GetUsersOfIdentityAsync([req.Payload.UserIdentityId], token);
         UserInfoModel? userData = getUser.Response?.FirstOrDefault(x => x.UserId == req.Payload.UserIdentityId);
-        string textMsg = $"К чату присоединился `{userData?.UserName ?? req.Payload.UserIdentityId}`";
+        string textMsg = $"К чату присоединился `{userData?.GetName() ?? req.Payload.UserIdentityId}`";
 
         MessageWebChatModelDB newMsgDb = new()
         {
