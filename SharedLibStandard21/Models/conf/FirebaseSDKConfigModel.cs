@@ -34,6 +34,9 @@ public class FirebaseSDKConfigModel
     public string? MeasurementId { get; set; }
 
     /// <inheritdoc/>
+    public string? PublicMessagingToken { get; set; }
+
+    /// <inheritdoc/>
     public bool IsValid() =>
         !string.IsNullOrWhiteSpace(ApiKey) &&
         !string.IsNullOrWhiteSpace(AuthDomain) &&
@@ -42,7 +45,8 @@ public class FirebaseSDKConfigModel
         !string.IsNullOrWhiteSpace(StorageBucket) &&
         !string.IsNullOrWhiteSpace(MessagingSenderId) &&
         !string.IsNullOrWhiteSpace(AppId) &&
-        !string.IsNullOrWhiteSpace(MeasurementId);
+        !string.IsNullOrWhiteSpace(MeasurementId) &&
+        !string.IsNullOrWhiteSpace(PublicMessagingToken);
 
     /// <summary>
     /// FirebaseSDKConfig

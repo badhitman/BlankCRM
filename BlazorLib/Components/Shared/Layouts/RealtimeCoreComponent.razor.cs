@@ -16,19 +16,19 @@ namespace BlazorLib.Components.Shared.Layouts;
 public partial class RealtimeCoreComponent : BlazorBusyComponentUsersCachedModel
 {
     [Inject]
-    IJSRuntime JsRuntime { get; set; } = default!;
+    IEventsWebChatsNotifies NotifyWebChatRepo { get; set; } = default!;
 
     [Inject]
     IParametersStorageTransmission StoreRepo { get; set; } = default!;
 
     [Inject]
-    NavigationManager NavRepo { get; set; } = default!;
-
-    [Inject]
     IOptions<ServerConfigModel> WebConfig { get; set; } = default!;
 
     [Inject]
-    IEventsWebChatsNotifies NotifyWebChatRepo { get; set; } = default!;
+    NavigationManager NavRepo { get; set; } = default!;
+
+    [Inject]
+    IJSRuntime JsRuntime { get; set; } = default!;
 
     [Inject]
     IEventNotifyReceive<PingClientsWebChatEventModel> PingClientsWebChatEventRepo { get; set; } = default!;
@@ -126,9 +126,19 @@ public partial class RealtimeCoreComponent : BlazorBusyComponentUsersCachedModel
 
         TResponseModel<bool> themeStore = await StoreRepo.ReadParameterAsync<bool>(GlobalStaticCloudStorageMetadata.ThemeMode(CurrentUserSession?.UserId));
         IsDarkMode = themeStore.Response == true;
+        await JsRuntime.InvokeVoidAsync("FirebaseSDK.RealtimeRegister", DotNetObjectReference.Create(this));
     }
 
-    private void NavRepo_LocationChanged(object? sender, Microsoft.AspNetCore.Components.Routing.LocationChangedEventArgs e)
+    /// <inheritdoc/>
+    [JSInvokable]
+    public Task FirebaseTokenSave(string firebaseMessagingToken)
+    {
+        SnackBarRepo.Info(firebaseMessagingToken);
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+
+    void NavRepo_LocationChanged(object? sender, Microsoft.AspNetCore.Components.Routing.LocationChangedEventArgs e)
     {
         changeThemeProcessing = false;
         StateHasChanged();

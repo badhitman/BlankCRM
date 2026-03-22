@@ -6,11 +6,12 @@ import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/12.11
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
-window.FirebaseApp = {};
-window.FirebaseConfig = {};
-window.FirebaseAnalytics = {};
-window.FirebaseMessaging = {};
-window.FirebaseMessagingToken = {};
+window.FirebaseConfig = null;
+window.FirebaseApp = null;
+window.FirebaseAnalytics = null;
+window.FirebaseMessaging = null;
+window.FirebaseMessagingToken = null;
+window.RealtimeCoreComponent = null;
 
 window.FirebaseSDK = {
     Initialize: function (apiKey, authDomain, databaseURL, projectId, storageBucket, messagingSenderId, appId, measurementId, publicMessagingToken) {
@@ -28,26 +29,32 @@ window.FirebaseSDK = {
         window.FirebaseApp = initializeApp(window.FirebaseConfig);
         window.FirebaseAnalytics = getAnalytics(window.FirebaseApp);
         window.FirebaseMessaging = getMessaging(window.FirebaseApp);
-        window.FirebaseMessaging.onMessage(function (payload) {
-            console.log('Message received. ', payload);
-            navigator.serviceWorker.register('messaging-sw.js');
-            new Notification(payload.notification.title, payload.notification);
-        });
+        //window.FirebaseMessaging.onMessage(function (payload) {
+        //    console.log('Message received. ', payload);
+        //    new Notification(payload.notification.title, payload.notification);
+        //});
+
+        //if ("serviceWorker" in navigator) {
+        //    navigator.serviceWorker.register("./firebase-messaging-sw.js").then((registration) => {
+        //        getToken(messaging, { serviceWorkerRegistration: registration, vapidKey: publicMessagingToken });
+        //        // The scope is now determined by the registration
+        //    });
+        //}
 
         window.FirebaseMessagingToken = getToken(window.FirebaseMessaging, { vapidKey: publicMessagingToken }).then((currentToken) => {
             if (currentToken) {
                 // Send the token to your server and update the UI if necessary
-                // ...
+                sendTokenToServer(currentToken);
             } else {
                 // Show permission request UI
                 console.log('No registration token available. Request permission to generate one.');
-                // ...
+                setTokenSentToServer(false);
             }
         }).catch((err) => {
             console.log('An error occurred while retrieving token. ', err);
             logEvent(window.FirebaseAnalytics, JSON.stringify(err));
-            window.effects.Toast("Новое сообщение в чате", err, "info", true, "#9EC600");
-            // ...
+            window.effects.Toast("Новое сообщение в чате", JSON.stringify(err), "info", true, "#9EC600");
+            setTokenSentToServer(false);
         });
         window.FirebaseSDK.RequestPermission();
     },
@@ -59,6 +66,9 @@ window.FirebaseSDK = {
                 const notification = new Notification("Hi there!");
             }
         });
+    },
+    RealtimeRegister: function (dotNetReference) {
+        window.RealtimeCoreComponent = dotNetReference;
     }
 }
 
@@ -108,11 +118,8 @@ window.FirebaseSDK = {
 function sendTokenToServer(currentToken) {
     if (!isTokenSentToServer(currentToken)) {
         console.log('Отправка токена на сервер...');
-
-        var url = ''; // адрес скрипта на сервере который сохраняет ID устройства
-        $.post(url, {
-            token: currentToken
-        });
+        if (window.RealtimeCoreComponent)
+            window.RealtimeCoreComponent.invokeMethodAsync('FirebaseTokenSave', currentToken);
 
         setTokenSentToServer(currentToken);
     } else {
@@ -127,3 +134,22 @@ function isTokenSentToServer(currentToken) {
 function setTokenSentToServer(currentToken) {
     window.localStorage.setItem('sentFirebaseMessagingToken', currentToken ? currentToken : '');
 }
+
+self.addEventListener('notificationclick', function (event) {
+    const target = event.notification.data.click_action || '/';
+    event.notification.close();
+
+    event.waitUntil(clients.matchAll({
+        type: 'window',
+        includeUncontrolled: true
+    }).then(function (clientList) {
+        for (var i = 0; i < clientList.length; i++) {
+            var client = clientList[i];
+            if (client.url == target && 'focus' in client) {
+                return client.focus();
+            }
+        }
+
+        return clients.openWindow(target);
+    }));
+});

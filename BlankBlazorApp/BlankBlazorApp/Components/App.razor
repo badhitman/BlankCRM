@@ -52,7 +52,7 @@
         document.addEventListener("DOMContentLoaded", function() { DOMContentLoaded(); });
     </script>
     
-    <script src="@Assets["lib/firebase/firebase-messaging-sw.js"]" type="module"></script>
+    <script src="@Assets["lib/firebase/firebase-messaging.js"]" type="module"></script>
     <script src="@Assets["lib/jquery/jquery.min.js"]"></script>
     <script src="@Assets["lib/jqueryui/jquery-ui.min.js"]"></script>
     <script src="@Assets["lib/tinymce/tinymce.min.js"]"></script>
@@ -61,32 +61,23 @@
     <script src="@Assets["_content/MudBlazor/MudBlazor.min.js"]"></script>
     <script src="@Assets["js/scriptLoader.js"]"></script>
     <script src="@Assets["js/JsOfReCAPTCHA.js"]"></script>
+    <script src="@Assets["firebase-messaging-sw.js"]" type="module"></script>
     
     @if (_firebaseConf is not null)
     {
         <script type="module">
-            // Import the functions you need from the SDKs you need
-            import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-            import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-analytics.js";
-            // TODO: Add SDKs for Firebase products that you want to use
-            // https://firebase.google.com/docs/web/setup#available-libraries
-
-            // Your web app's Firebase configuration
-            // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-            const firebaseConfig = {
-            apiKey: '@_firebaseConf.ApiKey',
-            authDomain: '@_firebaseConf.AuthDomain',
-            databaseURL: '@_firebaseConf.DatabaseURL',
-            projectId: '@_firebaseConf.ProjectId',
-            storageBucket: '@_firebaseConf.StorageBucket',
-            messagingSenderId: '@_firebaseConf.MessagingSenderId',
-            appId: '@_firebaseConf.AppId',
-            measurementId: '@_firebaseConf.MeasurementId'
-            };
-
-            // Initialize Firebase
-            const app = initializeApp(firebaseConfig);
-            const analytics = getAnalytics(app);
+            if ('Notification' in window){
+            window.FirebaseSDK.Initialize(
+            '@_firebaseConf.ApiKey',
+            '@_firebaseConf.AuthDomain',
+            '@_firebaseConf.DatabaseURL',
+            '@_firebaseConf.ProjectId',
+            '@_firebaseConf.StorageBucket',
+            '@_firebaseConf.MessagingSenderId',
+            '@_firebaseConf.AppId',
+            '@_firebaseConf.MeasurementId',
+            '@_firebaseConf.PublicMessagingToken');
+            }
         </script>
     }
     
