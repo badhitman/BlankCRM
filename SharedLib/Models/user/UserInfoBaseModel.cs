@@ -2,6 +2,8 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
+using System.Net.Mail;
+
 namespace SharedLib;
 
 /// <summary>
@@ -43,6 +45,6 @@ public record UserInfoBaseModel
             string.IsNullOrWhiteSpace(GivenName) &&
             string.IsNullOrWhiteSpace(Surname) &&
             string.IsNullOrWhiteSpace(Patronymic) &&
-            string.IsNullOrWhiteSpace(UserName);
+            (string.IsNullOrWhiteSpace(UserName) || !MailAddress.TryCreate(UserName, out MailAddress? resMail) || resMail.Host.Equals(GlobalStaticConstants.FakeHost));
     }
 }
