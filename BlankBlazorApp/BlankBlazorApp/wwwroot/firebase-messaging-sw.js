@@ -29,6 +29,7 @@ window.FirebaseSDK = {
         window.FirebaseApp = initializeApp(window.FirebaseConfig);
         window.FirebaseAnalytics = getAnalytics(window.FirebaseApp);
         window.FirebaseMessaging = getMessaging(window.FirebaseApp);
+
         //window.FirebaseMessaging.onMessage(function (payload) {
         //    console.log('Message received. ', payload);
         //    new Notification(payload.notification.title, payload.notification);
@@ -41,22 +42,20 @@ window.FirebaseSDK = {
         //    });
         //}
 
-        window.FirebaseMessagingToken = getToken(window.FirebaseMessaging, { vapidKey: publicMessagingToken }).then((currentToken) => {
-            if (currentToken) {
-                // Send the token to your server and update the UI if necessary
-                sendTokenToServer(currentToken);
-            } else {
-                // Show permission request UI
-                console.log('No registration token available. Request permission to generate one.');
-                setTokenSentToServer(false);
-            }
-        }).catch((err) => {
-            console.log('An error occurred while retrieving token. ', err);
-            logEvent(window.FirebaseAnalytics, JSON.stringify(err));
-            window.effects.Toast("Новое сообщение в чате", JSON.stringify(err), "info", true, "#9EC600");
-            setTokenSentToServer(false);
-        });
-        window.FirebaseSDK.RequestPermission();
+        //window.FirebaseMessagingToken = getToken(window.FirebaseMessaging, { vapidKey: publicMessagingToken }).then((currentToken) => {
+        //    if (currentToken) {
+        //        sendTokenToServer(currentToken);
+        //    } else {
+        //        console.log('No registration token available. Request permission to generate one.');
+        //        setTokenSentToServer(false);
+        //    }
+        //}).catch((err) => {
+        //    console.log('An error occurred while retrieving token. ', err);
+        //    logEvent(window.FirebaseAnalytics, JSON.stringify(err));
+        //    window.effects.Toast("Новое сообщение в чате", JSON.stringify(err), "info", true, "#9EC600");
+        //    setTokenSentToServer(false);
+        //});
+        //window.FirebaseSDK.RequestPermission();
     },
     RequestPermission: function () {
         console.log('Requesting permission...');
