@@ -34,4 +34,15 @@ public record UserInfoBaseModel
     /// Идентификатор (внешний)
     /// </summary>
     public string? ExternalUserId { get; set; }
+
+    /// <inheritdoc/>
+    public bool IsEmpty()
+    {
+        return 
+            string.IsNullOrWhiteSpace(PhoneNumber) && 
+            string.IsNullOrWhiteSpace(GivenName) &&
+            string.IsNullOrWhiteSpace(Surname) &&
+            string.IsNullOrWhiteSpace(Patronymic) &&
+            string.IsNullOrWhiteSpace(UserName);
+    }
 }

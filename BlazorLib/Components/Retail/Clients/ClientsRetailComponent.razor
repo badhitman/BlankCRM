@@ -22,7 +22,14 @@
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="ФИО">
-            <MudLink Href="@($"/retail/client-card/{context.UserId}")" Color="Color.Success">@context.GivenName @context.Surname @context.Patronymic</MudLink>
+            @if (context.IsEmpty())
+            {
+                <MudLink Href="@($"/retail/client-card/{context.UserId}")" Color="Color.Success">- * - * -</MudLink>
+            }
+            else
+            {
+                <MudLink Href="@($"/retail/client-card/{context.UserId}")" Color="Color.Success">@context.GivenName @context.Surname @context.Patronymic</MudLink>
+            }
         </MudTd>
         <MudTd DataLabel="Username">
             @if (!@context.UserName.EndsWith(GlobalStaticConstants.FakeHost))
