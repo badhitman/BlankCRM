@@ -32,9 +32,8 @@
                 @if (!MailAddress.TryCreate(context.Email, out MailAddress? resMail) || resMail.Host.Equals(GlobalStaticConstants.FakeHost) == true)
                 {
                     isFakeEmail = true;
-                    <span class="font-monospace me-1">[no-email]</span>
                     <MudBlazor.MudLink Href="@($"/Users/Profiles/view-{context.UserId}")" Underline="MudBlazor.Underline.Always" title="@GlobalStaticConstants.FakeHost">
-                        @context.GivenName @context.Surname
+                        <span class="font-monospace me-1">[no-email]</span> @context.GivenName @context.Surname
                     </MudBlazor.MudLink>
                 }
                 else
@@ -91,15 +90,15 @@
         PushRowGuid(_gd);
         <TemplateColumn Title="Claims" Align="Align.Right">
             <iframe id="@($"frame:{_gd}")" srcdoc="@($"<html lang=\"ru\" data-bs-theme=\"dark\"><head>" +
-                                                                                                                                                                                                        "<meta charset=\"utf-8\">" +
-                                                                                                                                                                                                        "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">" +
-                                                                                                                                                                                                        "<link href=\"_content/MudBlazor/MudBlazor.min.css\" rel=\"stylesheet\">" +
-                                                                                                                                                                                                        $"<link rel=\"stylesheet\" href=\"/lib/bootstrap-icons/font/bootstrap-icons.min.css?version={GlobalStaticConstants.InitSalt}\">" +
-                                                                                                                                                                                                        $"<link rel=\"stylesheet\" href=\"/lib/jqueryui/jquery-ui.min.css?version={GlobalStaticConstants.InitSalt}\">" +
-                                                                                                                                                                                                        $"<link rel='stylesheet' href='/lib/bootstrap/css/bootstrap.min.css?version={GlobalStaticConstants.InitSalt}'>" +
-                                                                                                                                                                                                        $"</head><body id='{_gd}'><div class='body-wrap-area'>{ClaimsHtml(context)}</div>" +
-                                                                                                                                                             @* $"<script src=\"/lib/jquery/jquery.min.js?version={GlobalStaticConstants.InitSalt}\"></script>" + *@
-                                                                                                                                                                                                        "</body></html>")" />
+                                                                                                                                                                                                                                                               "<meta charset=\"utf-8\">" +
+                                                                                                                                                                                                                                                               "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">" +
+                                                                                                                                                                                                                                                               "<link href=\"_content/MudBlazor/MudBlazor.min.css\" rel=\"stylesheet\">" +
+                                                                                                                                                                                                                                                               $"<link rel=\"stylesheet\" href=\"/lib/bootstrap-icons/font/bootstrap-icons.min.css?version={GlobalStaticConstants.InitSalt}\">" +
+                                                                                                                                                                                                                                                               $"<link rel=\"stylesheet\" href=\"/lib/jqueryui/jquery-ui.min.css?version={GlobalStaticConstants.InitSalt}\">" +
+                                                                                                                                                                                                                                                               $"<link rel='stylesheet' href='/lib/bootstrap/css/bootstrap.min.css?version={GlobalStaticConstants.InitSalt}'>" +
+                                                                                                                                                                                                                                                               $"</head><body id='{_gd}'><div class='body-wrap-area'>{ClaimsHtml(context)}</div>" +
+                                                                                                                                                                                                                    @* $"<script src=\"/lib/jquery/jquery.min.js?version={GlobalStaticConstants.InitSalt}\"></script>" + *@
+                                                                                                                                                                                                                                                               "</body></html>")" />
             @* @context.ClaimsAsString(";") *@
         </TemplateColumn>
     }
