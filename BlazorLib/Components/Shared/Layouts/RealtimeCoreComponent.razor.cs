@@ -126,7 +126,7 @@ public partial class RealtimeCoreComponent : BlazorBusyComponentUsersCachedModel
 
         TResponseModel<bool> themeStore = await StoreRepo.ReadParameterAsync<bool>(GlobalStaticCloudStorageMetadata.ThemeMode(CurrentUserSession?.UserId));
         IsDarkMode = themeStore.Response == true;
-        await JsRuntime.InvokeVoidAsync("FirebaseSDK.RealtimeRegister", DotNetObjectReference.Create(this));
+        // await JsRuntime.InvokeVoidAsync("FirebaseSDK.RealtimeRegister", DotNetObjectReference.Create(this));
     }
 
     /// <inheritdoc/>

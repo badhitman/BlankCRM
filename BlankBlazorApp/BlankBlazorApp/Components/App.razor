@@ -52,7 +52,7 @@
         document.addEventListener("DOMContentLoaded", function() { DOMContentLoaded(); });
     </script>
     
-    <script src="@Assets["lib/firebase/firebase-messaging.js"]" type="module"></script>
+    @* <script src="@Assets["lib/firebase/firebase-messaging.js"]" type="module"></script> *@
     <script src="@Assets["lib/jquery/jquery.min.js"]"></script>
     <script src="@Assets["lib/jqueryui/jquery-ui.min.js"]"></script>
     <script src="@Assets["lib/tinymce/tinymce.min.js"]"></script>
@@ -67,16 +67,7 @@
     {
         <script type="module">
             if ('Notification' in window){
-            window.FirebaseSDK.Initialize(
-            '@_firebaseConf.ApiKey',
-            '@_firebaseConf.AuthDomain',
-            '@_firebaseConf.DatabaseURL',
-            '@_firebaseConf.ProjectId',
-            '@_firebaseConf.StorageBucket',
-            '@_firebaseConf.MessagingSenderId',
-            '@_firebaseConf.AppId',
-            '@_firebaseConf.MeasurementId',
-            '@_firebaseConf.PublicMessagingToken');
+            window.FirebaseSDK.Initialize('@_firebaseConf.PublicMessagingToken');
             }
         </script>
     }
