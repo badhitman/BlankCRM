@@ -18,10 +18,6 @@ const firebaseApp = firebase.initializeApp(firebaseConfig);
 const firebaseMessaging = firebase.messaging();
 const firebaseAnalytics = firebase.analytics();
 
-window.FirebaseMessagingToken = null;
-window.RealtimeCoreComponent = null;
-window.PublicMessagingToken = null;
-
 firebaseMessaging.onBackgroundMessage(function (payload) {
     console.log("[firebase-messaging-sw.js] Received background message ", payload);
     // ... customize your notification
@@ -32,41 +28,3 @@ firebaseMessaging.onMessage(function (payload) {
     new Notification(payload.notification.title, payload.notification);
 });
 
-function sendTokenToServer(currentToken) {
-    if (!isTokenSentToServer(currentToken)) {
-        console.log('Отправка токена на сервер...');
-        if (window.RealtimeCoreComponent)
-            window.RealtimeCoreComponent.invokeMethodAsync('FirebaseTokenSave', currentToken);
-
-        setTokenSentToServer(currentToken);
-    } else {
-        console.log('Токен уже отправлен на сервер.');
-    }
-}
-
-function isTokenSentToServer(currentToken) {
-    return window.localStorage.getItem('sentFirebaseMessagingToken') == currentToken;
-}
-
-function setTokenSentToServer(currentToken) {
-    window.localStorage.setItem('sentFirebaseMessagingToken', currentToken ? currentToken : '');
-}
-
-self.addEventListener('notificationclick', function (event) {
-    const target = event.notification.data.click_action || '/';
-    event.notification.close();
-
-    event.waitUntil(clients.matchAll({
-        type: 'window',
-        includeUncontrolled: true
-    }).then(function (clientList) {
-        for (var i = 0; i < clientList.length; i++) {
-            var client = clientList[i];
-            if (client.url == target && 'focus' in client) {
-                return client.focus();
-            }
-        }
-
-        return clients.openWindow(target);
-    }));
-});

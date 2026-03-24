@@ -14,6 +14,10 @@ const firebaseConfig = {
     measurementId: "G-HVJ38TKTDN"
 };
 
+window.FirebaseMessagingToken = null;
+window.RealtimeCoreComponent = null;
+window.PublicMessagingToken = null;
+
 const firebaseApp = initializeApp(firebaseConfig);
 const firebaseMessaging = getMessaging(firebaseApp);
 const firebaseAnalytics = getAnalytics(firebaseApp);
@@ -76,16 +80,43 @@ async function enableNotifications() {
 
     const token = await getToken(messaging, { vapidKey: "BHNHODqpqbAdxcZYiEV9Suelf4DsT0mn1MT41P1YkUkCjNNLExbgzGvazLAdweupi3xhOYDwVEzA4gT6G7VCgAU" });
 
-    window.document.getElementById("pushTokenLayer").removeAttribute("hidden");
-
-    const pushTokenValue = window.document.getElementById("pushTokenValue");
-    pushTokenValue.innerText = token
 }
 
-// Wait for the DOM to be fully loaded before attaching listeners
-document.addEventListener('DOMContentLoaded', () => {
-    const button = document.getElementById('enableNotificationsBtn');
-    if (button) {
-        button.addEventListener('click', enableNotifications);
+function sendTokenToServer(currentToken) {
+    if (!isTokenSentToServer(currentToken)) {
+        console.log('Отправка токена на сервер...');
+        if (window.RealtimeCoreComponent)
+            window.RealtimeCoreComponent.invokeMethodAsync('FirebaseTokenSave', currentToken);
+
+        setTokenSentToServer(currentToken);
+    } else {
+        console.log('Токен уже отправлен на сервер.');
     }
+}
+
+function isTokenSentToServer(currentToken) {
+    return window.localStorage.getItem('sentFirebaseMessagingToken') == currentToken;
+}
+
+function setTokenSentToServer(currentToken) {
+    window.localStorage.setItem('sentFirebaseMessagingToken', currentToken ? currentToken : '');
+}
+
+self.addEventListener('notificationclick', function (event) {
+    const target = event.notification.data.click_action || '/';
+    event.notification.close();
+
+    event.waitUntil(clients.matchAll({
+        type: 'window',
+        includeUncontrolled: true
+    }).then(function (clientList) {
+        for (var i = 0; i < clientList.length; i++) {
+            var client = clientList[i];
+            if (client.url == target && 'focus' in client) {
+                return client.focus();
+            }
+        }
+
+        return clients.openWindow(target);
+    }));
 });
