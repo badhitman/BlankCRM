@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 window.FirebaseMessagingToken = null;
 window.RealtimeCoreComponent = null;
-var PublicMessagingToken = null;
+window.PublicMessagingToken = null;
 
 const firebaseApp = initializeApp(firebaseConfig);
 const firebaseMessaging = getMessaging(firebaseApp);
@@ -24,7 +24,7 @@ const firebaseAnalytics = getAnalytics(firebaseApp);
 
 window.FirebaseSDK = {
     Initialize: function (publicMessagingToken) {
-        PublicMessagingToken = publicMessagingToken;
+        window.PublicMessagingToken = publicMessagingToken;
         window.FirebaseSDK.RequestPermission();
     },
     RequestPermission: function () {
@@ -34,7 +34,7 @@ window.FirebaseSDK = {
                 console.info('Notification permission granted.');
                 // const notification = new Notification("Приветсвую!");
 
-                window.FirebaseMessagingToken = getToken(firebaseMessaging, { vapidKey: PublicMessagingToken }).then((currentToken) => {
+                window.FirebaseMessagingToken = getToken(firebaseMessaging, { vapidKey: window.PublicMessagingToken }).then((currentToken) => {
                     if (currentToken) {
                         sendTokenToServer(currentToken);
                     } else {
