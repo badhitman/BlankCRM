@@ -48,7 +48,7 @@ window.FirebaseSDK = {
                 console.info('Notification permission granted.');
                 const notification = new Notification("Приветсвую!");
 
-                /*window.FirebaseMessagingToken = getToken(firebaseMessaging, { vapidKey: window.PublicMessagingToken }).then((currentToken) => {
+                window.FirebaseMessagingToken = getToken(firebaseMessaging, { vapidKey: window.PublicMessagingToken }).then((currentToken) => {
                     if (currentToken) {
                         sendTokenToServer(currentToken);
                     } else {
@@ -59,7 +59,7 @@ window.FirebaseSDK = {
                     console.warn('An error occurred while retrieving token. ', err);
                     logEvent(firebaseAnalytics, JSON.stringify(err));
                     setTokenSentToServer(false);
-                });*/
+                });
             }
         })
         .catch(function (err) {
