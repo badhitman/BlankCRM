@@ -65,7 +65,7 @@
     
     @if (_firebaseConf is not null)
     {
-        <script type="module">
+        <script>
             if ('Notification' in window){
             window.FirebaseSDK.Initialize('@_firebaseConf.PublicMessagingToken');
             }
