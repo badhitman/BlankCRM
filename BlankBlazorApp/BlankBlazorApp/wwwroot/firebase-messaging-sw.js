@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-import { getAnalytics, logEvent } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-analytics.js";
-import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-messaging.js";
+importScripts("https://www.gstatic.com/firebasejs/12.11.0/firebase-app-compat.js");
+importScripts("https://www.gstatic.com/firebasejs/12.11.0/firebase-analytics-compat.js");
+importScripts("https://www.gstatic.com/firebasejs/12.11.0/firebase-messaging-compat.js");
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -46,30 +46,8 @@ window.FirebaseSDK = {
         Notification.requestPermission().then((permission) => {
             if (permission === 'granted') {
                 console.info('Notification permission granted.');
-                // const notification = new Notification("Приветсвую!");
+                const notification = new Notification("Приветсвую!");
 
-                if ('serviceWorker' in navigator) {
-                    navigator.serviceWorker.register('/firebase-messaging-sw.js', { type: 'module' })
-                        .then((registration) => {
-                            // Registration successful, you can pass the registration to getToken if needed
-                            // e.g., getToken(messaging, { serviceWorkerRegistration: registration });
-                            window.FirebaseMessagingToken = getToken(firebaseMessaging, { vapidKey: window.PublicMessagingToken }).then((currentToken) => {
-                                if (currentToken) {
-                                    sendTokenToServer(currentToken);
-                                } else {
-                                    console.warn('No registration token available. Request permission to generate one.');
-                                    setTokenSentToServer(false);
-                                }
-                            }).catch((err) => {
-                                console.warn('An error occurred while retrieving token. ', err);
-                                logEvent(firebaseAnalytics, JSON.stringify(err));
-                                setTokenSentToServer(false);
-                            });
-                        })
-                        .catch((err) => {
-                            console.error('Service Worker registration failed:', err);
-                        });
-                }
                 /*window.FirebaseMessagingToken = getToken(firebaseMessaging, { vapidKey: window.PublicMessagingToken }).then((currentToken) => {
                     if (currentToken) {
                         sendTokenToServer(currentToken);
