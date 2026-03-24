@@ -14,13 +14,13 @@ const firebaseConfig = {
     measurementId: "G-HVJ38TKTDN"
 };
 
-window.FirebaseMessagingToken = null;
-window.RealtimeCoreComponent = null;
-window.PublicMessagingToken = null;
-
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 const firebaseMessaging = firebase.messaging();
 const firebaseAnalytics = firebase.analytics();
+
+window.FirebaseMessagingToken = null;
+window.RealtimeCoreComponent = null;
+window.PublicMessagingToken = null;
 
 firebaseMessaging.onBackgroundMessage(function (payload) {
     console.log("[firebase-messaging-sw.js] Received background message ", payload);
