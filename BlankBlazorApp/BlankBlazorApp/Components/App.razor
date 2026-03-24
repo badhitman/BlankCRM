@@ -52,7 +52,6 @@
         document.addEventListener("DOMContentLoaded", function() { DOMContentLoaded(); });
     </script>
     
-    @* <script src="@Assets["lib/firebase/firebase-messaging.js"]" type="module"></script> *@
     <script src="@Assets["lib/jquery/jquery.min.js"]"></script>
     <script src="@Assets["lib/jqueryui/jquery-ui.min.js"]"></script>
     <script src="@Assets["lib/tinymce/tinymce.min.js"]"></script>
@@ -61,15 +60,18 @@
     <script src="@Assets["_content/MudBlazor/MudBlazor.min.js"]"></script>
     <script src="@Assets["js/scriptLoader.js"]"></script>
     <script src="@Assets["js/JsOfReCAPTCHA.js"]"></script>
-    <script src="@Assets["firebase-messaging-sw.js"]"></script>
+    <script src="@Assets["js/FirebaseSDK.js"]" type="module"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js" type="module"></script>
+    <script src="https://www.gstatic.com/firebasejs/12.11.0/firebase-messaging.js" type="module"></script>
     
     @if (_firebaseConf is not null)
     {
-        <script>
+        @* <script>
             if ('Notification' in window){
             window.FirebaseSDK.Initialize('@_firebaseConf.PublicMessagingToken');
             }
-        </script>
+        </script> *@
     }
     
     <script src="@Assets["js/site.js"]"></script>

@@ -1,129 +1,75 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
 import { getAnalytics, logEvent } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-analytics.js";
 import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-messaging.js";
 
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-window.FirebaseApp = {};
-window.FirebaseConfig = {};
-window.FirebaseAnalytics = {};
-window.FirebaseMessaging = {};
-window.FirebaseMessagingToken = {};
-
 window.FirebaseSDK = {
-    Initialize: function (apiKey, authDomain, databaseURL, projectId, storageBucket, messagingSenderId, appId, measurementId, publicMessagingToken) {
-        window.FirebaseConfig = {
-            apiKey: apiKey,
-            authDomain: authDomain,
-            databaseURL: databaseURL,
-            projectId: projectId,
-            storageBucket: storageBucket,
-            messagingSenderId: messagingSenderId,
-            appId: appId,
-            measurementId: measurementId
-        };
-
-        window.FirebaseApp = initializeApp(window.FirebaseConfig);
-        window.FirebaseAnalytics = getAnalytics(window.FirebaseApp);
-        window.FirebaseMessaging = getMessaging(window.FirebaseApp);
-        window.FirebaseMessaging.onMessage(function (payload) {
-            console.log('Message received. ', payload);
-            navigator.serviceWorker.register('messaging-sw.js');
-            new Notification(payload.notification.title, payload.notification);
-        });
-
-        window.FirebaseMessagingToken = getToken(window.FirebaseMessaging, { vapidKey: publicMessagingToken }).then((currentToken) => {
-            if (currentToken) {
-                // Send the token to your server and update the UI if necessary
-                // ...
-            } else {
-                // Show permission request UI
-                console.log('No registration token available. Request permission to generate one.');
-                // ...
-            }
-        }).catch((err) => {
-            console.log('An error occurred while retrieving token. ', err);
-            logEvent(window.FirebaseAnalytics, JSON.stringify(err));
-            window.effects.Toast("Новое сообщение в чате", err, "info", true, "#9EC600");
-            // ...
-        });
+    Initialize: function (publicMessagingToken) {
+        window.PublicMessagingToken = publicMessagingToken;
         window.FirebaseSDK.RequestPermission();
     },
     RequestPermission: function () {
         console.log('Requesting permission...');
         Notification.requestPermission().then((permission) => {
             if (permission === 'granted') {
-                console.log('Notification permission granted.');
-                const notification = new Notification("Hi there!");
-            }
-        });
-    }
-}
+                console.info('Notification permission granted.');
+                // const notification = new Notification("Приветсвую!");
 
-/*if ('Notification' in window) {
-    var messaging = firebase.messaging();
-
-    // пользователь уже разрешил получение уведомлений
-    // подписываем на уведомления если ещё не подписали
-    if (Notification.permission === 'granted') {
-        const notification = new Notification("Hi there!");
-        subscribe();
-    }
-
-    // по клику, запрашиваем у пользователя разрешение на уведомления
-    // и подписываем его
-    $('#subscribe').on('click', function () {
-        subscribe();
-    });
-}*/
-
-/*function subscribe() {
-    // запрашиваем разрешение на получение уведомлений
-    messaging.requestPermission()
-        .then(function () {
-            // получаем ID устройства
-            messaging.getToken()
-                .then(function (currentToken) {
-                    console.log(currentToken);
-
+                window.FirebaseMessagingToken = getToken(firebaseMessaging, { vapidKey: window.PublicMessagingToken }).then((currentToken) => {
                     if (currentToken) {
                         sendTokenToServer(currentToken);
                     } else {
-                        console.warn('Не удалось получить токен.');
+                        console.warn('No registration token available. Request permission to generate one.');
                         setTokenSentToServer(false);
                     }
-                })
-                .catch(function (err) {
-                    console.warn('При получении токена произошла ошибка.', err);
+                }).catch((err) => {
+                    console.warn('An error occurred while retrieving token. ', err);
+                    logEvent(firebaseAnalytics, JSON.stringify(err));
                     setTokenSentToServer(false);
                 });
+            }
         })
-        .catch(function (err) {
-            console.warn('Не удалось получить разрешение на показ уведомлений.', err);
-        });
-}*/
-
-function sendTokenToServer(currentToken) {
-    if (!isTokenSentToServer(currentToken)) {
-        console.log('Отправка токена на сервер...');
-
-        var url = ''; // адрес скрипта на сервере который сохраняет ID устройства
-        $.post(url, {
-            token: currentToken
-        });
-
-        setTokenSentToServer(currentToken);
-    } else {
-        console.log('Токен уже отправлен на сервер.');
+            .catch(function (err) {
+                console.warn('Не удалось получить разрешение на показ уведомлений.', err);
+            });
+    },
+    RealtimeRegister: function (dotNetReference) {
+        window.RealtimeCoreComponent = dotNetReference;
     }
 }
 
-function isTokenSentToServer(currentToken) {
-    return window.localStorage.getItem('sentFirebaseMessagingToken') == currentToken;
+async function enableNotifications() {
+    // Insert your firebase project config here
+    const firebaseConfig = {
+        apiKey: "AIzaSyCPlUkq609DA2CpFZsP88v-FIfFBU6uGRI",
+        authDomain: "evident-ethos-230204.firebaseapp.com",
+        databaseURL: "https://evident-ethos-230204.firebaseio.com",
+        projectId: "evident-ethos-230204",
+        storageBucket: "evident-ethos-230204.firebasestorage.app",
+        messagingSenderId: "1064563856635",
+        appId: "1:1064563856635:web:5267f1a99da99ef9710c5e",
+        measurementId: "G-HVJ38TKTDN"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const messaging = getMessaging(app);
+
+    const permission = await Notification.requestPermission();
+    if (permission !== 'granted') {
+        console.log("user denied notifications")
+    }
+
+    const token = await getToken(messaging, { vapidKey: "BHNHODqpqbAdxcZYiEV9Suelf4DsT0mn1MT41P1YkUkCjNNLExbgzGvazLAdweupi3xhOYDwVEzA4gT6G7VCgAU" });
+
+    window.document.getElementById("pushTokenLayer").removeAttribute("hidden");
+
+    const pushTokenValue = window.document.getElementById("pushTokenValue");
+    pushTokenValue.innerText = token
 }
 
-function setTokenSentToServer(currentToken) {
-    window.localStorage.setItem('sentFirebaseMessagingToken', currentToken ? currentToken : '');
-}
+// Wait for the DOM to be fully loaded before attaching listeners
+document.addEventListener('DOMContentLoaded', () => {
+    const button = document.getElementById('enableNotificationsBtn');
+    if (button) {
+        button.addEventListener('click', enableNotifications);
+    }
+});
