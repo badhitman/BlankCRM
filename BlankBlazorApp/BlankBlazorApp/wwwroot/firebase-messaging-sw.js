@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
-importScripts("https://www.gstatic.com/firebasejs/12.11.0/firebase-app-compat.js");
-importScripts("https://www.gstatic.com/firebasejs/12.11.0/firebase-analytics-compat.js");
-importScripts("https://www.gstatic.com/firebasejs/12.11.0/firebase-messaging-compat.js");
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+import { getAnalytics, logEvent } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-analytics.js";
+import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-messaging.js";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -46,7 +46,7 @@ window.FirebaseSDK = {
         Notification.requestPermission().then((permission) => {
             if (permission === 'granted') {
                 console.info('Notification permission granted.');
-                const notification = new Notification("Приветсвую!");
+                // const notification = new Notification("Приветсвую!");
 
                 /*window.FirebaseMessagingToken = getToken(firebaseMessaging, { vapidKey: window.PublicMessagingToken }).then((currentToken) => {
                     if (currentToken) {
