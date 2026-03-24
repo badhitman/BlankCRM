@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 window.FirebaseMessagingToken = null;
 window.RealtimeCoreComponent = null;
-window.PublicMessagingToken = null;
+var PublicMessagingToken = null;
 
 const firebaseApp = initializeApp(firebaseConfig);
 const firebaseMessaging = getMessaging(firebaseApp);
@@ -24,7 +24,7 @@ const firebaseAnalytics = getAnalytics(firebaseApp);
 
 window.FirebaseSDK = {
     Initialize: function (publicMessagingToken) {
-        window.PublicMessagingToken = publicMessagingToken;
+        PublicMessagingToken = publicMessagingToken;
         window.FirebaseSDK.RequestPermission();
     },
     RequestPermission: function () {
@@ -34,7 +34,7 @@ window.FirebaseSDK = {
                 console.info('Notification permission granted.');
                 // const notification = new Notification("Приветсвую!");
 
-                window.FirebaseMessagingToken = getToken(firebaseMessaging, { vapidKey: window.PublicMessagingToken }).then((currentToken) => {
+                window.FirebaseMessagingToken = getToken(firebaseMessaging, { vapidKey: PublicMessagingToken }).then((currentToken) => {
                     if (currentToken) {
                         sendTokenToServer(currentToken);
                     } else {
@@ -79,7 +79,6 @@ async function enableNotifications() {
     }
 
     const token = await getToken(messaging, { vapidKey: "BHNHODqpqbAdxcZYiEV9Suelf4DsT0mn1MT41P1YkUkCjNNLExbgzGvazLAdweupi3xhOYDwVEzA4gT6G7VCgAU" });
-
 }
 
 function sendTokenToServer(currentToken) {
