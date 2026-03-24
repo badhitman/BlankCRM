@@ -46,9 +46,31 @@ window.FirebaseSDK = {
         Notification.requestPermission().then((permission) => {
             if (permission === 'granted') {
                 console.info('Notification permission granted.');
-                const notification = new Notification("Приветсвую!");
+                // const notification = new Notification("Приветсвую!");
 
-                window.FirebaseMessagingToken = getToken(firebaseMessaging, { vapidKey: window.PublicMessagingToken }).then((currentToken) => {
+                if ('serviceWorker' in navigator) {
+                    navigator.serviceWorker.register('/firebase-messaging-sw.js', { type: 'module' })
+                        .then((registration) => {
+                            // Registration successful, you can pass the registration to getToken if needed
+                            // e.g., getToken(messaging, { serviceWorkerRegistration: registration });
+                            window.FirebaseMessagingToken = getToken(firebaseMessaging, { vapidKey: window.PublicMessagingToken }).then((currentToken) => {
+                                if (currentToken) {
+                                    sendTokenToServer(currentToken);
+                                } else {
+                                    console.warn('No registration token available. Request permission to generate one.');
+                                    setTokenSentToServer(false);
+                                }
+                            }).catch((err) => {
+                                console.warn('An error occurred while retrieving token. ', err);
+                                logEvent(firebaseAnalytics, JSON.stringify(err));
+                                setTokenSentToServer(false);
+                            });
+                        })
+                        .catch((err) => {
+                            console.error('Service Worker registration failed:', err);
+                        });
+                }
+                /*window.FirebaseMessagingToken = getToken(firebaseMessaging, { vapidKey: window.PublicMessagingToken }).then((currentToken) => {
                     if (currentToken) {
                         sendTokenToServer(currentToken);
                     } else {
@@ -59,7 +81,7 @@ window.FirebaseSDK = {
                     console.warn('An error occurred while retrieving token. ', err);
                     logEvent(firebaseAnalytics, JSON.stringify(err));
                     setTokenSentToServer(false);
-                });
+                });*/
             }
         })
         .catch(function (err) {
