@@ -14,9 +14,9 @@ const firebaseConfig = {
     measurementId: "G-HVJ38TKTDN"
 };
 
-const firebaseApp = firebase.initializeApp(firebaseConfig);
-const firebaseMessaging = firebase.messaging();
-const firebaseAnalytics = firebase.analytics();
+const firebaseApp = initializeApp(firebaseConfig);
+const firebaseMessaging = getMessaging(firebaseApp);
+const firebaseAnalytics = getAnalytics(firebaseApp);
 
 window.FirebaseSDK = {
     Initialize: function (publicMessagingToken) {
