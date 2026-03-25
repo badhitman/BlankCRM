@@ -23,6 +23,10 @@ firebaseMessaging.onBackgroundMessage(function (payload) {
 });
 
 firebaseMessaging.onMessage(function (payload) {
+    if (window.RealtimeCoreComponent) {
+        window.effects.Toast("Новое сообщение Firebase", payload, "info", true, "#9EC600");
+    }
+
     console.log('Message received. ', payload);
     navigator.serviceWorker.register('messaging-sw.js');
     navigator.serviceWorker.ready.then(function (registration) {

@@ -55,6 +55,7 @@ window.FirebaseSDK = {
     },
     RealtimeRegister: function (dotNetReference) {
         window.RealtimeCoreComponent = dotNetReference;
+        return window.FirebaseMessagingToken;
     }
 }
 

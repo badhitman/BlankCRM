@@ -7,6 +7,7 @@ using Microsoft.Extensions.Options;
 using BlazorLib.Components.Chat;
 using Microsoft.JSInterop;
 using SharedLib;
+using Newtonsoft.Json.Linq;
 
 namespace BlazorLib.Components.Shared.Layouts;
 
@@ -48,6 +49,7 @@ public partial class RealtimeCoreComponent : BlazorBusyComponentUsersCachedModel
     public required NavMainMenuModel NavMainMenu { get; set; }
 
 
+    AboutUserAgentModel? UserAgent;
     ChatWrapperComponent? chatWrapperRef;
     readonly List<PongClientsWebChatEventModel> UsersEcho = [];
     bool? IsDarkMode { get; set; }
@@ -77,7 +79,7 @@ public partial class RealtimeCoreComponent : BlazorBusyComponentUsersCachedModel
     {
         try
         {
-            _ = await JsRuntime.InvokeAsync<AboutUserAgentModel?>("methods.AboutUserAgent", timeout: TimeSpan.FromSeconds(2));
+            UserAgent = await JsRuntime.InvokeAsync<AboutUserAgentModel?>("methods.AboutUserAgent", timeout: TimeSpan.FromSeconds(2));
         }
         catch (TaskCanceledException)
         {
@@ -126,7 +128,12 @@ public partial class RealtimeCoreComponent : BlazorBusyComponentUsersCachedModel
 
         TResponseModel<bool> themeStore = await StoreRepo.ReadParameterAsync<bool>(GlobalStaticCloudStorageMetadata.ThemeMode(CurrentUserSession?.UserId));
         IsDarkMode = themeStore.Response == true;
-        await JsRuntime.InvokeVoidAsync("FirebaseSDK.RealtimeRegister", DotNetObjectReference.Create(this));
+
+        string? firebaseMessagingToken;
+        await Task.WhenAll([
+                Task.Run(async ()=> UserAgent = await JsRuntime.InvokeAsync<AboutUserAgentModel?>("methods.AboutUserAgent", timeout: TimeSpan.FromSeconds(2))),
+                Task.Run(async () => firebaseMessagingToken = await JsRuntime.InvokeAsync<string?>("FirebaseSDK.RealtimeRegister", DotNetObjectReference.Create(this)))
+            ]);
     }
 
     /// <inheritdoc/>
@@ -134,6 +141,15 @@ public partial class RealtimeCoreComponent : BlazorBusyComponentUsersCachedModel
     public Task FirebaseTokenSave(string firebaseMessagingToken)
     {
         SnackBarRepo.Info(firebaseMessagingToken);
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+
+    /// <inheritdoc/>
+    [JSInvokable]
+    public Task FirebaseIncomingMessage(JObject firebaseMessage)
+    {
+        //SnackBarRepo.Info(firebaseMessagingToken);
         StateHasChanged();
         return Task.CompletedTask;
     }
