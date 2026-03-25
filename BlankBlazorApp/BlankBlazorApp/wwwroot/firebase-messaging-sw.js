@@ -3,7 +3,7 @@ importScripts("https://www.gstatic.com/firebasejs/12.11.0/firebase-messaging-com
 importScripts("https://www.gstatic.com/firebasejs/12.11.0/firebase-analytics-compat.js");
 import('./js/FirebaseConfigSDK.js');
 
-const firebaseApp = firebase.initializeApp(firebaseConfig);
+const firebaseApp = firebase.initializeApp(window.firebaseConfig);
 const firebaseMessaging = firebase.messaging();
 
 firebaseMessaging.onBackgroundMessage(function (payload) {

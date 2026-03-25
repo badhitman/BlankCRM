@@ -7,7 +7,7 @@ window.FirebaseMessagingToken = null;
 window.RealtimeCoreComponent = null;
 window.PublicMessagingToken = null;
 
-const firebaseApp = initializeApp(firebaseConfig);
+const firebaseApp = initializeApp(window.firebaseConfig);
 const firebaseMessaging = getMessaging(firebaseApp);
 const firebaseAnalytics = getAnalytics(firebaseApp);
 
