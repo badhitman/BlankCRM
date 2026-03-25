@@ -19,15 +19,19 @@ const firebaseMessaging = firebase.messaging();
 
 firebaseMessaging.onBackgroundMessage(function (payload) {
     console.log("[firebase-messaging-sw.js] Received background message ", payload);
-    new Notification(payload.notification.title, payload.notification);
-});
-
-firebaseMessaging.onMessage(function (payload) {
     if (window.RealtimeCoreComponent) {
         window.effects.Toast("Новое сообщение Firebase", payload, "info", true, "#9EC600");
     }
 
+    new Notification(payload.notification.title, payload.notification);
+});
+
+firebaseMessaging.onMessage(function (payload) {
     console.log('Message received. ', payload);
+    if (window.RealtimeCoreComponent) {
+        window.effects.Toast("Новое сообщение Firebase", payload, "info", true, "#9EC600");
+    }
+
     navigator.serviceWorker.register('messaging-sw.js');
     navigator.serviceWorker.ready.then(function (registration) {
         payload.notification.data = payload.notification;
