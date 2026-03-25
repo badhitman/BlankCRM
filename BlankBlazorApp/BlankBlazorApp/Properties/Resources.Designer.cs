@@ -61,15 +61,6 @@ namespace BlankBlazorApp.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на importScripts(&quot;https://www.gstatic.com/firebasejs/12.11.0/firebase-app-compat.js&quot;);
-        ///importScripts(&quot;https://www.gstatic.com/firebasejs/12.11.0/firebase-messaging-compat.js&quot;);
-        ///importScripts(&quot;https://www.gstatic.com/firebasejs/12.11.0/firebase-analytics-compat.js&quot;);
-        ///
-        ///// Initialize Firebase using the global firebase object exposed by compat libraries
-        ///const firebaseConfig = {
-        ///    apiKey: &quot;AIzaSyCPlUkq609DA2CpFZsP88v-FIfFBU6uGRI&quot;,
-        ///    authDomain: &quot;evident-ethos-230204.firebaseapp.com&quot;,
-        ///    databaseURL: &quot;h [остаток строки не уместился]&quot;;.
         /// </summary>
         public static string firebase_messaging_sw {
             get {
@@ -78,14 +69,7 @@ namespace BlankBlazorApp.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на import { initializeApp } from &quot;https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js&quot;;
-        ///import { getAnalytics, logEvent } from &quot;https://www.gstatic.com/firebasejs/12.11.0/firebase-analytics.js&quot;;
-        ///import { getMessaging, getToken } from &quot;https://www.gstatic.com/firebasejs/12.11.0/firebase-messaging.js&quot;;
-        ///
-        ///// Initialize Firebase using the global firebase object exposed by compat libraries
-        ///const firebaseConfig = {
-        ///    apiKey: &quot;AIzaSyCPlUkq609DA2CpFZsP88v-FIfFBU6uGRI&quot;,
-        ///    authDomain: &quot;evident-ethos-230 [остаток строки не уместился]&quot;;.
+        ///   
         /// </summary>
         public static string FirebaseSDK {
             get {

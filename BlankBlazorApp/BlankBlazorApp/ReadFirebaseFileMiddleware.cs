@@ -29,9 +29,9 @@ public partial class ReadFirebaseFileMiddleware(RequestDelegate next)
             case "/FirebaseSDK.js":
                 _raw = Resources.FirebaseSDK;
                 break;
+            default:
+                return;
         }
-        if (string.IsNullOrWhiteSpace(_raw))
-            return;
 
         _raw = _raw
             .Replace("**measurementId**", fireOpt.Value.MeasurementId)
