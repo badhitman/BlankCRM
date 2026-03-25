@@ -41,7 +41,7 @@ firebaseMessaging.onMessage(function (payload) {
     });
 });
 
-messaging.setBackgroundMessageHandler(function (payload) {
+firebaseMessaging.setBackgroundMessageHandler(function (payload) {
     if (typeof payload.data.time != 'undefined') {
         var time = new Date(payload.data.time * 1000);
         var now = new Date();
