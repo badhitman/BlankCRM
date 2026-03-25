@@ -41,27 +41,27 @@ firebaseMessaging.onMessage(function (payload) {
     });
 });
 
-firebase.setBackgroundMessageHandler(function (payload) {
-    if (typeof payload.data.time != 'undefined') {
-        var time = new Date(payload.data.time * 1000);
-        var now = new Date();
+//firebase.setBackgroundMessageHandler(function (payload) {
+//    if (typeof payload.data.time != 'undefined') {
+//        var time = new Date(payload.data.time * 1000);
+//        var now = new Date();
 
-        if (time < now) {
-            return null;
-        }
+//        if (time < now) {
+//            return null;
+//        }
 
-        var diff = Math.round((time.getTime() - now.getTime()) / 1000);
+//        var diff = Math.round((time.getTime() - now.getTime()) / 1000);
 
-        payload.data.body = 'Начало через ' +
-            Math.round(diff / 60) + ' минут, в ' + time.getHours() + ':' +
-            (time.getMinutes() > 9 ? time.getMinutes() : '0' + time.getMinutes())
-            ;
-    }
+//        payload.data.body = 'Начало через ' +
+//            Math.round(diff / 60) + ' минут, в ' + time.getHours() + ':' +
+//            (time.getMinutes() > 9 ? time.getMinutes() : '0' + time.getMinutes())
+//            ;
+//    }
 
-    payload.data.data = payload.data;
+//    payload.data.data = payload.data;
 
-    return self.registration.showNotification(payload.data.title, payload.data);
-});
+//    return self.registration.showNotification(payload.data.title, payload.data);
+//});
 
 self.addEventListener('notificationclick', function (event) {
     const target = event.notification.data.click_action || '/';
