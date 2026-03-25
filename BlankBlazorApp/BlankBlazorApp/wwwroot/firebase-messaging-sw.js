@@ -1,7 +1,7 @@
 importScripts("https://www.gstatic.com/firebasejs/12.11.0/firebase-app-compat.js");
 importScripts("https://www.gstatic.com/firebasejs/12.11.0/firebase-messaging-compat.js");
 importScripts("https://www.gstatic.com/firebasejs/12.11.0/firebase-analytics-compat.js");
-importScripts("./js/FirebaseConfigSDK.js");
+import { firebaseConfig } from "./FirebaseConfigSDK.js";
 
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 const firebaseMessaging = firebase.messaging();
