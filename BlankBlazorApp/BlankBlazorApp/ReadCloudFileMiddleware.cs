@@ -14,14 +14,12 @@ using System.Text.RegularExpressions;
 public partial class ReadCloudFileMiddleware(RequestDelegate next)
 {
     private readonly RequestDelegate _next = next;
-    HttpContext? _http_context;
 
     /// <summary>
     /// Конвейер
     /// </summary>
     public async Task Invoke(HttpContext http_context, IStorageTransmission storeRepo, ILogger<ReadCloudFileMiddleware> _logger)
     {
-        _http_context = http_context;
         ClaimsPrincipal user = http_context.User;
 
         //if (user.Identity?.IsAuthenticated != true)
@@ -33,16 +31,12 @@ public partial class ReadCloudFileMiddleware(RequestDelegate next)
         string path = http_context.Request.Path;
         Regex rx = MyRegexDx();
         Match _match = rx.Match(path);
-        if (_match.Groups.Count != 3)
+        if (_match.Groups.Count != 3 || !int.TryParse(_match.Groups[1].Value, out int fileId))
         {
             await http_context.Response.BodyWriter.WriteAsync(Resources.noimage_simple);
             return;
         }
-        if (!int.TryParse(_match.Groups[1].Value, out int fileId))
-        {
-            await http_context.Response.BodyWriter.WriteAsync(Resources.noimage_simple);
-            return;
-        }
+        
         Claim? userId = user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
         TAuthRequestStandardModel<RequestFileReadModel> req = new()
         {
@@ -71,7 +65,7 @@ public partial class ReadCloudFileMiddleware(RequestDelegate next)
         await http_context.Response.BodyWriter.WriteAsync(rest.Response.Payload);
         try
         {
-            await _next.Invoke(_http_context);
+            await _next.Invoke(http_context);
         }
         catch (Exception ex)
         {

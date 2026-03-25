@@ -4,14 +4,14 @@ importScripts("https://www.gstatic.com/firebasejs/12.11.0/firebase-analytics-com
 
 // Initialize Firebase using the global firebase object exposed by compat libraries
 const firebaseConfig = {
-    apiKey: "AIzaSyCPlUkq609DA2CpFZsP88v-FIfFBU6uGRI",
-    authDomain: "evident-ethos-230204.firebaseapp.com",
-    databaseURL: "https://evident-ethos-230204.firebaseio.com",
-    projectId: "evident-ethos-230204",
-    storageBucket: "evident-ethos-230204.firebasestorage.app",
-    messagingSenderId: "1064563856635",
-    appId: "1:1064563856635:web:5267f1a99da99ef9710c5e",
-    measurementId: "G-HVJ38TKTDN"
+    apiKey: "**apiKey**",
+    authDomain: "**authDomain**",
+    databaseURL: "**databaseURL**",
+    projectId: "**projectId**",
+    storageBucket: "**storageBucket**",
+    messagingSenderId: "**messagingSenderId**",
+    appId: "**appId**",
+    measurementId: "**measurementId**"
 };
 
 const firebaseApp = firebase.initializeApp(firebaseConfig);

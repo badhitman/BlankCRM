@@ -19,10 +19,10 @@ namespace BlankBlazorApp.Properties {
     // с помощью такого средства, как ResGen или Visual Studio.
     // Чтобы добавить или удалить член, измените файл .ResX и снова запустите ResGen
     // с параметром /str или перестройте свой проект VS.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace BlankBlazorApp.Properties {
         ///   Возвращает кэшированный экземпляр ResourceManager, использованный этим классом.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("BlankBlazorApp.Properties.Resources", typeof(Resources).Assembly);
@@ -51,7 +51,7 @@ namespace BlankBlazorApp.Properties {
         ///   обращений к ресурсу с помощью этого класса ресурса со строгой типизацией.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -61,9 +61,42 @@ namespace BlankBlazorApp.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на importScripts(&quot;https://www.gstatic.com/firebasejs/12.11.0/firebase-app-compat.js&quot;);
+        ///importScripts(&quot;https://www.gstatic.com/firebasejs/12.11.0/firebase-messaging-compat.js&quot;);
+        ///importScripts(&quot;https://www.gstatic.com/firebasejs/12.11.0/firebase-analytics-compat.js&quot;);
+        ///
+        ///// Initialize Firebase using the global firebase object exposed by compat libraries
+        ///const firebaseConfig = {
+        ///    apiKey: &quot;AIzaSyCPlUkq609DA2CpFZsP88v-FIfFBU6uGRI&quot;,
+        ///    authDomain: &quot;evident-ethos-230204.firebaseapp.com&quot;,
+        ///    databaseURL: &quot;h [остаток строки не уместился]&quot;;.
+        /// </summary>
+        public static string firebase_messaging_sw {
+            get {
+                return ResourceManager.GetString("firebase-messaging-sw", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на import { initializeApp } from &quot;https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js&quot;;
+        ///import { getAnalytics, logEvent } from &quot;https://www.gstatic.com/firebasejs/12.11.0/firebase-analytics.js&quot;;
+        ///import { getMessaging, getToken } from &quot;https://www.gstatic.com/firebasejs/12.11.0/firebase-messaging.js&quot;;
+        ///
+        ///// Initialize Firebase using the global firebase object exposed by compat libraries
+        ///const firebaseConfig = {
+        ///    apiKey: &quot;AIzaSyCPlUkq609DA2CpFZsP88v-FIfFBU6uGRI&quot;,
+        ///    authDomain: &quot;evident-ethos-230 [остаток строки не уместился]&quot;;.
+        /// </summary>
+        public static string FirebaseSDK {
+            get {
+                return ResourceManager.GetString("FirebaseSDK", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Поиск локализованного ресурса типа System.Byte[].
         /// </summary>
-        internal static byte[] noimage_simple {
+        public static byte[] noimage_simple {
             get {
                 object obj = ResourceManager.GetObject("noimage-simple", resourceCulture);
                 return ((byte[])(obj));
@@ -73,7 +106,7 @@ namespace BlankBlazorApp.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Byte[].
         /// </summary>
-        internal static byte[] unauthorizedimage {
+        public static byte[] unauthorizedimage {
             get {
                 object obj = ResourceManager.GetObject("unauthorizedimage", resourceCulture);
                 return ((byte[])(obj));

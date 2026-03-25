@@ -147,7 +147,12 @@ builder.Services
     .Configure<CommerceConfigModel>(builder.Configuration.GetSection(CommerceConfigModel.Configuration))
     .Configure<TelegramBotConfigModel>(builder.Configuration.GetSection(WebConfigModel.Configuration))
     .Configure<ServerConfigModel>(builder.Configuration.GetSection(ServerConfigModel.Configuration))
+    .Configure<FirebaseSDKConfigModel>(builder.Configuration.GetSection(FirebaseSDKConfigModel.Configuration))
 ;
+
+FirebaseSDKConfigModel _firebaseConf = builder.Configuration.GetSection(FirebaseSDKConfigModel.Configuration).Get<FirebaseSDKConfigModel>() ?? throw new Exception("FirebaseSDK not config");
+if (!_firebaseConf.IsValid())
+    throw new Exception("FirebaseSDK config: not valid!");
 
 NavMainMenuModel? mainNavMenu = builder.Configuration.GetSection("NavMenuConfig").Get<NavMainMenuModel>();
 mainNavMenu ??= new NavMainMenuModel() { NavMenuItems = [new NavItemModel() { HrefNav = "", Title = "Home", IsNavLinkMatchAll = true }] };
@@ -379,7 +384,11 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapStaticAssets();
+
 app.Map("/cloud-fs/read", ma => ma.UseMiddleware<ReadCloudFileMiddleware>());
+
+app.Map("/firebase-messaging-sw.js", ma => ma.UseMiddleware<ReadFirebaseFileMiddleware>());
+app.Map("/FirebaseSDK.js", ma => ma.UseMiddleware<ReadFirebaseFileMiddleware>());
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
