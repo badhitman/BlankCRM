@@ -1,4 +1,4 @@
-export const firebaseConfig = {
+const firebaseConfig = {
     apiKey: "AIzaSyCPlUkq609DA2CpFZsP88v-FIfFBU6uGRI",
     authDomain: "evident-ethos-230204.firebaseapp.com",
     databaseURL: "https://evident-ethos-230204.firebaseio.com",
