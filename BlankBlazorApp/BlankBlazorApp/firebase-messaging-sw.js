@@ -26,7 +26,7 @@ firebaseMessaging.onBackgroundMessage(function (payload) {
     new Notification(payload.notification.title, payload.notification);
 });
 
-firebase.onMessage(function (payload) {
+firebaseMessaging.onMessage(function (payload) {
     console.log('Message received. ', payload);
     if (window.RealtimeCoreComponent) {
         window.effects.Toast("Новое сообщение Firebase", payload, "info", true, "#9EC600");
