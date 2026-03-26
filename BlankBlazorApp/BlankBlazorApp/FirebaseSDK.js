@@ -34,7 +34,7 @@ window.FirebaseSDK = {
                 console.info('Notification permission granted.');
                 // const notification = new Notification("Приветсвую!");
 
-                window.FirebaseMessagingToken = getToken(firebaseMessaging, { vapidKey: window.PublicMessagingToken }).then((currentToken) => {
+                window.FirebaseMessagingToken = await getToken(firebaseMessaging, { vapidKey: window.PublicMessagingToken }).then((currentToken) => {
                     logEvent(firebaseAnalytics, 'token_received');
                     if (currentToken) {
                         sendTokenToServer(currentToken);
@@ -60,6 +60,7 @@ window.FirebaseSDK = {
 }
 
 function sendTokenToServer(currentToken) {
+    window.FirebaseMessagingToken = currentToken;
     if (!isTokenSentToServer(currentToken)) {
         console.log('Отправка токена на сервер...');
         if (window.RealtimeCoreComponent)
