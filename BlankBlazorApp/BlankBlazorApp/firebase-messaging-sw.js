@@ -30,17 +30,17 @@ firebaseMessaging.onBackgroundMessage(function (payload) {
         body: JSON.stringify(payload),
     });
     //new Notification(payload.notification.title, payload.notification);
-    if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
-        // If a service worker is active, use its registration to show a persistent notification
-        navigator.serviceWorker.ready.then(registration => {
-            registration.showNotification(payload.notification.title, payload.notification);
-        });
-    } else {
-        // Fallback for environments where a service worker isn't active or supported
-        new Notification(payload.notification.title, payload.notification);
-    }
+    Notification.requestPermission().then(function (permission) {
+        if (permission === 'granted') {
+            showNotification(payload);
+        }
+    });
 });
-
+function showNotification(payload) {
+    navigator.serviceWorker.getRegistration().then(function (reg) {
+        reg.showNotification(payload.notification.title, payload.notification);
+    });
+}
 firebaseMessaging.onMessage(function (payload) {
     console.log('Message received. ', payload);
     //$.post("/firebase/onMessage", {
