@@ -22,7 +22,7 @@ firebaseMessaging.onBackgroundMessage(function (payload) {
     //$.post("/firebase/onBackgroundMessage", {
     //    messagePayload: payload
     //});
-    const response = await fetch("/firebase/onBackgroundMessage", {
+    const response = fetch("/firebase/onBackgroundMessage", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -38,7 +38,7 @@ firebaseMessaging.onMessage(function (payload) {
     //    messagePayload: payload
     //});
 
-    const response = await fetch("/firebase/onMessage", {
+    const response = fetch("/firebase/onMessage", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
