@@ -13,7 +13,6 @@ const firebaseConfig = {
     measurementId: "**measurementId**"
 };
 
-window.FirebaseMessagingToken = null;
 window.PublicMessagingToken = null;
 
 const firebaseApp = initializeApp(firebaseConfig);
@@ -54,9 +53,25 @@ window.FirebaseSDK = {
 }
 
 function sendTokenToServer(currentToken) {
-    $.post("/firebase/FirebaseTokenHandle", {
+    //$.post("/firebase/FirebaseTokenHandle", {
+    //    token: currentToken
+    //});
+    var dataToSend = {
         token: currentToken
+    };
+    $.ajax({
+        url: '/firebase/FirebaseTokenHandle',
+        type: 'POST',
+        contentType: 'application/json', // Set the correct Content-Type header
+        data: JSON.stringify(dataToSend), // Manually stringify the data to JSON format
+        success: function (response) {
+            console.log('Не удалось получить разрешение на показ уведомлений.', response);
+        },
+        error: function (xhr, status, error) {
+            // Handle error (including the 415 error)
+        }
     });
+
     if (!isTokenSentToServer(currentToken)) {
         console.log('Отправка токена на сервер...');
 
