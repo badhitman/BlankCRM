@@ -2,7 +2,6 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/fireba
 import { getAnalytics, logEvent } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-analytics.js";
 import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-messaging.js";
 
-// Initialize Firebase using the global firebase object exposed by compat libraries
 const firebaseConfig = {
     apiKey: "**apiKey**",
     authDomain: "**authDomain**",
@@ -15,7 +14,6 @@ const firebaseConfig = {
 };
 
 window.FirebaseMessagingToken = null;
-window.RealtimeCoreComponent = null;
 window.PublicMessagingToken = null;
 
 const firebaseApp = initializeApp(firebaseConfig);
@@ -34,7 +32,7 @@ window.FirebaseSDK = {
                 console.info('Notification permission granted.');
                 // const notification = new Notification("Приветсвую!");
 
-                var messagingTokenGet = getToken(firebaseMessaging, { vapidKey: window.PublicMessagingToken }).then((currentToken) => {
+                let messagingTokenGet = getToken(firebaseMessaging, { vapidKey: window.PublicMessagingToken }).then((currentToken) => {
                     logEvent(firebaseAnalytics, 'token_received');
                     if (currentToken) {
                         sendTokenToServer(currentToken);
@@ -49,22 +47,18 @@ window.FirebaseSDK = {
                 });
             }
         })
-            .catch(function (err) {
-                console.warn('Не удалось получить разрешение на показ уведомлений.', err);
-            });
-    },
-    RealtimeRegister: function (dotNetReference) {
-        window.RealtimeCoreComponent = dotNetReference;
-        return window.FirebaseMessagingToken;
+        .catch(function (err) {
+            console.warn('Не удалось получить разрешение на показ уведомлений.', err);
+        });
     }
 }
 
 function sendTokenToServer(currentToken) {
-    window.FirebaseMessagingToken = currentToken;
+    $.post("/FirebaseTokenHandle", {
+        token: currentToken
+    });
     if (!isTokenSentToServer(currentToken)) {
         console.log('Отправка токена на сервер...');
-        if (window.RealtimeCoreComponent)
-            window.RealtimeCoreComponent.invokeMethodAsync('FirebaseTokenSave', currentToken);
 
         setTokenSentToServer(currentToken);
     } else {

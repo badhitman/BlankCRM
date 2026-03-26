@@ -128,30 +128,7 @@ public partial class RealtimeCoreComponent : BlazorBusyComponentUsersCachedModel
 
         TResponseModel<bool> themeStore = await StoreRepo.ReadParameterAsync<bool>(GlobalStaticCloudStorageMetadata.ThemeMode(CurrentUserSession?.UserId));
         IsDarkMode = themeStore.Response == true;
-
-        string? firebaseMessagingToken;
-        await Task.WhenAll([
-                Task.Run(async ()=> UserAgent = await JsRuntime.InvokeAsync<AboutUserAgentModel?>("methods.AboutUserAgent", timeout: TimeSpan.FromSeconds(2))),
-                Task.Run(async () => firebaseMessagingToken = await JsRuntime.InvokeAsync<string?>("FirebaseSDK.RealtimeRegister", DotNetObjectReference.Create(this)))
-            ]);
-    }
-
-    /// <inheritdoc/>
-    [JSInvokable]
-    public Task FirebaseTokenSave(string firebaseMessagingToken)
-    {
-        SnackBarRepo.Info(firebaseMessagingToken);
-        StateHasChanged();
-        return Task.CompletedTask;
-    }
-
-    /// <inheritdoc/>
-    [JSInvokable]
-    public Task FirebaseIncomingMessage(JObject firebaseMessage)
-    {
-        //SnackBarRepo.Info(firebaseMessagingToken);
-        StateHasChanged();
-        return Task.CompletedTask;
+        UserAgent = await JsRuntime.InvokeAsync<AboutUserAgentModel?>("methods.AboutUserAgent", timeout: TimeSpan.FromSeconds(2));
     }
 
     void NavRepo_LocationChanged(object? sender, Microsoft.AspNetCore.Components.Routing.LocationChangedEventArgs e)

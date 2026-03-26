@@ -2,17 +2,16 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
-using BlankBlazorApp.Properties;
-using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
-using SharedLib;
+using Microsoft.Extensions.Options;
+using BlankBlazorApp.Properties;
 using System.Text;
-using System.Text.Unicode;
+using SharedLib;
 
 /// <summary>
 /// 
 /// </summary>
-public partial class ReadFirebaseFileMiddleware(RequestDelegate next)
+public partial class FirebaseMiddleware(RequestDelegate next)
 {
     private readonly RequestDelegate _next = next;
 
@@ -32,6 +31,8 @@ public partial class ReadFirebaseFileMiddleware(RequestDelegate next)
             default:
                 return;
         }
+        // FirebaseTokenHandle
+
 
         _raw = _raw
             .Replace("**measurementId**", fireOpt.Value.MeasurementId)

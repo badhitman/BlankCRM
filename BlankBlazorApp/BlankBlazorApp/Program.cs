@@ -387,8 +387,10 @@ app.MapStaticAssets();
 
 app.Map("/cloud-fs/read", ma => ma.UseMiddleware<ReadCloudFileMiddleware>());
 
-app.Map("/firebase-messaging-sw.js", ma => ma.UseMiddleware<ReadFirebaseFileMiddleware>());
-app.Map("/FirebaseSDK.js", ma => ma.UseMiddleware<ReadFirebaseFileMiddleware>());
+app.Map("/firebase-messaging-sw.js", ma => ma.UseMiddleware<FirebaseMiddleware>());
+app.Map("/FirebaseSDK.js", ma => ma.UseMiddleware<FirebaseMiddleware>());
+app.Map("/onBackgroundMessage", ma => ma.UseMiddleware<FirebaseMiddleware>());
+app.Map("/onMessage", ma => ma.UseMiddleware<FirebaseMiddleware>());
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
