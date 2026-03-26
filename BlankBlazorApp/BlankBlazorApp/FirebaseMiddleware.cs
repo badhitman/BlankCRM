@@ -9,11 +9,11 @@ using System.Text;
 using SharedLib;
 
 /// <summary>
-/// 
+/// RequestDelegate
 /// </summary>
 public partial class FirebaseMiddleware(RequestDelegate next)
 {
-    private readonly RequestDelegate _next = next;
+    readonly RequestDelegate _next = next;
 
     /// <inheritdoc/>
     public async Task Invoke(HttpContext http_context, IOptions<FirebaseSDKConfigModel> fireOpt)

@@ -18,25 +18,48 @@ const firebaseApp = firebase.initializeApp(firebaseConfig);
 const firebaseMessaging = firebase.messaging();
 
 firebaseMessaging.onBackgroundMessage(function (payload) {
-    console.log("[firebase-messaging-sw.js] Received background message ", payload);
+    let req = {
+        message: payload,
+        ticket: ReadCookie("ticket/session")
+    };
+
     const response = fetch("/firebase/onBackgroundMessage", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(req),
     });
-    //new Notification(payload.notification.title, payload.notification);
 });
 
+function ReadCookie(cname) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    let resValue = "";
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            resValue = c.substring(name.length, c.length);
+        }
+    }
+    return resValue;
+}
+
 firebaseMessaging.onMessage(function (payload) {
-    console.log('Message received. ', payload);
+    let req = {
+        message: payload,
+        ticket: ReadCookie("ticket/session")
+    };
     const response = fetch("/firebase/onMessage", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(req),
     });
 
     navigator.serviceWorker.register('messaging-sw.js');
