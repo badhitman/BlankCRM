@@ -391,6 +391,7 @@ app.Map("/firebase-messaging-sw.js", ma => ma.UseMiddleware<FirebaseMiddleware>(
 app.Map("/FirebaseSDK.js", ma => ma.UseMiddleware<FirebaseMiddleware>());
 app.Map("/onBackgroundMessage", ma => ma.UseMiddleware<FirebaseMiddleware>());
 app.Map("/onMessage", ma => ma.UseMiddleware<FirebaseMiddleware>());
+app.Map("/FirebaseTokenHandle", ma => ma.UseMiddleware<FirebaseMiddleware>());
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
