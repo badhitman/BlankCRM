@@ -1,6 +1,7 @@
 importScripts("https://www.gstatic.com/firebasejs/12.11.0/firebase-app-compat.js");
 importScripts("https://www.gstatic.com/firebasejs/12.11.0/firebase-messaging-compat.js");
 importScripts("https://www.gstatic.com/firebasejs/12.11.0/firebase-analytics-compat.js");
+importScripts("/lib/jquery/jquery.js");
 
 // Initialize Firebase using the global firebase object exposed by compat libraries
 const firebaseConfig = {
