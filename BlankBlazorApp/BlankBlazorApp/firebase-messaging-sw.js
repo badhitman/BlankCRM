@@ -30,11 +30,7 @@ firebaseMessaging.onBackgroundMessage(function (payload) {
         body: JSON.stringify(payload),
     });
     //new Notification(payload.notification.title, payload.notification);
-    Notification.requestPermission().then(function (permission) {
-        if (permission === 'granted') {
-            showNotification(payload);
-        }
-    });
+    showNotification(payload);
 });
 
 function showNotification(payload) {
