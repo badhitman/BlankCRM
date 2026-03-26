@@ -28,15 +28,6 @@ public partial class FirebaseMiddleware(RequestDelegate next)
             case "/FirebaseSDK.js":
                 _raw = Resources.FirebaseSDK;
                 break;
-            case "/onBackgroundMessage":
-                await _next.Invoke(http_context);
-                return;
-            case "/onMessage":
-                await _next.Invoke(http_context);
-                return;
-            case "/FirebaseTokenHandle":
-                await _next.Invoke(http_context);
-                return;
             default:
                 return;
         }// 

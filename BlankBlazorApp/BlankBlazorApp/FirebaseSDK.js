@@ -54,7 +54,7 @@ window.FirebaseSDK = {
 }
 
 function sendTokenToServer(currentToken) {
-    $.post("/FirebaseTokenHandle", {
+    $.post("/firebase/FirebaseTokenHandle", {
         token: currentToken
     });
     if (!isTokenSentToServer(currentToken)) {

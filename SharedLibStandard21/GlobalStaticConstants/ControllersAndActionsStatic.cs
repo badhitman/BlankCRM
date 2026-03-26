@@ -1111,6 +1111,9 @@ public static partial class GlobalStaticConstantsRoutes
         /// </summary>
         public const string AUTHORIZE_CONTROLLER_NAME = "authorize";
 
+        /// <inheritdoc/>
+        public const string FIREBASE_CONTROLLER_NAME = "firebase";
+
         /// <summary>
         /// Public
         /// </summary>

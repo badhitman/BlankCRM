@@ -19,7 +19,7 @@ const firebaseMessaging = firebase.messaging();
 
 firebaseMessaging.onBackgroundMessage(function (payload) {
     console.log("[firebase-messaging-sw.js] Received background message ", payload);
-    $.post("/onBackgroundMessage", {
+    $.post("/firebase/onBackgroundMessage", {
         messagePayload: payload
     });
     new Notification(payload.notification.title, payload.notification);
@@ -27,7 +27,7 @@ firebaseMessaging.onBackgroundMessage(function (payload) {
 
 firebaseMessaging.onMessage(function (payload) {
     console.log('Message received. ', payload);
-    $.post("/onMessage", {
+    $.post("/firebase/onMessage", {
         messagePayload: payload
     });
     navigator.serviceWorker.register('messaging-sw.js');
