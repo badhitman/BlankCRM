@@ -53,10 +53,7 @@ window.FirebaseSDK = {
 }
 
 function sendTokenToServer(currentToken) {
-    //$.post("/firebase/FirebaseTokenHandle", {
-    //    token: currentToken
-    //});
-    var dataToSend = {
+    const dataToSend = {
         token: currentToken
     };
     $.ajax({
