@@ -30,14 +30,7 @@ firebaseMessaging.onBackgroundMessage(function (payload) {
         body: JSON.stringify(payload),
     });
     //new Notification(payload.notification.title, payload.notification);
-    showNotification(payload);
 });
-
-function showNotification(payload) {
-    navigator.serviceWorker.getRegistration().then(function (reg) {
-        reg.showNotification(payload.notification.title, payload.notification);
-    });
-}
 
 firebaseMessaging.onMessage(function (payload) {
     console.log('Message received. ', payload);
