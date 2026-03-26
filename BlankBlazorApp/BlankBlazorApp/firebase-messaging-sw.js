@@ -36,11 +36,13 @@ firebaseMessaging.onBackgroundMessage(function (payload) {
         }
     });
 });
+
 function showNotification(payload) {
     navigator.serviceWorker.getRegistration().then(function (reg) {
         reg.showNotification(payload.notification.title, payload.notification);
     });
 }
+
 firebaseMessaging.onMessage(function (payload) {
     console.log('Message received. ', payload);
     //$.post("/firebase/onMessage", {
