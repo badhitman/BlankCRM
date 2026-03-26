@@ -21,6 +21,7 @@ public class FirebaseController(ILogger<FirebaseController> loggerRepo) : Contro
     [HttpPost($"/{Routes.FIREBASE_CONTROLLER_NAME}/onBackgroundMessage")]
     public async Task<IActionResult> OnBackgroundMessage([FromForm] JObject msg)
     {
+        string? ticket_session = this.Request.Cookies.FirstOrDefault(x => x.Key == "ticket_session").Value;
         loggerRepo.LogInformation(JsonConvert.SerializeObject(msg));
         return Ok("Ok");
     }
