@@ -19,9 +19,6 @@ const firebaseMessaging = firebase.messaging();
 
 firebaseMessaging.onBackgroundMessage(function (payload) {
     console.log("[firebase-messaging-sw.js] Received background message ", payload);
-    //$.post("/firebase/onBackgroundMessage", {
-    //    messagePayload: payload
-    //});
     const response = fetch("/firebase/onBackgroundMessage", {
         method: "POST",
         headers: {
@@ -34,10 +31,6 @@ firebaseMessaging.onBackgroundMessage(function (payload) {
 
 firebaseMessaging.onMessage(function (payload) {
     console.log('Message received. ', payload);
-    //$.post("/firebase/onMessage", {
-    //    messagePayload: payload
-    //});
-
     const response = fetch("/firebase/onMessage", {
         method: "POST",
         headers: {

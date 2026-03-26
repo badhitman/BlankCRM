@@ -19,7 +19,7 @@ public partial class FirebaseMiddleware(RequestDelegate next)
     public async Task Invoke(HttpContext http_context, IOptions<FirebaseSDKConfigModel> fireOpt)
     {
         http_context.Response.Headers.Append($"Content-type", "text/javascript; charset=UTF-8");
-        string _raw = "";
+        string _raw;
         switch (http_context.Request.PathBase)
         {
             case "/firebase-messaging-sw.js":
@@ -30,7 +30,7 @@ public partial class FirebaseMiddleware(RequestDelegate next)
                 break;
             default:
                 return;
-        }// 
+        }
 
         _raw = _raw
             .Replace("**measurementId**", fireOpt.Value.MeasurementId)
