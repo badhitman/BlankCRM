@@ -248,7 +248,10 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
 
         string
             _sessionCookieName = Path.Combine(Routes.TICKET_CONTROLLER_NAME, Routes.SESSION_CONTROLLER_NAME).Replace("\\", "/"),
-            _lastUserIdCookieName = Path.Combine(_sessionCookieName, $"{Routes.USER_CONTROLLER_NAME}-{Routes.IDENTITY_CONTROLLER_NAME}").Replace("\\", "/");
+            _lastUserIdCookieName = Path.Combine(_sessionCookieName, $"{Routes.USER_CONTROLLER_NAME}-{Routes.IDENTITY_CONTROLLER_NAME}")
+            .Replace("\\", "_")
+            .Replace("/", "_")
+            ;
 
         lastUserId = await JsRuntime.InvokeAsync<string?>("methods.ReadCookie", _lastUserIdCookieName);
         if (!string.IsNullOrWhiteSpace(CurrentUserSession?.UserId))
