@@ -247,7 +247,7 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
             return;
 
         string
-            _sessionCookieName = Path.Combine(Routes.TICKET_CONTROLLER_NAME, Routes.SESSION_CONTROLLER_NAME).Replace("\\", "/"),
+            _sessionCookieName = Path.Combine(Routes.TICKET_CONTROLLER_NAME, Routes.SESSION_CONTROLLER_NAME).Replace("\\", "_").Replace("/", "_"),
             _lastUserIdCookieName = Path.Combine(_sessionCookieName, $"{Routes.USER_CONTROLLER_NAME}-{Routes.IDENTITY_CONTROLLER_NAME}")
             .Replace("\\", "_")
             .Replace("/", "_")
