@@ -27,7 +27,7 @@ public class FirebaseController(ILogger<FirebaseController> loggerRepo) : Contro
 
     /// <inheritdoc/>
     [HttpPost($"/{Routes.FIREBASE_CONTROLLER_NAME}/onMessage")]
-    public async Task<IActionResult> onMessage(JObject msg)
+    public async Task<IActionResult> OnMessage(JObject msg)
     {
         loggerRepo.LogInformation(JsonConvert.SerializeObject(msg));
         return Ok("Ok");
@@ -35,9 +35,9 @@ public class FirebaseController(ILogger<FirebaseController> loggerRepo) : Contro
 
     /// <inheritdoc/>
     [HttpPost($"/{Routes.FIREBASE_CONTROLLER_NAME}/FirebaseTokenHandle")]
-    public async Task<IActionResult> FirebaseTokenHandle(JObject token)
+    public async Task<IActionResult> FirebaseTokenHandle([FromForm] JObject tokenFirebase)
     {
-        loggerRepo.LogInformation(JsonConvert.SerializeObject(token));
+        loggerRepo.LogInformation(JsonConvert.SerializeObject(tokenFirebase));
         return Ok("Ok");
     }
 }
