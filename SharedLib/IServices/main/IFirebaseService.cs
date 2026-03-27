@@ -5,9 +5,12 @@
 namespace SharedLib;
 
 /// <summary>
-/// FirebaseService
+/// Firebase service
 /// </summary>
 public interface IFirebaseService
 {
-    
+    /// <summary>
+    /// Send Firebase Message
+    /// </summary>
+    public Task<TResponseModel<List<string>>> SendFirebaseMessageAsync(TAuthRequestStandardModel<SendFirebaseMessageRequestModel> req, CancellationToken token = default);
 }

@@ -1,5 +1,54 @@
-﻿@inherits BlazorBusyComponentBaseModel
+﻿@inherits BlazorBusyComponentBaseAuthModel
 
-<h3>FirebaseCloudMessagingComponent</h3>
-
-<small>FCM: @ChatDialog.FirebaseCloudMessagingToken</small>
+<small>FCM Token: @ChatDialog.FirebaseCloudMessagingToken</small>
+<form>
+    <div class="mb-3">
+        <label for="exampleInputTitle1" class="form-label">Заголовок уведомления</label>
+        <input type="text"
+               class="form-control"
+               id="exampleInputTitle1"
+               aria-describedby="titleHelp"
+               @bind-value="titleMsg"
+               @bind-value:event="oninput" />
+        <div id="titleHelp" class="form-text">Отображается конечным пользователям в качестве заголовка уведомления.</div>
+    </div>
+    <div class="mb-3">
+        <label for="exampleFormControlTextBody" class="form-label">Текст уведомления</label>
+        <textarea class="form-control"
+                  id="exampleFormControlTextBody"
+                  rows="3"
+                  @bind-value="textBodyMsg"
+                  @bind-value:event="oninput"></textarea>
+    </div>
+    <div class="mb-3">
+        <label for="formFile" class="form-label">Изображение уведомления (опционально)</label>
+        <input class="form-control"
+               type="file"
+               id="formFile"
+               aria-describedby="imageHelp"
+               @bind-value="imageMsg"
+               @bind-value:event="oninput" />
+        <div id="imageHelp" class="form-text">При желании можно загрузить изображение или указать действительный URL-адрес изображения по протоколу HTTPS.</div>
+    </div>
+    <div class="mb-3">
+        <label for="exampleInputNameMsg" class="form-label">Название уведомления (необязательно)</label>
+        <input type="text"
+               class="form-control"
+               id="exampleInputNameMsg"
+               aria-describedby="nameMsgHelp"
+               @bind-value="nameMsg"
+               @bind-value:event="oninput" />
+        <div id="nameMsgHelp" class="form-text">Имя, используемое для идентификации этого уведомления в Firebase. Это имя не отображается пользователям.</div>
+    </div>
+    <div class="mb-3">
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" readonly />
+            <label class="form-check-label" for="inlineRadio1">Компактный вид</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2" readonly />
+            <label class="form-check-label" for="inlineRadio2">Развёрнутый вид</label>
+        </div>
+    </div>
+    <button type="button" class="btn btn-primary" @onclick="SendMessage" disabled="@(!CanSendMessage)">Отправить</button>
+</form>

@@ -2,9 +2,8 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
-using Newtonsoft.Json.Linq;
-using SharedLib;
 using Transmission.Receives.firebase;
+using SharedLib;
 
 namespace FirebaseService;
 
@@ -20,6 +19,7 @@ public static class RegisterMqListenerExtension
     {
         return services
             .RegisterListenerRabbitMQ<GetFirebaseConfigReceive, object, TResponseModel<FirebaseSDKConfigModel>>()
+            .RegisterListenerRabbitMQ<SendFirebaseMessageReceive, TAuthRequestStandardModel<SendFirebaseMessageRequestModel>, TResponseModel<List<string>>>()
             ;
     }
 }

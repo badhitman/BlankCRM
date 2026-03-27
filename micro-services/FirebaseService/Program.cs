@@ -16,8 +16,14 @@ using NLog;
 
 namespace FirebaseService;
 
+/// <summary>
+/// Program
+/// </summary>
 public class Program
 {
+    /// <summary>
+    /// Main
+    /// </summary>
     public static void Main(string[] args)
     {
         RealtimeMQTTClientConfigModel _confMQTT = RealtimeMQTTClientConfigModel.BuildEmpty();
@@ -161,12 +167,13 @@ public class Program
             .AddSingleton<IMQStandardClientExtRPC>(x => new ClientMQTT(x.GetRequiredService<RealtimeMQTTClientConfigModel>(), x.GetRequiredService<ILogger<ClientMQTT>>(), appName))
             ;
 
-        builder.Services.FirebaseRegisterMqListeners();
         builder.Services
             .AddSingleton<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
+            .AddScoped<IHistoryIndexing, HistoryTransmissionRabbit>()
             ;
-        #endregion
 
+        builder.Services.FirebaseRegisterMqListeners();
+        #endregion
 
         // Custom metrics for the application
         Meter greeterMeter = new($"OTel.{appName}", "1.0.0");
