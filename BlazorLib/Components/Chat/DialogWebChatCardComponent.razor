@@ -51,10 +51,6 @@
                     }
                 }
             </h6>
-            @if (!string.IsNullOrWhiteSpace(dialogEdit.FirebaseCloudMessagingToken))
-            {
-                <small>FCM: @dialogEdit.FirebaseCloudMessagingToken</small>
-            }
             <hr />
             <MudGrid Class="mb-3">
                 <MudItem xs=12 md=6>
@@ -170,6 +166,9 @@
                         </MudTabPanel>
                     </CascadingValue>
                 }
+                <MudTabPanel Text="FCM" Disabled="string.IsNullOrWhiteSpace(dialogEdit.FirebaseCloudMessagingToken)">
+                    <FirebaseCloudMessagingComponent ChatDialog="dialogEdit" />
+                </MudTabPanel>
             </MudTabs>
         </div>
     </div>
