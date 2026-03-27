@@ -1,20 +1,9 @@
 ## Blank CRM (набор микро-сервисов)
-- **Blazor NET.10**[^4]
-- Firebase SDK: Firebase Cloud Messaging (FCM) решение для [отправки уведомлений](https://firebase.google.com/docs/cloud-messaging).
-- **TelegramBot**[^5]: поддержка [автоматической авторизации](#автоматическая-авторизация-в-telegram-webapp) в Telegram WebApp
-- СЭД (ServiceDesk/HelpDesk) подсистема оказания консультаций, обратной связи или сопровождение заказов. Управление документами: изменение статусов заявок, журналирование/протоколирование событий и другая универсальная функциональность
-- [MQTTNet сервер](https://github.com/dotnet/MQTTnet) для организации функциональности двусторонней связи "реального времени": TCP (+TLS) или WS (WebSocket)
-- WEB чат для организации технической поддержки на базе самодостаточного сервера MQTTNet (в т.ч. низкоуровневый транспортный слой)
-- Подсистема электронной коммерции: на базе СЭД функционирует простой учёт заказов в т.ч. остатки на складах и предоставление услуг с настраиваемым графиком/расписанием
-- WEB-Конструктор схем данных (формы, документы)
-- Интерфейс rest API (swagger) для внешних информационных систем (пример: план обмена для [commerce](https://github.com/badhitman/BlankCRM/blob/main/micro-services/CommerceService/INTEGRATION.md))
-- ui пакеты: [MudBlazor 9](https://github.com/MudBlazor/MudBlazor/) и два WYSIWYG: [CKEditor](https://ckeditor.com/) + [TinyMCE](https://www.tiny.cloud). Важно: **CKEditor** не поддерживает вставку картинок, а **TinyMCE** имеет такую поддержу
+- [MQTTNet сервер](https://github.com/dotnet/MQTTnet) для организации функциональности двусторонней связи "реального времени"
+- ui пакеты: [MudBlazor 9](https://github.com/MudBlazor/MudBlazor/) и два WYSIWYG: [CKEditor](https://ckeditor.com/) + [TinyMCE](https://www.tiny.cloud): **CKEditor** не поддерживает вставку картинок, а **TinyMCE** имеет такую поддержу
 - Кроссплатформенный .NET MAUI (Win, Android и т.д.) [клиент доступа к Rest/Api](https://github.com/badhitman/BlankCRM?tab=readme-ov-file#tools-maui-app)
 - Связь между службами через RabbitMQ[^1] ↔ MQTT в режиме `запрос-ответ`: при отправке сообщения в очередь (через RabbitMQ), отправитель, в случае необходимости, получает ответ (в границах таймаута) и возвращает результат вызывающему (через MQTT). При использовании вызова такой команды удалённого сервиса проходит так, как если бы это был обычный `await` запрос к базе данных или rest/api. Вместе с тем есть возможность отправить команду в режиме "отправил и забыл"
 - .NET Aspire: [набор инструментов для оркестрации](https://github.com/badhitman/BlankCRM/tree/main/BlankCRM.AppHost): мониторинг сервисов (телеметрия, трассировка). ![aspire main](img/aspire-main.png)
-- T-Bank
-- LDAP (ActiveDirectory) коннектор. предварительная версия
-- Внешние [источники данных](https://github.com/badhitman/BlankCRM/blob/main/micro-services/outer/README.md): Rusklimat (Русклимат), DaichiBusiness, HaierProff, Breez.ru
 
 #### Startup
 readme for startup - https://github.com/badhitman/BlankCRM/blob/main/devops
@@ -28,14 +17,17 @@ dotnet run --project BlankCRM.AppHost/BlankCRM.AppHost.csproj --publisher manife
 Для ручного запуска [собственные микро сервисы настраиваются в виде служб](https://github.com/badhitman/BlankCRM/tree/main/devops/etc/systemd/system), а вспомогательные службы [**RabbitMQ**, **Redis**, **MongoDB** и **PostgreSQL**] запускаются пакетом в [docker-compose.yml](./devops/docker-compose.yml).
 
 #### [BlankBlazorApp](https://github.com/badhitman/BlankCRM/tree/main/BlankBlazorApp/BlankBlazorApp)
-- Blazor вэб сервер
+- Blazor NET.10 вэб сервер[^4]
 - Рендеринг: `InteractiveServerRenderMode(prerender: false)`
 - Авторизация типовая `Microsoft.AspNetCore.Identity` ([documents](https://learn.microsoft.com/ru-ru/aspnet/core/security/authentication/identity?view=aspnetcore-9.0&tabs=visual-studio))
 - В Frontend добавлен базовый функционал для работы с Пользователями, Ролями, Claims и Telegram[^4]
 
 #### [RealtimeService](https://github.com/badhitman/BlankCRM/tree/main/micro-services/RealtimeService)
-- MQTT сервер для организации функциональности "реального времени". Фронт-клиент подключён к MQTT, а бэк может взаимодействовать с клиентами напрямую по собственной инициативе. Бэк может отправить сообщение/команду в любой Blazor компонент.
+- MQTT сервер для организации функциональности "реального времени": TCP (+TLS) или WS (WebSocket). Фронт-клиент подключён к MQTT, а бэк может взаимодействовать с клиентами напрямую по собственной инициативе. Бэк может отправить сообщение/команду в любой Blazor компонент.
 - WebChat: чат между посетителями сайта и сотрудниками компании (служба поддержки).
+
+#### [FirebaseService](https://github.com/badhitman/BlankCRM/tree/main/micro-services/FirebaseService)
+- Firebase SDK: Firebase Cloud Messaging (FCM) решение для [отправки уведомлений](https://firebase.google.com/docs/cloud-messaging).
 
 #### [IdentityService](https://github.com/badhitman/BlankCRM/tree/main/micro-services/IdentityService)
 - Управление пользователями: регистрация, авторизация и т.д.
@@ -43,6 +35,7 @@ dotnet run --project BlankCRM.AppHost/BlankCRM.AppHost.csproj --publisher manife
 
 #### [TelegramBotService](https://github.com/badhitman/BlankCRM/tree/main/micro-services/TelegramBotService) 
 - Сохраняет все входящие сообщения и позволяет в последствии работать с чатами другим сервисам.
+- Поддержка [автоматической авторизации](#автоматическая-авторизация-в-telegram-webapp) в Telegram WebApp
 - В оригинальном исполнении `Worker Service`[^5].
 - Ответы на входящие Telegram сообщения обрабатывает реализация интерфейса `ITelegramDialogService`[^7]. Пользователям можно индивидуально устанавливать имя автоответчика[^2]. Это касается как простых текстовых `Message`, так и `CallbackQuery`.
 - Для обеспечения работы HelpDesk предусмотрен [командный режим работы бота](https://github.com/badhitman/BlankCRM/tree/main/micro-services/HelpDeskService#%D0%BA%D0%BE%D0%BC%D0%B0%D0%BD%D0%B4%D0%BD%D1%8B%D0%B9-%D1%80%D0%B5%D0%B6%D0%B8%D0%BC-telegrambot). В этом режиме простые текстовые сообщения в бота не обрабатываются автоответчиком (равно как и отправка файлов, документов и т.п.). Сообщения сохраняются, но ответ не формируется если это не команда или **CallbackQuery**. Команды в TelegramBot начинаются с косой черты (/). Таким образом в командном режиме бот будет пытаться выполнить/обработать входящее сообщение только если текст сообщения является командой: начинается с косой черты (/) либо в случае если это **CallbackQuery**, а в остальных случаях клиент будет в свободной форме вести чат с ботом, а операторы HelpDesk должны будут ему отвечать от имени бота через WEB интерфейс или воспользовавшись режимом ['экспресс-ответа'](https://github.com/badhitman/BlankCRM/tree/main/HelpDeskService#%D1%8D%D0%BA%D1%81%D0%BF%D1%80%D0%B5%D1%81%D1%81-%D0%BE%D1%82%D0%B2%D0%B5%D1%82%D1%8B).
@@ -69,6 +62,7 @@ dotnet run --project BlankCRM.AppHost/BlankCRM.AppHost.csproj --publisher manife
 - Остатки на складах в разрезе номенклатуры и офферов
 
 #### [ApiRestService](https://github.com/badhitman/BlankCRM/tree/main/micro-services/ApiRestService)
+- Интерфейс rest API (swagger) для внешних информационных систем (пример: план обмена для [commerce](https://github.com/badhitman/BlankCRM/blob/main/micro-services/CommerceService/INTEGRATION.md))
 - Упрощённая авторизация: использование постоянного токена в заголовке запроса (ключ доступа). Служба выступает в роли посредника между внутренним контуром и внешними потребителями. Например для обмена с 1С.
 
 #### [ConstructorService](https://github.com/badhitman/BlankCRM/tree/main/micro-services/ConstructorService)
@@ -82,10 +76,10 @@ dotnet run --project BlankCRM.AppHost/BlankCRM.AppHost.csproj --publisher manife
 - Интеграция AD через LDAP
 
 #### [BankService](https://github.com/badhitman/BlankCRM/tree/main/micro-services/BankService)
-- Банк
+- T-Bank
 
 #### [OuterApi's](https://github.com/badhitman/BlankCRM/blob/main/micro-services/outer/README.md)
-- Набор микро-сервисов для подключения внешних источников данных
+- Набор микро-сервисов для подключения внешних источников данных: Rusklimat (Русклимат), DaichiBusiness, HaierProff, Breez.ru
 
 > все службы должны быть настроены, запущены вместе и соединены общим RabbitMQ и Redis. В противном случае в MQ очередях будут копиться запросы без ответов и функционал местами будет недоступен если ответственная служба не будет обрабатывать запросы.
 
