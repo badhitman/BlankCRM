@@ -51,11 +51,11 @@
                     }
                 }
             </h6>
-            <hr />
             @if (!string.IsNullOrWhiteSpace(dialogEdit.FirebaseCloudMessagingToken))
             {
-                <small>@dialogEdit.FirebaseCloudMessagingToken</small>
+                <small>FCM: @dialogEdit.FirebaseCloudMessagingToken</small>
             }
+            <hr />
             <MudGrid Class="mb-3">
                 <MudItem xs=12 md=6>
                     <label for="exampleInputHumanName1" class="form-label">HumanName</label>
