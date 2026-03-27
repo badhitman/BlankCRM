@@ -13,7 +13,7 @@ namespace BlazorLib.Components.Chat;
 public partial class FirebaseCloudMessagingComponent : BlazorBusyComponentBaseAuthModel
 {
     [Inject]
-    IFirebaseService FirebaseRepo { get; set; } = default!;
+    IFirebaseServiceTransmission FirebaseRepo { get; set; } = default!;
 
 
     /// <inheritdoc/>
