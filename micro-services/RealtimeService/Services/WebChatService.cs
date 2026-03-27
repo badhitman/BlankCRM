@@ -108,8 +108,12 @@ public partial class WebChatService(
         if (!string.IsNullOrWhiteSpace(req.UserIdentityId) && string.IsNullOrWhiteSpace(readSession.InitiatorIdentityId))
             await context.Dialogs.Where(x => x.Id == readSession.Id)
                 .ExecuteUpdateAsync(set => set
-                    .SetProperty(p => p.FirebaseCloudMessagingToken, req.FirebaseCloudMessagingToken)
                     .SetProperty(p => p.InitiatorIdentityId, req.UserIdentityId), cancellationToken: cancellationToken);
+
+        if (!string.IsNullOrWhiteSpace(req.FirebaseCloudMessagingToken) && string.IsNullOrWhiteSpace(readSession.FirebaseCloudMessagingToken))
+            await context.Dialogs.Where(x => x.Id == readSession.Id)
+                .ExecuteUpdateAsync(set => set
+                    .SetProperty(p => p.FirebaseCloudMessagingToken, req.FirebaseCloudMessagingToken), cancellationToken: cancellationToken);
 
         return new()
         {
