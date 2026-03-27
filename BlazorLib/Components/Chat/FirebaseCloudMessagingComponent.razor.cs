@@ -23,8 +23,9 @@ public partial class FirebaseCloudMessagingComponent : BlazorBusyComponentBaseAu
 
     string? titleMsg, textBodyMsg, nameMsg, imageMsg;
 
-    bool CanSendMessage => !string.IsNullOrWhiteSpace(titleMsg);
-    bool withoutFirebaseCloudMessagingToken;
+    bool CanSendMessage =>
+        !string.IsNullOrWhiteSpace(titleMsg) &&
+        !string.IsNullOrWhiteSpace(textBodyMsg);
 
     async Task SendMessage()
     {
@@ -56,13 +57,12 @@ public partial class FirebaseCloudMessagingComponent : BlazorBusyComponentBaseAu
         await SetBusyAsync();
         TResponseModel<List<string>> res = await FirebaseRepo.SendFirebaseMessageAsync(req);
         SnackBarRepo.ShowMessagesResponse(res.Messages);
+        
+         titleMsg = "";
+         textBodyMsg = "";
+         nameMsg = "";
+         imageMsg = "";
+         
         await SetBusyAsync(false);
-    }
-
-    /// <inheritdoc/>
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-        withoutFirebaseCloudMessagingToken = string.IsNullOrWhiteSpace(ChatDialog.FirebaseCloudMessagingToken);
     }
 }
