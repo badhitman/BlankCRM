@@ -18,12 +18,16 @@ public class InitWebChatSessionRequestModel
     /// UserIdentityId
     /// </summary>
     public string? UserIdentityId { get; set; }
-    
+
     /// <inheritdoc/>
     public required string? UserAgent { get; set; }
 
     /// <inheritdoc/>
     public required string? Language { get; set; }
+
     /// <inheritdoc/>
     public required string BaseUri { get; set; }
+
+    /// <inheritdoc/>
+    public string? FirebaseCloudMessagingToken { get; set; }
 }

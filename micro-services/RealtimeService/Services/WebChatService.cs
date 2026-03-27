@@ -62,6 +62,7 @@ public partial class WebChatService(
                 Language = req.Language,
                 UserAgent = req.UserAgent,
                 BaseUri = req.BaseUri,
+                FirebaseCloudMessagingToken = req.FirebaseCloudMessagingToken,
             };
 
         readSession ??= new()
@@ -74,6 +75,7 @@ public partial class WebChatService(
             Language = req.Language,
             UserAgent = req.UserAgent,
             BaseUri = req.BaseUri,
+            FirebaseCloudMessagingToken = req.FirebaseCloudMessagingToken,
         };
 
         if (readSession.Id == 0)
@@ -106,6 +108,7 @@ public partial class WebChatService(
         if (!string.IsNullOrWhiteSpace(req.UserIdentityId) && string.IsNullOrWhiteSpace(readSession.InitiatorIdentityId))
             await context.Dialogs.Where(x => x.Id == readSession.Id)
                 .ExecuteUpdateAsync(set => set
+                    .SetProperty(p => p.FirebaseCloudMessagingToken, req.FirebaseCloudMessagingToken)
                     .SetProperty(p => p.InitiatorIdentityId, req.UserIdentityId), cancellationToken: cancellationToken);
 
         return new()

@@ -39,7 +39,7 @@
                 }
             </h5>
             <MudSpacer />
-            <h6 class="card-subtitle mb-2 text-body-sDialogdary">
+            <h6 class="card-subtitle mb-2 text-body-secondary">
                 @if (q is not null && q.Any())
                 {
                     <text>Сотрудники:</text>
@@ -52,6 +52,10 @@
                 }
             </h6>
             <hr />
+            @if (!string.IsNullOrWhiteSpace(dialogEdit.FirebaseCloudMessagingToken))
+            {
+                <small>@dialogEdit.FirebaseCloudMessagingToken</small>
+            }
             <MudGrid Class="mb-3">
                 <MudItem xs=12 md=6>
                     <label for="exampleInputHumanName1" class="form-label">HumanName</label>

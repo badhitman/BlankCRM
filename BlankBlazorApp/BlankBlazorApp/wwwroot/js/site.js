@@ -171,6 +171,9 @@ window.methods = {
                 ";expires=Thu, 01 Jan 1970 00:00:01 GMT";
         }
     },
+    ReadStorageProperty: function (name) {
+        return window.localStorage.getItem(name);
+    },
     AboutUserAgent: function () {
         const UserAgent = navigator.userAgent;
         const Language = navigator.language;

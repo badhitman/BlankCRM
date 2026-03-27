@@ -74,6 +74,10 @@
             }
             <code class="mx-2">@context.UserAgent</code>
             <sup>@context.Language</sup>
+            @if (!string.IsNullOrWhiteSpace(context.FirebaseCloudMessagingToken))
+            {
+                <sub class="badge text-bg-info" title="Firebase Cloud Message">FCM</sub>
+            }
         </MudTd>
         <MudTd DataLabel="Участники">
             @if (context.UsersJoins is not null && context.UsersJoins.Count != 0)

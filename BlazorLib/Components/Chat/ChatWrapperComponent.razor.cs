@@ -246,25 +246,50 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
         if (UserAgent?.CookieEnabled != true)
             return;
 
-        string
-            _sessionCookieName = Path.Combine(Routes.TICKET_CONTROLLER_NAME, Routes.SESSION_CONTROLLER_NAME).Replace("\\", "_").Replace("/", "_"),
-            _lastUserIdCookieName = Path.Combine(_sessionCookieName, $"{Routes.USER_CONTROLLER_NAME}-{Routes.IDENTITY_CONTROLLER_NAME}")
-            .Replace("\\", "_")
-            .Replace("/", "_")
+        string?
+            _sessionCookieNameObsolete = $"{Routes.TICKET_CONTROLLER_NAME}/{Routes.SESSION_CONTROLLER_NAME}",
+            _sessionCookieName = $"{Routes.TICKET_CONTROLLER_NAME}_{Routes.SESSION_CONTROLLER_NAME}",
+            _lastUserIdCookieNameObsolete = $"{_sessionCookieName}/{Routes.USER_CONTROLLER_NAME}/{Routes.IDENTITY_CONTROLLER_NAME}",
+            _lastUserIdCookieName = $"{_sessionCookieName}_{Routes.USER_CONTROLLER_NAME}_{Routes.IDENTITY_CONTROLLER_NAME}",
+            _firebaseMessagingToken = await JsRuntime.InvokeAsync<string?>("methods.ReadStorageProperty", "sentFirebaseMessagingToken")
             ;
 
         lastUserId = await JsRuntime.InvokeAsync<string?>("methods.ReadCookie", _lastUserIdCookieName);
+        #region fix cookies names        
+        if (string.IsNullOrWhiteSpace(lastUserId))
+        {
+            lastUserId = await JsRuntime.InvokeAsync<string?>("methods.ReadCookie", _lastUserIdCookieNameObsolete);
+            if (!string.IsNullOrWhiteSpace(lastUserId))
+            {
+                await JsRuntime.InvokeVoidAsync("methods.CreateCookie", _lastUserIdCookieName, lastUserId, 60 * 60 * 24 * 90, "/");
+                await JsRuntime.InvokeVoidAsync("methods.DeleteCookie", _lastUserIdCookieNameObsolete);
+            }
+        }
+        #endregion
+
         if (!string.IsNullOrWhiteSpace(CurrentUserSession?.UserId))
         {
             if (lastUserId != _lastUserIdCookieName)
                 await JsRuntime.InvokeVoidAsync("methods.CreateCookie", _lastUserIdCookieName, CurrentUserSession.UserId, 60 * 60 * 24 * 90, "/");
         }
-
         string? currentSessionTicket = await JsRuntime.InvokeAsync<string?>("methods.ReadCookie", _sessionCookieName);
+        #region fix cookies names
+        if (string.IsNullOrWhiteSpace(currentSessionTicket))
+        {
+            currentSessionTicket = await JsRuntime.InvokeAsync<string?>("methods.ReadCookie", _sessionCookieNameObsolete);
+            if (!string.IsNullOrWhiteSpace(currentSessionTicket))
+            {
+                await JsRuntime.InvokeVoidAsync("methods.CreateCookie", _sessionCookieName, currentSessionTicket, 60 * 60 * 24 * 90, "/");
+                await JsRuntime.InvokeVoidAsync("methods.DeleteCookie", _sessionCookieNameObsolete);
+            }
+        }
+        #endregion
+
         TResponseModel<DialogWebChatModelDB> initSessionTicket = await WebChatRepo.InitWebChatSessionAsync(new()
         {
-            SessionTicket = currentSessionTicket,
+            FirebaseCloudMessagingToken = _firebaseMessagingToken,
             UserIdentityId = CurrentUserSession?.UserId,
+            SessionTicket = currentSessionTicket,
             UserAgent = UserAgent.UserAgent,
             Language = UserAgent.Language,
             BaseUri = NavRepo.BaseUri,

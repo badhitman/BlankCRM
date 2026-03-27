@@ -9,7 +9,7 @@ namespace SharedLib;
 /// <summary>
 /// DialogWebChatModelDB
 /// </summary>
-[Index(nameof(InitiatorContactsNormalized)), Index(nameof(HelpdeskId))]
+[Index(nameof(InitiatorContactsNormalized)), Index(nameof(HelpdeskId)), Index(nameof(FirebaseCloudMessagingToken))]
 public class DialogWebChatModelDB : DialogWebChatViewModel
 {
     /// <summary>
@@ -25,4 +25,7 @@ public class DialogWebChatModelDB : DialogWebChatViewModel
 
     /// <inheritdoc/>
     public int? HelpdeskId { get; set; }
+
+    /// <inheritdoc/>
+    public string? FirebaseCloudMessagingToken { get; set; }
 }
