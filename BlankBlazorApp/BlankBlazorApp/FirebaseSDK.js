@@ -18,6 +18,10 @@ window.PublicMessagingToken = null;
 const firebaseApp = initializeApp(firebaseConfig);
 const firebaseMessaging = getMessaging(firebaseApp);
 const firebaseAnalytics = getAnalytics(firebaseApp);
+const FirebaseIsSupported = () =>
+    'Notification' in window &&
+    'serviceWorker' in navigator &&
+    'PushManager' in window;
 
 window.FirebaseSDK = {
     Initialize: function (publicMessagingToken) {
@@ -25,6 +29,9 @@ window.FirebaseSDK = {
         window.FirebaseSDK.RequestPermission();
     },
     RequestPermission: function () {
+        if (!FirebaseIsSupported)
+            return;
+
         console.log('Requesting permission...');
         Notification.requestPermission().then((permission) => {
             if (permission === 'granted') {
@@ -51,15 +58,19 @@ window.FirebaseSDK = {
             });
     },
     ReadPermission: async function () {
+        if (!FirebaseIsSupported)
+            return "none";
+
         console.log('Read permission...');
+
         let res;
         await Notification.requestPermission().then((permission) => {
             res = permission;
         })
-        .catch(function (err) {
-            console.warn('Не удалось получить разрешение на показ уведомлений.', err);
-            res = null;
-        });
+            .catch(function (err) {
+                console.warn('Не удалось получить разрешение на показ уведомлений.', err);
+                res = null;
+            });
         return res;
     }
 }

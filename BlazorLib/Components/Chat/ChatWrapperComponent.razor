@@ -25,13 +25,12 @@
             <h5 class="offcanvas-title" id="offcanvasScrollingLabel">Чат</h5>
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close" @onclick="ShowToggle"></button>
         </div>
-        <div class="offcanvas-body" style="padding-top: unset;">
+        <div class="offcanvas-body" style="padding-top: unset;" title="firebase @readPermission">
             <div class="ma-2">
                 @if (IsBusyProgress)
                 {
                     <MudProgressLinear Color="Color.Primary" Indeterminate />
                 }
-                Permissions: @readPermission
                 @if (string.IsNullOrWhiteSpace(dialogSession.InitiatorHumanName) && string.IsNullOrWhiteSpace(dialogSession.InitiatorIdentityId))
                 {
                     <div class="alert alert-warning" role="alert">
