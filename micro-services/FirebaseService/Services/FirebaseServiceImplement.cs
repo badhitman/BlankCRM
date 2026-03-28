@@ -84,11 +84,11 @@ public class FirebaseServiceImplement() : IFirebaseService
             //    Data = req.Payload.Data,
             //}
         };
-        if (!string.IsNullOrWhiteSpace(req.Payload.ImageUrl))
-        {
-            messages.Notification.ImageUrl = req.Payload.ImageUrl;
-            messages.Webpush.Notification.Image = req.Payload.ImageUrl;
-        }
+        //if (!string.IsNullOrWhiteSpace(req.Payload.ImageUrl))
+        //{
+        //    messages.Notification.ImageUrl = req.Payload.ImageUrl;
+        //    messages.Webpush.Notification.Image = req.Payload.ImageUrl;
+        //}
 
         BatchResponse response;
         res.Response.SuccessfulMessagesIds = [];
