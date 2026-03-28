@@ -29,7 +29,26 @@ public class FirebaseServiceImplement() : IFirebaseService
             {
                 Data = req.Payload.Data,
                 Token = req.Payload.TokensFCM[0],
+                Notification = new()
+                {
+                    Title = req.Payload.Title,
+                    Body = req.Payload.TextBody,
+                },
+                Webpush = new()
+                {
+                    Data = req.Payload.Data,
+                    Notification = new()
+                    {
+                        Title = req.Payload.Title,
+                        Body = req.Payload.TextBody,
+                    },
+                }
             };
+            if (!string.IsNullOrWhiteSpace(req.Payload.ImageUrl))
+            {
+                message.Notification.ImageUrl = req.Payload.ImageUrl;
+                message.Webpush.Notification.Image = req.Payload.ImageUrl;
+            }
 
             string responseSimple = await FirebaseMessaging.DefaultInstance.SendAsync(message, token);
             if (!string.IsNullOrWhiteSpace(responseSimple))
@@ -49,9 +68,21 @@ public class FirebaseServiceImplement() : IFirebaseService
                 Title = req.Payload.Title,
                 Body = req.Payload.TextBody,
             },
+            Webpush = new()
+            {
+                Notification = new()
+                {
+                    Title = req.Payload.Title,
+                    Body = req.Payload.TextBody,
+                    Data = req.Payload.Data,
+                }
+            }
         };
         if (!string.IsNullOrWhiteSpace(req.Payload.ImageUrl))
+        {
             messages.Notification.ImageUrl = req.Payload.ImageUrl;
+            messages.Webpush.Notification.Image = req.Payload.ImageUrl;
+        }
 
         BatchResponse response;
         res.Response.SuccessfulMessagesIds = [];
