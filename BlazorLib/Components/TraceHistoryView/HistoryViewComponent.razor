@@ -45,7 +45,6 @@
             DateTime _dt = context.UTCTimestampInitReceive.GetCustomTime();
         }
         <MudTd DataLabel="Дата">
-            @_dt
             <span class="hstack">
                 @_dt.ToString("d", GlobalStaticConstants.RU)
                 <sup>@_dt.ToString("t", GlobalStaticConstants.RU)</sup>
