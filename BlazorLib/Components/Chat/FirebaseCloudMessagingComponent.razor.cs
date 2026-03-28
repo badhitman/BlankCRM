@@ -114,7 +114,7 @@ public partial class FirebaseCloudMessagingComponent : BlazorBusyComponentBaseAu
             if (filesUpd.Count != 0)
             {
                 StorageFileModelDB _f = filesUpd.First();
-                req.Payload.ImageUrl = $"{NavRepo.BaseUri}cloud-fs/read/{_f.Id}/{_f.FileName}?{GlobalStaticConstantsRoutes.Routes.TOKEN_CONTROLLER_NAME}={_f.AccessRules?.First(x => x.AccessRuleType == FileAccessRulesTypesEnum.Token).Option}";
+                req.Payload.ImageUrl = $"{NavRepo.BaseUri}cloud-fs/read/{_f.Id}/image{Path.GetExtension(_f.FileName)}?{GlobalStaticConstantsRoutes.Routes.TOKEN_CONTROLLER_NAME}={_f.AccessRules?.First(x => x.AccessRuleType == FileAccessRulesTypesEnum.Token).Option}";
             }
 
             loadedFiles.Clear();
