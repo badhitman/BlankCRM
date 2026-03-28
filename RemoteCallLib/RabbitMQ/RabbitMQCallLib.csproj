@@ -26,7 +26,7 @@
 		<PackageReference Include="MongoDB.Driver.GridFS" Version="2.30.0" />
 		<PackageReference Include="NetMQ" Version="4.0.2.2" />
 		<PackageReference Include="RabbitMQ.Client" Version="7.2.1" />
-		<PackageReference Include="StackExchange.Redis" Version="2.12.4" />
+		<PackageReference Include="StackExchange.Redis" Version="2.12.8" />
 		<ProjectReference Include="..\..\..\HtmlGenerator\HtmlGenerator.csproj" />
 		<ProjectReference Include="..\..\SharedLib\SharedLib.csproj" />
 		<ProjectReference Include="..\MQTTCallLib\MQTTCallLib.csproj" />

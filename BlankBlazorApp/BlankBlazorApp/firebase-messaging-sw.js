@@ -26,8 +26,7 @@ firebaseMessaging.onBackgroundMessage(function (payload) {
         },
         body: JSON.stringify(payload),
     });
-    self.registration.showNotification(payload.notification.title,
-        payload.notification);
+    // self.registration.showNotification(payload.notification.title, payload.notification);
 });
 
 firebaseMessaging.onMessage(function (payload) {
