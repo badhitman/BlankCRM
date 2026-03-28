@@ -34,7 +34,18 @@ public class FirebaseServiceImplement() : IFirebaseService
             },
         };
         TResponseModel<List<string>> res = new();
-        BatchResponse response = await FirebaseMessaging.DefaultInstance.SendEachForMulticastAsync(message, token);
+        BatchResponse response;
+
+        try
+        {
+            response = await FirebaseMessaging.DefaultInstance.SendEachForMulticastAsync(message, token);
+        }
+        catch (Exception ex)
+        {
+            res.Messages.InjectException(ex);
+            return res;
+        }
+
         if (response.FailureCount > 0)
         {
             res.Response = [];
