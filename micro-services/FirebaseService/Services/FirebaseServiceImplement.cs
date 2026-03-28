@@ -41,7 +41,9 @@ public class FirebaseServiceImplement() : IFirebaseService
                     {
                         Title = req.Payload.Title,
                         Body = req.Payload.TextBody,
-                    },
+                        Data = req.Payload.Data,
+                        Direction = Direction.Auto,
+                    }
                 }
             };
             if (!string.IsNullOrWhiteSpace(req.Payload.ImageUrl))
@@ -52,7 +54,10 @@ public class FirebaseServiceImplement() : IFirebaseService
 
             string responseSimple = await FirebaseMessaging.DefaultInstance.SendAsync(message, token);
             if (!string.IsNullOrWhiteSpace(responseSimple))
+            {
                 res.Response.SuccessfulMessagesIds = [responseSimple];
+                res.AddSuccess($"Сообщение отправлено. Ответ: {responseSimple}");
+            }
             else
                 res.AddError($"Не удалось отправить сообщение токену/клиенту {req.Payload.TokensFCM[0]}");
 
@@ -75,6 +80,7 @@ public class FirebaseServiceImplement() : IFirebaseService
                     Title = req.Payload.Title,
                     Body = req.Payload.TextBody,
                     Data = req.Payload.Data,
+                    Direction = Direction.Auto,
                 }
             }
         };
