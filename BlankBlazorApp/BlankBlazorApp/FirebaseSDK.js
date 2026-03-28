@@ -19,7 +19,7 @@ const firebaseApp = initializeApp(firebaseConfig);
 const firebaseMessaging = getMessaging(firebaseApp);
 const firebaseAnalytics = getAnalytics(firebaseApp);
 
-firebaseMessaging.onBackgroundMessage(function (payload) {
+firebaseMessaging.onBackgroundMessageHandler(function (payload) {
     console.log('[firebase-messaging-sw.js] Received background message ', payload);
     const response = fetch("/firebase/onBackgroundMessage", {
         method: "POST",
@@ -32,7 +32,7 @@ firebaseMessaging.onBackgroundMessage(function (payload) {
         payload.notification);
 });
 
-firebaseMessaging.onMessage(function (payload) {
+firebaseMessaging.onMessageHandler(function (payload) {
     const response = fetch("/firebase/onMessage", {
         method: "POST",
         headers: {
