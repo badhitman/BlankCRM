@@ -22,12 +22,7 @@
     </div>
     <div class="mb-3">
         <label for="formFile" class="form-label">Изображение уведомления (опционально)</label>
-        <input class="form-control"
-               type="file"
-               id="formFile"
-               aria-describedby="imageHelp"
-               @bind-value="imageMsg"
-               @bind-value:event="oninput" />
+        <InputFile @key=@(_inputFileId) class="form-control form-control-sm" OnChange="SelectFilesChange" id="formFile" aria-describedby="imageHelp" />
         <div id="imageHelp" class="form-text">При желании можно загрузить изображение или указать действительный URL-адрес изображения по протоколу HTTPS.</div>
     </div>
     <div class="mb-3">

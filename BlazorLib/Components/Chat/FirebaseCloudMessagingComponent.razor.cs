@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 using SharedLib;
 
 namespace BlazorLib.Components.Chat;
@@ -13,7 +14,13 @@ namespace BlazorLib.Components.Chat;
 public partial class FirebaseCloudMessagingComponent : BlazorBusyComponentBaseAuthModel
 {
     [Inject]
+    IStorageTransmission StorageRepo { get; set; } = default!;
+
+    [Inject]
     IFirebaseServiceTransmission FirebaseRepo { get; set; } = default!;
+
+    [Inject]
+    NavigationManager NavRepo { get; set; } = default!;
 
 
     /// <inheritdoc/>
@@ -22,10 +29,22 @@ public partial class FirebaseCloudMessagingComponent : BlazorBusyComponentBaseAu
 
 
     string? titleMsg, textBodyMsg, nameMsg, imageMsg;
+    readonly List<IBrowserFile> loadedFiles = [];
+    string _inputFileId = Guid.NewGuid().ToString();
 
     bool CanSendMessage =>
         !string.IsNullOrWhiteSpace(titleMsg) &&
         !string.IsNullOrWhiteSpace(textBodyMsg);
+
+    void SelectFilesChange(InputFileChangeEventArgs e)
+    {
+        loadedFiles.Clear();
+
+        foreach (IBrowserFile file in e.GetMultipleFiles())
+        {
+            loadedFiles.Add(file);
+        }
+    }
 
     async Task SendMessage()
     {
@@ -59,8 +78,48 @@ public partial class FirebaseCloudMessagingComponent : BlazorBusyComponentBaseAu
                 },
             }
         };
+        List<StorageFileModelDB> filesUpd = [];
+        MemoryStream? ms = null;
         await SetBusyAsync();
-        TResponseModel<SendFirebaseMessageResultModel> res = await FirebaseRepo.SendFirebaseMessageAsync(req);
+        if (loadedFiles.Count != 0)
+        {
+            foreach (IBrowserFile fileBrowser in loadedFiles)
+            {
+                ms = new();
+                await fileBrowser.OpenReadStream(maxAllowedSize: 1024 * 18 * 1024).CopyToAsync(ms);
+                TAuthRequestStandardModel<StorageFileMetadataModel> reqF = new()
+                {
+                    SenderActionUserId = CurrentUserSession.UserId,
+                    Payload = new()
+                    {
+                        Payload = ms.ToArray(),
+                        FileName = fileBrowser.Name,
+                        ContentType = fileBrowser.ContentType,
+                        OwnerPrimaryKey = ChatDialog.Id,
+                        ApplicationName = Path.Combine($"{GlobalStaticConstantsRoutes.Routes.FIREBASE_CONTROLLER_NAME}-{GlobalStaticConstantsRoutes.Routes.NOTIFICATION_CONTROLLER_NAME}"),
+                        PropertyName = GlobalStaticConstantsRoutes.Routes.ATTACHMENT_CONTROLLER_NAME,
+                        Referrer = NavRepo.Uri,
+                        RulesTypes = new() { { FileAccessRulesTypesEnum.Token, [Guid.NewGuid().ToString()] } },
+                    }
+                };
+                TResponseModel<StorageFileModelDB> storeFile = await StorageRepo.SaveFileAsync(reqF);
+                SnackBarRepo.ShowMessagesResponse(storeFile.Messages);
+
+                if (storeFile.Response is not null)
+                    filesUpd.Add(storeFile.Response);
+                await ms.DisposeAsync();
+            }
+
+            if (filesUpd.Count != 0)
+            {
+                StorageFileModelDB _f = filesUpd.First();
+                req.Payload.ImageUrl = $"{NavRepo.BaseUri}/cloud-fs/read/{_f.Id}/{_f.FileName}?{GlobalStaticConstantsRoutes.Routes.TOKEN_CONTROLLER_NAME}={_f.AccessRules?.First(x => x.AccessRuleType == FileAccessRulesTypesEnum.Token).Option}";
+            }
+
+            loadedFiles.Clear();
+            _inputFileId = Guid.NewGuid().ToString();
+        }
+        TResponseModel<SendFirebaseMessageResultModel> res = await FirebaseRepo.SendFirebaseNotificationAsync(req);
         SnackBarRepo.ShowMessagesResponse(res.Messages);
 
         titleMsg = "";

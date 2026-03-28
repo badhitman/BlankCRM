@@ -59,8 +59,8 @@ function sendTokenToServer(currentToken) {
     $.ajax({
         url: '/firebase/FirebaseTokenHandle',
         type: 'POST',
-        contentType: 'application/json', // Set the correct Content-Type header
-        data: JSON.stringify(dataToSend), // Manually stringify the data to JSON format
+        contentType: 'application/json',
+        data: JSON.stringify(dataToSend),
         success: function (response) {
             console.log(`Токен [${currentToken}] отправлен на сервер: ${response}`);
         },

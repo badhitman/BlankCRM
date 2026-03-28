@@ -1427,7 +1427,7 @@ public static partial class GlobalStaticConstantsTransmission
         public static readonly string GetFirebaseConfigReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.FIREBASESDK_CONTROLLER_NAME, Routes.CONFIGURATION_CONTROLLER_NAME, Routes.GET_ACTION_NAME);
 
         /// <inheritdoc/>
-        public static readonly string SendFirebaseMessageReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.FIREBASESDK_CONTROLLER_NAME, Routes.MESSAGE_CONTROLLER_NAME, Routes.SEND_ACTION_NAME);
+        public static readonly string SendFirebaseNotificationReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.FIREBASESDK_CONTROLLER_NAME, Routes.MESSAGE_CONTROLLER_NAME, Routes.SEND_ACTION_NAME);
         #endregion
 
         /// <inheritdoc/>

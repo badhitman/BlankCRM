@@ -1410,6 +1410,11 @@ public static partial class GlobalStaticConstantsRoutes
         public const string ERRORS_CONTROLLER_NAME = "errors";
 
         /// <summary>
+        /// Notification
+        /// </summary>
+        public const string NOTIFICATION_CONTROLLER_NAME = "notification";
+
+        /// <summary>
         /// Message
         /// </summary>
         public const string MESSAGE_CONTROLLER_NAME = "message";
