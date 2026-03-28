@@ -50,15 +50,17 @@ window.FirebaseSDK = {
                 console.warn('Не удалось получить разрешение на показ уведомлений.', err);
             });
     },
-    ReadPermission: function () {
+    ReadPermission: async function () {
         console.log('Read permission...');
-        Notification.requestPermission().then((permission) => {
-            return permission;
+        let res;
+        await Notification.requestPermission().then((permission) => {
+            res = permission;
         })
         .catch(function (err) {
             console.warn('Не удалось получить разрешение на показ уведомлений.', err);
-            return null;
+            res = null;
         });
+        return res;
     }
 }
 
