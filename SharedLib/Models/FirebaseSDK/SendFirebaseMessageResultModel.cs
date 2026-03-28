@@ -9,8 +9,6 @@ namespace SharedLib;
 /// </summary>
 public class SendFirebaseMessageResultModel
 {
-    /// <summary>
-    /// 
-    /// </summary>
+    /// <inheritdoc/>
     public List<string>? SuccessfulMessagesIds { get; set; }
 }

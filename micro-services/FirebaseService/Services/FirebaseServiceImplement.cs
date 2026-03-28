@@ -73,16 +73,16 @@ public class FirebaseServiceImplement() : IFirebaseService
                 Title = req.Payload.Title,
                 Body = req.Payload.TextBody,
             },
-            //Webpush = new()
-            //{
-            //    Notification = new()
-            //    {
-            //        Title = req.Payload.Title,
-            //        Body = req.Payload.TextBody,
-            //        Data = req.Payload.Data,
-            //        Direction = Direction.Auto,
-            //    }
-            //}
+            Webpush = new()
+            {
+                Notification = new()
+                {
+                    Title = req.Payload.Title,
+                    Body = req.Payload.TextBody,
+                    Direction = Direction.Auto,
+                },
+                Data = req.Payload.Data,
+            }
         };
         if (!string.IsNullOrWhiteSpace(req.Payload.ImageUrl))
         {
