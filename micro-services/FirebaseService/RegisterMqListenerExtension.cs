@@ -19,7 +19,7 @@ public static class RegisterMqListenerExtension
     {
         return services
             .RegisterListenerRabbitMQ<GetFirebaseConfigReceive, object, TResponseModel<FirebaseSDKConfigModel>>()
-            .RegisterListenerRabbitMQ<SendFirebaseMessageReceive, TAuthRequestStandardModel<SendFirebaseMessageRequestModel>, TResponseModel<List<string>>>()
+            .RegisterListenerRabbitMQ<SendFirebaseMessageReceive, TAuthRequestStandardModel<SendFirebaseMessageRequestModel>, TResponseModel<SendFirebaseMessageResultModel>>()
             ;
     }
 }

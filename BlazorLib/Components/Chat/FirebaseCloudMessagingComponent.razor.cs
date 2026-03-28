@@ -55,7 +55,7 @@ public partial class FirebaseCloudMessagingComponent : BlazorBusyComponentBaseAu
             }
         };
         await SetBusyAsync();
-        TResponseModel<List<string>> res = await FirebaseRepo.SendFirebaseMessageAsync(req);
+        TResponseModel<SendFirebaseMessageResultModel> res = await FirebaseRepo.SendFirebaseMessageAsync(req);
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         
          titleMsg = "";

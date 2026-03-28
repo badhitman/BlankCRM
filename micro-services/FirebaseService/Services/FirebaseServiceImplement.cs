@@ -13,7 +13,7 @@ namespace FirebaseService;
 public class FirebaseServiceImplement() : IFirebaseService
 {
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<string>>> SendFirebaseMessageAsync(TAuthRequestStandardModel<SendFirebaseMessageRequestModel> req, CancellationToken token = default)
+    public async Task<TResponseModel<SendFirebaseMessageResultModel>> SendFirebaseMessageAsync(TAuthRequestStandardModel<SendFirebaseMessageRequestModel> req, CancellationToken token = default)
     {
         if (req.Payload is null)
             return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "req.Payload is null" }] };
@@ -21,8 +21,26 @@ public class FirebaseServiceImplement() : IFirebaseService
         if (!req.Payload.IsValid)
             return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "!req.Payload.IsValid" }] };
 
-        // See documentation on defining a message payload.
-        MulticastMessage message = new()
+        TResponseModel<SendFirebaseMessageResultModel> res = new();
+        res.Response = new();
+        if (req.Payload.TokensFCM.Count == 1)
+        {
+            Message message = new()
+            {
+                Data = req.Payload.Data,
+                Token = req.Payload.TokensFCM[0],
+            };
+
+            string responseSimple = await FirebaseMessaging.DefaultInstance.SendAsync(message, token);
+            if (!string.IsNullOrWhiteSpace(responseSimple))
+                res.Response.SuccessfulMessagesIds = [responseSimple];
+            else
+                res.AddError($"Не удалось отправить сообщение токену/клиенту {req.Payload.TokensFCM[0]}");
+
+            return res;
+        }
+
+        MulticastMessage messages = new()
         {
             Tokens = req.Payload.TokensFCM,
             Data = req.Payload.Data,
@@ -32,15 +50,14 @@ public class FirebaseServiceImplement() : IFirebaseService
                 Body = req.Payload.TextBody,
             },
         };
-        if(!string.IsNullOrWhiteSpace(req.Payload.ImageUrl))
-            message.Notification.ImageUrl = req.Payload.ImageUrl;
+        if (!string.IsNullOrWhiteSpace(req.Payload.ImageUrl))
+            messages.Notification.ImageUrl = req.Payload.ImageUrl;
 
-        TResponseModel<List<string>> res = new();
         BatchResponse response;
-
+        res.Response.SuccessfulMessagesIds = [];
         try
         {
-            response = await FirebaseMessaging.DefaultInstance.SendEachForMulticastAsync(message, token);
+            response = await FirebaseMessaging.DefaultInstance.SendEachForMulticastAsync(messages, token);
         }
         catch (Exception ex)
         {
@@ -48,14 +65,10 @@ public class FirebaseServiceImplement() : IFirebaseService
             return res;
         }
 
-        if (response.FailureCount > 0)
+        for (int i = 0; i < response.Responses.Count; i++)
         {
-            res.Response = [];
-            for (int i = 0; i < response.Responses.Count; i++)
-            {
-                if (!response.Responses[i].IsSuccess)
-                    res.Response.Add(req.Payload.TokensFCM[i]);
-            }
+            if (response.Responses[i].IsSuccess)
+                res.Response.SuccessfulMessagesIds.Add(req.Payload.TokensFCM[i]);
         }
 
         return res;

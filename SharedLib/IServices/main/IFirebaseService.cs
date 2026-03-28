@@ -12,5 +12,5 @@ public interface IFirebaseService
     /// <summary>
     /// Send Firebase Message
     /// </summary>
-    public Task<TResponseModel<List<string>>> SendFirebaseMessageAsync(TAuthRequestStandardModel<SendFirebaseMessageRequestModel> req, CancellationToken token = default);
+    public Task<TResponseModel<SendFirebaseMessageResultModel>> SendFirebaseMessageAsync(TAuthRequestStandardModel<SendFirebaseMessageRequestModel> req, CancellationToken token = default);
 }

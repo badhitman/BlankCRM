@@ -175,6 +175,6 @@
     <small class="text-body-secondary">
         created: @dialogEdit.CreatedAtUTC.GetCustomTime() |
         deadline: @dialogEdit.DeadlineUTC.GetCustomTime() |
-        online: @dialogEdit.LastOnlineAtUTC.GetCustomTime()
+        online: @dialogEdit.LastOnlineAtUTC.GetCustomTime() > client: @dialogEdit.UserAgent
     </small>
 }
