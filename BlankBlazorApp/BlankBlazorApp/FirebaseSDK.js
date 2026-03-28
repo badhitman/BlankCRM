@@ -29,7 +29,7 @@ window.FirebaseSDK = {
         window.FirebaseSDK.RequestPermission();
     },
     RequestPermission: function () {
-        if (!FirebaseIsSupported)
+        if (!FirebaseIsSupported())
             return;
 
         console.log('Requesting permission...');
@@ -58,7 +58,7 @@ window.FirebaseSDK = {
             });
     },
     ReadPermission: async function () {
-        if (!FirebaseIsSupported)
+        if (!FirebaseIsSupported())
             return "none";
 
         console.log('Read permission...');
