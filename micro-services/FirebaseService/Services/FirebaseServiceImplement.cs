@@ -34,15 +34,15 @@ public class FirebaseServiceImplement() : IFirebaseService
                     Title = req.Payload.Title,
                     Body = req.Payload.TextBody,
                 },
-                //Webpush = new()
-                //{
-                //    Data = req.Payload.Data,
-                //    Notification = new()
-                //    {
-                //        Title = req.Payload.Title,
-                //        Body = req.Payload.TextBody,
-                //    },
-                //}
+                Webpush = new()
+                {
+                    Data = req.Payload.Data,
+                    Notification = new()
+                    {
+                        Title = req.Payload.Title,
+                        Body = req.Payload.TextBody,
+                    },
+                }
             };
             if (!string.IsNullOrWhiteSpace(req.Payload.ImageUrl))
             {
@@ -63,11 +63,11 @@ public class FirebaseServiceImplement() : IFirebaseService
         {
             Tokens = req.Payload.TokensFCM,
             Data = req.Payload.Data,
-            //Notification = new()
-            //{
-            //    Title = req.Payload.Title,
-            //    Body = req.Payload.TextBody,
-            //},
+            Notification = new()
+            {
+                Title = req.Payload.Title,
+                Body = req.Payload.TextBody,
+            },
             Webpush = new()
             {
                 Notification = new()
