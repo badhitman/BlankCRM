@@ -18,5 +18,5 @@ public class FirebaseTransmissionRabbit([FromKeyedServices(nameof(RabbitClient))
 
     /// <inheritdoc/>
     public async Task<TResponseModel<List<string>>> SendFirebaseMessageAsync(TAuthRequestStandardModel<SendFirebaseMessageRequestModel> req, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<TResponseModel<List<string>>>(GlobalStaticConstantsTransmission.TransmissionQueues.SendFirebaseMessageReceive, token: token) ?? new();
+        => await rabbitClient.MqRemoteCallAsync<TResponseModel<List<string>>>(GlobalStaticConstantsTransmission.TransmissionQueues.SendFirebaseMessageReceive, req, token: token) ?? new();
 }
