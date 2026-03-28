@@ -52,17 +52,22 @@ public partial class FirebaseCloudMessagingComponent : BlazorBusyComponentBaseAu
                 Name = nameMsg,
                 ExpandViewMode = true,
                 ImageUrl = imageMsg,
+                Data = new Dictionary<string, string>()
+                {
+                    { "score", "850" },
+                    { "time", "2:45" },
+                },
             }
         };
         await SetBusyAsync();
         TResponseModel<SendFirebaseMessageResultModel> res = await FirebaseRepo.SendFirebaseMessageAsync(req);
         SnackBarRepo.ShowMessagesResponse(res.Messages);
-        
-         titleMsg = "";
-         textBodyMsg = "";
-         nameMsg = "";
-         imageMsg = "";
-         
+
+        titleMsg = "";
+        textBodyMsg = "";
+        nameMsg = "";
+        imageMsg = "";
+
         await SetBusyAsync(false);
     }
 }
