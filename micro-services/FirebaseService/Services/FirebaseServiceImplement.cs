@@ -68,11 +68,11 @@ public class FirebaseServiceImplement() : IFirebaseService
         {
             Tokens = req.Payload.TokensFCM,
             Data = req.Payload.Data,
-            //Notification = new()
-            //{
-            //    Title = req.Payload.Title,
-            //    Body = req.Payload.TextBody,
-            //},
+            Notification = new()
+            {
+                Title = req.Payload.Title,
+                Body = req.Payload.TextBody,
+            },
             //Webpush = new()
             //{
             //    Notification = new()
@@ -107,6 +107,9 @@ public class FirebaseServiceImplement() : IFirebaseService
             if (response.Responses[i].IsSuccess)
                 res.Response.SuccessfulMessagesIds.Add(req.Payload.TokensFCM[i]);
         }
+
+        if (res.Response.SuccessfulMessagesIds.Count == req.Payload.TokensFCM.Count)
+            res.AddSuccess("Отправка успешно выполнена");
 
         return res;
     }
