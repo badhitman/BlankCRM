@@ -47,7 +47,7 @@
         <MudTd DataLabel="Дата">
             <span class="hstack">
                 @_dt.ToString("d", GlobalStaticConstants.RU)
-                <sup>@_dt.ToString("t", GlobalStaticConstants.RU)</sup>
+                <sup>@_dt.ToString("T", GlobalStaticConstants.RU)</sup>
             </span>
             <sup title="время на выполнение операции">@(context.UTCTimestampFinalReceive - context.UTCTimestampInitReceive)</sup>
         </MudTd>
