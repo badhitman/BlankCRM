@@ -123,10 +123,7 @@ public partial class FirebaseCloudMessagingComponent : BlazorBusyComponentBaseAu
         TResponseModel<SendFirebaseMessageResultModel> res = await FirebaseRepo.SendFirebaseNotificationAsync(req);
         SnackBarRepo.ShowMessagesResponse(res.Messages);
 
-        titleMsg = "";
-        textBodyMsg = "";
-        nameMsg = "";
-        imageMsg = "";
+        titleMsg = nameMsg = imageMsg = textBodyMsg = clickUrl = "";
 
         await SetBusyAsync(false);
     }
