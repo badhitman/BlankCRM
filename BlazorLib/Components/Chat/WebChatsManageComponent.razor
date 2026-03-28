@@ -51,13 +51,15 @@
             </MudLink>
         </MudTd>
         <MudTd DataLabel="Вход" title="Дата/Время последнего посещения">
-            <MudLink Href="@($"/web-chats/room-{context.Id}")" Class="me-2">
-                @context.LastOnlineAtUTC.GetCustomTime()
-            </MudLink>
-            @if (!IsBusyProgress)
-            {
-                <ChatStatusComponent DialogId="context.Id" OnLoadHandler="() => { }" />
-            }
+            <div class="hstack">
+                <MudLink Href="@($"/web-chats/room-{context.Id}")" Class="me-2">
+                    @context.LastOnlineAtUTC.GetCustomTime()
+                </MudLink>
+                @if (!IsBusyProgress)
+                {
+                    <ChatStatusComponent DialogId="context.Id" OnLoadHandler="() => { }" />
+                }
+            </div>
         </MudTd>
         <MudTd DataLabel="Инициатор">
             @if (string.IsNullOrWhiteSpace(context.InitiatorIdentityId))
