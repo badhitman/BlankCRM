@@ -18,6 +18,7 @@ const firebaseApp = firebase.initializeApp(firebaseConfig);
 const firebaseMessaging = firebase.messaging();
 
 firebaseMessaging.onBackgroundMessage(function (payload) {
+    console.log('[firebase-messaging-sw.js] Received background message ', payload);
     const response = fetch("/firebase/onBackgroundMessage", {
         method: "POST",
         headers: {
@@ -25,6 +26,8 @@ firebaseMessaging.onBackgroundMessage(function (payload) {
         },
         body: JSON.stringify(payload),
     });
+    self.registration.showNotification(payload.notification.title,
+        payload.notification);
 });
 
 firebaseMessaging.onMessage(function (payload) {
@@ -36,13 +39,13 @@ firebaseMessaging.onMessage(function (payload) {
         body: JSON.stringify(payload),
     });
 
-    navigator.serviceWorker.register('messaging-sw.js');
-    navigator.serviceWorker.ready.then(function (registration) {
-        payload.notification.data = payload.notification;
-        return registration.showNotification(payload.notification.title, payload.notification);
-    }).catch(function (error) {
-        console.log('ServiceWorker registration failed', error);
-    });
+    //navigator.serviceWorker.register('messaging-sw.js');
+    //navigator.serviceWorker.ready.then(function (registration) {
+    //    payload.notification.data = payload.notification;
+    //    return registration.showNotification(payload.notification.title, payload.notification);
+    //}).catch(function (error) {
+    //    console.log('ServiceWorker registration failed', error);
+    //});
 });
 
 self.addEventListener('notificationclick', function (event) {
