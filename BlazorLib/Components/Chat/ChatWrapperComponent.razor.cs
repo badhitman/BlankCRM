@@ -54,7 +54,7 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
     DialogWebChatModelDB? dialogSession, dialogSessionEdit;
     string? lastUserId;
     Virtualize<MessageWebChatModelDB>? virtualizeComponent;
-    string? _textSendMessage;
+    string? _textSendMessage, readPermission;
     byte missingMessages;
     bool CannotSendMessage => string.IsNullOrWhiteSpace(_textSendMessage) || IsBusyProgress;
     static readonly int virtualCacheSize = 50;
@@ -311,6 +311,8 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
     {
         await base.OnInitializedAsync();
         await InitSession();
+        readPermission = await JsRuntime.InvokeAsync<string?>("FirebaseSDK.ReadPermission");
+
         if (dialogSession is not null)
         {
             await NewMessageWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.NewMessageWebChatNotifyReceive, dialogSession.Id.ToString()), NewMessageWebChatHandler, LayoutContainerId, CurrentUserSessionBytes, propertiesValues: [new(Routes.DIALOG_CONTROLLER_NAME, BitConverter.GetBytes(dialogSession.Id))]);
