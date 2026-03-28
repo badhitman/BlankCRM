@@ -23,46 +23,47 @@ public class FirebaseServiceImplement() : IFirebaseService
 
         TResponseModel<SendFirebaseMessageResultModel> res = new();
         res.Response = new();
-        //if (req.Payload.TokensFCM.Count == 1)
-        //{
-        //    Message message = new()
-        //    {
-        //        Data = req.Payload.Data,
-        //        Token = req.Payload.TokensFCM[0],
-        //        Notification = new()
-        //        {
-        //            Title = req.Payload.Title,
-        //            Body = req.Payload.TextBody,
-        //        },
-        //        Webpush = new()
-        //        {
-        //            Data = req.Payload.Data,
-        //            Notification = new()
-        //            {
-        //                Title = req.Payload.Title,
-        //                Body = req.Payload.TextBody,
-        //                Data = req.Payload.Data,
-        //                Direction = Direction.Auto,
-        //            }
-        //        },
-        //    };
-        //    if (!string.IsNullOrWhiteSpace(req.Payload.ImageUrl))
-        //    {
-        //        message.Notification.ImageUrl = req.Payload.ImageUrl;
-        //        message.Webpush.Notification.Image = req.Payload.ImageUrl;
-        //    }
 
-        //    string responseSimple = await FirebaseMessaging.DefaultInstance.SendAsync(message, token);
-        //    if (!string.IsNullOrWhiteSpace(responseSimple))
-        //    {
-        //        res.Response.SuccessfulMessagesIds = [responseSimple];
-        //        res.AddSuccess($"Сообщение отправлено. Ответ: {responseSimple}");
-        //    }
-        //    else
-        //        res.AddError($"Не удалось отправить сообщение токену/клиенту {req.Payload.TokensFCM[0]}");
+        /*if (req.Payload.TokensFCM.Count == 1)
+        {
+            Message message = new()
+            {
+                Data = req.Payload.Data,
+                Token = req.Payload.TokensFCM[0],
+                Notification = new()
+                {
+                    Title = req.Payload.Title,
+                    Body = req.Payload.TextBody,
+                },
+                Webpush = new()
+                {
+                    Data = req.Payload.Data,
+                    Notification = new()
+                    {
+                        Title = req.Payload.Title,
+                        Body = req.Payload.TextBody,
+                        Data = req.Payload.Data,
+                        Direction = Direction.Auto,
+                    }
+                },
+            };
+            if (!string.IsNullOrWhiteSpace(req.Payload.ImageUrl))
+            {
+                message.Notification.ImageUrl = req.Payload.ImageUrl;
+                message.Webpush.Notification.Image = req.Payload.ImageUrl;
+            }
 
-        //    return res;
-        //}
+            string responseSimple = await FirebaseMessaging.DefaultInstance.SendAsync(message, token);
+            if (!string.IsNullOrWhiteSpace(responseSimple))
+            {
+                res.Response.SuccessfulMessagesIds = [responseSimple];
+                res.AddSuccess($"Сообщение отправлено. Ответ: {responseSimple}");
+            }
+            else
+                res.AddError($"Не удалось отправить сообщение токену/клиенту {req.Payload.TokensFCM[0]}");
+
+            return res;
+        }*/
 
         MulticastMessage messages = new()
         {
@@ -73,21 +74,21 @@ public class FirebaseServiceImplement() : IFirebaseService
                 Title = req.Payload.Title,
                 Body = req.Payload.TextBody,
             },
-            //Webpush = new()
-            //{
-            //    Notification = new()
-            //    {
-            //        Title = req.Payload.Title,
-            //        Body = req.Payload.TextBody,
-            //        Direction = Direction.Auto,
-            //    },
-            //    Data = req.Payload.Data,
-            //}
+            Webpush = new()
+            {
+                Notification = new()
+                {
+                    Title = req.Payload.Title,
+                    Body = req.Payload.TextBody,
+                    Direction = Direction.Auto,
+                },
+                Data = req.Payload.Data,
+            }
         };
         if (!string.IsNullOrWhiteSpace(req.Payload.ImageUrl))
         {
             messages.Notification.ImageUrl = req.Payload.ImageUrl;
-        //    messages.Webpush.Notification.Image = req.Payload.ImageUrl;
+            messages.Webpush.Notification.Image = req.Payload.ImageUrl;
         }
 
         BatchResponse response;
