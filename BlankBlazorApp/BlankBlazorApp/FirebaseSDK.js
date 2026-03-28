@@ -62,10 +62,10 @@ function sendTokenToServer(currentToken) {
         contentType: 'application/json', // Set the correct Content-Type header
         data: JSON.stringify(dataToSend), // Manually stringify the data to JSON format
         success: function (response) {
-            console.log(`Токен отправлен на сервер: ${response}`);
+            console.log(`Токен [${currentToken}] отправлен на сервер: ${response}`);
         },
         error: function (xhr, status, error) {
-            console.log(`Не удалось получить разрешение на показ уведомлений: [status: ${status}] [error: ${error}].`);
+            console.log(`Не удалось отправить токен [[${currentToken}]]: [status: ${status}] [error: ${error}].`);
         }
     });
 
