@@ -47,7 +47,7 @@ public class FirebaseServiceImplement() : IFirebaseService
             if (!string.IsNullOrWhiteSpace(req.Payload.ImageUrl))
             {
                 message.Notification.ImageUrl = req.Payload.ImageUrl;
-                //message.Webpush.Notification.Image = req.Payload.ImageUrl;
+                message.Webpush.Notification.Image = req.Payload.ImageUrl;
             }
 
             string responseSimple = await FirebaseMessaging.DefaultInstance.SendAsync(message, token);
@@ -81,7 +81,7 @@ public class FirebaseServiceImplement() : IFirebaseService
         if (!string.IsNullOrWhiteSpace(req.Payload.ImageUrl))
         {
             messages.Notification.ImageUrl = req.Payload.ImageUrl;
-            //messages.Webpush.Notification.Image = req.Payload.ImageUrl;
+            messages.Webpush.Notification.Image = req.Payload.ImageUrl;
         }
 
         BatchResponse response;
