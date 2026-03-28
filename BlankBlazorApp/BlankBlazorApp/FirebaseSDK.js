@@ -19,6 +19,37 @@ const firebaseApp = initializeApp(firebaseConfig);
 const firebaseMessaging = getMessaging(firebaseApp);
 const firebaseAnalytics = getAnalytics(firebaseApp);
 
+firebaseMessaging.onBackgroundMessage(function (payload) {
+    console.log('[firebase-messaging-sw.js] Received background message ', payload);
+    const response = fetch("/firebase/onBackgroundMessage", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+    });
+    self.registration.showNotification(payload.notification.title,
+        payload.notification);
+});
+
+firebaseMessaging.onMessage(function (payload) {
+    const response = fetch("/firebase/onMessage", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+    });
+
+    //navigator.serviceWorker.register('messaging-sw.js');
+    //navigator.serviceWorker.ready.then(function (registration) {
+    //    payload.notification.data = payload.notification;
+    //    return registration.showNotification(payload.notification.title, payload.notification);
+    //}).catch(function (error) {
+    //    console.log('ServiceWorker registration failed', error);
+    //});
+});
+
 window.FirebaseSDK = {
     Initialize: function (publicMessagingToken) {
         window.PublicMessagingToken = publicMessagingToken;
