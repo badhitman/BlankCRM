@@ -30,9 +30,11 @@ public class FirebaseServiceImplement() : IFirebaseService
             {
                 Title = req.Payload.Title,
                 Body = req.Payload.TextBody,
-                ImageUrl = req.Payload.ImageUrl,
             },
         };
+        if(!string.IsNullOrWhiteSpace(req.Payload.ImageUrl))
+            message.Notification.ImageUrl = req.Payload.ImageUrl;
+
         TResponseModel<List<string>> res = new();
         BatchResponse response;
 
