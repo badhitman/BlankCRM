@@ -1,8 +1,9 @@
-﻿@inherits BlazorBusyComponentBaseAuthModel
+﻿@using MudBlazor
+@inherits BlazorBusyComponentBaseAuthModel
 
 <small>FCM Token: @ChatDialog.FirebaseCloudMessagingToken</small>
 <form>
-    <div class="mb-3">
+    <div class="mb-2">
         <label for="exampleInputTitle1" class="form-label">Заголовок уведомления</label>
         <input type="text"
                class="form-control"
@@ -12,7 +13,7 @@
                @bind-value:event="oninput" />
         <div id="titleHelp" class="form-text">Отображается конечным пользователям в качестве заголовка уведомления.</div>
     </div>
-    <div class="mb-3">
+    <div class="mb-2">
         <label for="exampleFormControlTextBody" class="form-label">Текст уведомления</label>
         <textarea class="form-control"
                   id="exampleFormControlTextBody"
@@ -20,22 +21,34 @@
                   @bind-value="textBodyMsg"
                   @bind-value:event="oninput"></textarea>
     </div>
-    <div class="mb-3">
-        <label for="formFile" class="form-label">Изображение уведомления (опционально)</label>
-        <InputFile @key=@(_inputFileId) class="form-control form-control-sm" OnChange="SelectFilesChange" id="formFile" aria-describedby="imageHelp" />
-        <div id="imageHelp" class="form-text">При желании можно загрузить изображение или указать действительный URL-адрес изображения по протоколу HTTPS.</div>
-    </div>
-    <div class="mb-3">
-        <label for="exampleInputNameMsg" class="form-label">Название уведомления (необязательно)</label>
-        <input type="text"
-               class="form-control"
-               id="exampleInputNameMsg"
-               aria-describedby="nameMsgHelp"
-               @bind-value="nameMsg"
-               @bind-value:event="oninput" />
-        <div id="nameMsgHelp" class="form-text">Имя, используемое для идентификации этого уведомления в Firebase. Это имя не отображается пользователям.</div>
-    </div>
-    <div class="mb-3">
+    <MudGrid Class="mb-2">
+        <MudItem xs="12" md="4">
+            <label for="formFile" class="form-label">Изображение уведомления (опционально)</label>
+            <InputFile @key=@(_inputFileId) class="form-control form-control-sm" OnChange="SelectFilesChange" id="formFile" aria-describedby="imageHelp" />
+            <div id="imageHelp" class="form-text">При желании можно загрузить изображение или указать действительный URL-адрес изображения по протоколу HTTPS.</div>
+        </MudItem>
+        <MudItem xs="12" md="4">
+            <label for="exampleInputNameMsg" class="form-label">Название уведомления (опционально)</label>
+            <input type="text"
+                   class="form-control"
+                   id="exampleInputNameMsg"
+                   aria-describedby="nameMsgHelp"
+                   @bind-value="nameMsg"
+                   @bind-value:event="oninput" />
+            <div id="nameMsgHelp" class="form-text">Имя, используемое для идентификации этого уведомления в Firebase. Это имя не отображается пользователям.</div>
+        </MudItem>
+        <MudItem xs="12" md="4">
+            <label for="exampleInputLinkMsg" class="form-label">Ссылка (опционально)</label>
+            <input type="text"
+                   class="form-control"
+                   id="exampleInputLinkMsg"
+                   aria-describedby="linkMsgHelp"
+                   @bind-value="clickUrl"
+                   @bind-value:event="oninput" />
+            <div id="linkMsgHelp" class="form-text">Ссылка, которая откроется при нажатии пользователем на уведомление.</div>
+        </MudItem>
+    </MudGrid>    
+    <div class="mb-2">
         <div class="form-check form-check-inline">
             <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" readonly />
             <label class="form-check-label" for="inlineRadio1">Компактный вид</label>

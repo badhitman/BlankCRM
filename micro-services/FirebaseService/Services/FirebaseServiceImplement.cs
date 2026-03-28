@@ -37,13 +37,13 @@ public class FirebaseServiceImplement() : IFirebaseService
             },
             Webpush = new()
             {
+                Data = req.Payload.Data,
                 Notification = new()
                 {
                     Title = req.Payload.Title,
                     Body = req.Payload.TextBody,
                     Direction = Direction.Auto,
-                },
-                Data = req.Payload.Data,
+                }
             }
         };
         if (!string.IsNullOrWhiteSpace(req.Payload.ImageUrl))
@@ -51,6 +51,8 @@ public class FirebaseServiceImplement() : IFirebaseService
             messages.Notification.ImageUrl = req.Payload.ImageUrl;
             messages.Webpush.Notification.Image = req.Payload.ImageUrl;
         }
+        if (!string.IsNullOrWhiteSpace(req.Payload.LinkURL))
+            messages.Webpush.FcmOptions = new() { Link = req.Payload.LinkURL };
 
         BatchResponse response;
         res.Response.SuccessfulMessagesIds = [];

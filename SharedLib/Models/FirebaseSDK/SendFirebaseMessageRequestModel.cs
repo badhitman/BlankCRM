@@ -28,6 +28,9 @@ public class SendFirebaseMessageRequestModel
     public string? ImageUrl { get; set; }
 
     /// <inheritdoc/>
+    public string? LinkURL { get; set; }
+
+    /// <inheritdoc/>
     public Dictionary<string, string>? Data { get; set; }
 
     /// <inheritdoc/>
