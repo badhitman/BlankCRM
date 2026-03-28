@@ -46,9 +46,9 @@ window.FirebaseSDK = {
                 });
             }
         })
-        .catch(function (err) {
-            console.warn('Не удалось получить разрешение на показ уведомлений.', err);
-        });
+            .catch(function (err) {
+                console.warn('Не удалось получить разрешение на показ уведомлений.', err);
+            });
     }
 }
 
@@ -62,10 +62,10 @@ function sendTokenToServer(currentToken) {
         contentType: 'application/json', // Set the correct Content-Type header
         data: JSON.stringify(dataToSend), // Manually stringify the data to JSON format
         success: function (response) {
-            console.log('Не удалось получить разрешение на показ уведомлений.', response);
+            console.log(`Токен отправлен на сервер: ${response}`);
         },
         error: function (xhr, status, error) {
-            // Handle error (including the 415 error)
+            console.log(`Не удалось получить разрешение на показ уведомлений: [status: ${status}] [error: ${error}].`);
         }
     });
 
