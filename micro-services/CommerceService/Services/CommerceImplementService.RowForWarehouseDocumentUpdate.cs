@@ -4,10 +4,10 @@
 
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 using Newtonsoft.Json;
 using SharedLib;
 using DbcLib;
-using System.Reflection;
 
 namespace CommerceService;
 
