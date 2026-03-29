@@ -88,7 +88,7 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
                 Amount = offerForAddElement.Value.Amount,
             };
             await SetBusyAsync();
-            TResponseModel<int> res = await RetailRepo.CreateRowOfDeliveryDocumentAsync(new()
+            TResponseModel<int> res = await RetailRepo.CreateRowOfDeliveryDocumentRetailAsync(new()
             {
                 Payload = req,
                 SenderActionUserId = CurrentUserSession.UserId,
@@ -251,7 +251,7 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
                     Amount = off.Quantity * off.Price,
                 };
                 await SetBusyAsync();
-                TResponseModel<int> res = await RetailRepo.CreateRowOfDeliveryDocumentAsync(new()
+                TResponseModel<int> res = await RetailRepo.CreateRowOfDeliveryDocumentRetailAsync(new()
                 {
                     SenderActionUserId = CurrentUserSession.UserId,
                     Payload = req,
@@ -272,7 +272,7 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
             if (Document.Id > 0)
             {
                 await SetBusyAsync();
-                TResponseModel<Guid?> res = await RetailRepo.UpdateRowOfDeliveryDocumentAsync(new() { SenderActionUserId = CurrentUserSession.UserId, Payload = Document.Rows[exist_row] });
+                TResponseModel<Guid?> res = await RetailRepo.UpdateRowOfDeliveryDocumentRetailAsync(new() { SenderActionUserId = CurrentUserSession.UserId, Payload = Document.Rows[exist_row] });
                 SnackBarRepo.ShowMessagesResponse(res.Messages);
                 if (res.Response is not null)
                     Document.Version = res.Response.Value;
@@ -311,7 +311,7 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
         else
         {
             RowOfDeliveryRetailDocumentModelDB rowOfDocument = Document.Rows!.First(x => x.OfferId == offerId);
-            DocumentNewVersionResponseModel res = await RetailRepo.DeleteRowOfDeliveryDocumentAsync(new()
+            DocumentNewVersionResponseModel res = await RetailRepo.DeleteRowOfDeliveryDocumentRetailAsync(new()
             {
                 SenderActionUserId = CurrentUserSession.UserId,
                 Payload = new()
@@ -355,7 +355,7 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
 
                     if (off.Id == 0)
                     {
-                        TResponseModel<int> res = await RetailRepo.CreateRowOfDeliveryDocumentAsync(new()
+                        TResponseModel<int> res = await RetailRepo.CreateRowOfDeliveryDocumentRetailAsync(new()
                         {
                             Payload = off,
                             SenderActionUserId = CurrentUserSession.UserId,
@@ -364,7 +364,7 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
                     }
                     else
                     {
-                        TResponseModel<Guid?> res = await RetailRepo.UpdateRowOfDeliveryDocumentAsync(new()
+                        TResponseModel<Guid?> res = await RetailRepo.UpdateRowOfDeliveryDocumentRetailAsync(new()
                         {
                             Payload = off,
                             SenderActionUserId = CurrentUserSession.UserId,
@@ -386,7 +386,7 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
                 if (Document.Id > 0)
                 {
                     await SetBusyAsync();
-                    TResponseModel<Guid?> res = await RetailRepo.UpdateRowOfDeliveryDocumentAsync(new() { SenderActionUserId = CurrentUserSession.UserId, Payload = off });
+                    TResponseModel<Guid?> res = await RetailRepo.UpdateRowOfDeliveryDocumentRetailAsync(new() { SenderActionUserId = CurrentUserSession.UserId, Payload = off });
                     SnackBarRepo.ShowMessagesResponse(res.Messages);
                     if (res.Response is not null)
                         Document.Version = res.Response.Value;

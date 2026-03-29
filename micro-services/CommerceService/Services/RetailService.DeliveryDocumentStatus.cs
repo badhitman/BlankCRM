@@ -4,6 +4,7 @@
 
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 using Newtonsoft.Json;
 using SharedLib;
 using DbcLib;
@@ -16,7 +17,7 @@ namespace CommerceService;
 public partial class RetailService : IRetailService
 {
     /// <inheritdoc/>
-    public async Task<DocumentNewVersionResponseModel> CreateDeliveryStatusDocumentAsync(TAuthRequestStandardModel<DeliveryStatusRetailDocumentModelDB> req, CancellationToken token = default)
+    public async Task<DocumentNewVersionResponseModel> CreateDeliveryStatusDocumentRetailAsync(TAuthRequestStandardModel<DeliveryStatusRetailDocumentModelDB> req, CancellationToken token = default)
     {
         if (req.Payload is null)
             return new()
@@ -60,12 +61,15 @@ public partial class RetailService : IRetailService
         }
 
         int[] _offersIds = [.. docDb.Rows.Select(x => x.OfferId)];
+        IQueryable<OfferAvailabilityModelDB> offerAvailabilityQuery = context
+                   .OffersAvailability
+                   .Where(x => _offersIds.Contains(x.OfferId));
         List<LockTransactionModelDB> lockers = [.._offersIds.Select(x=> new LockTransactionModelDB()
         {
             LockerName = nameof(OfferAvailabilityModelDB),
             LockerId = x,
             LockerAreaId = docDb.WarehouseId,
-            Marker = nameof(CreateDeliveryStatusDocumentAsync)
+            Marker = nameof(CreateDeliveryStatusDocumentRetailAsync)
         })];
 
         string msg;
@@ -101,11 +105,9 @@ public partial class RetailService : IRetailService
             return res;
         }
 
-        List<OfferAvailabilityModelDB> offerAvailabilityDB = await context
-           .OffersAvailability
-           .Where(x => _offersIds.Contains(x.OfferId))
+        List<OfferAvailabilityModelDB> offerAvailabilityDB = await offerAvailabilityQuery
            .ToListAsync(cancellationToken: token);
-
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(MethodBase.GetCurrentMethod()!.Name, docDb.Id.ToString(), offerAvailabilityDB);
         ResponseBaseModel sRes = await DoIt(context, transaction, docDb.Rows, !offDeliveriesStatuses.Contains(_newStatus), offerAvailabilityDB, docDb, token);
         if (!sRes.Success())
         {
@@ -120,11 +122,12 @@ public partial class RetailService : IRetailService
         }
 
         await transaction.CommitAsync(token);
+        await indexingRepo.SaveHistoryForReceiverAsync(trace.SetResponse(await offerAvailabilityQuery.ToListAsync(cancellationToken: token)), token);
         return res;
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<Guid?>> UpdateDeliveryStatusDocumentAsync(TAuthRequestStandardModel<DeliveryStatusRetailDocumentModelDB> req, CancellationToken token = default)
+    public async Task<TResponseModel<Guid?>> UpdateDeliveryStatusDocumentRetailAsync(TAuthRequestStandardModel<DeliveryStatusRetailDocumentModelDB> req, CancellationToken token = default)
     {
         if (req.Payload is null)
             return new()
@@ -201,7 +204,7 @@ public partial class RetailService : IRetailService
             LockerName = nameof(OfferAvailabilityModelDB),
             LockerId = x,
             LockerAreaId = docDb.WarehouseId,
-            Marker = nameof(UpdateDeliveryStatusDocumentAsync)
+            Marker = nameof(UpdateDeliveryStatusDocumentRetailAsync)
         })];
 
         string msg;
@@ -242,7 +245,7 @@ public partial class RetailService : IRetailService
     }
 
     /// <inheritdoc/>
-    public async Task<DeleteDeliveryStatusDocumentResponseModel> DeleteDeliveryStatusDocumentAsync(TAuthRequestStandardModel<DeleteDeliveryStatusDocumentRequestModel> req, CancellationToken token = default)
+    public async Task<DeleteDeliveryStatusDocumentResponseModel> DeleteDeliveryStatusDocumentRetailAsync(TAuthRequestStandardModel<DeleteDeliveryStatusDocumentRequestModel> req, CancellationToken token = default)
     {
         if (req.Payload is null)
             return new()
@@ -301,7 +304,7 @@ public partial class RetailService : IRetailService
             LockerName = nameof(OfferAvailabilityModelDB),
             LockerId = x,
             LockerAreaId = res.DeliveryStatus.DeliveryDocument!.WarehouseId,
-            Marker = nameof(DeleteDeliveryStatusDocumentAsync),
+            Marker = nameof(DeleteDeliveryStatusDocumentRetailAsync),
         })];
 
         string msg;

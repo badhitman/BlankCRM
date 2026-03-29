@@ -2,11 +2,12 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
-using Microsoft.EntityFrameworkCore.Storage;
+using DbcLib;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using Newtonsoft.Json;
 using SharedLib;
-using DbcLib;
+using System.Reflection;
 
 namespace CommerceService;
 
@@ -46,7 +47,9 @@ public partial class CommerceImplementService : ICommerceService
         req.Payload.DeliveryDate = req.Payload.DeliveryDate.SetKindUtc();
         if (req.Payload.Name is not null)
             req.Payload.Name = req.Payload.Name.Trim();
+
         req.Payload.NormalizedUpperName = req.Payload.Name?.ToUpper() ?? "";
+        req.Payload.DeliveryDate = req.Payload.DeliveryDate.SetKindUtc();
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         DateTime dtu = DateTime.UtcNow;
@@ -61,6 +64,7 @@ public partial class CommerceImplementService : ICommerceService
             req.Payload.CreatedAtUTC = dtu;
             req.Payload.LastUpdatedAtUTC = dtu;
             req.Payload.IsDisabled = true;
+
             await context.WarehouseDocuments.AddAsync(req.Payload, token);
             await context.SaveChangesAsync(token);
             res.Response = req.Payload.Id;
@@ -141,7 +145,10 @@ public partial class CommerceImplementService : ICommerceService
         offersLocked = [.. offersLocked.DistinctBy(x => x.LockerAreaId)];
 
         using IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(System.Data.IsolationLevel.Serializable, cancellationToken: token);
-
+        int[] _offersIds = [.. warehouseDocumentDb.Rows.Select(x => x.OfferId).Distinct()];
+        IQueryable<OfferAvailabilityModelDB> offerAvailabilityQuery = context.OffersAvailability
+                    .Where(x => _offersIds.Any(y => y == x.OfferId));
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(MethodBase.GetCurrentMethod()!.Name, warehouseDocumentDb.Id.ToString(), await offerAvailabilityQuery.ToListAsync(cancellationToken: token));
         if (offersLocked.Count != 0)
         {
             try
@@ -159,9 +166,7 @@ public partial class CommerceImplementService : ICommerceService
             }
         }
 
-        int[] _offersIds = [.. warehouseDocumentDb.Rows.Select(x => x.OfferId).Distinct()];
-        List<OfferAvailabilityModelDB> registersOffersDb = await context.OffersAvailability
-            .Where(x => _offersIds.Any(y => y == x.OfferId))
+        List<OfferAvailabilityModelDB> registersOffersDb = await offerAvailabilityQuery
             .Include(x => x.Offer)
             .Include(x => x.Nomenclature)
             .ToListAsync(cancellationToken: token);
@@ -487,6 +492,7 @@ public partial class CommerceImplementService : ICommerceService
 
         res.AddSuccess("Складской документ обновлён");
         await transaction.CommitAsync(token);
+        await indexingRepo.SaveHistoryForReceiverAsync(trace.SetResponse(await offerAvailabilityQuery.ToListAsync(cancellationToken: token)), token);
         return res;
     }
 }

@@ -18,7 +18,7 @@
         <MudChipSet @bind-SelectedValues="SelectedWarehouses" SelectionMode="SelectionMode.MultiSelection" CheckMark Variant="Variant.Text" Color="Color.Info">
             @foreach (RubricNestedModel war in Warehouses)
             {
-                <MudChip Value="@war.Id" Text="@war.Name" />
+                <MudChip Value="war.Id" Text="@war.Name" title="@war.Id" />
             }
         </MudChipSet>
     </ToolBarContent>

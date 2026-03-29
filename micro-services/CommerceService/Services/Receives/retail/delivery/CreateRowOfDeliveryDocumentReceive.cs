@@ -21,7 +21,7 @@ public class CreateRowOfDeliveryDocumentReceive(IRetailService commRepo, IHistor
     {
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.SenderActionUserId, req.Payload);
-        DocumentNewVersionResponseModel res = await commRepo.CreateRowOfDeliveryDocumentAsync(req, token);
+        DocumentNewVersionResponseModel res = await commRepo.CreateRowOfDeliveryDocumentRetailAsync(req, token);
         await indexingRepo.SaveHistoryForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }

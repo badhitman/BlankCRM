@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////
 
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 using Newtonsoft.Json;
 using SharedLib;
 using DbcLib;
@@ -61,14 +62,14 @@ public partial class RetailService : IRetailService
             return res;
         }
 
-        List<OfferAvailabilityModelDB> offerAvailabilityDB = await context
+        IQueryable<OfferAvailabilityModelDB> offerAvailabilityQuery = context
            .OffersAvailability
-           .Where(x => x.OfferId == req.Payload.OfferId)
-           .ToListAsync(cancellationToken: token);
+           .Where(x => x.OfferId == req.Payload.OfferId);
+        List<OfferAvailabilityModelDB> offerAvailabilityDB = await offerAvailabilityQuery.ToListAsync(cancellationToken: token);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(MethodBase.GetCurrentMethod()!.Name, req.Payload.OrderId.ToString(), GlobalTools.CreateDeepCopy(offerAvailabilityDB));
 
         OfferAvailabilityModelDB? regOfferAv = offerAvailabilityDB
-            .Where(x => x.OfferId == req.Payload.OfferId && x.WarehouseId == retailOrderDb.WarehouseId)
-            .FirstOrDefault();
+            .FirstOrDefault(x => x.OfferId == req.Payload.OfferId && x.WarehouseId == retailOrderDb.WarehouseId);
 
         TResponseModel<bool?> res_WarehouseReserveForRetailOrder = await StorageTransmissionRepo
             .ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.WarehouseReserveForRetailOrder, token);
@@ -138,6 +139,7 @@ public partial class RetailService : IRetailService
               .SetProperty(p => p.Version, res.DocumentNewVersion), cancellationToken: token);
 
         await transaction.CommitAsync(token);
+        await indexingRepo.SaveHistoryForReceiverAsync(trace.SetResponse(await offerAvailabilityQuery.ToListAsync(cancellationToken: token)), token);
         return res;
     }
 
@@ -178,7 +180,7 @@ public partial class RetailService : IRetailService
                     TypeMessage = MessagesTypesEnum.Error,
                     Text = $"Строку документа уже кто-то изменил. Обновите документ и попробуйте изменить его снова" }]
             };
-        
+
         if (offOrdersStatuses.Contains(retailOrderDb.StatusDocument))
         {
             await context.RowsOrdersRetails
@@ -236,11 +238,12 @@ public partial class RetailService : IRetailService
             loggerRepo.LogError(ex, $"{msg}{JsonConvert.SerializeObject(req.Payload, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
             return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = $"{msg}{ex.Message}" }] };
         }
-
-        List<OfferAvailabilityModelDB> offerAvailabilityDB = await context
+        IQueryable<OfferAvailabilityModelDB> offerAvailabilityQuery = context
             .OffersAvailability
-            .Where(x => x.OfferId == req.Payload.OfferId || x.OfferId == rowDb.OfferId)
+            .Where(x => x.OfferId == req.Payload.OfferId || x.OfferId == rowDb.OfferId);
+        List<OfferAvailabilityModelDB> offerAvailabilityDB = await offerAvailabilityQuery
             .ToListAsync(cancellationToken: token);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(MethodBase.GetCurrentMethod()!.Name, req.Payload.OrderId.ToString(), GlobalTools.CreateDeepCopy(offerAvailabilityDB));
 
         OfferAvailabilityModelDB? regOfferAv;
         if (rowDb.OfferId != req.Payload.OfferId)
@@ -417,6 +420,7 @@ public partial class RetailService : IRetailService
               .SetProperty(p => p.Version, retailOrderDb.Version), cancellationToken: token);
 
         await transaction.CommitAsync(token);
+        await indexingRepo.SaveHistoryForReceiverAsync(trace.SetResponse(await offerAvailabilityQuery.ToListAsync(cancellationToken: token)), token);
         return new()
         {
             Response = retailOrderDb.Version,
@@ -448,7 +452,10 @@ public partial class RetailService : IRetailService
         DocumentRetailModelDB retailOrderDb = rowOfRetailDb.Order!;
         DocumentRetailModelDB _order = rowOfRetailDb.Order!;
         rowOfRetailDb.Order = null;
-
+        IQueryable<OfferAvailabilityModelDB> offerAvailabilityQuery = context
+                .OffersAvailability
+                .Where(x => x.OfferId == rowOfRetailDb.OfferId && x.WarehouseId == retailOrderDb.WarehouseId);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(MethodBase.GetCurrentMethod()!.Name, rowOfRetailDb.OrderId.ToString(), await offerAvailabilityQuery.ToListAsync(cancellationToken: token));
         using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
         if (!offOrdersStatuses.Contains(retailOrderDb.StatusDocument))
         {
@@ -477,10 +484,7 @@ public partial class RetailService : IRetailService
                 return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = $"{msg}{ex.Message}" }] };
             }
 
-            OfferAvailabilityModelDB? regOfferAv = await context
-                .OffersAvailability
-                .Where(x => x.OfferId == rowOfRetailDb.OfferId)
-                .FirstOrDefaultAsync(x => x.OfferId == rowOfRetailDb.OfferId && x.WarehouseId == retailOrderDb.WarehouseId, cancellationToken: token);
+            OfferAvailabilityModelDB? regOfferAv = await offerAvailabilityQuery.FirstOrDefaultAsync(cancellationToken: token);
 
             if (res_WarehouseReserveForRetailOrder.Response == true)
             {
@@ -558,7 +562,7 @@ public partial class RetailService : IRetailService
             .SetProperty(p => p.Version, _nv), cancellationToken: token);
 
         await transaction.CommitAsync(token);
-
+        await indexingRepo.SaveHistoryForReceiverAsync(trace.SetResponse(await offerAvailabilityQuery.ToListAsync(cancellationToken: token)), token);
         return new()
         {
             Response = rowOfRetailDb,

@@ -4,10 +4,11 @@
 
 using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver.Linq;
+using System.Reflection;
 using Newtonsoft.Json;
 using SharedLib;
 using DbcLib;
-using MongoDB.Driver.Linq;
 
 namespace CommerceService;
 
@@ -75,7 +76,6 @@ public partial class RetailService : IRetailService
         req.Payload.Description = req.Payload.Description?.Trim();
         req.Payload.CreatedAtUTC = DateTime.UtcNow;
         req.Payload.DateDocument = req.Payload.DateDocument.SetKindUtc();
-        // req.Payload.Rows?.ForEach(x => x.Version = Guid.NewGuid());
 
         using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
 
@@ -145,9 +145,11 @@ public partial class RetailService : IRetailService
 
         if (retailOrderDb.Version != req.Payload.Version)
             return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = $"Документ уже был кем-то изменён. Обновите документ и попробуйте снова его изменить" }] };
-
+        int[] _offersIds = [.. retailOrderDb.Rows!.Select(x => x.OfferId).Distinct()];
         using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
-
+        IQueryable<OfferAvailabilityModelDB> offerAvailabilityQuery = context.OffersAvailability
+                .Where(x => _offersIds.Any(y => y == x.OfferId));
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(MethodBase.GetCurrentMethod()!.Name, retailOrderDb.Id.ToString(), await offerAvailabilityQuery.ToListAsync(cancellationToken: token));
         if (!offOrdersStatuses.Contains(retailOrderDb.StatusDocument) && retailOrderDb.WarehouseId != req.Payload.WarehouseId)
         {
             List<LockTransactionModelDB> offersLocked = [];
@@ -185,9 +187,8 @@ public partial class RetailService : IRetailService
             }
 
             TResponseModel<Guid> res = new();
-            int[] _offersIds = [.. retailOrderDb.Rows.Select(x => x.OfferId).Distinct()];
-            List<OfferAvailabilityModelDB> registersOffersDb = await context.OffersAvailability
-                .Where(x => _offersIds.Any(y => y == x.OfferId))
+
+            List<OfferAvailabilityModelDB> registersOffersDb = await offerAvailabilityQuery
                 .Include(x => x.Offer)
                 .Include(x => x.Nomenclature)
                 .ToListAsync(cancellationToken: token);
@@ -327,7 +328,7 @@ public partial class RetailService : IRetailService
                   .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token);
 
         await transaction.CommitAsync(token);
-
+        await indexingRepo.SaveHistoryForReceiverAsync(trace.SetResponse(await offerAvailabilityQuery.ToListAsync(cancellationToken: token)), token);
         return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Success, Text = "Документ/заказ обновлён" }], Response = _ver };
     }
 

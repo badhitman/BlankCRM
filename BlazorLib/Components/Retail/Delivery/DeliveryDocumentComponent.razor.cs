@@ -191,7 +191,7 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
         await SetBusyAsync();
         if (editDoc.Id <= 0)
         {
-            TResponseModel<int> res = await RetailRepo.CreateDeliveryDocumentAsync(new()
+            TResponseModel<int> res = await RetailRepo.CreateDeliveryDocumentRetailAsync(new()
             {
                 Payload = CreateDeliveryDocumentRetailRequestModel.Build(editDoc, InjectToOrder?.Id ?? 0),
                 SenderActionUserId = CurrentUserSession.UserId,
@@ -203,7 +203,7 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
         }
         else
         {
-            TResponseModel<Guid?> res = await RetailRepo.UpdateDeliveryDocumentAsync(new() { SenderActionUserId = CurrentUserSession.UserId, Payload = editDoc });
+            TResponseModel<Guid?> res = await RetailRepo.UpdateDeliveryDocumentRetailAsync(new() { SenderActionUserId = CurrentUserSession.UserId, Payload = editDoc });
             SnackBarRepo.ShowMessagesResponse(res.Messages);
             if (res.Success())
             {

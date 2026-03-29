@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using SharedLib;
 using DbcLib;
+using System.Reflection;
 
 namespace CommerceService;
 
@@ -62,7 +63,10 @@ public partial class CommerceImplementService : ICommerceService
         }
 
         if (req.Payload.NomenclatureId < 1)
-            req.Payload.NomenclatureId = await context.Offers.Where(x => x.Id == req.Payload.OfferId).Select(x => x.NomenclatureId).FirstAsync(cancellationToken: token);
+            req.Payload.NomenclatureId = await context.Offers
+                .Where(x => x.Id == req.Payload.OfferId)
+                .Select(x => x.NomenclatureId)
+                .FirstAsync(cancellationToken: token);
 
         loggerRepo.LogInformation($"{nameof(warehouseDocDB)}: {JsonConvert.SerializeObject(warehouseDocDB, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
         RowOfWarehouseDocumentModelDB? rowDb = req.Payload.Id > 0
@@ -135,14 +139,14 @@ public partial class CommerceImplementService : ICommerceService
             loggerRepo.LogError(ex, $"{msg}{JsonConvert.SerializeObject(req.Payload, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
             return res;
         }
-
-        List<OfferAvailabilityModelDB> offerAvailabilityDB = await context
+        IQueryable<OfferAvailabilityModelDB> offerAvailabilityQuery = context
             .OffersAvailability
-            .Where(x => x.OfferId == req.Payload.OfferId || (rowDb != null && x.OfferId == rowDb.OfferId))
-            .Include(x => x.Offer)
+            .Where(x => x.OfferId == req.Payload.OfferId || (rowDb != null && x.OfferId == rowDb.OfferId));
+
+        List<OfferAvailabilityModelDB> offerAvailabilityDB = await offerAvailabilityQuery.Include(x => x.Offer)
             .Include(x => x.Nomenclature)
             .ToListAsync(cancellationToken: token);
-
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(MethodBase.GetCurrentMethod()!.Name, req.Payload.WarehouseDocumentId.ToString(), GlobalTools.CreateDeepCopy(offerAvailabilityDB));
         if (!warehouseDocDB.IsDisabled)
         {
             OfferAvailabilityModelDB? regOfferAv, regOfferAvWritingOff;
@@ -224,8 +228,8 @@ public partial class CommerceImplementService : ICommerceService
             regOfferAvWritingOff = offerAvailabilityDB.FirstOrDefault(x => x.OfferId == req.Payload.OfferId && x.WarehouseId == warehouseDocDB.WritingOffWarehouseId);
             //
             decimal _quantity = rowDb is null
-                   ? -req.Payload.Quantity
-                   : -(rowDb.Quantity - req.Payload.Quantity);
+                   ? req.Payload.Quantity
+                   : rowDb.Quantity - req.Payload.Quantity;
 
             if (warehouseDocDB.WritingOffWarehouseId > 0)
             {
@@ -246,14 +250,14 @@ public partial class CommerceImplementService : ICommerceService
                             WarehouseId = warehouseDocDB.WritingOffWarehouseId,
                             OfferId = req.Payload.OfferId,
                             NomenclatureId = req.Payload.NomenclatureId,
-                            Quantity = _quantity,
+                            Quantity = -_quantity,
                         };
                         await context.OffersAvailability.AddAsync(regOfferAvWritingOff, token);
                         await context.SaveChangesAsync(token);
                         offerAvailabilityDB.Add(regOfferAvWritingOff);
                     }
                 }
-                else if (regOfferAvWritingOff.Quantity + _quantity < 0 && warehouseNegativeBalanceAllowed.Response != true)
+                else if (regOfferAvWritingOff.Quantity - _quantity < 0 && warehouseNegativeBalanceAllowed.Response != true)
                 {
                     await transaction.RollbackAsync(token);
                     msg = $"Остаток офера #{req.Payload.OfferId} на складе #{warehouseDocDB.WritingOffWarehouseId} списания не достаточный";
@@ -265,9 +269,9 @@ public partial class CommerceImplementService : ICommerceService
                 {
                     await context.OffersAvailability.Where(y => y.Id == regOfferAvWritingOff.Id)
                         .ExecuteUpdateAsync(set => set
-                            .SetProperty(p => p.Quantity, p => p.Quantity + _quantity), cancellationToken: token);
+                            .SetProperty(p => p.Quantity, p => p.Quantity - _quantity), cancellationToken: token);
 
-                    regOfferAvWritingOff.Quantity += _quantity;
+                    regOfferAvWritingOff.Quantity -= _quantity;
                 }
             }
 
@@ -305,7 +309,7 @@ public partial class CommerceImplementService : ICommerceService
             }
             else
             {
-                if (regOfferAv.Quantity < -_quantity && warehouseNegativeBalanceAllowed.Response != true)
+                if (regOfferAv.Quantity + _quantity < 0 && warehouseNegativeBalanceAllowed.Response != true)
                 {
                     await transaction.RollbackAsync(token);
                     msg = $"На складе #{warehouseDocDB.WarehouseId} отсутствует офер #{regOfferAv.OfferId}";
@@ -329,7 +333,7 @@ public partial class CommerceImplementService : ICommerceService
             await context.RowsWarehouses.AddAsync(req.Payload, token);
             await context.SaveChangesAsync(token);
 
-            res.AddSuccess("Товар добавлен к документу");
+            res.AddSuccess("Строка добавлена к документу");
             res.Response = req.Payload.Id;
         }
         else
@@ -341,6 +345,8 @@ public partial class CommerceImplementService : ICommerceService
                       .SetProperty(p => p.NomenclatureId, req.Payload.NomenclatureId)
                       .SetProperty(p => p.Quantity, req.Payload.Quantity)
                       .SetProperty(p => p.Version, Guid.NewGuid()), cancellationToken: token);
+
+            res.AddSuccess("Строка документа обновлена");
         }
 
         if (lockers.Count != 0)
@@ -348,7 +354,7 @@ public partial class CommerceImplementService : ICommerceService
 
         await context.SaveChangesAsync(token);
         await transaction.CommitAsync(token);
-
+        await indexingRepo.SaveHistoryForReceiverAsync(trace.SetResponse(await offerAvailabilityQuery.ToListAsync(cancellationToken: token)), token);
         res.AddSuccess($"Обновление `строки складского документа` выполнено");
         return res;
     }

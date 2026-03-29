@@ -69,11 +69,11 @@ public class RetailTransmissionRabbit([FromKeyedServices(nameof(RabbitClient))] 
 
     #region Delivery Document
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> CreateDeliveryDocumentAsync(TAuthRequestStandardModel<CreateDeliveryDocumentRetailRequestModel> req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> CreateDeliveryDocumentRetailAsync(TAuthRequestStandardModel<CreateDeliveryDocumentRetailRequestModel> req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(TransmissionQueues.CreateDeliveryDocumentRetailReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<Guid?>> UpdateDeliveryDocumentAsync(TAuthRequestStandardModel<DeliveryDocumentRetailModelDB> req, CancellationToken token = default)
+    public async Task<TResponseModel<Guid?>> UpdateDeliveryDocumentRetailAsync(TAuthRequestStandardModel<DeliveryDocumentRetailModelDB> req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<Guid?>>(TransmissionQueues.UpdateDeliveryDocumentRetailReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
@@ -90,11 +90,11 @@ public class RetailTransmissionRabbit([FromKeyedServices(nameof(RabbitClient))] 
 
     #region Row Of Delivery Document
     /// <inheritdoc/>
-    public async Task<DocumentNewVersionResponseModel> CreateRowOfDeliveryDocumentAsync(TAuthRequestStandardModel<RowOfDeliveryRetailDocumentModelDB> req, CancellationToken token = default)
+    public async Task<DocumentNewVersionResponseModel> CreateRowOfDeliveryDocumentRetailAsync(TAuthRequestStandardModel<RowOfDeliveryRetailDocumentModelDB> req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<DocumentNewVersionResponseModel>(TransmissionQueues.CreateRowOfDeliveryDocumentRetailReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<Guid?>> UpdateRowOfDeliveryDocumentAsync(TAuthRequestStandardModel<RowOfDeliveryRetailDocumentModelDB> req, CancellationToken token = default)
+    public async Task<TResponseModel<Guid?>> UpdateRowOfDeliveryDocumentRetailAsync(TAuthRequestStandardModel<RowOfDeliveryRetailDocumentModelDB> req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<Guid?>>(TransmissionQueues.UpdateRowOfDeliveryDocumentRetailReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
@@ -102,17 +102,17 @@ public class RetailTransmissionRabbit([FromKeyedServices(nameof(RabbitClient))] 
         => await rabbitClient.MqRemoteCallAsync<TPaginationResponseStandardModel<RowOfDeliveryRetailDocumentModelDB>>(TransmissionQueues.SelectRowsOfDeliveryDocumentsRetailReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<DocumentNewVersionResponseModel> DeleteRowOfDeliveryDocumentAsync(TAuthRequestStandardModel<DeleteRowOfDeliveryDocumentRequestModel> rowId, CancellationToken token = default)
+    public async Task<DocumentNewVersionResponseModel> DeleteRowOfDeliveryDocumentRetailAsync(TAuthRequestStandardModel<DeleteRowOfDeliveryDocumentRequestModel> rowId, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<DocumentNewVersionResponseModel>(TransmissionQueues.DeleteRowOfDeliveryDocumentRetailReceive, rowId, token: token) ?? new();
     #endregion
 
     #region Statuses (of delivery document)
     /// <inheritdoc/>
-    public async Task<DocumentNewVersionResponseModel> CreateDeliveryStatusDocumentAsync(TAuthRequestStandardModel<DeliveryStatusRetailDocumentModelDB> req, CancellationToken token = default)
+    public async Task<DocumentNewVersionResponseModel> CreateDeliveryStatusDocumentRetailAsync(TAuthRequestStandardModel<DeliveryStatusRetailDocumentModelDB> req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<DocumentNewVersionResponseModel>(TransmissionQueues.CreateDeliveryStatusDocumentRetailReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<Guid?>> UpdateDeliveryStatusDocumentAsync(TAuthRequestStandardModel<DeliveryStatusRetailDocumentModelDB> req, CancellationToken token = default)
+    public async Task<TResponseModel<Guid?>> UpdateDeliveryStatusDocumentRetailAsync(TAuthRequestStandardModel<DeliveryStatusRetailDocumentModelDB> req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<Guid?>>(TransmissionQueues.UpdateDeliveryStatusDocumentRetailReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
@@ -120,7 +120,7 @@ public class RetailTransmissionRabbit([FromKeyedServices(nameof(RabbitClient))] 
         => await rabbitClient.MqRemoteCallAsync<TPaginationResponseStandardModel<DeliveryStatusRetailDocumentModelDB>>(TransmissionQueues.SelectDeliveryStatusesDocumentsRetailReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<DeleteDeliveryStatusDocumentResponseModel> DeleteDeliveryStatusDocumentAsync(TAuthRequestStandardModel<DeleteDeliveryStatusDocumentRequestModel> statusId, CancellationToken token = default)
+    public async Task<DeleteDeliveryStatusDocumentResponseModel> DeleteDeliveryStatusDocumentRetailAsync(TAuthRequestStandardModel<DeleteDeliveryStatusDocumentRequestModel> statusId, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<DeleteDeliveryStatusDocumentResponseModel>(TransmissionQueues.DeleteDeliveryStatusDocumentRetailReceive, statusId, token: token) ?? new();
     #endregion
 

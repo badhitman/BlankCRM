@@ -22,6 +22,14 @@ public static partial class GlobalToolsStandard
     public static readonly int WebChatTicketSessionDeadlineSeconds = 60 * 60 * 24 * 60;
 
     /// <inheritdoc/>
+    public static bool IsCollection(object obj)
+    {
+        if (obj == null) return false;
+
+        return obj is IEnumerable<object> || obj is System.Collections.IEnumerable;
+    }
+
+    /// <inheritdoc/>
     public static string ToReadableString(this TimeSpan span)
     {
         string formatted = string.Format("{0}{1}{2}{3}",

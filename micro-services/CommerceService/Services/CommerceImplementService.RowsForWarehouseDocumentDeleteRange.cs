@@ -4,6 +4,7 @@
 
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 using Newtonsoft.Json;
 using SharedLib;
 using DbcLib;
@@ -44,6 +45,7 @@ public partial class CommerceImplementService : ICommerceService
             .Where(x => req.Payload.Any(y => y == x.Id))
             .Include(x => x.Offer)
             .Include(x => x.Nomenclature)
+            .Include(x => x.WarehouseDocument)
             .ToListAsync(cancellationToken: token);
 
         if (rowsDB.Count == 0)
@@ -51,29 +53,29 @@ public partial class CommerceImplementService : ICommerceService
             res.AddWarning($"Данные не найдены. Метод удаления [{nameof(RowsDeleteFromWarehouseDocumentAsync)}] не может выполнить команду.");
             return res;
         }
+        using IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(System.Data.IsolationLevel.Serializable, cancellationToken: token);
         List<LockTransactionModelDB> offersLocked = [];
-        foreach (var x in rowsDB)
+        foreach (RowOfWarehouseDocumentModelDB _rowWar in rowsDB)
         {
-            if (!offersLocked.Any(y => y.LockerId == x.OfferId && y.LockerAreaId == x.WarehouseDocument!.WarehouseId))
+            if (!offersLocked.Any(y => y.LockerId == _rowWar.OfferId && y.LockerAreaId == _rowWar.WarehouseDocument!.WarehouseId))
                 offersLocked.Add(new LockTransactionModelDB()
                 {
                     LockerName = nameof(OfferAvailabilityModelDB),
-                    LockerId = x.OfferId,
-                    LockerAreaId = x.WarehouseDocument!.WarehouseId,
+                    LockerId = _rowWar.OfferId,
+                    LockerAreaId = _rowWar.WarehouseDocument!.WarehouseId,
                     Marker = nameof(RowsDeleteFromWarehouseDocumentAsync),
                 });
 
-            if (!offersLocked.Any(y => y.LockerId == x.OfferId && y.LockerAreaId == x.WarehouseDocument!.WritingOffWarehouseId))
+            if (!offersLocked.Any(y => y.LockerId == _rowWar.OfferId && y.LockerAreaId == _rowWar.WarehouseDocument!.WritingOffWarehouseId))
                 offersLocked.Add(new LockTransactionModelDB()
                 {
                     LockerName = nameof(OfferAvailabilityModelDB),
-                    LockerId = x.OfferId,
-                    LockerAreaId = x.WarehouseDocument!.WritingOffWarehouseId,
+                    LockerId = _rowWar.OfferId,
+                    LockerAreaId = _rowWar.WarehouseDocument!.WritingOffWarehouseId,
                     Marker = nameof(RowsDeleteFromWarehouseDocumentAsync),
                 });
         }
 
-        using IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(System.Data.IsolationLevel.Serializable, cancellationToken: token);
         try
         {
             await context.LockTransactions.AddRangeAsync(offersLocked, token);
@@ -89,21 +91,21 @@ public partial class CommerceImplementService : ICommerceService
         }
 
         int[] _offersIds = [.. rowsDB.Select(x => x.OfferId).Distinct()];
-        List<OfferAvailabilityModelDB> registersOffersDb = await context.OffersAvailability
-           .Where(x => _offersIds.Any(y => y == x.OfferId))
-           .ToListAsync(cancellationToken: token);
-
+        IQueryable<OfferAvailabilityModelDB> offerAvailabilityQuery = context.OffersAvailability
+           .Where(x => _offersIds.Any(y => y == x.OfferId));
+        List<OfferAvailabilityModelDB> offerAvailabilityDB = await offerAvailabilityQuery.ToListAsync(cancellationToken: token);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(MethodBase.GetCurrentMethod()!.Name, rowsDB.Select(x => x.WarehouseDocumentId).First().ToString(), GlobalTools.CreateDeepCopy(offerAvailabilityDB));
         foreach (int doc_id in rowsDB.Select(x => x.WarehouseDocument!.Id).Distinct())
             await context.WarehouseDocuments.Where(x => x.Id == doc_id).ExecuteUpdateAsync(set => set
             .SetProperty(p => p.Version, Guid.NewGuid())
             .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token);
 
-        foreach (var rowOfDocumentElement in rowsDB.Where(x => !x.WarehouseDocument!.IsDisabled))
+        foreach (RowOfWarehouseDocumentModelDB? rowOfDocumentElement in rowsDB.Where(x => !x.WarehouseDocument!.IsDisabled))
         {
             loggerRepo.LogInformation($"{nameof(rowOfDocumentElement)}: {JsonConvert.SerializeObject(rowOfDocumentElement, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
             OfferAvailabilityModelDB?
-                offerRegister = registersOffersDb.FirstOrDefault(x => x.OfferId == rowOfDocumentElement.OfferId && x.WarehouseId == rowOfDocumentElement.WarehouseDocument!.WarehouseId),
-                offerRegisterWritingOff = registersOffersDb.FirstOrDefault(x => x.OfferId == rowOfDocumentElement.OfferId && x.WarehouseId == rowOfDocumentElement.WarehouseDocument!.WritingOffWarehouseId);
+                offerRegister = offerAvailabilityDB.FirstOrDefault(x => x.OfferId == rowOfDocumentElement.OfferId && x.WarehouseId == rowOfDocumentElement.WarehouseDocument!.WarehouseId),
+                offerRegisterWritingOff = offerAvailabilityDB.FirstOrDefault(x => x.OfferId == rowOfDocumentElement.OfferId && x.WarehouseId == rowOfDocumentElement.WarehouseDocument!.WritingOffWarehouseId);
 
             if (offerRegisterWritingOff is not null)
             {
@@ -142,7 +144,7 @@ public partial class CommerceImplementService : ICommerceService
                         OfferId = rowOfDocumentElement.OfferId,
                     };
 
-                    registersOffersDb.Add(offerRegister);
+                    offerAvailabilityDB.Add(offerRegister);
                     await context.OffersAvailability.AddAsync(offerRegister, token);
                     await context.SaveChangesAsync(token);
                 }
@@ -164,7 +166,10 @@ public partial class CommerceImplementService : ICommerceService
         }
 
         if (offersLocked.Count != 0)
+        {
             context.LockTransactions.RemoveRange(offersLocked);
+            await context.SaveChangesAsync(token);
+        }
 
         res.Response = [];
         foreach (var v in rowsDB.GroupBy(x => x.WarehouseDocumentId))
@@ -183,7 +188,7 @@ public partial class CommerceImplementService : ICommerceService
            .ExecuteDeleteAsync(cancellationToken: token);
 
         await transaction.CommitAsync(token);
-
+        await indexingRepo.SaveHistoryForReceiverAsync(trace.SetResponse(await offerAvailabilityQuery.ToListAsync(cancellationToken: token)), token);
         res.AddSuccess("Команда удаления выполнена");
         return res;
     }

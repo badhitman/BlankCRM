@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////
 
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 using Newtonsoft.Json;
 using System.Text;
 using SharedLib;
@@ -16,7 +17,7 @@ namespace CommerceService;
 public partial class RetailService : IRetailService
 {
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> CreateDeliveryDocumentAsync(TAuthRequestStandardModel<CreateDeliveryDocumentRetailRequestModel> req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> CreateDeliveryDocumentRetailAsync(TAuthRequestStandardModel<CreateDeliveryDocumentRetailRequestModel> req, CancellationToken token = default)
     {
         TResponseModel<int> res = new();
         if (req.Payload is null)
@@ -90,7 +91,7 @@ public partial class RetailService : IRetailService
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<Guid?>> UpdateDeliveryDocumentAsync(TAuthRequestStandardModel<DeliveryDocumentRetailModelDB> req, CancellationToken token = default)
+    public async Task<TResponseModel<Guid?>> UpdateDeliveryDocumentRetailAsync(TAuthRequestStandardModel<DeliveryDocumentRetailModelDB> req, CancellationToken token = default)
     {
         if (req.Payload is null)
             return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "req.Payload is null" }] };
@@ -113,6 +114,10 @@ public partial class RetailService : IRetailService
         TResponseModel<Guid?> res = new();
         using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
         string msg;
+        int[] _offersIds = [.. documentDb.Rows!.Select(x => x.OfferId).Distinct()];
+        IQueryable<OfferAvailabilityModelDB> offerAvailabilityQuery = context.OffersAvailability
+                .Where(x => _offersIds.Any(y => y == x.OfferId));
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(MethodBase.GetCurrentMethod()!.Name, documentDb.Id.ToString(), await offerAvailabilityQuery.ToListAsync(cancellationToken: token));
         if (!offDeliveriesStatuses.Contains(documentDb.DeliveryStatus) && documentDb.WarehouseId != req.Payload.WarehouseId)
         {
             List<LockTransactionModelDB> offersLocked = [];
@@ -123,14 +128,14 @@ public partial class RetailService : IRetailService
                     LockerName = nameof(OfferAvailabilityModelDB),
                     LockerAreaId = req.Payload.WarehouseId,
                     LockerId = rowDoc.OfferId,
-                    Marker = nameof(UpdateDeliveryDocumentAsync),
+                    Marker = nameof(UpdateDeliveryDocumentRetailAsync),
                 },
                 new LockTransactionModelDB()
                 {
                     LockerName = nameof(OfferAvailabilityModelDB),
                     LockerAreaId = documentDb.WarehouseId,
                     LockerId = rowDoc.OfferId,
-                    Marker = nameof(UpdateDeliveryDocumentAsync),
+                    Marker = nameof(UpdateDeliveryDocumentRetailAsync),
                 });
             }
             if (offersLocked.Count != 0)
@@ -149,9 +154,7 @@ public partial class RetailService : IRetailService
                 }
             }
 
-            int[] _offersIds = [.. documentDb.Rows.Select(x => x.OfferId).Distinct()];
-            List<OfferAvailabilityModelDB> registersOffersDb = await context.OffersAvailability
-                .Where(x => _offersIds.Any(y => y == x.OfferId))
+            List<OfferAvailabilityModelDB> registersOffersDb = await offerAvailabilityQuery
                 .Include(x => x.Offer)
                 .Include(x => x.Nomenclature)
                 .ToListAsync(cancellationToken: token);
@@ -250,6 +253,7 @@ public partial class RetailService : IRetailService
                 .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token);
 
         await transaction.CommitAsync(token);
+        await indexingRepo.SaveHistoryForReceiverAsync(trace.SetResponse(await offerAvailabilityQuery.ToListAsync(cancellationToken: token)), token);
         res.AddSuccess("Ok");
         return res;
     }

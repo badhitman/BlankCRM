@@ -54,7 +54,7 @@ public partial class DeliveryStatusesTableComponent : BlazorBusyComponentBaseAut
 
         await SetBusyAsync();
 
-        DeleteDeliveryStatusDocumentResponseModel res = await RetailRepo.DeleteDeliveryStatusDocumentAsync(new()
+        DeleteDeliveryStatusDocumentResponseModel res = await RetailRepo.DeleteDeliveryStatusDocumentRetailAsync(new()
         {
             Payload = new() { DeleteDeliveryStatusDocumentId = initDeleteRowStatusId.Value },
             SenderActionUserId = CurrentUserSession.UserId
@@ -94,7 +94,7 @@ public partial class DeliveryStatusesTableComponent : BlazorBusyComponentBaseAut
                 Id = editRowId.Value,
             };
             await SetBusyAsync();
-            ResponseBaseModel res = await RetailRepo.UpdateDeliveryStatusDocumentAsync(new()
+            ResponseBaseModel res = await RetailRepo.UpdateDeliveryStatusDocumentRetailAsync(new()
             {
                 Payload = req,
                 SenderActionUserId = CurrentUserSession.UserId
@@ -178,7 +178,7 @@ public partial class DeliveryStatusesTableComponent : BlazorBusyComponentBaseAut
             DeliveryDocument = Document
         };
         await SetBusyAsync();
-        DocumentNewVersionResponseModel res = await RetailRepo.CreateDeliveryStatusDocumentAsync(new() { Payload = req, SenderActionUserId = CurrentUserSession.UserId });
+        DocumentNewVersionResponseModel res = await RetailRepo.CreateDeliveryStatusDocumentRetailAsync(new() { Payload = req, SenderActionUserId = CurrentUserSession.UserId });
         if (!res.Success())
         {
             SnackBarRepo.ShowMessagesResponse(res.Messages);

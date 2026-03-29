@@ -21,7 +21,7 @@ public class DeleteDeliveryStatusDocumentReceive(IRetailService commRepo, IHisto
     {
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.SenderActionUserId, req.Payload);
-        DeleteDeliveryStatusDocumentResponseModel res = await commRepo.DeleteDeliveryStatusDocumentAsync(req, token);
+        DeleteDeliveryStatusDocumentResponseModel res = await commRepo.DeleteDeliveryStatusDocumentRetailAsync(req, token);
         await indexingRepo.SaveHistoryForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }

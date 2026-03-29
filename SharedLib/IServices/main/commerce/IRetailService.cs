@@ -11,10 +11,10 @@ public interface IRetailService
 {
     #region Delivery Document
     /// <inheritdoc/>
-    public Task<TResponseModel<int>> CreateDeliveryDocumentAsync(TAuthRequestStandardModel<CreateDeliveryDocumentRetailRequestModel> req, CancellationToken token = default);
+    public Task<TResponseModel<int>> CreateDeliveryDocumentRetailAsync(TAuthRequestStandardModel<CreateDeliveryDocumentRetailRequestModel> req, CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<TResponseModel<Guid?>> UpdateDeliveryDocumentAsync(TAuthRequestStandardModel<DeliveryDocumentRetailModelDB> req, CancellationToken token = default);
+    public Task<TResponseModel<Guid?>> UpdateDeliveryDocumentRetailAsync(TAuthRequestStandardModel<DeliveryDocumentRetailModelDB> req, CancellationToken token = default);
 
     /// <inheritdoc/>
     public Task<TPaginationResponseStandardModel<DeliveryDocumentRetailModelDB>> SelectDeliveryDocumentsAsync(TPaginationRequestStandardModel<SelectDeliveryDocumentsRetailRequestModel> req, CancellationToken token = default);
@@ -28,30 +28,30 @@ public interface IRetailService
 
     #region Row Of Delivery Document
     /// <inheritdoc/>
-    public Task<DocumentNewVersionResponseModel> CreateRowOfDeliveryDocumentAsync(TAuthRequestStandardModel<RowOfDeliveryRetailDocumentModelDB> req, CancellationToken token = default);
+    public Task<DocumentNewVersionResponseModel> CreateRowOfDeliveryDocumentRetailAsync(TAuthRequestStandardModel<RowOfDeliveryRetailDocumentModelDB> req, CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<TResponseModel<Guid?>> UpdateRowOfDeliveryDocumentAsync(TAuthRequestStandardModel<RowOfDeliveryRetailDocumentModelDB> req, CancellationToken token = default);
+    public Task<TResponseModel<Guid?>> UpdateRowOfDeliveryDocumentRetailAsync(TAuthRequestStandardModel<RowOfDeliveryRetailDocumentModelDB> req, CancellationToken token = default);
 
     /// <inheritdoc/>
     public Task<TPaginationResponseStandardModel<RowOfDeliveryRetailDocumentModelDB>> SelectRowsOfDeliveryDocumentsAsync(TPaginationRequestStandardModel<SelectRowsOfDeliveriesRetailDocumentsRequestModel> req, CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<DocumentNewVersionResponseModel> DeleteRowOfDeliveryDocumentAsync(TAuthRequestStandardModel<DeleteRowOfDeliveryDocumentRequestModel> req, CancellationToken token = default);
+    public Task<DocumentNewVersionResponseModel> DeleteRowOfDeliveryDocumentRetailAsync(TAuthRequestStandardModel<DeleteRowOfDeliveryDocumentRequestModel> req, CancellationToken token = default);
     #endregion
 
     #region Statuses (of delivery document)
     /// <inheritdoc/>
-    public Task<DocumentNewVersionResponseModel> CreateDeliveryStatusDocumentAsync(TAuthRequestStandardModel<DeliveryStatusRetailDocumentModelDB> req, CancellationToken token = default);
+    public Task<DocumentNewVersionResponseModel> CreateDeliveryStatusDocumentRetailAsync(TAuthRequestStandardModel<DeliveryStatusRetailDocumentModelDB> req, CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<TResponseModel<Guid?>> UpdateDeliveryStatusDocumentAsync(TAuthRequestStandardModel<DeliveryStatusRetailDocumentModelDB> req, CancellationToken token = default);
+    public Task<TResponseModel<Guid?>> UpdateDeliveryStatusDocumentRetailAsync(TAuthRequestStandardModel<DeliveryStatusRetailDocumentModelDB> req, CancellationToken token = default);
 
     /// <inheritdoc/>
     public Task<TPaginationResponseStandardModel<DeliveryStatusRetailDocumentModelDB>> SelectDeliveryStatusesDocumentsAsync(TPaginationRequestStandardModel<SelectDeliveryStatusesRetailDocumentsRequestModel> req, CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<DeleteDeliveryStatusDocumentResponseModel> DeleteDeliveryStatusDocumentAsync(TAuthRequestStandardModel<DeleteDeliveryStatusDocumentRequestModel> statusId, CancellationToken token = default);
+    public Task<DeleteDeliveryStatusDocumentResponseModel> DeleteDeliveryStatusDocumentRetailAsync(TAuthRequestStandardModel<DeleteDeliveryStatusDocumentRequestModel> statusId, CancellationToken token = default);
     #endregion
 
     #region Deliveries orders link`s    
