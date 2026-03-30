@@ -275,7 +275,7 @@ public partial class CommerceImplementService : ICommerceService
 
             if (regOfferAv is null)
             {
-                if (_quantity > 0)
+                if (_quantity < 0)
                 {
                     if (warehouseNegativeBalanceAllowed.Response != true)
                     {
@@ -296,13 +296,13 @@ public partial class CommerceImplementService : ICommerceService
                         };
                     }
                 }
-                else if (_quantity < 0)
+                else if (_quantity > 0)
                     await context.OffersAvailability.AddAsync(new()
                     {
                         OfferId = req.Payload.OfferId,
                         NomenclatureId = req.Payload.NomenclatureId,
                         WarehouseId = warehouseDocDB.WarehouseId,
-                        Quantity = -_quantity,
+                        Quantity = _quantity,
                     }, token);
             }
             else
