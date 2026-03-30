@@ -19,6 +19,7 @@ public partial class CommerceImplementService : ICommerceService
     /// <inheritdoc/>
     public async Task<DocumentNewVersionResponseModel> RowForWarehouseDocumentUpdateOrCreateAsync(TAuthRequestStandardModel<RowOfWarehouseDocumentModelDB> req, CancellationToken token = default)
     {
+        #region prepare
         string msg;
         DocumentNewVersionResponseModel res = new();
 
@@ -139,6 +140,8 @@ public partial class CommerceImplementService : ICommerceService
             loggerRepo.LogError(ex, $"{msg}{JsonConvert.SerializeObject(req.Payload, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
             return res;
         }
+        #endregion
+
         IQueryable<OfferAvailabilityModelDB> offerAvailabilityQuery = context
             .OffersAvailability
             .Where(x => x.OfferId == req.Payload.OfferId || (rowDb != null && x.OfferId == rowDb.OfferId));
@@ -181,22 +184,9 @@ public partial class CommerceImplementService : ICommerceService
                     }
                 }
 
-                if (regOfferAvWritingOff is null)
+                if (regOfferAv is null)
                 {
-                    if (warehouseNegativeBalanceAllowed.Response == true)
-                    {
-                        regOfferAvWritingOff = new()
-                        {
-                            WarehouseId = warehouseDocDB.WarehouseId,
-                            Quantity = -rowDb.Quantity,
-                            NomenclatureId = rowDb.NomenclatureId,
-                            OfferId = rowDb.OfferId,
-                        };
-                        await context.OffersAvailability.AddAsync(regOfferAvWritingOff, token);
-                        await context.SaveChangesAsync(token);
-                        offerAvailabilityDB.Add(regOfferAvWritingOff);
-                    }
-                    else
+                    if (warehouseNegativeBalanceAllowed.Response != true)
                     {
                         await transaction.RollbackAsync(token);
                         msg = $"Остаток офера #{rowDb.OfferId} на складе #{warehouseDocDB.WarehouseId} не достаточный";
@@ -205,8 +195,18 @@ public partial class CommerceImplementService : ICommerceService
                         return res;
                     }
 
+                    regOfferAv = new()
+                    {
+                        WarehouseId = warehouseDocDB.WarehouseId,
+                        Quantity = -rowDb.Quantity,
+                        NomenclatureId = rowDb.NomenclatureId,
+                        OfferId = rowDb.OfferId,
+                    };
+                    await context.OffersAvailability.AddAsync(regOfferAv, token);
+                    await context.SaveChangesAsync(token);
+                    offerAvailabilityDB.Add(regOfferAv);
                 }
-                else if (regOfferAvWritingOff.Quantity < rowDb.Quantity && warehouseNegativeBalanceAllowed.Response != true)
+                else if (regOfferAv.Quantity < rowDb.Quantity && warehouseNegativeBalanceAllowed.Response != true)
                 {
                     await transaction.RollbackAsync(token);
                     msg = $"Остаток офера #{rowDb.OfferId} на складе #{warehouseDocDB.WarehouseId} не достаточный";
@@ -216,11 +216,11 @@ public partial class CommerceImplementService : ICommerceService
                 }
                 else
                 {
-                    await context.OffersAvailability.Where(y => y.Id == regOfferAvWritingOff.Id)
+                    await context.OffersAvailability.Where(y => y.Id == regOfferAv.Id)
                         .ExecuteUpdateAsync(set => set
                             .SetProperty(p => p.Quantity, p => p.Quantity - rowDb.Quantity), cancellationToken: token);
 
-                    regOfferAvWritingOff.Quantity -= rowDb.Quantity;
+                    regOfferAv.Quantity -= rowDb.Quantity;
                 }
             }
 
@@ -243,19 +243,17 @@ public partial class CommerceImplementService : ICommerceService
                         res.AddError(msg);
                         return res;
                     }
-                    else
+
+                    regOfferAvWritingOff = new()
                     {
-                        regOfferAvWritingOff = new()
-                        {
-                            WarehouseId = warehouseDocDB.WritingOffWarehouseId,
-                            OfferId = req.Payload.OfferId,
-                            NomenclatureId = req.Payload.NomenclatureId,
-                            Quantity = -_quantity,
-                        };
-                        await context.OffersAvailability.AddAsync(regOfferAvWritingOff, token);
-                        await context.SaveChangesAsync(token);
-                        offerAvailabilityDB.Add(regOfferAvWritingOff);
-                    }
+                        WarehouseId = warehouseDocDB.WritingOffWarehouseId,
+                        OfferId = req.Payload.OfferId,
+                        NomenclatureId = req.Payload.NomenclatureId,
+                        Quantity = -_quantity,
+                    };
+                    await context.OffersAvailability.AddAsync(regOfferAvWritingOff, token);
+                    await context.SaveChangesAsync(token);
+                    offerAvailabilityDB.Add(regOfferAvWritingOff);
                 }
                 else if (regOfferAvWritingOff.Quantity - _quantity < 0 && warehouseNegativeBalanceAllowed.Response != true)
                 {
