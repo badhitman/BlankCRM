@@ -31,10 +31,10 @@ public partial class RolesManageKitComponent : BlazorBusyComponentBaseAuthModel
     {
         return name switch
         {
-            GlobalStaticConstantsRoles.Roles.HelpDeskUnit => "Исполнитель (hd)",
-            GlobalStaticConstantsRoles.Roles.HelpDeskManager => "Manger (hd)",
-            GlobalStaticConstantsRoles.Roles.HelpDeskChatsManage => "Чаты (hd)",
-            GlobalStaticConstantsRoles.Roles.HelpDeskRubricsManage => "Рубрики (hd)",
+            GlobalStaticConstantsRoles.Roles.HelpDeskUnit => "Исполнитель (HelpDesk)",
+            GlobalStaticConstantsRoles.Roles.HelpDeskManager => "Manger (HelpDesk)",
+            GlobalStaticConstantsRoles.Roles.HelpDeskChatsManage => "Чаты (HelpDesk)",
+            GlobalStaticConstantsRoles.Roles.HelpDeskRubricsManage => "Рубрики (HelpDesk)",
             GlobalStaticConstantsRoles.Roles.CommerceManager => "Manger (com)",
             GlobalStaticConstantsRoles.Roles.CommerceClient => "Покупатель (b2b)",
             GlobalStaticConstantsRoles.Roles.RetailManage => "Manger (retail)",
