@@ -45,19 +45,23 @@
         <MudTh>Участники</MudTh>
     </HeaderContent>
     <RowTemplate>
+        @{
+            DateTime _dc = context.CreatedAtUTC.GetCustomTime();
+            DateTime _dlo = context.LastOnlineAtUTC.GetCustomTime();
+        }
         <MudTd DataLabel="Сообщение" title="Дата/Время последнего сообщения">
             <MudLink Href="@($"/web-chats/room-{context.Id}")">
-                @context.LastMessageAtUTC?.GetCustomTime().ToString()
+                @_dc.ToString("d", GlobalStaticConstants.RU) <sup>@_dc.ToString("t", GlobalStaticConstants.RU)</sup>
             </MudLink>
         </MudTd>
         <MudTd DataLabel="Вход" title="Дата/Время последнего посещения">
             <div class="hstack">
                 <MudLink Href="@($"/web-chats/room-{context.Id}")" Class="me-2">
-                    @context.LastOnlineAtUTC.GetCustomTime()
+                    @_dlo.ToString("d", GlobalStaticConstants.RU) <sup>@_dc.ToString("t", GlobalStaticConstants.RU)</sup>
                 </MudLink>
                 @if (!IsBusyProgress)
                 {
-                    <ChatStatusComponent DialogId="context.Id" OnLoadHandler="() => { }" />
+                    <ChatStatusComponent DialogId="context.Id" />
                 }
             </div>
         </MudTd>

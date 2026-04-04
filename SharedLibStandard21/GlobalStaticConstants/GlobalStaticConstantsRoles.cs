@@ -21,7 +21,7 @@ namespace SharedLib
             public const string Debug = "debug";
 
             /// <inheritdoc/>
-            public const string System = "system";
+            public const string System = GlobalStaticConstantsRoutes.Routes.SYSTEM_CONTROLLER_NAME;
 
             /// <inheritdoc/>
             public const string GoodsManage = "GoodsManage";

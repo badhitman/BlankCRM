@@ -4,20 +4,20 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Options;
+using System.Diagnostics.Metrics;
 using NLog.Extensions.Logging;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Trace;
 using CommerceService;
+using Newtonsoft.Json;
 using RemoteCallLib;
+using OpenTelemetry;
+using System.Text;
 using SharedLib;
 using NLog.Web;
 using DbcLib;
 using NLog;
-using OpenTelemetry;
-using System.Diagnostics.Metrics;
-using OpenTelemetry.Metrics;
-using OpenTelemetry.Trace;
-using Microsoft.Extensions.Options;
-using System.Text;
-using Newtonsoft.Json;
 
 RealtimeMQTTClientConfigModel _confMQTT = RealtimeMQTTClientConfigModel.BuildEmpty();
 Console.OutputEncoding = Encoding.UTF8;

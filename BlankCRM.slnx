@@ -140,6 +140,6 @@
   </Folder>
   <Project Path="BlankCRM.AppHost/BlankCRM.AppHost.csproj" />
   <Project Path="BlankCRM.ServiceDefaults/BlankCRM.ServiceDefaults.csproj" />
-  <Project Path="XUnitTests/XUnitTests.csproj" Id="7dbbe71f-1ac8-41ed-8cdd-594c72118d56" />
+  <Project Path="XUnitTests/XUnitTests.csproj" Id="16eb44b5-28e2-4607-8b51-4aba2568c88f" />
   
 </Solution>
