@@ -14,7 +14,7 @@ namespace BlazorLib.Components.Retail.Delivery;
 public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthModel
 {
     [Inject]
-    IRubricsTransmission RubricsRepo { get; set; } = default!;
+    IRubricsService RubricsRepo { get; set; } = default!;
 
     [Inject]
     IRetailService RetailRepo { get; set; } = default!;

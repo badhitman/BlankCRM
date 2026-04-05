@@ -23,7 +23,7 @@ public partial class OrderDocumentObjectComponent : BlazorBusyComponentBaseAuthM
 
 
     [Inject]
-    IRubricsTransmission RubricsRepo { get; set; } = default!;
+    IRubricsService RubricsRepo { get; set; } = default!;
 
 
     [Inject]

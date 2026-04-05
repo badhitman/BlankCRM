@@ -17,7 +17,7 @@ public partial class RubricsForInstrumentComponent : BlazorBusyComponentBaseMode
     IDataStockSharpService SsRepo { get; set; } = default!;
 
     [Inject]
-    IRubricsTransmission RubricsRepo { get; set; } = default!;
+    IRubricsService RubricsRepo { get; set; } = default!;
 
 
     /// <inheritdoc/>

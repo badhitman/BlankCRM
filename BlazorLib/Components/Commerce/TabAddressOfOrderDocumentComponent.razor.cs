@@ -16,7 +16,7 @@ public partial class TabAddressOfOrderDocumentComponent : OffersTableBaseCompone
     IParametersStorageTransmission StorageTransmissionRepo { get; set; } = default!;
 
     [Inject]
-    IRubricsTransmission HelpDeskRepo { get; set; } = default!;
+    IRubricsService HelpDeskRepo { get; set; } = default!;
 
 
     /// <summary>

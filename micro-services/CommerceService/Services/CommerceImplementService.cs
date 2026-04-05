@@ -25,7 +25,7 @@ public partial class CommerceImplementService(
     IDbContextFactory<CommerceContext> commerceDbFactory,
     IWebTransmission webTransmissionRepo,
     IHelpdeskTransmission HelpDeskRepo,
-    IRubricsTransmission RubricsRepo,
+    IRubricsService RubricsRepo,
     IStorageTransmission FilesRepo,
     IHistoryIndexing indexingRepo,
     ITelegramTransmission tgRepo,

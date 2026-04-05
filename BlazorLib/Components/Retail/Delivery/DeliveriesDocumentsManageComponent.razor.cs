@@ -25,7 +25,7 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
     IParametersStorageTransmission StorageRepo { get; set; } = default!;
 
     [Inject]
-    IRubricsTransmission RubricsRepo { get; set; } = default!;
+    IRubricsService RubricsRepo { get; set; } = default!;
 
 
     /// <inheritdoc/>

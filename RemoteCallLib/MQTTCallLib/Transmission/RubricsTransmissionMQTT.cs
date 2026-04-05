@@ -10,7 +10,7 @@ using SharedLib;
 namespace RemoteCallLib;
 
 /// <inheritdoc/>
-public class RubricsTransmissionMQTT(IMQStandardClientExtRPC rabbitClient) : IRubricsTransmission
+public class RubricsTransmissionMQTT(IMQStandardClientExtRPC rabbitClient) : IRubricsService
 {
     /// <inheritdoc/>
     public async Task<TResponseModel<List<RubricStandardModel>>> RubricsGetAsync(IEnumerable<int> rubricsIds, CancellationToken token = default)

@@ -23,7 +23,7 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseAuthMode
     IRetailService RetailRepo { get; set; } = default!;
 
     [Inject]
-    IRubricsTransmission HelpDeskRepo { get; set; } = default!;
+    IRubricsService HelpDeskRepo { get; set; } = default!;
 
     [Inject]
     IParametersStorageTransmission StorageRepo { get; set; } = default!;

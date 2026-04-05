@@ -19,7 +19,7 @@ public partial class PaymentsManageComponent : BlazorBusyComponentUsersCachedMod
     IRetailService RetailRepo { get; set; } = default!;
 
     [Inject]
-    IRubricsTransmission RubricsRepo { get; set; } = default!;
+    IRubricsService RubricsRepo { get; set; } = default!;
 
 
     /// <inheritdoc/>

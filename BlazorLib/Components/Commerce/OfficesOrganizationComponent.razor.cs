@@ -14,7 +14,7 @@ namespace BlazorLib.Components.Commerce;
 public partial class OfficesOrganizationComponent : BlazorBusyComponentBaseAuthModel
 {
     [Inject]
-    IRubricsTransmission HelpDeskRepo { get; set; } = default!;
+    IRubricsService HelpDeskRepo { get; set; } = default!;
 
     [Inject]
     ICommerceTransmission CommerceRepo { get; set; } = default!;

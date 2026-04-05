@@ -13,7 +13,7 @@ namespace BlazorLib.Components.Rubrics;
 public partial class RubricInputComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
-    IRubricsTransmission RubricsRepo { get; set; } = default!;
+    IRubricsService RubricsRepo { get; set; } = default!;
 
 
     /// <inheritdoc/>

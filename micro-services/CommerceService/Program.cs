@@ -177,7 +177,7 @@ builder.Services
     .AddScoped<IStorageTransmission, StorageTransmissionRabbit>()
     .AddScoped<IParametersStorageTransmission, ParametersStorageTransmissionRabbit>()
     .AddScoped<IIdentityTransmission, IdentityTransmissionRabbit>()
-    .AddScoped<IRubricsTransmission, RubricsTransmissionRabbit>()
+    .AddScoped<IRubricsService, RubricsTransmissionRabbit>()
     ;
 //
 builder.Services.CommerceRegisterMqListeners();
