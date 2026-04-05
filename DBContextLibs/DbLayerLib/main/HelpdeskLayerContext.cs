@@ -21,7 +21,8 @@ public partial class HelpDeskLayerContext : DbContext
         //#if DEBUG
         //        Database.EnsureCreated();
         //#else
-        Database.Migrate();
+        if (Database.IsRelational())
+            Database.Migrate();
         //#endif
     }
 

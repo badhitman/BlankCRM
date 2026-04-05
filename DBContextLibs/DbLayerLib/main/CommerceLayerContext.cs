@@ -23,9 +23,7 @@ public partial class CommerceLayerContext : DbContext
         //        Database.EnsureCreated();
         //#else
         if (Database.IsRelational())
-        {
             Database.Migrate();
-        }
         //#endif
     }
 

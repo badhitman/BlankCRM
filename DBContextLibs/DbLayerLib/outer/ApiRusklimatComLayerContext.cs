@@ -17,7 +17,8 @@ public abstract partial class ApiRusklimatComLayerContext : DbContext
         //#if DEBUG
         //        Database.EnsureCreated();
         //#else
-        Database.Migrate();
+        if (Database.IsRelational())
+            Database.Migrate();
         //#endif
     }
 

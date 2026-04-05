@@ -1,14 +1,17 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using CommerceService;
+using HelpdeskService;
 using SharedLib;
 using DbcLib;
 using Moq;
+using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace XUnitTests;
 
-public class UnitTest
+public class CommerceUnitTest
 {
     readonly IDbContextFactory<CommerceContext> CommerceContextFactoryDb;
     readonly IDbContextFactory<HelpDeskContext> HelpdeskContextFactoryDb;
@@ -18,14 +21,14 @@ public class UnitTest
 
     readonly CommerceImplementService CommerceService;
     readonly RetailService RetailService;
-    // readonly RubricsService
+    readonly RubricsImplementService RubricsService;
 
-    public UnitTest()
+    public CommerceUnitTest()
     {
         ServiceCollection services = new();
-        
-        services.AddDbContextFactory<CommerceContext>(options => options.UseInMemoryDatabase("TestCommerceContext"));
-        services.AddDbContextFactory<HelpDeskContext>(options => options.UseInMemoryDatabase("TestHelpdeskContext"));
+
+        services.AddDbContextFactory<CommerceContext>(options => options.UseInMemoryDatabase($"CommerceContext{GetType().Name}"));
+        services.AddDbContextFactory<HelpDeskContext>(options => options.UseInMemoryDatabase($"HelpdeskContext{GetType().Name}"));
 
         ServiceProvider serviceProvider = services.BuildServiceProvider();
         CommerceContextFactoryDb = serviceProvider.GetRequiredService<IDbContextFactory<CommerceContext>>();
@@ -52,7 +55,7 @@ public class UnitTest
                               mockTelegramRepo.Object,
                               mockLoggerCommerceRepo.Object,
                               mockWebConf.Object,
-                                                       StorageTransmissionRepo);
+                              StorageTransmissionRepo);
 
         Mock<IKladrNavigationService> mockKladrRepo = new();
         Mock<ILogger<RetailService>> mockLoggerRetailRepo = new();
@@ -62,10 +65,13 @@ public class UnitTest
                             HistoryIndexingRepo,
                             StorageTransmissionRepo,
                             CommerceContextFactoryDb);
+
+        Mock<IMemoryCache> mockCacheRepo = new();
+        RubricsService = new(HelpdeskContextFactoryDb, mockCacheRepo.Object);
     }
 
     [Fact]
-    public async Task Test()
+    public async Task TestCommerce()
     {
         NomenclatureModelDB nomenclature_1 = await CreateNomenclature();
         OfferModelDB offer_1 = await CreateOffer(nomenclature_1.Id);
@@ -74,13 +80,38 @@ public class UnitTest
         NomenclatureModelDB nomenclature_2 = await CreateNomenclature();
         OfferModelDB offer_3 = await CreateOffer(nomenclature_2.Id);
 
-        WarehouseDocumentModelDB whDoc = await CreateWarehouseDocument();
+        RubricModelDB whRubric_1 = await CreateWarehouseRubric();
+        RubricModelDB whRubric_2 = await CreateWarehouseRubric();
+
+        WarehouseDocumentModelDB whDoc = await CreateWarehouseDocument(whRubric_1.Id);
 
         // Assert
         Assert.True(true);
     }
 
-    async Task<WarehouseDocumentModelDB> CreateWarehouseDocument()
+    async Task<RubricModelDB> CreateWarehouseRubric()
+    {
+        using HelpDeskContext context = await HelpdeskContextFactoryDb.CreateDbContextAsync();
+        int countOffers = (await context.Rubrics.Where(x => x.ContextName == Routes.WAREHOUSE_CONTROLLER_NAME).CountAsync()) + 1;
+        string name = $"Test Warehouse rubric: {countOffers}";
+        RubricModelDB WarehouseRubric = new()
+        {
+            ContextName = Routes.WAREHOUSE_CONTROLLER_NAME,
+            SortIndex = (uint)countOffers,
+            CreatedAtUTC = DateTime.UtcNow,
+            Name = name,
+            NormalizedNameUpper = name.ToUpper(),
+        };
+        TResponseModel<int> whCreate = await RubricsService.RubricCreateOrUpdateAsync(WarehouseRubric);
+
+        Assert.NotEqual(0, whCreate.Response);
+        Assert.True(whCreate.Success());
+        WarehouseRubric.Id = whCreate.Response;
+
+        return WarehouseRubric;
+    }
+
+    async Task<WarehouseDocumentModelDB> CreateWarehouseDocument(int warehouseRubricId)
     {
         using CommerceContext context = await CommerceContextFactoryDb.CreateDbContextAsync();
         int countDocs = (await context.WarehouseDocuments.CountAsync()) + 1;
@@ -90,19 +121,15 @@ public class UnitTest
             NormalizedUpperName = "",
             CreatedAtUTC = DateTime.Now,
             Name = $"Test WH document: {countDocs}",
-            WarehouseId = 0,
+            WarehouseId = warehouseRubricId,
         };
-        TAuthRequestStandardModel<WarehouseDocumentModelDB> warehouseDocCreate = new()
-        {
-            Payload = WarehouseDocumentDb,
-            SenderActionUserId = GlobalStaticConstantsRoutes.Routes.SYSTEM_CONTROLLER_NAME
-        };
+        TAuthRequestStandardModel<WarehouseDocumentModelDB> warehouseDocCreateRequest = new() { Payload = WarehouseDocumentDb, SenderActionUserId = GlobalStaticConstantsRoutes.Routes.SYSTEM_CONTROLLER_NAME };
 
-        DocumentNewVersionResponseModel wh = await CommerceService.WarehouseDocumentUpdateOrCreateAsync(warehouseDocCreate);
+        DocumentNewVersionResponseModel warehouseDocNew = await CommerceService.WarehouseDocumentUpdateOrCreateAsync(warehouseDocCreateRequest);
 
-        Assert.NotEqual(0, wh.Response);
-        Assert.True(wh.Success());
-        WarehouseDocumentDb.Id = wh.Response;
+        Assert.NotEqual(0, warehouseDocNew.Response);
+        Assert.True(warehouseDocNew.Success());
+        WarehouseDocumentDb.Id = warehouseDocNew.Response;
 
         return WarehouseDocumentDb;
     }
@@ -124,7 +151,7 @@ public class UnitTest
         };
         TResponseModel<int> offerCreate = await CommerceService.OfferUpdateOrCreateAsync(new()
         {
-            SenderActionUserId = GlobalStaticConstantsRoutes.Routes.SYSTEM_CONTROLLER_NAME,
+            SenderActionUserId = Routes.SYSTEM_CONTROLLER_NAME,
             Payload = OfferDb
         });
 

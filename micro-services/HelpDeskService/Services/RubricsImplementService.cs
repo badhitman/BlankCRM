@@ -13,9 +13,9 @@ using DbcLib;
 namespace HelpdeskService;
 
 /// <summary>
-/// RubricsService
+/// RubricsImplementService
 /// </summary>
-public partial class RubricsService(
+public partial class RubricsImplementService(
     IDbContextFactory<HelpDeskContext> helpdeskDbFactory,
     IMemoryCache cache) : IRubricsService
 {

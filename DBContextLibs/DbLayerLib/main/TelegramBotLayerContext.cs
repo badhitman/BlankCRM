@@ -18,11 +18,12 @@ public partial class TelegramBotLayerContext : DbContext
     public TelegramBotLayerContext(DbContextOptions options)
         : base(options)
     {
-//#if DEBUG
-//        Database.EnsureCreated();
-//#else
-        Database.Migrate();
-//#endif
+        //#if DEBUG
+        //        Database.EnsureCreated();
+        //#else
+        if (Database.IsRelational())
+            Database.Migrate();
+        //#endif
     }
 
     /// <inheritdoc/>
@@ -59,10 +60,10 @@ public partial class TelegramBotLayerContext : DbContext
     /// <inheritdoc/>
     protected override void OnConfiguring(DbContextOptionsBuilder options)
     {
-//#if DEBUG
-//        options.EnableSensitiveDataLogging(true);
-//        options.ConfigureWarnings(w => w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
-//#endif
+        //#if DEBUG
+        //        options.EnableSensitiveDataLogging(true);
+        //        options.ConfigureWarnings(w => w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
+        //#endif
     }
 
     /// <summary>

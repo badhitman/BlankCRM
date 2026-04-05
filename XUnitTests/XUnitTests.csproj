@@ -19,6 +19,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\DBContextLibs\DbPostgreLib\DbPostgreLib.csproj" />
 		<ProjectReference Include="..\micro-services\CommerceService\CommerceService.csproj" />
+		<ProjectReference Include="..\micro-services\HelpDeskService\HelpDeskService.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -12,7 +12,7 @@ namespace HelpdeskService;
 /// <summary>
 /// Articles
 /// </summary>
-public partial class ArticlesService(IDbContextFactory<HelpDeskContext> helpdeskDbFactory) : IArticlesService
+public partial class ArticlesImplementService(IDbContextFactory<HelpDeskContext> helpdeskDbFactory) : IArticlesService
 {
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> ArticleCreateOrUpdateAsync(ArticleModelDB article, CancellationToken token = default)

@@ -112,7 +112,7 @@ public class Program
         ;
 
         builder.Services
-            .AddScoped<IArticlesService, ArticlesService>()
+            .AddScoped<IArticlesService, ArticlesImplementService>()
             .AddScoped<IIndexingServive, IndexingTransmissionRabbit>()
             .AddScoped<IHistoryIndexing, HistoryTransmissionRabbit>()
             ;
@@ -179,7 +179,7 @@ public class Program
             .AddScoped<ICommerceTransmission, CommerceTransmissionRabbit>()
             .AddScoped<IHelpDeskService, HelpdeskImplementService>()
             .AddScoped<IRetailService, RetailTransmissionRabbit>()
-            .AddScoped<IRubricsService, RubricsService>()
+            .AddScoped<IRubricsService, RubricsImplementService>()
             .AddScoped<IKladrNavigationService, KladrNavigationServiceTransmissionRabbit>()
             .AddScoped<IStorageTransmission, StorageTransmissionRabbit>()
             .AddScoped<IParametersStorageTransmission, ParametersStorageTransmissionRabbit>()

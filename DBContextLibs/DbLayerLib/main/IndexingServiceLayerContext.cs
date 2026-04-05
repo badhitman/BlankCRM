@@ -17,7 +17,8 @@ public partial class IndexingServiceLayerContext : DbContext
         //#if DEBUG
         //        Database.EnsureCreated();
         //#else
-        Database.Migrate();
+        if (Database.IsRelational())
+            Database.Migrate();
         //#endif
     }
 

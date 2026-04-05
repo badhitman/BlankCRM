@@ -32,7 +32,7 @@ public abstract partial class ToolsAppLayerContext : DbContext
 
         if (!_fi.Exists)
             Database.EnsureCreated();
-        else
+        else if (Database.IsRelational())
             Database.Migrate();
     }
 
