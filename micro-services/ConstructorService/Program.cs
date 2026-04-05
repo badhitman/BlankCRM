@@ -162,7 +162,7 @@ builder.Services
     .AddScoped<IHistoryIndexing, HistoryTransmissionRabbit>()
     .AddScoped<IWebTransmission, WebTransmissionRabbit>()
     .AddScoped<ITelegramTransmission, TelegramTransmissionRabbit>()
-    .AddScoped<IHelpDeskTransmission, HelpDeskTransmissionRabbit>()
+    .AddScoped<IHelpdeskTransmission, HelpdeskTransmissionRabbit>()
     .AddScoped<IKladrNavigationService, KladrNavigationServiceTransmissionRabbit>()
     .AddScoped<IStorageTransmission, StorageTransmissionRabbit>()
     .AddScoped<IParametersStorageTransmission, ParametersStorageTransmissionRabbit>()

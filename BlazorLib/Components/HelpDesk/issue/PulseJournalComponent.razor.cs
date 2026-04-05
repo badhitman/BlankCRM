@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using SharedLib;
 
-namespace BlazorLib.Components.HelpDesk.issue;
+namespace BlazorLib.Components.Helpdesk.issue;
 
 /// <summary>
 /// PulseJournalComponent

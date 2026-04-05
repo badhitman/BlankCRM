@@ -6,7 +6,7 @@ using BlazorLib;
 using SharedLib;
 using static SharedLib.GlobalStaticConstantsRoutes;
 
-namespace BlazorLib.Components.HelpDesk.issue;
+namespace BlazorLib.Components.Helpdesk.issue;
 
 /// <summary>
 /// ChatsWappiIssueComponent

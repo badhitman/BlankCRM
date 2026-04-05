@@ -172,7 +172,7 @@ builder.Services
     .AddScoped<IWebTransmission, WebTransmissionRabbit>()
     .AddScoped<IWebChatService, WebChatTransmissionRabbit>()
     .AddScoped<ITelegramTransmission, TelegramTransmissionRabbit>()
-    .AddScoped<IHelpDeskTransmission, HelpDeskTransmissionRabbit>()
+    .AddScoped<IHelpdeskTransmission, HelpdeskTransmissionRabbit>()
     .AddScoped<IKladrNavigationService, KladrNavigationServiceTransmissionRabbit>()
     .AddScoped<IStorageTransmission, StorageTransmissionRabbit>()
     .AddScoped<IParametersStorageTransmission, ParametersStorageTransmissionRabbit>()

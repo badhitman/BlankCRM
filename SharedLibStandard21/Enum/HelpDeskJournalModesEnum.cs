@@ -9,7 +9,7 @@ namespace SharedLib;
 /// <summary>
 /// HelpDesk journal modes: All, ActualOnly, ArchiveOnly
 /// </summary>
-public enum HelpDeskJournalModesEnum
+public enum HelpdeskJournalModesEnum
 {
     /// <summary>
     /// All

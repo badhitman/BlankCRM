@@ -18,7 +18,7 @@ using DbcLib;
 using NLog;
 using Newtonsoft.Json;
 
-namespace HelpDeskService;
+namespace HelpdeskService;
 
 /// <summary>
 /// Program
@@ -108,7 +108,7 @@ public class Program
 
         builder.Services
             .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
-            .Configure<HelpDeskConfigModel>(builder.Configuration.GetSection(HelpDeskConfigModel.Configuration))
+            .Configure<HelpdeskConfigModel>(builder.Configuration.GetSection(HelpdeskConfigModel.Configuration))
         ;
 
         builder.Services
@@ -173,11 +173,11 @@ public class Program
         //
         builder.Services
             .AddSingleton<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
-            .AddScoped<IHelpDeskTransmission, HelpDeskTransmissionRabbit>()
+            .AddScoped<IHelpdeskTransmission, HelpdeskTransmissionRabbit>()
             .AddScoped<IWebTransmission, WebTransmissionRabbit>()
             .AddScoped<ITelegramTransmission, TelegramTransmissionRabbit>()
             .AddScoped<ICommerceTransmission, CommerceTransmissionRabbit>()
-            .AddScoped<IHelpDeskService, HelpDeskImplementService>()
+            .AddScoped<IHelpDeskService, HelpdeskImplementService>()
             .AddScoped<IRetailService, RetailTransmissionRabbit>()
             .AddScoped<IRubricsService, RubricsService>()
             .AddScoped<IKladrNavigationService, KladrNavigationServiceTransmissionRabbit>()
@@ -219,7 +219,7 @@ public class Program
 
         using (IServiceScope ss = app.Services.CreateScope())
         {
-            IOptions<HelpDeskConfigModel> wc_main = ss.ServiceProvider.GetRequiredService<IOptions<HelpDeskConfigModel>>();
+            IOptions<HelpdeskConfigModel> wc_main = ss.ServiceProvider.GetRequiredService<IOptions<HelpdeskConfigModel>>();
             IWebTransmission webRemoteCall = ss.ServiceProvider.GetRequiredService<IWebTransmission>();
             TelegramBotConfigModel wc_remote = await webRemoteCall.GetWebConfigAsync();
             if (Uri.TryCreate(wc_remote.BaseUri, UriKind.Absolute, out _))

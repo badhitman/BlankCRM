@@ -14,17 +14,17 @@ using DbcLib;
 using static SharedLib.GlobalStaticConstantsRoutes;
 using static SharedLib.GlobalStaticConstantsTransmission;
 
-namespace HelpDeskService;
+namespace HelpdeskService;
 
 /// <summary>
 /// HelpDesk - Implement
 /// </summary>
-public partial class HelpDeskImplementService(
+public partial class HelpdeskImplementService(
     IIdentityTransmission IdentityRepo,
-    ILogger<HelpDeskImplementService> loggerRepo,
+    ILogger<HelpdeskImplementService> loggerRepo,
     IDbContextFactory<HelpDeskContext> helpdeskDbFactory,
     IManualCustomCacheService cacheRepo,
-    IOptions<HelpDeskConfigModel> hdConf,
+    IOptions<HelpdeskConfigModel> hdConf,
     ICommerceTransmission commRepo,
     IMemoryCache cache,
     ITelegramTransmission telegramRemoteRepo,
@@ -81,7 +81,7 @@ public partial class HelpDeskImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> MessageCreateOrUpdateAsync(TAuthRequestStandardModel<IssueMessageHelpDeskBaseModel> req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> MessageCreateOrUpdateAsync(TAuthRequestStandardModel<IssueMessageHelpdeskBaseModel> req, CancellationToken token = default)
     {
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
 
@@ -545,7 +545,7 @@ public partial class HelpDeskImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<TPaginationResponseStandardModel<IssueHelpDeskModel>>> IssuesSelectAsync(TAuthRequestStandardModel<TPaginationRequestStandardModel<SelectIssuesRequestModel>> req, CancellationToken token = default)
+    public async Task<TResponseModel<TPaginationResponseStandardModel<IssueHelpdeskModel>>> IssuesSelectAsync(TAuthRequestStandardModel<TPaginationRequestStandardModel<SelectIssuesRequestModel>> req, CancellationToken token = default)
     {
         if (req.Payload?.Payload?.IdentityUsersIds is null)
             return new()
@@ -577,10 +577,10 @@ public partial class HelpDeskImplementService(
 
         switch (req.Payload.Payload.JournalMode)
         {
-            case HelpDeskJournalModesEnum.ActualOnly:
+            case HelpdeskJournalModesEnum.ActualOnly:
                 q = q.Where(x => x.StatusDocument <= StatusesDocumentsEnum.Progress);
                 break;
-            case HelpDeskJournalModesEnum.ArchiveOnly:
+            case HelpdeskJournalModesEnum.ArchiveOnly:
                 q = q.Where(x => x.StatusDocument > StatusesDocumentsEnum.Progress);
                 break;
             default:
@@ -589,16 +589,16 @@ public partial class HelpDeskImplementService(
 
         switch (req.Payload.Payload.UserArea)
         {
-            case UsersAreasHelpDeskEnum.Subscriber:
+            case UsersAreasHelpdeskEnum.Subscriber:
                 q = q.Where(x => context.SubscribersOfIssues.Any(y => y.IssueId == x.Id && req.Payload.Payload.IdentityUsersIds.Contains(y.UserId)));
                 break;
-            case UsersAreasHelpDeskEnum.Executor:
+            case UsersAreasHelpdeskEnum.Executor:
                 q = q.Where(x => req.Payload.Payload.IdentityUsersIds.Contains(x.ExecutorIdentityUserId));
                 break;
-            case UsersAreasHelpDeskEnum.Main:
+            case UsersAreasHelpdeskEnum.Main:
                 q = q.Where(x => req.Payload.Payload.IdentityUsersIds.Contains(x.ExecutorIdentityUserId) || context.SubscribersOfIssues.Any(y => y.IssueId == x.Id && req.Payload.Payload.IdentityUsersIds.Contains(y.UserId)));
                 break;
-            case UsersAreasHelpDeskEnum.Author:
+            case UsersAreasHelpdeskEnum.Author:
                 q = q.Where(x => req.Payload.Payload.IdentityUsersIds.Contains(x.AuthorIdentityUserId));
                 break;
             default:
@@ -629,13 +629,13 @@ public partial class HelpDeskImplementService(
                 SortingDirection = req.Payload.SortingDirection,
                 SortBy = req.Payload.SortBy,
                 TotalRowsCount = await q.CountAsync(cancellationToken: token),
-                Response = [.. data.Select(IssueHelpDeskModel.Build)]
+                Response = [.. data.Select(IssueHelpdeskModel.Build)]
             }
         };
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseStandardModel<IssueHelpDeskModel>> ConsoleIssuesSelectAsync(TPaginationRequestStandardModel<ConsoleIssuesRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<IssueHelpdeskModel>> ConsoleIssuesSelectAsync(TPaginationRequestStandardModel<ConsoleIssuesRequestModel> req, CancellationToken token = default)
     {
         if (req.Payload is null)
         {
@@ -671,7 +671,7 @@ public partial class HelpDeskImplementService(
 
         if (!string.IsNullOrWhiteSpace(cacheToken))
         {
-            TPaginationResponseStandardModel<IssueHelpDeskModel>? _fr = await cacheRepo.GetObjectAsync<TPaginationResponseStandardModel<IssueHelpDeskModel>>(cacheToken, token);
+            TPaginationResponseStandardModel<IssueHelpdeskModel>? _fr = await cacheRepo.GetObjectAsync<TPaginationResponseStandardModel<IssueHelpdeskModel>>(cacheToken, token);
             if (_fr is not null)
                 return _fr;
         }
@@ -705,14 +705,14 @@ public partial class HelpDeskImplementService(
             .Include(x => x.RubricIssue)
             .ToListAsync(cancellationToken: token);
 
-        TPaginationResponseStandardModel<IssueHelpDeskModel> res = new()
+        TPaginationResponseStandardModel<IssueHelpdeskModel> res = new()
         {
             PageNum = req.PageNum,
             PageSize = req.PageSize,
             SortingDirection = req.SortingDirection,
             SortBy = req.SortBy,
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
-            Response = [.. data.Select(x => IssueHelpDeskModel.Build(x))]
+            Response = [.. data.Select(x => IssueHelpdeskModel.Build(x))]
         };
 
         if (!string.IsNullOrWhiteSpace(cacheToken))
@@ -1927,7 +1927,7 @@ public partial class HelpDeskImplementService(
     }
 
     /// <inheritdoc/>
-    public Task<ResponseBaseModel> SetWebConfigAsync(HelpDeskConfigModel req, CancellationToken token = default)
+    public Task<ResponseBaseModel> SetWebConfigAsync(HelpdeskConfigModel req, CancellationToken token = default)
     {
         if (!Uri.TryCreate(req.BaseUri, UriKind.Absolute, out _))
             return Task.FromResult(ResponseBaseModel.CreateError("BaseUri is null"));

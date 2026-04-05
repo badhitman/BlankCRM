@@ -5,7 +5,7 @@
 using Microsoft.AspNetCore.Components;
 using SharedLib;
 
-namespace BlazorLib.Components.HelpDesk.issue;
+namespace BlazorLib.Components.Helpdesk.issue;
 
 /// <summary>
 /// UserCardMainComponent

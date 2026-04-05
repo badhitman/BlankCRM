@@ -2,18 +2,16 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
-using BlazorLib;
-using BlazorLib.Components;
+using static SharedLib.GlobalStaticConstantsRoutes;
 using Microsoft.AspNetCore.Components;
 using SharedLib;
-using static SharedLib.GlobalStaticConstantsRoutes;
 
-namespace BlazorLib.Components.HelpDesk;
+namespace BlazorLib.Components.Helpdesk;
 
 /// <summary>
 /// ConsoleHelpDeskComponent
 /// </summary>
-public partial class ConsoleHelpDeskComponent : BlazorBusyComponentBaseAuthModel
+public partial class ConsoleHelpdeskComponent : BlazorBusyComponentBaseAuthModel
 {
     [Inject]
     IParametersStorageTransmission StorageRepo { get; set; } = default!;

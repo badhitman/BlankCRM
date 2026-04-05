@@ -8,9 +8,9 @@ using SharedLib;
 namespace Transmission.Receives.commerce;
 
 /// <summary>
-/// StatusesOrdersAttendancesChangeByHelpDeskDocumentId
+/// StatusesOrdersAttendancesChangeByHelpdeskDocumentId
 /// </summary>
-public class StatusesOrdersAttendancesChangeByHelpDeskDocumentIdReceive(ICommerceService commRepo, IHistoryIndexing indexingRepo)
+public class StatusesOrdersAttendancesChangeByHelpdeskDocumentIdReceive(ICommerceService commRepo, IHistoryIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<StatusChangeRequestModel>?, TResponseModel<List<RecordsAttendanceModelDB>>?>
 {
     /// <inheritdoc/>

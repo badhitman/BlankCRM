@@ -15,7 +15,7 @@ namespace BlazorLib.Components.Articles;
 public partial class ArticlesListComponent : BlazorBusyComponentBaseAuthModel
 {
     [Inject]
-    IHelpDeskTransmission HelpDeskRepo { get; set; } = default!;
+    IHelpdeskTransmission HelpDeskRepo { get; set; } = default!;
 
 
     MudTable<ArticleModelDB> table = default!;

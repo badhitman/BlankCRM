@@ -7,9 +7,9 @@ using System.ComponentModel.DataAnnotations;
 namespace SharedLib;
 
 /// <summary>
-/// IssueMessageHelpDeskBaseModel
+/// IssueMessageHelpdeskBaseModel
 /// </summary>
-public class IssueMessageHelpDeskBaseModel
+public class IssueMessageHelpdeskBaseModel
 {
     /// <summary>
     /// MessageText

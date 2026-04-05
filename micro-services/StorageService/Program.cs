@@ -165,7 +165,7 @@ public class Program
 
         builder.Services
             .AddSingleton<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
-            .AddScoped<IHelpDeskTransmission, HelpDeskTransmissionRabbit>()
+            .AddScoped<IHelpdeskTransmission, HelpdeskTransmissionRabbit>()
             .AddScoped<ITelegramTransmission, TelegramTransmissionRabbit>()
             .AddScoped<IIdentityTransmission, IdentityTransmissionRabbit>()
             .AddScoped<ICommerceTransmission, CommerceTransmissionRabbit>()

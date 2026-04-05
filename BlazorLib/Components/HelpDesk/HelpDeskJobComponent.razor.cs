@@ -2,23 +2,22 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
-using BlazorLib;
 using SharedLib;
 
-namespace BlazorLib.Components.HelpDesk;
+namespace BlazorLib.Components.Helpdesk;
 
 /// <summary>
-/// HelpDeskJobComponent
+/// HelpdeskJobComponent
 /// </summary>
-public partial class HelpDeskJobComponent : BlazorBusyComponentBaseModel
+public partial class HelpdeskJobComponent : BlazorBusyComponentBaseModel
 {
-    HelpDeskJournalComponent _tab = default!;
+    HelpdeskJournalComponent _tab = default!;
 
-    UsersAreasHelpDeskEnum? _selectedOption = UsersAreasHelpDeskEnum.Executor;
+    UsersAreasHelpdeskEnum? _selectedOption = UsersAreasHelpdeskEnum.Executor;
     /// <summary>
     /// SelectedOption
     /// </summary>
-    public UsersAreasHelpDeskEnum? SelectedOption
+    public UsersAreasHelpdeskEnum? SelectedOption
     {
         get => _selectedOption;
         set
@@ -39,7 +38,7 @@ public partial class HelpDeskJobComponent : BlazorBusyComponentBaseModel
         await SetBusyAsync(false);
     }
 
-    void SetTab(HelpDeskJournalComponent page)
+    void SetTab(HelpdeskJournalComponent page)
     {
         _tab = page;
     }

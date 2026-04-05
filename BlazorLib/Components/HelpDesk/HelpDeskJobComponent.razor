@@ -2,13 +2,13 @@
 @using MudBlazor
 
 <MudField Label="Filter:" Variant="Variant.Outlined" InnerPadding="false" Class="pa-2">
-    <MudRadioGroup T="UsersAreasHelpDeskEnum?" Disabled="IsBusyProgress" @bind-Value="SelectedOption">
-        <MudRadio T="UsersAreasHelpDeskEnum?" Value="@UsersAreasHelpDeskEnum.Executor">I executor</MudRadio>
-        <MudRadio T="UsersAreasHelpDeskEnum?" Value="@UsersAreasHelpDeskEnum.Subscriber">I subscriber</MudRadio>
-        <MudRadio T="UsersAreasHelpDeskEnum?" Value="@UsersAreasHelpDeskEnum.Main">All</MudRadio>
+    <MudRadioGroup T="UsersAreasHelpdeskEnum?" Disabled="IsBusyProgress" @bind-Value="SelectedOption">
+        <MudRadio T="UsersAreasHelpdeskEnum?" Value="@UsersAreasHelpdeskEnum.Executor">I executor</MudRadio>
+        <MudRadio T="UsersAreasHelpdeskEnum?" Value="@UsersAreasHelpdeskEnum.Subscriber">I subscriber</MudRadio>
+        <MudRadio T="UsersAreasHelpdeskEnum?" Value="@UsersAreasHelpdeskEnum.Main">All</MudRadio>
         <AuthorizeView Roles="@GlobalStaticConstantsRoles.Roles.Admin">
             <Authorized>
-                <MudRadio T="UsersAreasHelpDeskEnum?" Value="null">root</MudRadio>
+                <MudRadio T="UsersAreasHelpdeskEnum?" Value="null">root</MudRadio>
             </Authorized>
         </AuthorizeView>
     </MudRadioGroup>
@@ -18,14 +18,14 @@
     <div class="card-body">
         <CascadingValue Value="SetTab">
             <TabSetComponent IsSilent AsPills>
-                <TabComponent IsDisabled="IsBusyProgress" SystemName="@(nameof(HelpDeskJournalModesEnum.ActualOnly))" Title="Opened">
-                    <HelpDeskJournalComponent UserArea="SelectedOption" JournalMode="HelpDeskJournalModesEnum.ActualOnly" />
+                <TabComponent IsDisabled="IsBusyProgress" SystemName="@(nameof(HelpdeskJournalModesEnum.ActualOnly))" Title="Opened">
+                    <HelpdeskJournalComponent UserArea="SelectedOption" JournalMode="HelpdeskJournalModesEnum.ActualOnly" />
                 </TabComponent>
-                <TabComponent IsDisabled="IsBusyProgress" SystemName="@(nameof(HelpDeskJournalModesEnum.ArchiveOnly))" Title="Closed">
-                    <HelpDeskJournalComponent UserArea="SelectedOption" JournalMode="HelpDeskJournalModesEnum.ArchiveOnly" />
+                <TabComponent IsDisabled="IsBusyProgress" SystemName="@(nameof(HelpdeskJournalModesEnum.ArchiveOnly))" Title="Closed">
+                    <HelpdeskJournalComponent UserArea="SelectedOption" JournalMode="HelpdeskJournalModesEnum.ArchiveOnly" />
                 </TabComponent>
-                <TabComponent IsDisabled="IsBusyProgress" SystemName="@(nameof(HelpDeskJournalModesEnum.All))" Title="All">
-                    <HelpDeskJournalComponent UserArea="SelectedOption" JournalMode="HelpDeskJournalModesEnum.All" />
+                <TabComponent IsDisabled="IsBusyProgress" SystemName="@(nameof(HelpdeskJournalModesEnum.All))" Title="All">
+                    <HelpdeskJournalComponent UserArea="SelectedOption" JournalMode="HelpdeskJournalModesEnum.All" />
                 </TabComponent>
             </TabSetComponent>
         </CascadingValue>

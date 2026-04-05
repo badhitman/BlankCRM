@@ -30,7 +30,7 @@ public static class RegisterMqListenerExtension
             .RegisterListenerRabbitMQ<DeleteConversionOrderLinkDocumentReceive, TAuthRequestStandardModel<OrderConversionModel>, ResponseBaseModel>()
             .RegisterListenerRabbitMQ<DeleteToggleConversionReceive, TAuthRequestStandardModel<DeleteToggleConversionRequestModel>, TResponseModel<Guid?>>()
             .RegisterListenerRabbitMQ<UpdateConversionOrderLinkDocumentReceive, TAuthRequestStandardModel<OrderConversionAmountModel>, ResponseBaseModel>()
-            .RegisterListenerRabbitMQ<StatusesOrdersAttendancesChangeByHelpDeskDocumentIdReceive, TAuthRequestStandardModel<StatusChangeRequestModel>, TResponseModel<List<RecordsAttendanceModelDB>>>()
+            .RegisterListenerRabbitMQ<StatusesOrdersAttendancesChangeByHelpdeskDocumentIdReceive, TAuthRequestStandardModel<StatusChangeRequestModel>, TResponseModel<List<RecordsAttendanceModelDB>>>()
             .RegisterListenerRabbitMQ<SelectWalletsTypesReceive, TPaginationRequestStandardModel<SelectWalletsRetailsTypesRequestModel>, TPaginationResponseStandardModel<WalletRetailTypeViewModel>>()
             .RegisterListenerRabbitMQ<SelectWalletsReceive, TPaginationRequestStandardModel<SelectWalletsRetailsRequestModel>, TPaginationResponseStandardModel<WalletRetailModelDB>>()
             .RegisterListenerRabbitMQ<SelectRowOfDeliveryDocumentsReceive, TPaginationRequestStandardModel<SelectRowsOfDeliveriesRetailDocumentsRequestModel>, TPaginationResponseStandardModel<RowOfDeliveryRetailDocumentModelDB>>()

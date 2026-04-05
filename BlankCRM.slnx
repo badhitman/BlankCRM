@@ -39,7 +39,7 @@
     <Project Path="micro-services/CommerceService/CommerceService.csproj" />
     <Project Path="micro-services/ConstructorService/ConstructorService.csproj" />
     <Project Path="micro-services/FirebaseService/FirebaseService.csproj" />
-    <Project Path="micro-services/HelpDeskService/HelpDeskService.csproj" />
+    <Project Path="micro-services/HelpDeskService/HelpDeskService.csproj" DisplayName="HelpdeskService" />
     <Project Path="micro-services/IdentityService/IdentityService.csproj" />
     <Project Path="micro-services/IndexingService/IndexingService.csproj" />
     <Project Path="micro-services/KladrService/KladrService.csproj" />

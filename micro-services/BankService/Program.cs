@@ -168,7 +168,7 @@ builder.Services
 builder.Services
     .AddScoped<IWebTransmission, WebTransmissionRabbit>()
     .AddScoped<ITelegramTransmission, TelegramTransmissionRabbit>()
-    .AddScoped<IHelpDeskTransmission, HelpDeskTransmissionRabbit>()
+    .AddScoped<IHelpdeskTransmission, HelpdeskTransmissionRabbit>()
     .AddScoped<IStorageTransmission, StorageTransmissionRabbit>()
     .AddScoped<IRetailService, RetailTransmissionRabbit>()
     .AddScoped<IIdentityTransmission, IdentityTransmissionRabbit>()

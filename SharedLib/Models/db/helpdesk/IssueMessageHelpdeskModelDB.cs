@@ -12,7 +12,7 @@ namespace SharedLib;
 /// </summary>
 [Index(nameof(AuthorUserId))]
 [Index(nameof(CreatedAt), nameof(LastUpdateAt))]
-public class IssueMessageHelpDeskModelDB : IssueMessageHelpDeskBaseModel
+public class IssueMessageHelpDeskModelDB : IssueMessageHelpdeskBaseModel
 {
     /// <summary>
     /// Автор сообщения

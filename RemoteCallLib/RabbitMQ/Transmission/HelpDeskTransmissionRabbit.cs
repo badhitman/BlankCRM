@@ -8,7 +8,7 @@ using SharedLib;
 namespace RemoteCallLib;
 
 /// <inheritdoc/>
-public class HelpDeskTransmissionRabbit([FromKeyedServices(nameof(RabbitClient))] IMQStandardClientRPC rabbitClient) : IHelpDeskTransmission
+public class HelpdeskTransmissionRabbit([FromKeyedServices(nameof(RabbitClient))] IMQStandardClientRPC rabbitClient) : IHelpdeskTransmission
 {
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> TelegramMessageIncomingAsync(TelegramIncomingMessageModel req, CancellationToken token = default)
@@ -38,8 +38,8 @@ public class HelpDeskTransmissionRabbit([FromKeyedServices(nameof(RabbitClient))
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(GlobalStaticConstantsTransmission.TransmissionQueues.IssueUpdateHelpDeskReceive, issue, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<TPaginationResponseStandardModel<IssueHelpDeskModel>>> IssuesSelectAsync(TAuthRequestStandardModel<TPaginationRequestStandardModel<SelectIssuesRequestModel>> req, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<TResponseModel<TPaginationResponseStandardModel<IssueHelpDeskModel>>>(GlobalStaticConstantsTransmission.TransmissionQueues.IssuesSelectHelpDeskReceive, req, token: token) ?? new();
+    public async Task<TResponseModel<TPaginationResponseStandardModel<IssueHelpdeskModel>>> IssuesSelectAsync(TAuthRequestStandardModel<TPaginationRequestStandardModel<SelectIssuesRequestModel>> req, CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<TResponseModel<TPaginationResponseStandardModel<IssueHelpdeskModel>>>(GlobalStaticConstantsTransmission.TransmissionQueues.IssuesSelectHelpDeskReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<TResponseModel<IssueHelpDeskModelDB[]>> IssuesReadAsync(TAuthRequestStandardModel<IssuesReadRequestModel> req, CancellationToken token = default)
@@ -70,13 +70,13 @@ public class HelpDeskTransmissionRabbit([FromKeyedServices(nameof(RabbitClient))
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<TPaginationResponseStandardModel<PulseViewModel>>>(GlobalStaticConstantsTransmission.TransmissionQueues.PulseJournalHelpDeskSelectReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseStandardModel<IssueHelpDeskModel>> ConsoleIssuesSelectAsync(TPaginationRequestStandardModel<ConsoleIssuesRequestModel> req, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<TPaginationResponseStandardModel<IssueHelpDeskModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.ConsoleIssuesSelectHelpDeskReceive, req, token: token) ?? new();
+    public async Task<TPaginationResponseStandardModel<IssueHelpdeskModel>> ConsoleIssuesSelectAsync(TPaginationRequestStandardModel<ConsoleIssuesRequestModel> req, CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<TPaginationResponseStandardModel<IssueHelpdeskModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.ConsoleIssuesSelectHelpDeskReceive, req, token: token) ?? new();
     #endregion
 
     #region message
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> MessageCreateOrUpdateAsync(TAuthRequestStandardModel<IssueMessageHelpDeskBaseModel> req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> MessageCreateOrUpdateAsync(TAuthRequestStandardModel<IssueMessageHelpdeskBaseModel> req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(GlobalStaticConstantsTransmission.TransmissionQueues.MessageOfIssueUpdateHelpDeskReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>

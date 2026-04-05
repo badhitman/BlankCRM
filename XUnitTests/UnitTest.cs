@@ -34,7 +34,7 @@ public class UnitTest
         Mock<ILogger<CommerceImplementService>> mockLoggerCommerceRepo = new();
 
         Mock<IWebTransmission> mockWebTransmissionRepo = new();
-        Mock<IHelpDeskTransmission> mockHelpDeskRepo = new();
+        Mock<IHelpdeskTransmission> mockHelpdeskRepo = new();
         Mock<IRubricsTransmission> mockRubricsRepo = new();
         Mock<IStorageTransmission> mockFilesRepo = new();
 
@@ -43,7 +43,7 @@ public class UnitTest
         CommerceImplementService commerceService = new(IdentityTransmissionRepo,
                                                        ContextFactoryDb,
                                                        mockWebTransmissionRepo.Object,
-                                                       mockHelpDeskRepo.Object,
+                                                       mockHelpdeskRepo.Object,
                                                        mockRubricsRepo.Object,
                                                        mockFilesRepo.Object,
                                                        HistoryIndexingRepo,
@@ -52,11 +52,15 @@ public class UnitTest
                                                        mockWebConf.Object,
                                                        StorageTransmissionRepo);
 
-        NomenclatureModelDB Nomenclature_1 = await CreateNomenclature(commerceService);
-        OfferModelDB Offer_1 = await CreateOffer(commerceService, Nomenclature_1.Id);
+        NomenclatureModelDB nomenclature_1 = await CreateNomenclature(commerceService);
+        OfferModelDB offer_1 = await CreateOffer(commerceService, nomenclature_1.Id);
+        OfferModelDB offer_2 = await CreateOffer(commerceService, nomenclature_1.Id);
 
-        NomenclatureModelDB Nomenclature_2 = await CreateNomenclature(commerceService);
-        OfferModelDB Offer_2 = await CreateOffer(commerceService, Nomenclature_2.Id);
+        NomenclatureModelDB nomenclature_2 = await CreateNomenclature(commerceService);
+        OfferModelDB offer_3 = await CreateOffer(commerceService, nomenclature_2.Id);
+
+        TAuthRequestStandardModel<WarehouseDocumentModelDB> wh = new();
+        var v = await commerceService.WarehouseDocumentUpdateOrCreateAsync(wh);
 
         Mock<IKladrNavigationService> mockKladrRepo = new();
         Mock<ILogger<RetailService>> mockLoggerRetailRepo = new();

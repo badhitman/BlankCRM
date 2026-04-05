@@ -5,7 +5,7 @@
 using SharedLib;
 using Transmission.Receives.helpdesk;
 
-namespace HelpDeskService;
+namespace HelpdeskService;
 
 /// <summary>
 /// MQ listen
@@ -24,12 +24,12 @@ public static class RegisterMqListenerExtension
             .RegisterListenerRabbitMQ<RubricReadReceive, int, TResponseModel<List<RubricStandardModel>>>()
             .RegisterListenerRabbitMQ<RubricsGetReceive, int[], TResponseModel<List<RubricStandardModel>>>()
 
-            .RegisterListenerRabbitMQ<IssuesSelectReceive, TAuthRequestStandardModel<TPaginationRequestStandardModel<SelectIssuesRequestModel>>, TResponseModel<TPaginationResponseStandardModel<IssueHelpDeskModel>>>()
+            .RegisterListenerRabbitMQ<IssuesSelectReceive, TAuthRequestStandardModel<TPaginationRequestStandardModel<SelectIssuesRequestModel>>, TResponseModel<TPaginationResponseStandardModel<IssueHelpdeskModel>>>()
             .RegisterListenerRabbitMQ<ArticlesSelectReceive, TPaginationRequestStandardModel<SelectArticlesRequestModel>, TPaginationResponseStandardModel<ArticleModelDB>>()
             .RegisterListenerRabbitMQ<IssueCreateOrUpdateReceive, TAuthRequestStandardModel<UniversalUpdateRequestModel>, TResponseModel<int>>()
             .RegisterListenerRabbitMQ<MessageVoteReceive, TAuthRequestStandardModel<VoteIssueRequestModel>, TResponseModel<bool>>()
-            .RegisterListenerRabbitMQ<MessageUpdateOrCreateReceive, TAuthRequestStandardModel<IssueMessageHelpDeskBaseModel>, TResponseModel<int>>()
-            .RegisterListenerRabbitMQ<SetWebConfigReceive, HelpDeskConfigModel, ResponseBaseModel>()
+            .RegisterListenerRabbitMQ<MessageUpdateOrCreateReceive, TAuthRequestStandardModel<IssueMessageHelpdeskBaseModel>, TResponseModel<int>>()
+            .RegisterListenerRabbitMQ<SetWebConfigReceive, HelpdeskConfigModel, ResponseBaseModel>()
             .RegisterListenerRabbitMQ<UpdateRubricsForArticleReceive, RubricsSetModel, ResponseBaseModel>()
             .RegisterListenerRabbitMQ<ArticlesReadReceive, int[], TResponseModel<ArticleModelDB[]>>()
             .RegisterListenerRabbitMQ<ArticleCreateOrUpdateReceive, ArticleModelDB, TResponseModel<int>>()
@@ -42,7 +42,7 @@ public static class RegisterMqListenerExtension
             .RegisterListenerRabbitMQ<PulseIssueReceive, PulseRequestModel, TResponseModel<bool>>()
             .RegisterListenerRabbitMQ<PulseJournalSelectReceive, TAuthRequestStandardModel<TPaginationRequestStandardModel<UserIssueModel>>, TResponseModel<TPaginationResponseStandardModel<PulseViewModel>>>()
             .RegisterListenerRabbitMQ<TelegramMessageIncomingReceive, TelegramIncomingMessageModel, ResponseBaseModel>()
-            .RegisterListenerRabbitMQ<ConsoleIssuesSelectReceive, TPaginationRequestStandardModel<ConsoleIssuesRequestModel>, TPaginationResponseStandardModel<IssueHelpDeskModel>>()
+            .RegisterListenerRabbitMQ<ConsoleIssuesSelectReceive, TPaginationRequestStandardModel<ConsoleIssuesRequestModel>, TPaginationResponseStandardModel<IssueHelpdeskModel>>()
             ;
     }
 }

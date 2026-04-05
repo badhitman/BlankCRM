@@ -28,7 +28,7 @@ public class StorageFilesImpl(
     IOptions<MongoConfigModel> mongoConf,
     IIdentityTransmission identityRepo,
     ICommerceTransmission commRepo,
-    IHelpDeskTransmission HelpDeskRepo,
+    IHelpdeskTransmission HelpDeskRepo,
     WebConfigModel webConfig,
     ILogger<ParametersStorage> loggerRepo) : IFilesStorage
 {

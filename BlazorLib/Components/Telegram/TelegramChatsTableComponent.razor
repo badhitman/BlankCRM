@@ -1,6 +1,6 @@
 ﻿@inherits BlazorBusyComponentBaseAuthModel
 
-@using BlazorLib.Components.HelpDesk.issue
+@using BlazorLib.Components.Helpdesk.issue
 @using MudBlazor
 @using System.Globalization
 
@@ -51,7 +51,7 @@
             @if (context.Type == ChatsTypesTelegramEnum.Private)
             {
                 UserInfoModel? user = UsersCache.FirstOrDefault(x => x.TelegramId == context.ChatTelegramId);
-                IssueHelpDeskModel[]? issues = user is null || !IssuesCache.TryGetValue(user.UserId, out IssueHelpDeskModel[]? issues_cached)
+                IssueHelpdeskModel[]? issues = user is null || !IssuesCache.TryGetValue(user.UserId, out IssueHelpdeskModel[]? issues_cached)
                 ? null
                 : issues_cached;
 

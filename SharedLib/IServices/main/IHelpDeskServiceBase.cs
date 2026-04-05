@@ -5,14 +5,14 @@
 namespace SharedLib;
 
 /// <summary>
-/// IHelpDeskServiceBase
+/// IHelpdeskServiceBase
 /// </summary>
-public interface IHelpDeskServiceBase
+public interface IHelpdeskServiceBase
 {
     /// <summary>
     /// Получить обращения
     /// </summary>
-    public Task<TPaginationResponseStandardModel<IssueHelpDeskModel>> ConsoleIssuesSelectAsync(TPaginationRequestStandardModel<ConsoleIssuesRequestModel> req, CancellationToken token = default);
+    public Task<TPaginationResponseStandardModel<IssueHelpdeskModel>> ConsoleIssuesSelectAsync(TPaginationRequestStandardModel<ConsoleIssuesRequestModel> req, CancellationToken token = default);
 
     /// <summary>
     /// Журнал событий в обращении
@@ -22,7 +22,7 @@ public interface IHelpDeskServiceBase
     /// <summary>
     /// Получить обращения для пользователя
     /// </summary>
-    public Task<TResponseModel<TPaginationResponseStandardModel<IssueHelpDeskModel>>> IssuesSelectAsync(TAuthRequestStandardModel<TPaginationRequestStandardModel<SelectIssuesRequestModel>> req, CancellationToken token = default);
+    public Task<TResponseModel<TPaginationResponseStandardModel<IssueHelpdeskModel>>> IssuesSelectAsync(TAuthRequestStandardModel<TPaginationRequestStandardModel<SelectIssuesRequestModel>> req, CancellationToken token = default);
 
     /// <summary>
     /// Создать обращение
@@ -58,7 +58,7 @@ public interface IHelpDeskServiceBase
     /// <summary>
     /// Добавить сообщение к обращению
     /// </summary>
-    public Task<TResponseModel<int>> MessageCreateOrUpdateAsync(TAuthRequestStandardModel<IssueMessageHelpDeskBaseModel> req, CancellationToken token = default);
+    public Task<TResponseModel<int>> MessageCreateOrUpdateAsync(TAuthRequestStandardModel<IssueMessageHelpdeskBaseModel> req, CancellationToken token = default);
 
     /// <summary>
     /// Сообщения из обращения

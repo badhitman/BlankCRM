@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 using BlazorLib;
 using SharedLib;
 
-namespace BlazorLib.Components.HelpDesk.issue;
+namespace BlazorLib.Components.Helpdesk.issue;
 
 /// <summary>
 /// Обращения/заявки для чата
@@ -18,7 +18,7 @@ public partial class IssuesForChatComponent : BlazorBusyComponentBaseModel
     /// Issues
     /// </summary>
     [Parameter, EditorRequired]
-    public required IssueHelpDeskModel[] Issues { get; set; }
+    public required IssueHelpdeskModel[] Issues { get; set; }
 
 
     bool IsExpand;

@@ -10,7 +10,7 @@ namespace SharedLib;
 /// IssueHelpDeskModelDB
 /// </summary>
 [Index(nameof(AuthorIdentityUserId), nameof(ExecutorIdentityUserId), nameof(LastUpdateAt), nameof(RubricIssueId), nameof(StatusDocument)), Index(nameof(NormalizedNameUpper))]
-public class IssueHelpDeskModelDB : IssueHelpDeskModel
+public class IssueHelpDeskModelDB : IssueHelpdeskModel
 {
     /// <inheritdoc/>
     public string? NormalizedNameUpper { get; set; }

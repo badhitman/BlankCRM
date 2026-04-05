@@ -4,7 +4,7 @@
 
 using SharedLib;
 
-namespace BlazorLib.Components.HelpDesk.issue;
+namespace BlazorLib.Components.Helpdesk.issue;
 
 /// <summary>
 /// AboutIssueComponent

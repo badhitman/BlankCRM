@@ -11,7 +11,7 @@ namespace Transmission.Receives.helpdesk;
 /// Сообщение в обращение
 /// </summary>
 public class MessageUpdateOrCreateReceive(IHelpDeskService hdRepo, IHistoryIndexing indexingRepo)
-    : IResponseReceive<TAuthRequestStandardModel<IssueMessageHelpDeskBaseModel>?, TResponseModel<int>?>
+    : IResponseReceive<TAuthRequestStandardModel<IssueMessageHelpdeskBaseModel>?, TResponseModel<int>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.MessageOfIssueUpdateHelpDeskReceive;
@@ -19,7 +19,7 @@ public class MessageUpdateOrCreateReceive(IHelpDeskService hdRepo, IHistoryIndex
     /// <summary>
     /// Сообщение в обращение
     /// </summary>
-    public async Task<TResponseModel<int>?> ResponseHandleActionAsync(TAuthRequestStandardModel<IssueMessageHelpDeskBaseModel>? req, CancellationToken token = default)
+    public async Task<TResponseModel<int>?> ResponseHandleActionAsync(TAuthRequestStandardModel<IssueMessageHelpdeskBaseModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req?.Payload);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.SenderActionUserId, req.Payload);

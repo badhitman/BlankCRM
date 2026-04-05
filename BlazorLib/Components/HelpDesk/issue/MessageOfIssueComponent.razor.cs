@@ -9,7 +9,7 @@ using SharedLib;
 using System.ComponentModel;
 using static SharedLib.GlobalStaticConstantsRoutes;
 
-namespace BlazorLib.Components.HelpDesk.issue;
+namespace BlazorLib.Components.Helpdesk.issue;
 
 /// <summary>
 /// MessageOfIssueComponent

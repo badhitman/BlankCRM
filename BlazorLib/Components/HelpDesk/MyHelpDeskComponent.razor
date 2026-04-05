@@ -5,14 +5,14 @@
 <br />
 <CascadingValue Value="SetTab">
     <TabSetComponent IsSilent AsPills>
-        <TabComponent SystemName="@(nameof(HelpDeskJournalModesEnum.ActualOnly))" Title="Opened">
-            <HelpDeskJournalComponent UserArea="UsersAreasHelpDeskEnum.Author" JournalMode="HelpDeskJournalModesEnum.ActualOnly" />
+        <TabComponent SystemName="@(nameof(HelpdeskJournalModesEnum.ActualOnly))" Title="Opened">
+            <HelpdeskJournalComponent UserArea="UsersAreasHelpdeskEnum.Author" JournalMode="HelpdeskJournalModesEnum.ActualOnly" />
         </TabComponent>
-        <TabComponent SystemName="@(nameof(HelpDeskJournalModesEnum.ArchiveOnly))" Title="Closed">
-            <HelpDeskJournalComponent UserArea="UsersAreasHelpDeskEnum.Author" JournalMode="HelpDeskJournalModesEnum.ArchiveOnly" />
+        <TabComponent SystemName="@(nameof(HelpdeskJournalModesEnum.ArchiveOnly))" Title="Closed">
+            <HelpdeskJournalComponent UserArea="UsersAreasHelpdeskEnum.Author" JournalMode="HelpdeskJournalModesEnum.ArchiveOnly" />
         </TabComponent>
-        <TabComponent SystemName="@(nameof(HelpDeskJournalModesEnum.All))" Title="All">
-            <HelpDeskJournalComponent UserArea="UsersAreasHelpDeskEnum.Author" JournalMode="HelpDeskJournalModesEnum.All" />
+        <TabComponent SystemName="@(nameof(HelpdeskJournalModesEnum.All))" Title="All">
+            <HelpdeskJournalComponent UserArea="UsersAreasHelpdeskEnum.Author" JournalMode="HelpdeskJournalModesEnum.All" />
         </TabComponent>
     </TabSetComponent>
 </CascadingValue>
@@ -25,14 +25,14 @@
     [Inject]
     AuthenticationStateProvider authRepo { get; set; } = default!;
 
-    HelpDeskJournalComponent? _tab;
+    HelpdeskJournalComponent? _tab;
 
     void Update()
     {
         _tab?.TableRef.ReloadServerData();
     }
 
-    void SetTab(HelpDeskJournalComponent page)
+    void SetTab(HelpdeskJournalComponent page)
     {
         _tab = page;
     }

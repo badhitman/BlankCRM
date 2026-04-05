@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components;
 using BlazorLib;
 using SharedLib;
 
-namespace BlazorLib.Components.HelpDesk.Pages;
+namespace BlazorLib.Components.Helpdesk.Pages;
 
 /// <summary>
 /// OrdersAttendancesListComponent

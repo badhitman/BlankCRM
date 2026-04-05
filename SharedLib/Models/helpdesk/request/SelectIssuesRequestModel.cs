@@ -12,12 +12,12 @@ public class SelectIssuesRequestModel : SelectRequestAuthBaseModel
     /// <summary>
     /// Автор, Исполнитель, Подписчик или Main (= Исполнитель||Подписчик)
     /// </summary>
-    public UsersAreasHelpDeskEnum? UserArea { get; set; }
+    public UsersAreasHelpdeskEnum? UserArea { get; set; }
 
     /// <summary>
     /// Journal mode: All, ActualOnly, ArchiveOnly
     /// </summary>
-    public required HelpDeskJournalModesEnum JournalMode { get; set; }
+    public required HelpdeskJournalModesEnum JournalMode { get; set; }
 
     /// <summary>
     /// Загрузить данные по подписчикам

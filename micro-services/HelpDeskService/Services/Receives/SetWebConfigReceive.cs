@@ -11,13 +11,13 @@ namespace Transmission.Receives.helpdesk;
 /// Set web config site
 /// </summary>
 public class SetWebConfigReceive(IHelpDeskService hdRepo)
-    : IResponseReceive<HelpDeskConfigModel?, ResponseBaseModel?>
+    : IResponseReceive<HelpdeskConfigModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.SetWebConfigHelpDeskReceive;
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(HelpDeskConfigModel? payload, CancellationToken token = default)
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(HelpdeskConfigModel? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
         return await hdRepo.SetWebConfigAsync(payload, token);

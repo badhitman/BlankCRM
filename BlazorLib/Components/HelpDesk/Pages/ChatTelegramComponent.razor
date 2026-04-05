@@ -42,21 +42,21 @@ else
         <MudTabPanel Disabled="@(CurrentUser is null)" Text="Issues">
             <CascadingValue Value="SetTab">
                 <TabSetComponent IsSilent AsPills>
-                    <TabComponent SystemName="@(nameof(HelpDeskJournalModesEnum.ActualOnly))" Title="Opened">
-                        <HelpDeskJournalComponent UserIdentityId="@CurrentUser!.UserIdentityId" UserArea="UsersAreasHelpDeskEnum.Author" JournalMode="HelpDeskJournalModesEnum.ActualOnly" />
+                    <TabComponent SystemName="@(nameof(HelpdeskJournalModesEnum.ActualOnly))" Title="Opened">
+                        <HelpdeskJournalComponent UserIdentityId="@CurrentUser!.UserIdentityId" UserArea="UsersAreasHelpdeskEnum.Author" JournalMode="HelpdeskJournalModesEnum.ActualOnly" />
                     </TabComponent>
-                    <TabComponent SystemName="@(nameof(HelpDeskJournalModesEnum.ArchiveOnly))" Title="Closed">
-                        <HelpDeskJournalComponent UserIdentityId="@CurrentUser!.UserIdentityId" UserArea="UsersAreasHelpDeskEnum.Author" JournalMode="HelpDeskJournalModesEnum.ArchiveOnly" />
+                    <TabComponent SystemName="@(nameof(HelpdeskJournalModesEnum.ArchiveOnly))" Title="Closed">
+                        <HelpdeskJournalComponent UserIdentityId="@CurrentUser!.UserIdentityId" UserArea="UsersAreasHelpdeskEnum.Author" JournalMode="HelpdeskJournalModesEnum.ArchiveOnly" />
                     </TabComponent>
-                    <TabComponent SystemName="@(nameof(HelpDeskJournalModesEnum.All))" Title="All">
-                        <HelpDeskJournalComponent UserIdentityId="@CurrentUser!.UserIdentityId" UserArea="UsersAreasHelpDeskEnum.Author" JournalMode="HelpDeskJournalModesEnum.All" />
+                    <TabComponent SystemName="@(nameof(HelpdeskJournalModesEnum.All))" Title="All">
+                        <HelpdeskJournalComponent UserIdentityId="@CurrentUser!.UserIdentityId" UserArea="UsersAreasHelpdeskEnum.Author" JournalMode="HelpdeskJournalModesEnum.All" />
                     </TabComponent>
                 </TabSetComponent>
             </CascadingValue>
             <CreateIssueComponent Update="Update" UserIdentityId="@CurrentUser!.UserIdentityId" />
         </MudTabPanel>
         <MudTabPanel Disabled="@(CurrentUser is null)" Text="Settings">
-            <ChatSettingsHelpDeskComponent Chat="Chat" />
+            <ChatSettingsHelpdeskComponent Chat="Chat" />
         </MudTabPanel>
     </MudTabs>
 }

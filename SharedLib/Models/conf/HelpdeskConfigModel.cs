@@ -6,12 +6,12 @@
 namespace SharedLib;
 
 /// <summary>
-/// HelpDesk Config
+/// Helpdesk Config
 /// </summary>
-public class HelpDeskConfigModel : WebConfigModel
+public class HelpdeskConfigModel : WebConfigModel
 {
     /// <inheritdoc/>
-    public static new readonly string Configuration = "HelpDeskConfig";
+    public static new readonly string Configuration = "HelpdeskConfig";
 
     /// <summary>
     /// Длительность Cache для сегментов консоли (по статусу)

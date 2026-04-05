@@ -11,7 +11,7 @@ namespace SharedLib;
 /// IssueHelpDeskModel
 /// </summary>
 [Index(nameof(LastUpdateAt)), Index(nameof(CreatedAtUTC)), Index(nameof(StatusDocument)), Index(nameof(NormalizedDescriptionUpper)), Index(nameof(AuthorIdentityUserId))]
-public class IssueHelpDeskModel : EntryDescriptionModel
+public class IssueHelpdeskModel : EntryDescriptionModel
 {
     /// <summary>
     /// Шаг/статус обращения: "Создан", "В работе", "На проверке" и "Готово"
@@ -61,7 +61,7 @@ public class IssueHelpDeskModel : EntryDescriptionModel
     /// <summary>
     /// Build
     /// </summary>
-    public static IssueHelpDeskModel Build(IssueHelpDeskModelDB sender)
+    public static IssueHelpdeskModel Build(IssueHelpDeskModelDB sender)
     {
         return new()
         {

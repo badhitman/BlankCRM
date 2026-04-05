@@ -7,9 +7,9 @@ using System.ComponentModel;
 namespace SharedLib;
 
 /// <summary>
-/// Users areas HelpDesk: Автор, Исполнитель, Подписчик или Исполнитель+Подписчик
+/// Users areas Helpdesk: Автор, Исполнитель, Подписчик или Исполнитель+Подписчик
 /// </summary>
-public enum UsersAreasHelpDeskEnum
+public enum UsersAreasHelpdeskEnum
 {
     /// <summary>
     /// Автор

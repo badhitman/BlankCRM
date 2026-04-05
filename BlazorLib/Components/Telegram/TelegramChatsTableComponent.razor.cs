@@ -17,7 +17,7 @@ public partial class TelegramChatsTableComponent : BlazorBusyComponentBaseAuthMo
     ITelegramTransmission TgRepo { get; set; } = default!;
 
     [Inject]
-    IHelpDeskTransmission HelpDeskRepo { get; set; } = default!;
+    IHelpdeskTransmission HelpDeskRepo { get; set; } = default!;
 
 
     private IEnumerable<ChatTelegramStandardModel> pagedData = [];
@@ -26,7 +26,7 @@ public partial class TelegramChatsTableComponent : BlazorBusyComponentBaseAuthMo
     private string? searchString = null;
 
     readonly List<UserInfoModel> UsersCache = [];
-    readonly Dictionary<string, IssueHelpDeskModel[]> IssuesCache = [];
+    readonly Dictionary<string, IssueHelpdeskModel[]> IssuesCache = [];
 
     async Task<TableData<ChatTelegramStandardModel>> ServerReload(TableState state, CancellationToken token)
     {
@@ -82,18 +82,18 @@ public partial class TelegramChatsTableComponent : BlazorBusyComponentBaseAuthMo
                 Payload = new()
                 {
                     IdentityUsersIds = [.. users_ids_identity],
-                    JournalMode = HelpDeskJournalModesEnum.All,
+                    JournalMode = HelpdeskJournalModesEnum.All,
                     IncludeSubscribers = true,
                 },
                 PageNum = 0,
                 PageSize = 100,
-                SortBy = nameof(IssueHelpDeskModel.LastUpdateAt),
+                SortBy = nameof(IssueHelpdeskModel.LastUpdateAt),
                 SortingDirection = DirectionsEnum.Down,
             },
             SenderActionUserId = CurrentUserSession.UserId
         };
         await SetBusyAsync();
-        TResponseModel<TPaginationResponseStandardModel<IssueHelpDeskModel>> issues_users_res = await HelpDeskRepo
+        TResponseModel<TPaginationResponseStandardModel<IssueHelpdeskModel>> issues_users_res = await HelpDeskRepo
                      .IssuesSelectAsync(req);
 
         if (issues_users_res.Response?.Response is null || issues_users_res.Response.Response.Count == 0)
@@ -107,7 +107,7 @@ public partial class TelegramChatsTableComponent : BlazorBusyComponentBaseAuthMo
 
         foreach (UserInfoModel us in users_res.Response)
         {
-            IssueHelpDeskModel[] issues_for_user = [.. issues_users_res.Response.Response
+            IssueHelpdeskModel[] issues_for_user = [.. issues_users_res.Response.Response
                 .Where(x =>
                 x.ExecutorIdentityUserId == us.UserId ||
                 x.Subscribers!.Any(y => y.UserId == us.UserId) ||

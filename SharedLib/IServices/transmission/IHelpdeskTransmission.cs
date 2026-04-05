@@ -5,9 +5,9 @@
 namespace SharedLib;
 
 /// <summary>
-/// IHelpDeskTransmission
+/// IHelpdeskTransmission
 /// </summary>
-public interface IHelpDeskTransmission : IArticlesService, IHelpDeskServiceBase
+public interface IHelpdeskTransmission : IArticlesService, IHelpdeskServiceBase
 {
     #region issue
     /// <summary>

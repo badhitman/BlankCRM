@@ -17,7 +17,7 @@ public partial class OrdersJournalComponent : BlazorBusyComponentBaseAuthModel
     ICommerceTransmission CommerceRepo { get; set; } = default!;
 
     [Inject]
-    IHelpDeskTransmission HelpDeskRepo { get; set; } = default!;
+    IHelpdeskTransmission HelpDeskRepo { get; set; } = default!;
 
 
     /// <summary>

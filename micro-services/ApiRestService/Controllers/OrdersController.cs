@@ -16,7 +16,7 @@ namespace ApiRestService.Controllers;
 /// </summary>
 [Route("api/[controller]/[action]"), ApiController, ServiceFilter(typeof(UnhandledExceptionAttribute))]
 [TypeFilter(typeof(RolesAuthorizationFilter), Arguments = [$"{nameof(ExpressApiRolesEnum.OrdersReadCommerce)},{nameof(ExpressApiRolesEnum.OrdersWriteCommerce)}"])]
-public class OrdersController(ICommerceTransmission commRepo, IHelpDeskTransmission hdRepo, IStorageTransmission storageRepo) : ControllerBase
+public class OrdersController(ICommerceTransmission commRepo, IHelpdeskTransmission hdRepo, IStorageTransmission storageRepo) : ControllerBase
 {
     /// <summary>
     /// Подбор (поиск по параметрам) заказов

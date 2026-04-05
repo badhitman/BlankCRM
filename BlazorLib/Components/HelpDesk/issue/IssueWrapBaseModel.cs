@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components;
 using BlazorLib;
 using SharedLib;
 
-namespace BlazorLib.Components.HelpDesk.issue;
+namespace BlazorLib.Components.Helpdesk.issue;
 
 /// <summary>
 /// IssueWrapBaseModel
@@ -14,7 +14,7 @@ namespace BlazorLib.Components.HelpDesk.issue;
 public abstract class IssueWrapBaseModel : BlazorBusyComponentBaseAuthModel
 {
     [Inject]
-    internal IHelpDeskTransmission HelpDeskRepo { get; set; } = default!;
+    internal IHelpdeskTransmission HelpDeskRepo { get; set; } = default!;
 
     [Inject]
     internal IRubricsTransmission RubricsRepo { get; set; } = default!;

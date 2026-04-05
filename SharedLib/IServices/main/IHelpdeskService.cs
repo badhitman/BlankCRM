@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// HelpDesk (service)
 /// </summary>
-public interface IHelpDeskService : IHelpDeskServiceBase
+public interface IHelpDeskService : IHelpdeskServiceBase
 {
     /// <summary>
     /// ReplaceTags
@@ -35,7 +35,7 @@ public interface IHelpDeskService : IHelpDeskServiceBase
     /// <summary>
     /// SetWebConfig
     /// </summary>
-    public Task<ResponseBaseModel> SetWebConfigAsync(HelpDeskConfigModel req, CancellationToken token = default);
+    public Task<ResponseBaseModel> SetWebConfigAsync(HelpdeskConfigModel req, CancellationToken token = default);
 
     /// <summary>
     /// Очистить кеш сегмента консоли

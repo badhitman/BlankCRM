@@ -191,7 +191,7 @@ public class Program
             .AddScoped<IIndexingServive, IndexingTransmissionRabbit>()
             .AddScoped<IHistoryIndexing, HistoryTransmissionRabbit>()
             .AddScoped<IWebTransmission, WebTransmissionRabbit>()
-            .AddScoped<IHelpDeskTransmission, HelpDeskTransmissionRabbit>()
+            .AddScoped<IHelpdeskTransmission, HelpdeskTransmissionRabbit>()
             .AddScoped<IStorageTransmission, StorageTransmissionRabbit>()
             .AddScoped<IRetailService, RetailTransmissionRabbit>()
             .AddScoped<IParametersStorageTransmission, ParametersStorageTransmissionRabbit>()

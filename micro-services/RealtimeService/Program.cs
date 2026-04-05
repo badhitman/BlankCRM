@@ -207,7 +207,7 @@ public class Program
             .AddScoped<IWebTransmission, WebTransmissionRabbit>()
             .AddScoped<IIdentityTransmission, IdentityTransmissionRabbit>()
             .AddScoped<ITelegramTransmission, TelegramTransmissionRabbit>()
-            .AddScoped<IHelpDeskTransmission, HelpDeskTransmissionRabbit>()
+            .AddScoped<IHelpdeskTransmission, HelpdeskTransmissionRabbit>()
             .AddScoped<IRubricsTransmission, RubricsTransmissionRabbit>()
             .AddScoped<ICommerceTransmission, CommerceTransmissionRabbit>()
             .AddScoped<IKladrNavigationService, KladrNavigationServiceTransmissionRabbit>()

@@ -229,7 +229,7 @@ public class Program
         builder.Services
             .AddSingleton<ITraceRabbitActionsServiceTransmission, TraceRabbitActionsTransmission>()
             .AddScoped<ITelegramTransmission, TelegramTransmissionRabbit>()
-            .AddScoped<IHelpDeskTransmission, HelpDeskTransmissionRabbit>()
+            .AddScoped<IHelpdeskTransmission, HelpdeskTransmissionRabbit>()
             .AddScoped<IWebTransmission, WebTransmissionRabbit>()
             .AddScoped<IStorageTransmission, StorageTransmissionRabbit>()
             .AddScoped<IParametersStorageTransmission, ParametersStorageTransmissionRabbit>()

@@ -19,7 +19,7 @@ public partial class OrderDocumentObjectComponent : BlazorBusyComponentBaseAuthM
     ICommerceTransmission CommRepo { get; set; } = default!;
 
     [Inject]
-    IHelpDeskTransmission HelpDeskRepo { get; set; } = default!;
+    IHelpdeskTransmission HelpDeskRepo { get; set; } = default!;
 
 
     [Inject]

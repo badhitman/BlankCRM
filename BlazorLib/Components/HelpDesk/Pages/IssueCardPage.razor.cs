@@ -7,7 +7,7 @@ using BlazorLib;
 using MudBlazor;
 using SharedLib;
 
-namespace BlazorLib.Components.HelpDesk.Pages;
+namespace BlazorLib.Components.Helpdesk.Pages;
 
 /// <summary>
 /// IssueCardPage
@@ -15,7 +15,7 @@ namespace BlazorLib.Components.HelpDesk.Pages;
 public partial class IssueCardPage : BlazorBusyComponentBaseAuthModel
 {
     [Inject]
-    IHelpDeskTransmission HelpDeskRepo { get; set; } = default!;
+    IHelpdeskTransmission HelpDeskRepo { get; set; } = default!;
 
     [Inject]
     ICommerceTransmission CommRepo { get; set; } = default!;

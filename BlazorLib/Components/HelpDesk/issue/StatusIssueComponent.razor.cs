@@ -6,7 +6,7 @@ using BlazorLib;
 using Newtonsoft.Json.Linq;
 using SharedLib;
 
-namespace BlazorLib.Components.HelpDesk.issue;
+namespace BlazorLib.Components.Helpdesk.issue;
 
 /// <summary>
 /// Участники диалога

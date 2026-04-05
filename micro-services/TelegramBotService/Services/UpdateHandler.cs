@@ -18,7 +18,7 @@ public class UpdateHandler(
     ILogger<UpdateHandler> logger,
     TelegramBotConfigModel tgConf,
     IParametersStorageTransmission serializeStorageRepo,
-    IHelpDeskTransmission helpdeskRepo,
+    IHelpdeskTransmission helpdeskRepo,
     IIdentityTransmission identityRepo,
     IServiceProvider servicesProvider) : IUpdateHandler
 {

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using SharedLib;
 using DbcLib;
 
-namespace HelpDeskService;
+namespace HelpdeskService;
 
 /// <summary>
 /// RubricsService

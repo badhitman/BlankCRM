@@ -3,19 +3,19 @@
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 @attribute [Authorize]
 
-@using BlazorLib.Components.HelpDesk
+@using BlazorLib.Components.Helpdesk
 @using BlazorLib.Components.Telegram
 @using MudBlazor
 
 <MudTabs Outlined TabPanelsClass="pa-1">
     <MudTabPanel ToolTip="Your personal requests" Text="My Issues" Icon="@Icons.Material.Filled.AllInbox">
-        <MyHelpDeskComponent />
+        <MyHelpdeskComponent />
     </MudTabPanel>
 
     <AuthorizeView Roles="@($"{string.Join(",", GlobalStaticConstantsRoles.Roles.AllHelpDeskRoles)},{GlobalStaticConstantsRoles.Roles.Admin}")">
         <MudTabPanel ToolTip="Servicing incoming requests" Text="Customer requests" Icon="@Icons.Material.Filled.BugReport">
             <MudPaper Class="ma-2" Elevation="3">
-                <HelpDeskJobComponent />
+                <HelpdeskJobComponent />
             </MudPaper>
         </MudTabPanel>
     </AuthorizeView>

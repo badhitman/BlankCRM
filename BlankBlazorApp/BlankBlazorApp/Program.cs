@@ -295,7 +295,7 @@ builder.Services
     .AddScoped<IWebChatService, WebChatTransmissionRabbit>()
     .AddScoped<ICommerceTransmission, CommerceTransmissionRabbit>()
     .AddScoped<ITelegramTransmission, TelegramTransmissionRabbit>()
-    .AddScoped<IHelpDeskTransmission, HelpDeskTransmissionRabbit>()
+    .AddScoped<IHelpdeskTransmission, HelpdeskTransmissionRabbit>()
     .AddScoped<IRubricsTransmission, RubricsTransmissionRabbit>()
     .AddScoped<IRetailService, RetailTransmissionRabbit>()
     .AddScoped<IStorageTransmission, StorageTransmissionRabbit>()

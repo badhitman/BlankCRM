@@ -7,7 +7,7 @@ using BlazorLib;
 using MudBlazor;
 using SharedLib;
 
-namespace BlazorLib.Components.HelpDesk.console;
+namespace BlazorLib.Components.Helpdesk.console;
 
 /// <summary>
 /// ConsoleSegmentColumnComponent
@@ -15,7 +15,7 @@ namespace BlazorLib.Components.HelpDesk.console;
 public partial class ConsoleSegmentColumnComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
-    IHelpDeskTransmission HelpDeskRepo { get; set; } = default!;
+    IHelpdeskTransmission HelpDeskRepo { get; set; } = default!;
 
     [Inject]
     ICommerceTransmission commRepo { get; set; } = default!;
@@ -57,14 +57,14 @@ public partial class ConsoleSegmentColumnComponent : BlazorBusyComponentBaseMode
     static MarkupString MyMarkup(string descr_issue) =>
         new(descr_issue);
 
-    readonly List<IssueHelpDeskModel> Issues = [];
+    readonly List<IssueHelpdeskModel> Issues = [];
     int totalCount;
     int pageNum = 0;
 
     async Task LoadData()
     {
         await SetBusyAsync();
-        TPaginationResponseStandardModel<IssueHelpDeskModel> res = await HelpDeskRepo.ConsoleIssuesSelectAsync(new TPaginationRequestStandardModel<ConsoleIssuesRequestModel>
+        TPaginationResponseStandardModel<IssueHelpdeskModel> res = await HelpDeskRepo.ConsoleIssuesSelectAsync(new TPaginationRequestStandardModel<ConsoleIssuesRequestModel>
         {
             PageNum = pageNum,
             PageSize = 5,

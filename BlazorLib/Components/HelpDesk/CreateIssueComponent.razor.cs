@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components;
 using BlazorLib;
 using SharedLib;
 
-namespace BlazorLib.Components.HelpDesk;
+namespace BlazorLib.Components.Helpdesk;
 
 /// <summary>
 /// Create Issue
@@ -14,7 +14,7 @@ namespace BlazorLib.Components.HelpDesk;
 public partial class CreateIssueComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
-    IHelpDeskTransmission HelpDeskRepo { get; set; } = default!;
+    IHelpdeskTransmission HelpDeskRepo { get; set; } = default!;
 
     [Inject]
     IParametersStorageTransmission SerializeStorageRepo { get; set; } = default!;
@@ -32,7 +32,7 @@ public partial class CreateIssueComponent : BlazorBusyComponentBaseModel
 
     /// <inheritdoc/>
     [CascadingParameter, EditorRequired]
-    public required Action<HelpDeskJournalModesEnum> ReloadIssueJournal { get; set; }
+    public required Action<HelpdeskJournalModesEnum> ReloadIssueJournal { get; set; }
 
 
     bool CanCreate =>

@@ -231,7 +231,7 @@ public class Program
             .WaitFor(realtimeService)
             ;
 
-        IResourceBuilder<ProjectResource> helpdeskService = builder.AddProject<Projects.HelpDeskService>("helpdeskservice")
+        IResourceBuilder<ProjectResource> helpdeskService = builder.AddProject<Projects.HelpdeskService>("helpdeskservice")
             .WithEnvironment(act => rabbitConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
             .WithReference(builder.AddConnectionString($"HelpDeskConnection{_modePrefix}"))
             .WithReference(redisConnectionStr)

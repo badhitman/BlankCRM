@@ -7,7 +7,7 @@ using SharedLib;
 using BlazorLib;
 using BlazorLib.Components.Rubrics;
 
-namespace BlazorLib.Components.HelpDesk.issue;
+namespace BlazorLib.Components.Helpdesk.issue;
 
 /// <summary>
 /// IssueBodyComponent

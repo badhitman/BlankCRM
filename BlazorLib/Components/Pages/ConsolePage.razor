@@ -1,7 +1,7 @@
 ﻿@page "/help-desk/console"
-@using BlazorLib.Components.HelpDesk
+@using BlazorLib.Components.Helpdesk
 
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 @attribute [Authorize(Roles = $"{GlobalStaticConstantsRoles.Roles.HelpDeskRubricsManage},{GlobalStaticConstantsRoles.Roles.Admin}")]
 
-<ConsoleHelpDeskComponent />
+<ConsoleHelpdeskComponent />
