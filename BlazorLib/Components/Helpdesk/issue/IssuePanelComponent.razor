@@ -1,0 +1,21 @@
+﻿@inherits IssueWrapBaseModel
+@attribute [Authorize]
+
+<div class="vstack gap-3">
+    <div class="px-1">
+        <CascadingValue Value="@(CurrentUserSession?.IsAdmin == true)">
+            <StatusIssueComponent />
+        </CascadingValue>
+    </div>
+    <AuthorizeView Roles="@($"{string.Join(",", GlobalStaticConstantsRoles.Roles.AllHelpDeskRoles)},{GlobalStaticConstantsRoles.Roles.Admin}")">
+        <Authorized>
+            <div class="px-1"><SubscribersIssueComponent /></div>
+        </Authorized>
+    </AuthorizeView>
+    <div class="px-1"><AboutIssueComponent /></div>
+</div>
+
+@code {
+    [CascadingParameter, EditorRequired]
+    public required IssueHelpDeskModelDB CurrentIssue { get; set; }
+}

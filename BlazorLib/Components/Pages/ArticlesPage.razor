@@ -1,0 +1,12 @@
+﻿@page "/articles"
+
+@using BlazorLib.Components.Articles
+@using BlazorLib.Components.Helpdesk
+@using BlazorLib.Components.Rubrics
+@using MudBlazor
+@using static SharedLib.GlobalStaticConstantsRoutes
+
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@attribute [Authorize]
+
+<ArticlesListComponent />

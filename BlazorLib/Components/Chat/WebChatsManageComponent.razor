@@ -1,0 +1,145 @@
+﻿@using MudBlazor
+
+@inherits BlazorBusyComponentUsersCachedModel
+
+<MudTable ServerData="ServerReload" Dense Hover @ref="tableRef">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">
+            WEB чаты:
+            @if (IsBusyProgress)
+            {
+                <sup class="spinner-grow spinner-grow-sm ms-2" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </sup>
+            }
+            else
+            {
+                <sup class="bi bi-arrow-clockwise ms-2"
+                     style="cursor:pointer;"
+                     title="Обновить таблицу"
+                     @onclick="async () => { if (tableRef is not null) await tableRef.ReloadServerData(); }"></sup>
+            }
+        </MudText>
+        <MudSpacer />
+        <MudCheckBox @bind-Value="IsDisabledFilteredValue"
+                     Color="@Color.Secondary"
+                     TriState>
+            Состояние: @(IsDisabledFilteredValue == null ? "Все" : (IsDisabledFilteredValue.Value ? "Закрытые (только)" : "Активные (строго)"))
+        </MudCheckBox>
+        <MudCheckBox @bind-Value="WithoutEmptyFilteredValue"
+                     Color="@Color.Secondary"
+                     TriState>
+            Сообщения: @(WithoutEmptyFilteredValue == null ? "Все" : (WithoutEmptyFilteredValue.Value ? "НЕ Пустые (только)" : "Пустые (строго)"))
+        </MudCheckBox>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh title="Дата/Время последнего сообщения">
+            <MudTableSortLabel InitialDirection="SortDirection.Descending" SortLabel="@(nameof(DialogWebChatModelDB.LastMessageAtUTC))" T="DialogWebChatModelDB">
+                Сообщение
+            </MudTableSortLabel>
+        </MudTh>
+        <MudTh title="Дата/Время последнего посещения">
+            <MudTableSortLabel SortLabel="@(nameof(DialogWebChatModelDB.LastOnlineAtUTC))" T="DialogWebChatModelDB">Вход</MudTableSortLabel>
+        </MudTh>
+        <MudTh>Инициатор</MudTh>
+        <MudTh>Участники</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        @{
+            DateTime _dc = context.CreatedAtUTC.GetCustomTime();
+            DateTime _dlo = context.LastOnlineAtUTC.GetCustomTime();
+        }
+        <MudTd DataLabel="Сообщение" title="Дата/Время последнего сообщения">
+            <MudLink Href="@($"/web-chats/room-{context.Id}")">
+                @_dc.ToString("d", GlobalStaticConstants.RU) <sup>@_dc.ToString("t", GlobalStaticConstants.RU)</sup>
+            </MudLink>
+        </MudTd>
+        <MudTd DataLabel="Вход" title="Дата/Время последнего посещения">
+            <div class="hstack">
+                <MudLink Href="@($"/web-chats/room-{context.Id}")" Class="me-2">
+                    @_dlo.ToString("d", GlobalStaticConstants.RU) <sup>@_dc.ToString("t", GlobalStaticConstants.RU)</sup>
+                </MudLink>
+                @if (!IsBusyProgress)
+                {
+                    <ChatStatusComponent DialogId="context.Id" />
+                }
+            </div>
+        </MudTd>
+        <MudTd DataLabel="Инициатор">
+            @if (string.IsNullOrWhiteSpace(context.InitiatorIdentityId))
+            {
+                <MudLink Href="@($"/web-chats/room-{context.Id}")">
+                    @context.InitiatorHumanName @context.InitiatorContacts
+                </MudLink>
+            }
+            else
+            {
+                <MudLink Href="@($"/web-chats/room-{context.Id}")">
+                    @(UsersCache.FirstOrDefault(x => x.UserId == context.InitiatorIdentityId)?.ToString() ?? context.InitiatorIdentityId)
+                </MudLink>
+            }
+            @if (!string.IsNullOrWhiteSpace(context.FirebaseCloudMessagingToken))
+            {
+                <sub class="badge text-bg-info mx-1" title="Firebase Cloud Message">FCM</sub>
+            }
+            <code class="mx-2">@context.UserAgent</code>
+            <sup>@context.Language</sup>
+        </MudTd>
+        <MudTd DataLabel="Участники">
+            @if (context.UsersJoins is not null && context.UsersJoins.Count != 0)
+            {
+                foreach (UserJoinDialogWebChatModelDB usr in context.UsersJoins.Where(x => !x.OutDateUTC.HasValue))
+                {
+                    <span class="badge text-bg-@(usr.OutDateUTC is null ? "primary" : "secondary") me-1" title="@(usr.OutDateUTC is null ? "" : $"{usr.JoinedDateUTC}-{usr.OutDateUTC}")">
+                        @if (usr.UserIdentityId == CurrentUserSession?.UserId)
+                        {
+                            <span class="ms-1">[Вы]</span>
+                        }
+                        else
+                        {
+                            <text>@(UsersCache.FirstOrDefault(x => x.UserId == usr.UserIdentityId)?.UserName ?? usr.UserIdentityId)</text>
+                        }
+                    </span>
+                }
+            }
+            @if (context.UsersJoins is null || context.UsersJoins.Count == 0 || !context.UsersJoins.Any(x => !x.OutDateUTC.HasValue))
+            {
+                <span class="badge text-bg-success me-1"
+                      style="cursor:pointer;"
+                      @onclick="async () => await JoinToChat(context.Id, true)"
+                      title="Вступить в диалог/чат">Взять в работу</span>
+            }
+            else if (context.UsersJoins?.Any(x => !x.OutDateUTC.HasValue && x.UserIdentityId == CurrentUserSession?.UserId) != true)
+            {
+                <span class="badge text-bg-light me-1"
+                      style="cursor:pointer;"
+                      @onclick="async () => await JoinToChat(context.Id)"
+                      title="Вступить в диалог/чат">Присоединиться</span>
+            }
+            else if (context.UsersJoins?.Any(x => !x.OutDateUTC.HasValue && x.UserIdentityId == CurrentUserSession?.UserId) == true)
+            {
+                <span class="badge text-bg-light me-1"
+                      style="cursor:pointer;"
+                      @onclick="async () => await OutFromChat(context.UsersJoins.First(x => !x.OutDateUTC.HasValue && x.UserIdentityId == CurrentUserSession?.UserId).Id)"
+                      title="Покинуть диалог/чат">Выйти</span>
+            }
+        </MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>No matching records found</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager PageSizeOptions="new int[] { 25, 50, 100 }" />
+    </PagerContent>
+</MudTable>
+<audio id="WebChatsManageComponent">
+    <source src="/sounds/mail-agent-message_gohr.mp3" type="audio/mpeg" />
+    Your browser does not support the audio tag.
+</audio>
+<audio id="audioPlayerStateEchoForWebChatComponent">
+    <source src="/sounds/z_uki-aski-tuk-tuk-tuk.mp3" type="audio/mpeg" />
+    Your browser does not support the audio tag.
+</audio>

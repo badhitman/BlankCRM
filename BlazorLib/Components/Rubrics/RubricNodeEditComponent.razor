@@ -1,0 +1,174 @@
+@using MudBlazor
+
+@inherits BlazorBusyComponentBaseModel
+
+<div style="display: grid; grid-template-columns: 1fr auto; align-items: center; width: 100%" class="@(ItemModel?.IsDisabled == true ? "text-decoration-line-through opacity-25" : "")">
+    <MudStack Row>
+        @if (IsRenameMode)
+        {
+            <div class="row">
+                <div class="col-auto">
+                    <input @bind-value="itemSystemName"
+                           @bind-value:event="oninput"
+                           class="form-control form-control-sm@(string.IsNullOrWhiteSpace(itemSystemName) ? " border border-warning-subtle" : "")"
+                           autocomplete="off"
+                           placeholder="Имя" />
+                </div>
+                <div class="col-auto">
+                    <button @onclick="SaveRubric" disabled="@(!IsEditedName)" type="button" class="btn btn-outline-info btn-sm">Сохранить</button>
+                </div>
+                <div class="col-auto">
+                    <button @onclick="() => { itemSystemName = ItemModel?.Name; IsRenameMode = false; }"
+                            type="button"
+                            class="btn btn-outline-info btn-sm">
+                        Отмена
+                    </button>
+                </div>
+            </div>
+        }
+        else
+        {
+            @ItemBody
+        }
+    </MudStack>
+    <div style="justify-self: end;">
+        <div class="row">
+            @if (ItemModel?.IsDisabled == true)
+            {
+                <div class="col-auto">
+                    <p class="lead">
+                        Деактивирован.
+                    </p>
+                </div>
+            }
+            @if (!IsRenameMode)
+            {
+                <div class="col-auto">
+                    <div class="hstack">
+                        @if (!ReadOnly)
+                        {
+                            <MudIconButton OnClick="() => MoveRow(DirectionsEnum.Up, Item)" Disabled="CantUpMove.Contains(Item.MoveRowState)" Icon="@Icons.Material.Filled.ArrowDropUp"></MudIconButton>
+                            <MudIconButton OnClick="() => MoveRow(DirectionsEnum.Down, Item)" Disabled="CantDownMove.Contains(Item.MoveRowState)" Icon="@Icons.Material.Filled.ArrowDropDown"></MudIconButton>
+                            <div class="btn-group" role="group" aria-label="Basic example">
+                                <button title="Переименовать элемент" @onclick="() => IsRenameMode = true" type="button" class="btn btn-outline-info btn-sm bi bi bi-pencil"></button>
+                                <button disabled="@IsEditedName" @onclick="async () => { ItemModel!.IsDisabled = !ItemModel.IsDisabled; await SaveRubric(); }" type="button" class="btn btn-outline-@(ItemModel?.IsDisabled == true ? "secondary" : "info") btn-sm bi bi-toggle-@(ItemModel?.IsDisabled == true ? "off" : "on")"></button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    [Inject]
+    IRubricsService RubricsRepo { get; set; } = default!;
+
+
+    /// <summary>
+    /// ReadOnly
+    /// </summary>
+    [Parameter]
+    public bool ReadOnly { get; set; }
+
+    /// <summary>
+    /// ContextName
+    /// </summary>
+    [Parameter, EditorRequired]
+    public required string? ContextName { get; set; }
+
+    /// <inheritdoc/>
+    [CascadingParameter, EditorRequired]
+    public required Action<int> ReloadNodeHandle { get; set; }
+
+    /// <inheritdoc/>
+    [CascadingParameter, EditorRequired]
+    public required Action<RubricNestedModel> ItemUpdateHandle { get; set; }
+
+    /// <inheritdoc/>
+    [CascadingParameter, EditorRequired]
+    public required TreeItemDataRubricModel Item { get; set; }
+
+    [Parameter, EditorRequired]
+    public required RenderFragment ItemBody { get; set; }
+
+
+    bool IsRenameMode;
+
+    RubricNestedModel? ItemModel;
+
+    string? itemSystemName;
+
+    /// <inheritdoc/>
+    protected string DomID => $"{Item.Value?.Id}";
+
+    bool IsEditedName => itemSystemName != ItemModel?.Name;
+
+    //Item.MoveRowState
+    static MoveRowStatesEnum[] CantUpMove => [MoveRowStatesEnum.Start, MoveRowStatesEnum.Singleton];
+
+    static MoveRowStatesEnum[] CantDownMove => [MoveRowStatesEnum.End, MoveRowStatesEnum.Singleton];
+
+
+    async Task MoveRow(DirectionsEnum dir, TreeItemDataRubricModel rubric)
+    {
+        if (ItemModel is null)
+            return;
+
+        await SetBusyAsync();
+        ResponseBaseModel res = await RubricsRepo.RubricMoveAsync(new() { Payload = new() { Direction = dir, RowObjectId = rubric.Value!.Id, ContextName = ContextName } });
+
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
+        ReloadNodeHandle(ItemModel.ParentId ?? 0);
+
+        await SetBusyAsync(false);
+    }
+
+    async Task SaveRubric()
+    {
+        if (ItemModel is null)
+            throw new ArgumentNullException(nameof(ItemModel));
+
+        if (string.IsNullOrWhiteSpace(itemSystemName))
+            throw new ArgumentNullException(nameof(itemSystemName));
+
+        IsRenameMode = false;
+        ItemModel.Name = itemSystemName;
+
+        await SetBusyAsync();
+        TResponseModel<int> res = await RubricsRepo.RubricCreateOrUpdateAsync(new RubricModelDB()
+        {
+            Name = ItemModel.Name,
+            Description = ItemModel.Description,
+            Id = ItemModel.Id,
+            ParentId = ItemModel.ParentId,
+            ProjectId = ItemModel.ProjectId,
+            SortIndex = ItemModel.SortIndex,
+            IsDisabled = ItemModel.IsDisabled,
+        });
+
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
+        ItemUpdateHandle(ItemModel);
+        await SetBusyAsync(false);
+    }
+
+    /// <inheritdoc/>
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        ItemModel = Item.Value;
+        itemSystemName = ItemModel?.Name;
+    }
+
+    /// <inheritdoc/>
+    protected override void OnAfterRender(bool firstRender)
+    {
+        bool need_refresh = !((ItemModel is null && Item.Value is null) || (!(ItemModel is null || Item.Value is null)));
+
+        ItemModel = Item.Value;
+        if (need_refresh)
+            StateHasChanged();
+    }
+}

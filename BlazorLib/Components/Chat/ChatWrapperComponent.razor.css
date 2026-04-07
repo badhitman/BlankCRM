@@ -1,0 +1,20 @@
+﻿.hoverarea {
+    cursor: pointer !important;
+    background-color: var(--mud-palette-appbar-background);
+    color: var(--mud-palette-appbar-text);
+    transition: opacity 0.3s ease;
+    opacity: .8;
+}
+
+.actionarea {
+    background-color: var(--mud-palette-appbar-background);
+    color: var(--mud-palette-appbar-text);
+}
+
+.actionarea:focus {
+    opacity: 1;
+}
+.sticky-element {
+    position: sticky;
+    bottom: 0; /* The element will stick when it's 0px from the bottom of the viewport */
+}

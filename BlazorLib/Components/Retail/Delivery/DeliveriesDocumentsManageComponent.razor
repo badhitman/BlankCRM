@@ -1,0 +1,221 @@
+﻿@using MudBlazor
+
+@inherits BlazorBusyComponentUsersCachedModel
+
+<MudStack AlignItems="AlignItems.Center" Row Class="p-1">
+    <div class="card mb-1">
+        <div class="card-body p-1">
+            <MudChipSet @bind-SelectedValues="SelectedTypes"
+                        SelectionMode="SelectionMode.MultiSelection"
+                        CheckMark Variant="Variant.Text"
+                        SelectedColor="Color.Primary"
+                        Color="Color.Info">
+                @foreach (RubricNestedModel dt in AllDeliveriesTypes)
+                {
+                    <MudChip Value="@dt.Id" Text="@dt.Name" />
+                }
+            </MudChipSet>
+        </div>
+    </div>
+    <div class="card mb-1">
+        <div class="card-body p-1">
+            <MudStack Row>
+                @if (PresetStatusesDocuments is null || PresetStatusesDocuments.Count != 0)
+                {
+                    <MudChipSet @bind-SelectedValues="SelectedStatuses"
+                                SelectionMode="SelectionMode.MultiSelection"
+                                CheckMark Variant="Variant.Text"
+                                SelectedColor="Color.Primary"
+                                Color="Color.Surface">
+                        @foreach (DeliveryStatusesEnum ds in Enum.GetValues<DeliveryStatusesEnum>())
+                        {
+                            <MudChip Value="@ds" Text="@ds.DescriptionInfo()" />
+                        }
+                        <MudChip T="string"
+                                 Icon="@(includeUnsetStatus? @Icons.Material.Filled.Check : "")"
+                                 Selected=includeUnsetStatus
+                                 OnClick="OnChipClicked"
+                                 SelectedColor="Color.Primary"
+                                 Color="Color.Default">Не обработанные</MudChip>
+                    </MudChipSet>
+                }
+                else
+                {
+                    @foreach (StatusesDocumentsEnum? _mc in PresetStatusesDocuments)
+                    {
+                        <span class="badge rounded-pill text-bg-primary me-2">@(_mc?.DescriptionInfo() ?? "не обработан")</span>
+                    }
+                }
+            </MudStack>
+        </div>
+    </div>
+    <MudDateRangePicker PickerVariant="@PickerVariant.Inline" @bind-DateRange="@DateRangeProp" Margin="Margin.Dense" Clearable />
+    <MudIconButton OnClick="DownloadFullPrice" Icon="@Icons.Material.Filled.Download" />
+</MudStack>
+
+<MudTable ServerData="ServerReload"
+          T="DeliveryDocumentRetailModelDB"
+          OnRowClick="RowClickEvent"
+          RowClass="@(RowClickEventHandler is null ? "" : "cursor-pointer")"
+          Dense Hover
+          @ref=tableRef>
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Доставка (документы отгрузки)</MudText>
+        <div class="form-check form-switch form-check-inline ms-2">
+            <MudTooltip Text="Отображение документов с расхождением финансов с заказом по сумме">
+                <input class="form-check-input"
+                       type="checkbox"
+                       role="switch"
+                       id="switchCheckDefault"
+                       @bind=EqualSumFilter />
+                <label class="form-check-label" for="switchCheckDefault">
+                    расхождение сумм
+                </label>
+            </MudTooltip>
+        </div>
+        <MudSpacer />
+        <MudTextField T="string"
+                      ValueChanged="@(s => OnSearch(s))"
+                      Placeholder="Search"
+                      Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search"
+                      IconSize="Size.Medium"
+                      Class="mt-0 me-2"></MudTextField>
+        <MudTooltip Text="Создать новый документ доставки">
+            @if (RowClickEventHandler is null)
+            {
+                <MudButton OnClick=CreateNewDeliveryOpenDialog
+                           Class="me-2"
+                           Variant="Variant.Outlined"
+                           EndIcon="@Icons.Material.Filled.Add"
+                           IconColor="Color.Secondary">Новая доставка</MudButton>
+            }
+        </MudTooltip>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Тип/Статус</MudTh>
+        <MudTh>
+            <MudTableSortLabel T="DeliveryDocumentRetailModelDB"
+                               InitialDirection="@SortDirection.Descending"
+                               SortLabel="@(nameof(DeliveryDocumentRetailModelDB.CreatedAtUTC))">
+                Дата
+            </MudTableSortLabel>
+        </MudTh>
+        <MudTh>Вес</MudTh>
+        <MudTh>Заказ(ы)</MudTh>
+        @if (string.IsNullOrWhiteSpace(ClientId))
+        {
+            <MudTh>Получатель</MudTh>
+        }
+        <MudTh>Стоимость доставки</MudTh>
+        <MudTh>Адрес</MudTh>
+        <MudTh>Трэк/Код</MudTh>
+        <MudTh>Примечание</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        @{
+            DateTime cdt = context.CreatedAtUTC.GetCustomTime();
+        }
+        <MudTd DataLabel="Тип/Статус">
+            <MudLink Href="@($"/retail/delivery-document/{context.Id}")">
+                @(RubricsCache.FirstOrDefault(x => x.Id == context.DeliveryTypeId)?.Name ?? $"#{context.DeliveryTypeId}")
+            </MudLink>
+            @if (context.DeliveryStatus.HasValue)
+            {
+                <span class="badge text-bg-info ms-2">@(context.DeliveryStatus.DescriptionInfo())</span>
+            }
+            @if (context.DeliveryPaymentUponReceipt)
+            {
+                <sup class="ms-2">[оплата при получении]</sup>
+            }
+        </MudTd>
+        <MudTd DataLabel="Дата">
+            @if (RowClickEventHandler is null)
+            {
+                <MudLink Href="@($"/retail/delivery-document/{context.Id}")">
+                    <span>
+                        @cdt.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@cdt.ToString("t", GlobalStaticConstants.RU)</sup>
+                    </span>
+                </MudLink>
+            }
+            else
+            {
+                <MudLink Href="@($"/retail/delivery-document/{context.Id}")">
+                    <span>
+                        @cdt.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@cdt.ToString("t", GlobalStaticConstants.RU)</sup>
+                    </span>
+                </MudLink>
+            }
+
+            @if (FilterOrderId.HasValue && FilterOrderId.Value > 0)
+            {
+                if (initDeleteOrderFromDelivery == context.Id)
+                {
+                    <span class="badge text-bg-danger cursor-pointer me-1" @onclick="async () => await DeleteDeliveryLink(context.Id)">подтвердить удаление</span>
+                    <span class="badge text-bg-success cursor-pointer" @onclick="async () => initDeleteOrderFromDelivery = null">отмена</span>
+                }
+                else
+                {
+                    <span class="badge text-bg-secondary cursor-pointer" @onclick="async () => await DeleteDeliveryLink(context.Id)">удалить заказ из доставки</span>
+                }
+            }
+        </MudTd>
+        <MudTd DataLabel="Вес">
+            <MudLink Href="@($"/retail/delivery-document/{context.Id}")" title="вес отгрузки (в т.ч. по строкам документа)">
+                @context.WeightShipping <code>(@(context.Rows is null || context.Rows.Count == 0 ? 0 : context.Rows.Sum(x => x.WeightOffer)))</code>
+            </MudLink>
+        </MudTd>
+        <MudTd DataLabel="Заказ(ы)">
+            @if (context.OrdersLinks is null)
+            {
+                <span class="badge text-bg-danger">данные не загружены</span>
+            }
+            else
+            {
+                <DeliveryOrdersLinksAboutComponent Orders="context.OrdersLinks" />
+            }
+        </MudTd>
+        @if (string.IsNullOrWhiteSpace(ClientId))
+        {
+            <MudTd DataLabel="Получатель">
+                <MudLink Href="@($"/retail/client-card/{context.RecipientIdentityUserId}")" Color="Color.Success">
+                    @(UsersCache.FirstOrDefault(x => x.UserId == context.RecipientIdentityUserId)?.ToString() ?? context.RecipientIdentityUserId)
+                </MudLink>
+            </MudTd>
+        }
+        <MudTd DataLabel="Стоимость доставки">@context.ShippingCost</MudTd>
+        <MudTd DataLabel="Адрес">@context.KladrTitle @context.AddressUserComment</MudTd>
+        <MudTd DataLabel="Трэк/Код">@context.DeliveryCode</MudTd>
+        <MudTd DataLabel="Примечание">
+            <span>@context.Name</span>
+            @if (!string.IsNullOrWhiteSpace(context.Description))
+            {
+                <p>
+                    @NoteGet(context.Description)
+                </p>
+            }
+        </MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>Соответствующих записей не найдено</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
+
+<MudDialog @bind-Visible="_visibleCreateNewDelivery" Options="_dialogOptions">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" />Новая доставка (розница)
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <CascadingValue Name="ClientId" Value="ClientId">
+            <DeliveryDocumentComponent />
+        </CascadingValue>
+    </DialogContent>
+</MudDialog>

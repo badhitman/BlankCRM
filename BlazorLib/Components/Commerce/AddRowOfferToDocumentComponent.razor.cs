@@ -1,0 +1,223 @@
+﻿////////////////////////////////////////////////
+// © https://github.com/badhitman - @FakeGov
+////////////////////////////////////////////////
+
+using Microsoft.AspNetCore.Components;
+using SharedLib;
+
+namespace BlazorLib.Components.Commerce;
+
+/// <summary>
+/// AddRowOfferToDocumentComponent
+/// </summary>
+public partial class AddRowOfferToDocumentComponent : BlazorRegistersComponent
+{
+    [Inject]
+    ICommerceTransmission CommRepo { get; set; } = default!;
+
+
+    /// <summary>
+    /// Склад
+    /// </summary>
+    [Parameter, EditorRequired]
+    public required int WarehouseId { get; set; }
+
+    /// <summary>
+    /// Текущие/выбранные строки
+    /// </summary>
+    [Parameter, EditorRequired]
+    public required List<int> CurrentRows { get; set; }
+
+    /// <summary>
+    /// Если true - тогда отображается цена за единицу (непосредственно в элементах html селектора/select: option).
+    /// Если false - тогда цена за единицу не будет отображаться
+    /// </summary>
+    [Parameter]
+    public bool ShowPriceOffers { get; set; }
+
+    /// <summary>
+    /// Если true - тогда отображается остаток (непосредственно в элементах html селектора/select: option).
+    /// Если false - тогда остаток не будет отображаться
+    /// </summary>
+    [Parameter]
+    public bool ShowRegistersOffersQuantity { get; set; }
+
+    /// <summary>
+    /// Если true - тогда можно добавлять офферы, которых нет в остатках.
+    /// Если false - тогда для добавления доступны только офферы на остатках
+    /// </summary>
+    [Parameter]
+    public bool ForceAdding { get; set; }
+
+    /// <summary>
+    /// Обработчик добавления оффера (кнопка +)
+    /// </summary>
+    [Parameter, EditorRequired]
+    public required Action<OfferActionModel> AddingOfferHandler { get; set; }
+
+    /// <summary>
+    /// Обработчик выбора Оффера
+    /// </summary>
+    /// <remarks>
+    /// До непосредственного добавления "выбранной номенклатуры" в документ
+    /// </remarks>
+    [Parameter]
+    public Action<OfferModelDB?>? SelectOfferHandler { get; set; }
+
+
+    /// <summary>
+    /// Все офферы (для выбора)
+    /// </summary>
+    IEnumerable<OfferModelDB> AllOffers { get; set; } = [];
+
+    OfferModelDB? SelectedOffer { get; set; }
+
+    int? _selectedOfferId;
+    /// <summary>
+    /// SelectedOfferId
+    /// </summary>
+    public int? SelectedOfferId
+    {
+        get => _selectedOfferId;
+        set
+        {
+            _selectedOfferId = value;
+            SelectedOffer = ActualOffers.FirstOrDefault(x => x.Id == value);
+
+            System.Collections.Immutable.ImmutableList<decimal>? _qv = SelectedOffer?.QuantitiesValues;
+            if (_qv is not null && _qv.Count != 0 && !ForceAdding)
+                QuantityValue = _qv.First();
+            else
+                QuantityValue = 1;
+
+            if (SelectedOffer is not null && !ForceAdding)
+                InvokeAsync(async () => await CacheRegistersUpdate(_offers: [SelectedOffer.Id], _goods: [], WarehouseId, true));
+            if (SelectOfferHandler is not null)
+                SelectOfferHandler(SelectedOffer);
+        }
+    }
+
+    decimal GetOfferQuantity(OfferModelDB opt)
+    {
+        return RegistersCache.Where(x => x.OfferId == opt.Id && (WarehouseId < 1 || x.WarehouseId == WarehouseId)).Sum(x => x.Quantity);
+    }
+
+    decimal GetMaxValue()
+    {
+        if (ForceAdding)
+            return decimal.MaxValue;
+
+        return SelectedOffer is null
+            ? 0
+            : RegistersCache.Where(x => x.OfferId == SelectedOffer.Id && x.WarehouseId == WarehouseId).Sum(x => x.Quantity);
+    }
+
+    bool CantAdd()
+    {
+        return !ForceAdding && (SelectedOffer is null || GetMaxValue() == 0);
+    }
+
+    IEnumerable<OfferModelDB> ActualOffers => AllOffers.Where(x => !CurrentRows!.Contains(x.Id));
+
+    bool IsShowAddingOffer;
+    decimal QuantityValue { get; set; }
+    void OnExpandAddingOffer()
+    {
+        System.Collections.Immutable.ImmutableList<decimal>? _qv = SelectedOffer?.QuantitiesValues;
+        if (!IsShowAddingOffer && _qv is not null && _qv.Count != 0 && !ForceAdding)
+            QuantityValue = _qv.First();
+        else
+            QuantityValue = 1;
+
+        IsShowAddingOffer = !IsShowAddingOffer;
+        if (IsShowAddingOffer)
+        {
+            SelectedOffer = ActualOffers.FirstOrDefault();
+            _selectedOfferId = SelectedOffer?.Id;
+        }
+    }
+
+    IEnumerable<IGrouping<NomenclatureModelDB?, OfferModelDB>> OffersNodes => ActualOffers.GroupBy(x => x.Nomenclature);
+
+    void AddOffer()
+    {
+        AddingOfferHandler(new OfferActionModel()
+        {
+            Name = SelectedOffer!.Name,
+            Nomenclature = SelectedOffer.Nomenclature,
+            Quantity = QuantityValue,
+            Weight = SelectedOffer.Weight * QuantityValue,
+            Multiplicity = SelectedOffer.Multiplicity,
+            OfferUnit = SelectedOffer.OfferUnit,
+            Price = SelectedOffer.Price,
+            IsDisabled = SelectedOffer.IsDisabled,
+            NomenclatureId = SelectedOffer.NomenclatureId,
+            Id = SelectedOffer.Id,
+        });
+        QuantityValue = 1;
+
+        SelectedOffer = ActualOffers.FirstOrDefault();
+        _selectedOfferId = SelectedOffer?.Id;
+        OnExpandAddingOffer();
+    }
+
+    int? cacheId = null;
+
+    /// <inheritdoc/>
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+        {
+            if (cacheId != SelectedOfferId && SelectedOffer is not null && !ForceAdding)
+            {
+                await CacheRegistersUpdate(_offers: [.. OffersNodes.SelectMany(x => x.Select(y => y.Id))], _goods: [], WarehouseId, true);
+                cacheId = SelectedOfferId;
+                StateHasChanged();
+            }
+        }
+    }
+
+    /// <inheritdoc/>
+    public async Task RegistersReload()
+    {
+        await SetBusyAsync();
+        await CacheRegistersUpdate(_offers: [.. OffersNodes.SelectMany(x => x.Select(y => y.Id))], _goods: [], WarehouseId, true);
+        await SetBusyAsync(false);
+    }
+
+    /// <inheritdoc/>
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
+
+        await SetBusyAsync();
+
+        SelectedOfferId = ActualOffers.FirstOrDefault()?.Id;
+        TResponseModel<TPaginationResponseStandardModel<OfferModelDB>> getOffersRes = await CommerceRepo.OffersSelectAsync(new()
+        {
+            SenderActionUserId = CurrentUserSession.UserId,
+            Payload = new()
+            {
+                PageSize = int.MaxValue,
+                Payload = new()
+                {
+                    ContextName = null
+                }
+            },
+        });
+
+        if (getOffersRes.Success() && getOffersRes.Response?.Response is not null)
+            AllOffers = getOffersRes.Response.Response;
+
+        //if (SelectedOffer is not null && !ForceAdding)
+        await CacheRegistersUpdate(_offers: [], _goods: [], WarehouseId, true);
+
+        cacheId = SelectedOfferId;
+        await SetBusyAsync(false);
+    }
+}

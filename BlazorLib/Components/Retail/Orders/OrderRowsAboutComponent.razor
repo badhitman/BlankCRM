@@ -1,0 +1,6 @@
+﻿<b>x @Rows.Count (@Rows.Sum(x => x.Amount))</b>
+
+@code {
+    [Parameter, EditorRequired]
+    public required List<RowOfRetailOrderDocumentModelDB> Rows { get; set; }
+}

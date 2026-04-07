@@ -1,0 +1,39 @@
+﻿@using MudBlazor
+@using System.Globalization
+@inherits IssueWrapBaseModel
+
+<MudTable Loading="IsBusyProgress" ServerData="ServerReload" @ref=tableRef Dense Hover>
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">History (events)</MudText>
+        <MudSpacer />
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh><MudTableSortLabel InitialDirection="SortDirection.Descending" SortLabel="@(nameof(PulseViewModel.CreatedAt))" T="PulseViewModel">Date</MudTableSortLabel></MudTh>
+        <MudTh>Author</MudTh>
+        <MudTh>Type</MudTh>
+        <MudTh>Mark</MudTh>
+        <MudTh>Info</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Создан">
+            <span data-cd="@context.CreatedAt">
+                @context.CreatedAt.GetCustomTime().ToString("d", GlobalStaticConstants.RU) <sup>@context.CreatedAt.GetCustomTime().ToString("t", GlobalStaticConstants.RU)</sup>
+            </span>
+        </MudTd>
+        <MudTd DataLabel="Author">@(UsersIdentityDump.FirstOrDefault(x => x.UserId == context.AuthorUserIdentityId)?.UserName ?? context.AuthorUserIdentityId)</MudTd>
+        <MudTd DataLabel="Type">@context.PulseType</MudTd>
+        <MudTd DataLabel="Mark">@context.Tag</MudTd>
+        <MudTd DataLabel="Info">
+            @ms(context.Description)
+        </MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>No records found</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>

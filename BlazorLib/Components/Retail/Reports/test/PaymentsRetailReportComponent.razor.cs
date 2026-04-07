@@ -1,0 +1,128 @@
+////////////////////////////////////////////////
+// © https://github.com/badhitman - @FakeGov
+////////////////////////////////////////////////
+
+using BlazorLib.Components.Retail.Reports.mmm;
+using Microsoft.AspNetCore.Components;
+using MudBlazor;
+using SharedLib;
+using static SharedLib.GlobalStaticConstantsRoutes;
+
+namespace BlazorLib.Components.Retail.Reports.test;
+
+/// <summary>
+/// PaymentsRetailReportComponent
+/// </summary>
+public partial class PaymentsRetailReportComponent : BlazorBusyComponentBaseModel
+{
+    [Inject]
+    IRetailService RetailRepo { get; set; } = default!;
+
+    [Inject]
+    IRubricsService RubricsRepo { get; set; } = default!;
+
+
+    /// <inheritdoc/>
+    [CascadingParameter]
+    public MMMWrapperComponent? Owner { get; set; }
+
+
+    MudTable<WalletRetailReportRowModel>? _tableRef;
+    List<RubricNestedModel> AllPaymentsTypes = [];
+    bool includeUnset;
+
+    DateRange? _dateRange;
+    DateRange? DateRangeProp
+    {
+        get => _dateRange;
+        set
+        {
+            _dateRange = value;
+            if (_tableRef is not null)
+                InvokeAsync(_tableRef.ReloadServerData);
+        }
+    }
+
+    IReadOnlyCollection<int> _selectedPaymentsTypes = [];
+    IReadOnlyCollection<int> SelectedPaymentsTypes
+    {
+        get => _selectedPaymentsTypes;
+        set
+        {
+            _selectedPaymentsTypes = value;
+            if (_tableRef is not null)
+                InvokeAsync(_tableRef.ReloadServerData);
+        }
+    }
+
+    /// <inheritdoc/>
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await SetBusyAsync();
+        string ctx = Path.Combine(Routes.PAYMENTS_CONTROLLER_NAME, Routes.TYPES_CONTROLLER_NAME);
+        AllPaymentsTypes = await RubricsRepo.RubricsChildListAsync(new() { ContextName = ctx });
+        await SetBusyAsync(false);
+
+        if (Owner?.SelectedWeek is not null)
+            _dateRange = new(Owner.SelectedWeek.Value.Start, Owner.SelectedWeek.Value.End);
+    }
+
+    async Task OnChipClicked()
+    {
+        includeUnset = !includeUnset;
+        if (_tableRef is not null)
+            await _tableRef.ReloadServerData();
+    }
+
+    /// <inheritdoc/>
+    public async Task Reload()
+    {
+        if (Owner?.SelectedWeek is not null)
+            _dateRange = new(Owner.SelectedWeek.Value.Start, Owner.SelectedWeek.Value.End);
+
+        if (_tableRef is not null)
+            await _tableRef.ReloadServerData();
+    }
+
+    async Task<TableData<WalletRetailReportRowModel>> ServerReload(TableState state, CancellationToken token)
+    {
+        TPaginationRequestStandardModel<SelectPaymentsRetailReportRequestModel> req = new()
+        {
+            PageNum = state.Page,
+            PageSize = state.PageSize,
+            SortingDirection = state.SortDirection.Convert(),
+            SortBy = state.SortLabel,
+            Payload = new(),
+        };
+
+        if (SelectedPaymentsTypes.Count != 0)
+            req.Payload.TypesFilter = [.. SelectedPaymentsTypes];
+
+        if (includeUnset)
+        {
+            req.Payload.TypesFilter ??= [];
+            req.Payload.TypesFilter.Add(null);
+        }
+
+        if (Owner is not null && Owner.SelectedWeek.HasValue)
+        {
+            req.Payload.NumWeekOfYear = Owner.SelectedWeek.Value.NumWeekOfYear;
+        }
+        else if (DateRangeProp is not null)
+        {
+            req.Payload.Start = DateRangeProp.Start;
+            req.Payload.End = DateRangeProp.End;
+        }
+
+        await SetBusyAsync(token: token);
+        TPaginationResponseStandardModel<WalletRetailReportRowModel> res = await RetailRepo.FinancialsReportRetailAsync(req, token);
+        await SetBusyAsync(false, token);
+
+        if (res.Response is null)
+            return new TableData<WalletRetailReportRowModel>() { TotalItems = 0, Items = [] };
+
+        // Return the data
+        return new TableData<WalletRetailReportRowModel>() { TotalItems = res.TotalRowsCount, Items = res.Response };
+    }
+}

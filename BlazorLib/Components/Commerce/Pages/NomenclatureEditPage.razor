@@ -1,0 +1,38 @@
+﻿@page "/nomenclature/card/{NomenclatureId:int}/{ViewMode}"
+@page "/nomenclature/card/{NomenclatureId:int}"
+
+@using BlazorLib.Components.Commerce.Nomenclature
+@using MudBlazor
+@using static SharedLib.GlobalStaticConstantsRoutes
+
+@inherits BlazorBusyComponentBaseAuthModel
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@attribute [Authorize]
+
+<MudCard>
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText Typo="Typo.h6">Номенклатура #@NomenclatureId</MudText>
+        </CardHeaderContent>
+        @* <CardHeaderActions>
+            <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Default" />
+        </CardHeaderActions> *@
+    </MudCardHeader>
+    <MudCardContent>
+        <NomenclatureEditCardComponent NomenclatureId="NomenclatureId" ViewMode="ViewMode" />
+    </MudCardContent>
+</MudCard>
+
+@code {
+    /// <summary>
+    /// NomenclatureId
+    /// </summary>
+    [Parameter]
+    public int NomenclatureId { get; set; }
+
+    /// <summary>
+    /// ViewMode
+    /// </summary>
+    [Parameter]
+    public string? ViewMode { get; set; }
+}

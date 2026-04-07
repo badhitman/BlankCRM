@@ -1,0 +1,307 @@
+﻿@typeparam TEntity where TEntity : RubricNodeBodyComponent
+
+@using BlazorLib.Components.StockSharp
+@using MudBlazor
+
+@inherits BlazorBusyComponentBaseModel
+
+@if (IsBusyProgress)
+{
+    <MudProgressLinear Color="Color.Primary" Indeterminate />
+}
+else if (InitialTreeItems.Count == 0)
+{
+    <figure class="text-center">
+        <blockquote class="blockquote">
+            <p>Отсутствуют категории для выбора.</p>
+        </blockquote>
+        <figcaption class="blockquote-footer">
+            Добавьте <cite title="категории статей">категории</cite> для возможности их выбора
+        </figcaption>
+    </figure>
+}
+
+<MudTreeView Style="width: 100%"
+             @ref="_treeRef"
+             AutoSelectParent="false"
+             ServerData="@(FullChildsLoad ? null : LoadServerData)"
+             AutoExpand
+             Items="@InitialTreeItems"
+             SelectionMode="@(SelectedValuesChanged is null ? SelectionMode.ToggleSelection : SelectionMode.MultiSelection)"
+             T="RubricNestedModel"
+             SelectedValuesChanged="SelectedValuesChangeHandler">
+    <ItemTemplate Context="item">
+        <MudTreeViewItem Text="@item.Text"
+                         Icon="@item.Icon"
+                         IconExpanded="@Icons.Custom.Uncategorized.FolderOpen"
+                         Value="item.Value"
+                         Items="item.Children?.OrderBy(x => x.Value?.SortIndex).ToList()"
+                         CanExpand="item.Expandable"
+                         Selected="item.Selected">
+            <BodyContent>
+                <CascadingValue Value="ReloadNodeAction">
+                    <CascadingValue Value="ItemUpdAction">
+                        <CascadingValue Value="(TreeItemDataRubricModel)item">
+                            @if (item.Value!.Id > 0)
+                            {
+                                <RubricNodeEditComponent ReadOnly="@(SelectedValuesChanged is not null)" ContextName="@ContextName">
+                                    <ItemBody>
+                                        <DynamicComponent Type="typeof(TEntity)"
+                                                          Parameters="parameters(item)" />
+                                    </ItemBody>
+                                </RubricNodeEditComponent>
+                            }
+                            else if (SelectedValuesChanged is null)
+                            {
+                                <RubricNodeCreatingNewComponent ContextName="@ContextName"
+                                                                TEntity="TEntity" />
+                            }
+                        </CascadingValue>
+                    </CascadingValue>
+                </CascadingValue>
+            </BodyContent>
+        </MudTreeViewItem>
+    </ItemTemplate>
+</MudTreeView>
+
+@code {
+    [Inject]
+    IRubricsService RubricsRepo { get; set; } = default!;
+
+
+    /// <summary>
+    /// Имя контекста
+    /// </summary>
+    [Parameter]
+    public string? ContextName { get; set; }
+
+    /// <summary>
+    /// Имя-префикс
+    /// </summary>
+    /// <remarks>
+    /// Для организации внутри одного контекста разных наборов рубрик
+    /// </remarks>
+    [Parameter]
+    public string? PrefixName { get; set; }
+
+    [Parameter]
+    public int? ProjectId { get; set; }
+
+
+    /// <summary>
+    /// ValueChanged
+    /// </summary>
+    [Parameter]
+    public TreeViewOptionsHandler? SelectedValuesChanged { get; set; }
+
+    /// <summary>
+    /// Без вложенных узлов
+    /// </summary>
+    [Parameter]
+    public bool SingleLevelMode { get; set; }
+
+    /// <summary>
+    /// Загрузить сразу всё дерево
+    /// </summary>
+    [Parameter]
+    public bool FullChildsLoad { get; set; }
+
+
+    MudTreeView<RubricNestedModel>? _treeRef;
+    IDictionary<string, object?> parameters(ITreeItemData<RubricNestedModel?> _node)
+    {
+        Dictionary<string, object?> _res = new();
+        _res.Add("Node", _node);
+        _res.Add("ContextName", ContextName);
+        _res.Add("PrefixName", PrefixName);
+
+        if (ProjectId.HasValue)
+            _res.Add("ProjectId", ProjectId.Value);
+
+        return _res;
+    }
+
+    public bool IsStarted { get; private set; }
+    List<TreeItemDataRubricModel> InitialTreeItems { get; set; } = [];
+    void SelectedValuesChangeHandler(IReadOnlyCollection<RubricNestedModel?> SelectedValues)
+    {
+        if (!IsStarted)
+        {
+            List<RubricNestedModel> _src = [];
+            ExtractSelected(_treeRef!.Items!, _src);
+            SelectedValuesChanged?.SelectedValuesChangedHandler(_src);
+            //     _isStarted = true;
+            return;
+        }
+
+        SelectedValuesChanged?.SelectedValuesChangedHandler(SelectedValues);
+    }
+
+    void ExtractSelected(IEnumerable<ITreeItemData<RubricNestedModel>> sender, List<RubricNestedModel> src)
+    {
+        foreach (ITreeItemData<RubricNestedModel> _n in sender)
+        {
+            if (_n.Selected)
+                src.Add(_n.Value!);
+
+            if (_n.Children is not null && _n.Children.Count != 0)
+                ExtractSelected(_n.Children, src);
+        }
+    }
+
+    List<ITreeItemData<RubricNestedModel>> ConvertRubrics(IEnumerable<RubricNestedModel> rubrics)
+    {
+        (uint min, uint max) = rubrics.Any(x => x.SortIndex != uint.MaxValue)
+            ? (rubrics.Min(x => x.SortIndex), rubrics.Where(x => x.SortIndex != uint.MaxValue).Max(x => x.SortIndex))
+            : (0, 0);
+
+        List<ITreeItemData<RubricNestedModel>> res = [];
+
+        foreach (RubricNestedModel x in rubrics)
+        {
+            MoveRowStatesEnum mhp;
+            if (x.SortIndex == min && x.SortIndex == max)
+                mhp = MoveRowStatesEnum.Singleton;
+            else if (x.SortIndex == min)
+                mhp = MoveRowStatesEnum.Start;
+            else if (x.SortIndex == max)
+                mhp = MoveRowStatesEnum.End;
+            else
+                mhp = MoveRowStatesEnum.Between;
+
+            var _ex = x.NestedRubrics is not null && x.NestedRubrics.Count != 0;
+
+            TreeItemDataRubricModel _ri = new(x, x.Id == 0 ? Icons.Material.Filled.PlaylistAdd : SelectedValuesChanged is null ? Icons.Material.Filled.CropFree : Icons.Custom.Uncategorized.Folder)
+            {
+                MoveRowState = mhp,
+                Selected = SelectedValuesChanged?.SelectedNodes.Contains(x.Id) == true,
+                Expanded = _ex,
+                Children = (_ex ? ConvertRubrics(x.NestedRubrics!) : null)!,
+            };
+
+            if (SingleLevelMode)
+                _ri.Expandable = false;
+
+            res.Add(_ri!);
+        }
+
+        return res;
+    }
+
+    void ItemUpdAction(RubricNestedModel sender)
+    {
+        TreeItemDataRubricModel findNode = FindNode(sender.Id, InitialTreeItems) ?? throw new Exception();
+        findNode.Text = sender.Name;
+        findNode.Value?.Update(sender);
+    }
+
+    async void ReloadNodeAction(int parent_id)
+    {
+        await SetBusyAsync();
+        List<RubricNestedModel> rubrics = await RequestRubrics(parent_id);
+        if (parent_id > 0)
+        {
+            TreeItemDataRubricModel findNode = FindNode(parent_id, InitialTreeItems) ?? throw new Exception();
+            findNode.Children = ConvertRubrics(rubrics)!;
+        }
+        else
+        {
+            InitialTreeItems = [.. ConvertRubrics(rubrics).Select(x => new TreeItemDataRubricModel(x))];
+        }
+        await SetBusyAsync(false);
+    }
+
+    static TreeItemDataRubricModel? FindNode(int parent_id, IEnumerable<TreeItemDataRubricModel> treeItems)
+    {
+        TreeItemDataRubricModel? res = treeItems.FirstOrDefault(x => x.Value?.Id == parent_id);
+        if (res is not null)
+            return res;
+
+        TreeItemDataRubricModel? FindChildNode(IReadOnlyCollection<ITreeItemData<RubricNestedModel?>> children)
+        {
+            ITreeItemData<RubricNestedModel?>? res_child = children.FirstOrDefault(x => x.Value?.Id == parent_id);
+            if (res_child is not null)
+                return (TreeItemDataRubricModel?)res_child;
+
+            foreach (ITreeItemData<RubricNestedModel?> c in children)
+            {
+                if (c.Children is not null)
+                {
+                    res_child = FindChildNode(c.Children);
+                    if (res_child is not null)
+                        return (TreeItemDataRubricModel?)res_child;
+                }
+            }
+
+            return null;
+        }
+
+        foreach (TreeItemDataRubricModel _tin in treeItems)
+        {
+            if (_tin.Children is not null)
+            {
+                res = FindChildNode(_tin.Children);
+                if (res is not null)
+                    return res;
+            }
+        }
+
+        return null;
+    }
+
+    /// <inheritdoc/>
+    protected override async void OnInitialized()
+    {
+        List<RubricNestedModel> rubrics = await RequestRubrics();
+        InitialTreeItems = [.. ConvertRubrics(rubrics).Select(x => new TreeItemDataRubricModel(x))];
+        StateHasChanged();
+        if (_treeRef is not null)
+        {
+            await _treeRef.ExpandAllAsync();
+            IsStarted = true;
+        }
+    }
+
+    /// <inheritdoc/>
+    public async Task<IReadOnlyCollection<TreeItemData<RubricNestedModel?>>> LoadServerData(RubricNestedModel? parentValue)
+    {
+        ArgumentNullException.ThrowIfNull(parentValue);
+        await SetBusyAsync();
+        List<RubricNestedModel> rubrics = await RequestRubrics(parentValue.Id);
+        TreeItemDataRubricModel findNode = FindNode(parentValue.Id, InitialTreeItems) ?? throw new Exception();
+
+        findNode.Children = ConvertRubrics(rubrics)!;
+        await SetBusyAsync(false);
+        return [..findNode.Children.Select(x => new TreeItemData<RubricNestedModel?>()
+        {
+             Children = x.Children,
+             Expandable = x.Expandable,
+             Expanded = x.Expanded,
+             Icon = x.Icon,
+             Selected = x.Selected,
+             Text = x.Text,
+             Value = x.Value,
+             Visible = x.Visible,
+        })];
+    }
+
+    async Task<List<RubricNestedModel>> RequestRubrics(int? parent_id = null)
+    {
+        await SetBusyAsync();
+        List<RubricNestedModel> rest = await RubricsRepo.RubricsChildListAsync(new()
+        {
+            Request = parent_id ?? 0,
+            ContextName = ContextName,
+            PrefixName = PrefixName,
+            FullChildsLoad = FullChildsLoad
+        });
+
+        rest = [.. rest.OrderBy(x => x.SortIndex)];
+
+        if (SelectedValuesChanged is null)
+            rest.Add(new RubricNestedModel() { Name = "", SortIndex = uint.MaxValue, ParentId = parent_id });
+
+        await SetBusyAsync(false);
+        return rest;
+    }
+}

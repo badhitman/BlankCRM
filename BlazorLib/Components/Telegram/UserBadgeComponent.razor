@@ -1,0 +1,36 @@
+﻿@using MudBlazor
+@inherits BlazorBusyComponentBaseModel
+
+<span title="Click for open manage permissions" @onclick=OpenDialog class="badge text-bg-@(BadgeColor ?? "secondary") me-1" style="cursor:pointer;">
+    @JoinUserChat.User!.GetName()
+    @if (Selected.Count != 0)
+    {
+        <sup class="ms-2">
+            @($"[{string.Join(", ", Selected.Select(x => { string di = x.DescriptionInfo(); int si = di.IndexOf(" "); return si < 0 ? di : di.Substring(0, si); }))}]")
+        </sup>
+    }
+</span>
+
+<MudDialog @bind-Visible="_visible" Options="_dialogOptions">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.AdminPanelSettings" Class="mr-3" /> Edit permission for user
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <p>@JoinUserChat.User.GetName()</p>
+        <hr />
+        <MudChipSet @bind-SelectedValues="Selected" CheckMark
+                    T="TelegramUsersRolesEnum"
+                    Color="Color.Info"
+                    SelectionMode="SelectionMode.MultiSelection">
+            @foreach (TelegramUsersRolesEnum tur in Enum.GetValues(typeof(TelegramUsersRolesEnum)))
+            {
+                <MudChip Value="@tur" Text="@tur.DescriptionInfo()" />
+            }
+        </MudChipSet>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Submit" Class="px-10">Close</MudButton>
+    </DialogActions>
+</MudDialog>

@@ -1,0 +1,51 @@
+﻿@inherits BlazorBusyComponentBaseModel
+
+@using MudBlazor
+<style>
+    #position-step-move span.badge {
+        cursor: pointer;
+    }
+</style>
+<MudDialog>
+    <DialogContent>
+        <code>@DirectoryItem.FullPath</code>
+        <select class="form-select" id="exampleInputStatusPayment" @bind="SelectedEncoding">
+            @foreach (EncodingsEnum _sp in Enum.GetValues(typeof(EncodingsEnum)))
+            {
+                <option value="@_sp">@_sp.DescriptionInfo()</option>
+            }
+        </select>
+        <MudSlider T=uint Max="10240" @bind-Value="ReadSizeArea">
+            Размер данных: @GlobalToolsStandard.SizeDataAsString(ReadSizeArea) (x2 = @GlobalToolsStandard.SizeDataAsString(ReadSizeArea * 2))
+        </MudSlider>
+        <MudSlider Max="DirectoryItem.FileSizeBytes" @bind-Value="FilePositionSlider">
+            <div class="hstack gap-1" id="position-step-move" title="Перемещение позиции">
+                <div class="me-3">Position: @_valueSliderString (of @FileSizeString)</div>
+                <div><span class="badge rounded-pill text-bg-light" @onclick="() => PositionStepMove(-50)">-50</span></div>
+                <div><span class="badge rounded-pill text-bg-light" @onclick="() => PositionStepMove(-20)">-20</span></div>
+                <div><span class="badge rounded-pill text-bg-light" @onclick="() => PositionStepMove(-5)">-5</span></div>
+                <div><span class="badge rounded-pill text-bg-light" @onclick="() => PositionStepMove(-1)">-1</span></div>
+                <div><span class="badge rounded-pill text-bg-light" @onclick="() => PositionStepMove(1)">+1</span></div>
+                <div><span class="badge rounded-pill text-bg-light" @onclick="() => PositionStepMove(5)">+5</span></div>
+                <div><span class="badge rounded-pill text-bg-light" @onclick="() => PositionStepMove(20)">+20</span></div>
+                <div><span class="badge rounded-pill text-bg-light" @onclick="() => PositionStepMove(50)">+50</span></div>
+            </div>
+        </MudSlider>
+        <MudTextField Variant="Variant.Outlined"
+                      @bind-Text="RawDataStart"
+                      Label="Left [raw-data]"
+                      T="string"
+                      Lines="15"
+                      ReadOnly />
+        <MudTextField Variant="Variant.Outlined"
+                      @bind-Text="RawDataEnd"
+                      Label="Right [raw-data]"
+                      T="string"
+                      Lines="15"
+                      ReadOnly />
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">OK</MudButton>
+    </DialogActions>
+</MudDialog>

@@ -1,0 +1,61 @@
+﻿@using MudBlazor
+@inherits BlazorBusyComponentRubricsCachedModel
+
+<MudTable ServerData="ServerReload" Dense Hover @ref="table">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Поступления/Перемещения</MudText>
+        <MudSpacer />
+        <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Placeholder="Поиск по примечанию" Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh><MudTableSortLabel SortDirection="SortDirection.Ascending" SortLabel="Name" T="WarehouseDocumentModelDB">Примечание</MudTableSortLabel></MudTh>
+        <MudTh>Доставка</MudTh>
+        <MudTh>Склад</MudTh>
+        <MudTh>Создан/Изменён</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        @{
+            DateTime cdt = context.CreatedAtUTC.GetCustomTime();
+            DateTime? udt = context.LastUpdatedAtUTC?.GetCustomTime();
+            DateTime ddt = context.DeliveryDate.GetCustomTime();
+        }
+        <MudTd DataLabel="Примечание">
+            <MudLink Href="@($"/nomenclature/warehouse/editing/{context.Id}")">@context.Name</MudLink>
+        </MudTd>
+        <MudTd DataLabel="Доставка">
+            <span class="@(context.IsDisabled ? "text-decoration-line-through" : "")">
+                @ddt.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary @(context.IsDisabled ? "text-decoration-line-through" : "")">@ddt.ToString("t", GlobalStaticConstants.RU)</sup>
+            </span>
+        </MudTd>
+        <MudTd DataLabel="Склад">
+            <span class="@(context.IsDisabled ? "text-decoration-line-through" : "")">
+                @WarehouseTitle(context)
+            </span>
+        </MudTd>
+        <MudTd DataLabel="">
+            <span class="@(context.IsDisabled ? "text-decoration-line-through" : "")">
+                @cdt.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@cdt.ToString("t", GlobalStaticConstants.RU)</sup>
+            </span>
+            @if (udt is not null)
+            {
+                <text>/</text>
+                <span class="@(context.IsDisabled ? "text-decoration-line-through" : "")">
+                    @udt.Value.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@udt.Value.ToString("t", GlobalStaticConstants.RU)</sup>
+                </span>
+            }
+        </MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>Данные отсутствуют</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
+<div class="d-grid gap-2 mt-3">
+    <a class="btn btn-primary" href="/nomenclature/warehouse/editing" role="button">Создать новый документ</a>
+</div>

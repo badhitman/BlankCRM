@@ -1,0 +1,4 @@
+﻿#history-view-table pre.cell-payload {
+    max-height: 250px;
+    max-width: 550px;
+}

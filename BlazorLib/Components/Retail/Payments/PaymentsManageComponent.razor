@@ -1,0 +1,143 @@
+﻿@using MudBlazor
+
+@inherits BlazorBusyComponentUsersCachedModel
+
+<MudStack AlignItems="AlignItems.Center" Row Class="mb-1">
+    <div class="card">
+        <div class="card-body p-1">
+            <MudChipSet @bind-SelectedValues="SelectedPaymentsTypes"
+                        SelectionMode="SelectionMode.MultiSelection"
+                        CheckMark
+                        Class="me-2"
+                        Variant="Variant.Text"
+                        Color="Color.Info">
+                @foreach (RubricNestedModel pt in AllPaymentsTypes)
+                {
+                    <MudChip Value="@pt.Id" Text="@pt.Name" />
+                }
+            </MudChipSet>
+        </div>
+    </div>
+    <div class="card mb-1">
+        <div class="card-body p-1">
+            <MudChipSet @bind-SelectedValues="SelectedPaymentsStatuses"
+                        SelectionMode="SelectionMode.MultiSelection"
+                        CheckMark
+                        Variant="Variant.Text"
+                        Color="Color.Surface">
+                @foreach (PaymentsRetailStatusesEnum ps in Enum.GetValues(typeof(PaymentsRetailStatusesEnum)))
+                {
+                    <MudChip Value="@ps" Text="@ps.DescriptionInfo()" />
+                }
+            </MudChipSet>
+        </div>
+    </div>
+    <MudSpacer />
+    <MudDateRangePicker PickerVariant="@PickerVariant.Inline" @bind-DateRange="@DateRangeProp" Margin="Margin.Dense" Clearable />
+</MudStack>
+<MudTable ServerData="ServerReload"
+          T="PaymentRetailDocumentModelDB"
+          OnRowClick="RowClickEvent"
+          Dense Hover
+          Loading="IsBusyProgress"
+          RowClass="@(RowClickEventHandler is null ? "" : "cursor-pointer")"
+          @ref=_tableRef>
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Платежи (розница)</MudText>
+        <MudSpacer />
+        @if (RowClickEventHandler is null)
+        {
+            <MudButton Variant="Variant.Outlined"
+                       IconColor="Color.Secondary"
+                       OnClick=CreateNewOrderOpenDialog
+                       EndIcon="@Icons.Material.Filled.Add">Создать платёж</MudButton>
+        }
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Тип</MudTh>
+        <MudTh>Статус</MudTh>
+        <MudTh>
+            <MudTableSortLabel T="PaymentRetailDocumentModelDB"
+                               InitialDirection="@SortDirection.Descending"
+                               SortLabel="@(nameof(PaymentRetailDocumentModelDB.DatePayment))">Дата</MudTableSortLabel>
+        </MudTh>
+        @if (string.IsNullOrWhiteSpace(ClientId))
+        {
+            <MudTh>Плательщик</MudTh>
+        }
+        <MudTh>Кошелёк</MudTh>
+        <MudTh>Сумма</MudTh>
+        <MudTh>Direct</MudTh>
+        <MudTh>Примечание</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        @{
+            DateTime pdt = context.DatePayment;
+        }
+        <MudTd DataLabel="Тип">
+            @if (RowClickEventHandler is null)
+            {
+                <MudLink Href="@($"/retail/payment-document/{context.Id}")">
+                    @(RubricsCache.FirstOrDefault(x => x.Id == context.TypePaymentId)?.Name ?? $"#{context.TypePaymentId}")
+                </MudLink>
+            }
+            else
+            {
+                <span>@(RubricsCache.FirstOrDefault(x => x.Id == context.TypePaymentId)?.Name ?? $"#{context.TypePaymentId}")</span>
+            }
+        </MudTd>
+        <MudTd DataLabel="Статус">
+            @if (RowClickEventHandler is null)
+            {
+                <MudLink Href="@($"/retail/payment-document/{context.Id}")">@context.StatusPayment.DescriptionInfo()</MudLink>
+            }
+            else
+            {
+                <span>@context.StatusPayment.DescriptionInfo()</span>
+            }
+        </MudTd>
+        <MudTd DataLabel="Дата">
+            @if (RowClickEventHandler is null)
+            {
+                <MudLink Href="@($"/retail/payment-document/{context.Id}")">@pdt.ToString("d", GlobalStaticConstants.RU)</MudLink>
+            }
+            else
+            {
+                <span>@pdt.ToString("d", GlobalStaticConstants.RU)</span>
+            }
+        </MudTd>
+        @if (string.IsNullOrWhiteSpace(ClientId))
+        {
+            <MudTd DataLabel="Плательщик">
+                <MudLink Href="@($"/retail/client-card/{context.Wallet!.UserIdentityId}")" Color="Color.Success">
+                    @(UsersCache.FirstOrDefault(x => x.UserId == context.Wallet!.UserIdentityId)?.ToString() ?? context.Wallet!.UserIdentityId)
+                </MudLink>
+            </MudTd>
+        }
+        <MudTd DataLabel="Кошелёк">[@context.Wallet!.WalletType!.Name] '@context.Wallet.Name'</MudTd>
+        <MudTd DataLabel="Сумма">@context.Amount</MudTd>
+        <MudTd DataLabel="Direct">@context.PaymentSource</MudTd>
+        <MudTd DataLabel="Name">@context.Name</MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>Соответствующих записей не найдено</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
+<MudDialog @bind-Visible="_visible" Options="_dialogOptions">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" /> Новый платёж (розница)
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <CascadingValue Value="ClientId" Name="ClientId">
+            <PaymentDocumentComponent />
+        </CascadingValue>
+    </DialogContent>
+</MudDialog>

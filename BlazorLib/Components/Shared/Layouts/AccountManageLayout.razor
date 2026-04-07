@@ -1,0 +1,17 @@
+﻿@using MudBlazor
+@layout MainLayout
+@inherits LayoutComponentBase
+
+<MudCard>
+    <MudCardContent>
+        <MudText>Editing your account settings</MudText>
+        <div class="row">
+            <div class="col-md-3">
+                <AccountManageNavMenu />
+            </div>
+            <div class="col-md-9">
+                @Body
+            </div>
+        </div>
+    </MudCardContent>
+</MudCard>

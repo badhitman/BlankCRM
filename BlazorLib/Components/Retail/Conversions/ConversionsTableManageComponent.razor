@@ -1,0 +1,115 @@
+﻿@using MudBlazor
+
+@inherits BlazorBusyComponentUsersCachedModel
+
+<MudTable ServerData="ServerReload"
+          Dense Hover
+          T="WalletConversionRetailDocumentModelDB"
+          OnRowClick="RowClickEvent"
+          RowClass="@(RowClickEventHandler is null ? " " : " cursor-pointer")"
+          @ref=tableRef>
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Переводы (розница)</MudText>
+        <div class="form-check form-switch form-check-inline ms-2">
+            <MudTooltip Text="Отображение удалённых документов">
+                <input class="form-check-input"
+                       type="checkbox"
+                       role="switch"
+                       id="switchCheckDefault"
+                       @bind=ShowDeleted />
+                <label class="form-check-label" for="switchCheckDefault">удалённые @(ShowDeleted ? "отображаются (скрыть?)" : "скрыты (отобразить?)")</label>
+            </MudTooltip>
+        </div>
+        <MudSpacer />
+        <MudDateRangePicker Class="me-2" PickerVariant="@PickerVariant.Inline" @bind-DateRange="@DateRangeProp" Clearable />
+        @if (RowClickEventHandler is null)
+        {
+            <MudButton OnClick=CreateNewConversionOpenDialog
+                       Variant="Variant.Outlined"
+                       StartIcon="@Icons.Material.Filled.Add"
+                       IconColor="Color.Secondary">Новый перевод/конвертация</MudButton>
+        }
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>
+            <MudTableSortLabel T="WalletConversionRetailDocumentModelDB"
+                               InitialDirection="@SortDirection.Descending"
+                               SortLabel="@(nameof(WalletConversionRetailDocumentModelDB.DateDocument))">Дата</MudTableSortLabel>
+        </MudTh>
+        <MudTh>Примечание</MudTh>
+        <MudTh>Списание</MudTh>
+        <MudTh>Зачисление</MudTh>
+        @if (RowClickEventHandler is null)
+        {
+            <MudTh></MudTh>
+        }
+    </HeaderContent>
+    <RowTemplate>
+        @{
+            DateTime ddt = context.DateDocument.GetCustomTime();
+        }
+        <MudTd DataLabel="Дата">
+            @if (RowClickEventHandler is null)
+            {
+
+                <MudLink Href="@($"/retail/conversion-document/{context.Id}")">
+                    @ddt.ToString("d", GlobalStaticConstants.RU)
+                </MudLink>
+            }
+            else
+            {
+                <span>@ddt.ToString("d", GlobalStaticConstants.RU)</span>
+            }
+        </MudTd>
+        <MudTd DataLabel="Примечание">
+            @if (RowClickEventHandler is null)
+            {
+                <MudLink Href="@($"/retail/conversion-document/{context.Id}")">
+                    @context.Name
+                </MudLink>
+            }
+            else
+            {
+                <span>@context.Name</span>
+            }
+        </MudTd>
+        <MudTd DataLabel="Списание">
+            <span title="Текущий баланс" class="border border-warning-subtle me-2 pa-1">@context.FromWallet!.ToString()</span>
+            - @context.FromWalletSum [@(UsersCache.FirstOrDefault(x => x.UserId == context.FromWallet.UserIdentityId)?.ToString())]
+        </MudTd>
+        <MudTd DataLabel="Зачисление">
+            <span title="Текущий баланс" class="border border-primary-subtle me-2 pa-1">@context.ToWallet?.ToString()</span>
+            @context.ToWalletSum [@(UsersCache.FirstOrDefault(x => x.UserId == context.ToWallet!.UserIdentityId)?.ToString())]
+        </MudTd>
+        @if (RowClickEventHandler is null)
+        {
+            <MudTd>
+                <span class="badge text-bg-@(context.IsDisabled ? "secondary" : "success") cursor-pointer"
+                      @onclick="async () => await DisabledToggle(context.Id)">
+                    @(context.IsDisabled ? "выключено (включить?)" : "включено (выключить?)")
+                </span>
+            </MudTd>
+        }
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>Соответствующих записей не найдено</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
+<MudDialog @bind-Visible="_visible" Options="_dialogOptions">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" /> Новый перевод (розница)
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <CascadingValue Name="ClientId" Value="ClientId">
+            <ConversionDocumentComponent />
+        </CascadingValue>
+    </DialogContent>
+</MudDialog>

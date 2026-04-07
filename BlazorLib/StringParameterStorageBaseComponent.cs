@@ -1,0 +1,73 @@
+﻿////////////////////////////////////////////////
+// © https://github.com/badhitman - @FakeGov
+////////////////////////////////////////////////
+
+using Microsoft.AspNetCore.Components;
+using SharedLib;
+
+namespace BlazorLib;
+
+/// <summary>
+/// StringParameterStorageBaseComponent
+/// </summary>
+public class StringParameterStorageBaseComponent : BlazorBusyComponentBaseModel
+{
+    [Inject]
+    IParametersStorageTransmission StoreRepo { get; set; } = default!;
+
+
+    /// <summary>
+    /// Label
+    /// </summary>
+    [Parameter, EditorRequired]
+    public required string Label { get; set; }
+
+    /// <summary>
+    /// KeyStorage
+    /// </summary>
+    [Parameter, EditorRequired]
+    public required StorageMetadataModel KeyStorage { get; set; }
+
+    /// <summary>
+    /// HelperText
+    /// </summary>
+    [Parameter]
+    public string? HelperText { get; set; }
+
+
+    string? _textValue;
+    /// <summary>
+    /// TextValue
+    /// </summary>
+    protected string? TextValue
+    {
+        get => _textValue;
+        set
+        {
+            _textValue = value;
+            InvokeAsync(StoreData);
+        }
+    }
+
+    async Task StoreData()
+    {
+        await SetBusyAsync();
+        await StoreRepo.SaveParameterAsync(_textValue, KeyStorage, true);
+        await SetBusyAsync(false);
+    }
+
+    /// <inheritdoc/>
+    protected override async Task OnInitializedAsync()
+    {
+        await SetBusyAsync();
+        TResponseModel<string?> res = await StoreRepo.ReadParameterAsync<string?>(KeyStorage);
+        SnackBarRepo.ShowMessagesResponse(res.Messages.Where(x => x.TypeMessage > MessagesTypesEnum.Warning));
+
+        if (!res.Success())
+            SnackBarRepo.ShowMessagesResponse(res.Messages);
+
+        _textValue = res.Response;
+
+        await SetBusyAsync(false);
+    }
+}

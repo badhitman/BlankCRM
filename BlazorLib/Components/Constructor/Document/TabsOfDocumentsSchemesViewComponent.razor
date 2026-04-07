@@ -1,0 +1,92 @@
+﻿@inherits BlazorBusyComponentBaseModel
+
+@if (DocumentScheme.Tabs is null)
+{
+    <figure>
+        <blockquote class="blockquote">
+            <p>DocumentScheme.Pages is null</p>
+        </blockquote>
+        <figcaption class="blockquote-footer">
+            ошибка <cite>E112BEFB-5709-4D5A-89A5-987F19FB0371</cite>
+        </figcaption>
+    </figure>
+}
+else if (!CanEdit)
+{
+    <MudTabs @bind-ActivePanelIndex="@DocumentIndex" TabPanelsClass="pa-1" Elevation="4" Rounded ApplyEffectsToContainer>
+        @if (!DocumentScheme.Tabs.Any())
+        {
+            <figure class="text-center mt-3">
+                <blockquote class="blockquote">
+                    <p>Добавьте страницу</p>
+                </blockquote>
+                <figcaption class="blockquote-footer">
+                    В схеме нет ни одной <cite>страницы</cite>
+                </figcaption>
+            </figure>
+        }
+        else
+        {
+            foreach (TabOfDocumentSchemeConstructorModelDB questionnaire_page in DocumentScheme.Tabs.OrderBy(x => x.SortIndex))
+            {
+                questionnaire_page.Owner = DocumentScheme;
+                <MudTabPanel ID="@($"document-scheme_{questionnaire_page.Id}")"
+                             Text="@questionnaire_page.Name"
+                             BadgeDot="@(questionnaire_page.Id < 1)">
+                    <TabsOfDocumentViewComponent ReloadHandler="ReloadHandler"
+                                                 TabOfDocumentScheme="questionnaire_page"
+                                                 SessionOfDocumentData="null" />
+                </MudTabPanel>
+            }
+        }
+    </MudTabs>
+}
+else
+{
+    <MudDynamicTabs @bind-ActivePanelIndex="@DocumentIndex"
+                    AddTab="@AddTab"
+                    AddIconClass="mud-secondary-text"
+                    AddIconToolTip="Добавить страницу анкеты/опроса"
+                    CloseTab="@CloseTabCallback"
+                    CloseIconToolTip="Close tab. All data will be lost"
+                    TabPanelsClass="px-4 py-6"
+                    Elevation="4"
+                    Rounded ApplyEffectsToContainer>
+        @if (!DocumentScheme.Tabs.Any())
+        {
+            <figure class="text-center mt-3">
+                <blockquote class="blockquote">
+                    <p>Добавьте страницу</p>
+                </blockquote>
+                <figcaption class="blockquote-footer">
+                    В схеме нет ни одной <cite>страницы</cite>
+                </figcaption>
+            </figure>
+        }
+        else
+        {
+            foreach (TabOfDocumentSchemeConstructorModelDB tab_of_document_scheme in DocumentScheme.Tabs.OrderBy(x => x.SortIndex))
+            {
+                tab_of_document_scheme.Owner = DocumentScheme;
+                <MudTabPanel ID="tab_of_document_scheme.Id"
+                             Text="@tab_of_document_scheme.Name"
+                             Disabled="@TabIsDisabled(tab_of_document_scheme.Id)"
+                             ShowCloseIcon="@(tab_of_document_scheme.Id < 1)"
+                             BadgeDot="@(tab_of_document_scheme.Id < 1)">
+                    <TabOfDocumentEditViewComponent CanDownMove="@(CanDownPage(tab_of_document_scheme))"
+                                                    CanUpMove="@(CanUpPage(tab_of_document_scheme))"
+                                                    DocumentReloadHandle="DocumentReloadAction"
+                                                    SetIdForPageHandle="SetIdForPageAction"
+                                                    SetNameForPageHandle="SetNameForPage"
+                                                    DocumentPage="tab_of_document_scheme"
+                                                    SetHoldHandle="SetHoldAction"
+                                                    UpdateDocumentHandle="Update"
+                                                    ReloadHandler="ReloadHandler"
+                                                    AllForms="AllForms"
+                                                    CanEdit="CanEdit"
+                                                    InUse="InUse" />
+                </MudTabPanel>
+            }
+        }
+    </MudDynamicTabs>
+}

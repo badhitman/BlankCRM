@@ -1,0 +1,10 @@
+﻿@implements ITab
+@inherits BlazorBusyComponentBaseModel
+
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+<li title="@Tooltip" class="nav-item">
+    <a @onclick="ActivateTabHandler" class="nav-link @TitleCssClass" role="button">
+        @Title
+    </a>
+</li>

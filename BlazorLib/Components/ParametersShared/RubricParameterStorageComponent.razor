@@ -1,0 +1,26 @@
+﻿@using MudBlazor
+@inherits BlazorBusyComponentBaseModel
+
+<div class="vstack gap-2">
+    @if (IsBusyProgress)
+    {
+        <MudProgressLinear Color="Color.Primary" Indeterminate Class="my-3" />
+    }
+    else
+    {
+        <RubricInputComponent SelectRubricsHandle="RubricSelectAction"
+                              ModeSelectingRubrics=ModeSelectingRubrics
+                              DisabledSelect=IsDisabledInput
+                              RubricInitial="@(_rubricSelected ?? 0)"
+                              ContextName="@KeyStorage.ContextName"
+                              Title="@Label"
+                              ShowDisabledRubrics />
+    }
+</div>
+
+@if (!string.IsNullOrWhiteSpace(HelperText))
+{
+    <div class="form-text">
+        @HelperText
+    </div>
+}

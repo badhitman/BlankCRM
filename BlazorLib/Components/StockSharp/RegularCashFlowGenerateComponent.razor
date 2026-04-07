@@ -1,0 +1,42 @@
+﻿@using MudBlazor
+@inherits BlazorBusyComponentBaseModel
+
+<MudIconButton Icon="@Icons.Material.Filled.Clear"
+               Color="Color.Warning"
+               title="Delete all flow`s"
+               OnClick="Clear"
+               Disabled="@(IsBusyProgress || _holdInstrumentGen || !Period.IssueDate.HasValue|| !Period.MaturityDate.HasValue)" />
+
+<MudButton StartIcon="@Icons.Material.Filled.DataExploration"
+           Color="Color.Primary"
+           title="Generation regular flow`s"
+           OnClick="OpenDialog"
+           Disabled="@(IsBusyProgress || _holdInstrumentGen || !Period.IssueDate.HasValue|| !Period.MaturityDate.HasValue)">Regular</MudButton>
+
+<MudDialog @bind-Visible="_visible" Options="_dialogOptions">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" /> Regular Flow generator
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudGrid>
+            <MudItem xs="12" md="6">
+                <MudTextField T="DateTime?" Format="yyyy-MM-dd" Label="Issue Date" InputType="InputType.Date" @bind-Value="IssueDate" />
+            </MudItem>
+            <MudItem xs="12" md="6">
+                <MudTextField T="DateTime?" Format="yyyy-MM-dd" Label="Maturity Date" InputType="InputType.Date" @bind-Value="MaturityDate" />
+            </MudItem>
+            <MudItem xs="12" md="6">
+                <MudNumericField @bind-Value="FromDaysValue" Label="FromDays" Variant="Variant.Outlined" />
+            </MudItem>
+            <MudItem xs="12" md="6">
+                <MudNumericField @bind-Value="NotionalFirstValue" Label="NotionalFirstValue" Variant="Variant.Outlined" />
+            </MudItem>
+        </MudGrid>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Filled" Color="Color.Tertiary" OnClick="Submit" Class="px-10" Disabled=_holdInstrumentGen>Generate</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Close" Class="px-10">Close</MudButton>
+    </DialogActions>
+</MudDialog>

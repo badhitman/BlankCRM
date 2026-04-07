@@ -1,0 +1,68 @@
+﻿@typeparam TEnumItem where TEnumItem : struct, System.Enum
+@inherits BlazorBusyComponentBaseModel
+
+@if (!string.IsNullOrWhiteSpace(LabelText))
+{
+    <label for="@_domId" class="form-label">@LabelText</label>
+}
+<select class="form-select" aria-label="Default select example" id="@_domId" aria-describedby="helper@_domId" @bind="SelectedValueEnum">
+    <option selected="@(SelectedValueEnum is null)"></option>
+    @foreach (TEnumItem _el in Enum.GetValues<TEnumItem>())
+    {
+        <option value="@_el">@_el.DescriptionInfo()</option>
+    }
+</select>
+@if (!string.IsNullOrWhiteSpace(HelperText))
+{
+    <div id="helper@_domId" class="form-text">@HelperText</div>
+}
+
+@code {
+    [Inject]
+    IParametersStorageTransmission StoreRepo { get; set; } = default!;
+
+
+    [Parameter]
+    public string? LabelText { get; set; }
+
+    [Parameter]
+    public string? HelperText { get; set; }
+
+    [Parameter]
+    public TEnumItem? DefaultValueEnum { get; set; }
+
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required StorageMetadataModel KeyStorage { get; set; }
+
+
+    string _domId = Guid.NewGuid().ToString();
+
+    TEnumItem? _selectedValueEnum;
+    TEnumItem? SelectedValueEnum
+    {
+        get => _selectedValueEnum;
+        set
+        {
+            _selectedValueEnum = value;
+            InvokeAsync(async () => { await StoreRepo.SaveParameterAsync(_selectedValueEnum, KeyStorage, true); });
+        }
+    }
+
+    /// <inheritdoc/>
+    protected override async Task OnInitializedAsync()
+    {
+        await SetBusyAsync();
+        TResponseModel<TEnumItem?> res = await StoreRepo.ReadParameterAsync<TEnumItem?>(KeyStorage);
+        SnackBarRepo.ShowMessagesResponse(res.Messages.Where(x => x.TypeMessage > MessagesTypesEnum.Warning));
+
+        if (DefaultValueEnum.HasValue && res.Response is null)
+        {
+            res.Response = DefaultValueEnum.Value;
+            await StoreRepo.SaveParameterAsync(res.Response, KeyStorage, false);
+        }
+
+        _selectedValueEnum = res.Response;
+        await SetBusyAsync(false);
+    }
+}

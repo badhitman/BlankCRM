@@ -1,0 +1,16 @@
+﻿@page "/retail/client-card/{ClientId}"
+
+@using BlazorLib.Components.Retail.Clients
+
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@attribute [Authorize]
+
+@if (!string.IsNullOrWhiteSpace(ClientId))
+{
+    <ClientCardWrapperComponent ClientId="@ClientId" />
+}
+
+@code {
+    [Parameter]
+    public string? ClientId { get; set; }
+}

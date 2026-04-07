@@ -1,0 +1,27 @@
+﻿@page "/goods"
+@using BlazorLib.Components.Commerce.Nomenclature
+@using BlazorLib.Components.Helpdesk
+
+@using BlazorLib.Components.Warehouse
+@using MudBlazor
+@using static SharedLib.GlobalStaticConstantsRoutes
+
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@attribute [Authorize(Roles = $"{GlobalStaticConstantsRoles.Roles.Admin},{GlobalStaticConstantsRoles.Roles.Debug},{GlobalStaticConstantsRoles.Roles.GoodsManage}")]
+<PageTitle>Товары</PageTitle>
+
+<MudTabs Elevation="2" Rounded ApplyEffectsToContainer TabPanelsClass="pa-1">
+    <MudTabPanel Text="Справочник">
+        <NomenclaturesManageComponent />
+    </MudTabPanel>
+    <AuthorizeView Roles="@($"{GlobalStaticConstantsRoles.Roles.Admin},{GlobalStaticConstantsRoles.Roles.CommerceManager},{GlobalStaticConstantsRoles.Roles.Debug}")">
+        <Authorized>
+            <MudTabPanel Text="Движения">
+                <WarehouseMainComponent />
+            </MudTabPanel>
+            <MudTabPanel Text="Регистры">
+                <OfferRegistersComponent />
+            </MudTabPanel>
+        </Authorized>
+    </AuthorizeView>
+</MudTabs>

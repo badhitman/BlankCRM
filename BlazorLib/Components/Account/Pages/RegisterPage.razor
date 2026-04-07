@@ -1,0 +1,89 @@
+﻿@page "/Account/Register"
+
+@inject IUsersAuthenticateService UserAuthRepo
+@inject NavigationManager NavigationManager
+@inject IdentityRedirectManager RedirectManager
+
+<PageTitle>Registration</PageTitle>
+
+<h1>Registration</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <StatusMessage Messages="@identityErrors" />
+        <EditForm Model="Input" asp-route-returnUrl="@ReturnUrl" method="post" OnValidSubmit="RegisterUser" FormName="register">
+            <DataAnnotationsValidator />
+            <h2>Create a new account.</h2>
+            <hr />
+            <ValidationSummary class="text-danger" role="alert" />
+            @if (Input is not null)
+            {
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                    <label for="email">Email</label>
+                    <ValidationMessage For="() => Input.Email" class="text-danger" />
+                </div>
+                <div class="form-floating mb-3">
+                    <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                    <label for="password">Пароль</label>
+                    <ValidationMessage For="() => Input.Password" class="text-danger" />
+                </div>
+                <div class="form-floating mb-3">
+                    <InputText type="password" @bind-Value="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                    <label for="confirm-password">Repeat Password</label>
+                    <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
+                </div>
+            }
+            <button type="submit" class="w-100 btn btn-lg btn-primary">Registration</button>
+        </EditForm>
+    </div>
+    <div class="col-md-6 col-md-offset-2">
+        <section style="display:none;">
+            <h3>Using another service for registration.</h3>
+            <hr />
+            Telegram?
+        </section>
+    </div>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    // #if DEMO
+    //     private UserRegistrationModel Input { get; set; } = new() { Password = "Qwerty123!", ConfirmPassword = "Qwerty123!" };
+    // #else
+    UserRegistrationModel? Input { get; set; }
+    //#endif
+
+    [SupplyParameterFromQuery]
+    string? ReturnUrl { get; set; }
+
+
+    IEnumerable<ResultMessage>? identityErrors;
+
+    protected override void OnInitialized()
+    {
+        Input ??= new();
+        base.OnInitialized();
+    }
+
+    public async Task RegisterUser(EditContext editContext)
+    {
+        if (Input is null)
+            throw new ArgumentNullException(nameof(Input));
+
+        identityErrors = null;
+        RegistrationNewUserResponseModel result = await UserAuthRepo.RegisterNewUserAsync(new()
+        {
+            Email = Input.Email,
+            Password = Input.Password,
+            BaseAddress = NavigationManager.ToAbsoluteUri("Account/ConfirmEmail").ToString()
+        });
+
+        identityErrors = result.Messages;
+        if (!result.Success())
+            return;
+
+        if (!string.IsNullOrWhiteSpace(ReturnUrl))
+            RedirectManager.RedirectTo(ReturnUrl);
+    }
+}

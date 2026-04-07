@@ -1,0 +1,186 @@
+////////////////////////////////////////////////
+// © https://github.com/badhitman - @FakeGov
+////////////////////////////////////////////////
+
+using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
+using MudBlazor;
+using SharedLib;
+
+namespace BlazorLib.Components.Chat;
+
+/// <summary>
+/// WebChatsManageComponent
+/// </summary>
+public partial class WebChatsManageComponent : BlazorBusyComponentUsersCachedModel
+{
+    [Inject]
+    IJSRuntime JsRuntime { get; set; } = default!;
+
+    [Inject]
+    IWebChatService WebChatRepo { get; set; } = default!;
+
+    [Inject]
+    IEventNotifyReceive<NewMessageWebChatEventModel> NewMessageWebChatEventRepo { get; set; } = default!;
+
+    [Inject]
+    IEventNotifyReceive<StateWebChatModel> StateEchoWebChatEventRepo { get; set; } = default!;
+
+
+    /// <inheritdoc/>
+    [Parameter]
+    public string? FilterUserIdentityId { get; set; }
+
+
+    MudTable<DialogWebChatModelDB>? tableRef;
+    bool muteSound;
+    readonly string LayoutContainerId = Guid.NewGuid().ToString();
+
+    bool? _withoutEmptyFilteredValue;
+    bool? WithoutEmptyFilteredValue
+    {
+        get => _withoutEmptyFilteredValue;
+        set
+        {
+            _withoutEmptyFilteredValue = value;
+            if (tableRef is not null)
+                InvokeAsync(tableRef.ReloadServerData);
+        }
+    }
+
+    bool? _isDisabledFilteredValue;
+    bool? IsDisabledFilteredValue
+    {
+        get => _isDisabledFilteredValue;
+        set
+        {
+            _isDisabledFilteredValue = value;
+            if (tableRef is not null)
+                InvokeAsync(tableRef.ReloadServerData);
+        }
+    }
+
+    /// <inheritdoc/>
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        if (CurrentUserSession is not null)
+            UsersCache.Add(CurrentUserSession);
+
+        await NewMessageWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.NewMessageWebChatNotifyReceive, "#"), NewMessageWebChatHandler, LayoutContainerId, CurrentUserSessionBytes);
+        await StateEchoWebChatEventRepo.RegisterAction(Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueues.StateEchoWebChatNotifyReceive, "#"), StateEchoWebChatEventHandle, LayoutContainerId, null, isMute: true);
+    }
+
+    async void StateEchoWebChatEventHandle(StateWebChatModel req)
+    {
+        if (req.StateDialog && req.UserIdentityId != CurrentUserSession?.UserId)
+        {
+            await JsRuntime.InvokeVoidAsync("methods.PlayAudio", "audioPlayerStateEchoForWebChatComponent");
+            if (!string.IsNullOrWhiteSpace(req.UserIdentityId))
+            {
+                await CacheUsersUpdate([req.UserIdentityId]);
+                await JsRuntime.InvokeVoidAsync("effects.Toast", "Пользователь вошёл в чат", UsersCache.FirstOrDefault(x => x.UserId == req.UserIdentityId)?.ToString() ?? req.UserIdentityId ?? "не авторизован", "info", true, "#9EC600");
+            }
+        }
+    }
+
+    void NewMessageWebChatHandler(NewMessageWebChatEventModel model)
+    {
+        if (tableRef is not null)
+            InvokeAsync(async () =>
+            {
+                await tableRef.ReloadServerData();
+                StateHasChanged();
+                if (!muteSound)
+                    await JsRuntime.InvokeVoidAsync("methods.PlayAudio", "WebChatsManageComponent");
+                else
+                    muteSound = false;
+            });
+    }
+
+    async Task JoinToChat(int chatId, bool isExclusive = false)
+    {
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
+
+        TAuthRequestStandardModel<UserInjectDialogWebChatRequestModel> req = new()
+        {
+            SenderActionUserId = CurrentUserSession.UserId,
+            Payload = new()
+            {
+                UserIdentityId = CurrentUserSession.UserId,
+                DialogJoinId = chatId,
+                IsExclusiveJoin = isExclusive,
+            }
+        };
+        muteSound = true;
+        await SetBusyAsync();
+        ResponseBaseModel res = await WebChatRepo.UserInjectDialogWebChatAsync(req);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
+        if (tableRef is not null)
+            await tableRef.ReloadServerData();
+
+        await SetBusyAsync(false);
+    }
+
+    async Task OutFromChat(int chatId)
+    {
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
+
+        TAuthRequestStandardModel<int> req = new()
+        {
+            SenderActionUserId = CurrentUserSession.UserId,
+            Payload = chatId,
+        };
+        muteSound = true;
+        await SetBusyAsync();
+        ResponseBaseModel res = await WebChatRepo.DeleteUserJoinDialogWebChatAsync(req);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
+        if (tableRef is not null)
+            await tableRef.ReloadServerData();
+
+        await SetBusyAsync(false);
+    }
+
+    async Task<TableData<DialogWebChatModelDB>> ServerReload(TableState state, CancellationToken token)
+    {
+        TPaginationRequestStandardModel<SelectDialogsWebChatsRequestModel> req = new()
+        {
+            PageNum = state.Page,
+            PageSize = state.PageSize,
+            SortingDirection = state.SortDirection.Convert(),
+            SortBy = state.SortLabel,
+            Payload = new()
+            {
+                FilterUserIdentityId = FilterUserIdentityId,
+                IsDisabledFiltered = IsDisabledFilteredValue,
+                WithoutEmpty = WithoutEmptyFilteredValue
+            }
+        };
+        await SetBusyAsync(token: token);
+        TPaginationResponseStandardModel<DialogWebChatModelDB> res = await WebChatRepo.SelectDialogsWebChatsAsync(req, token);
+
+        if (res.Response is not null && res.Response.Count != 0)
+            await CacheUsersUpdate([.. res.Response.Where(x => !string.IsNullOrWhiteSpace(x.InitiatorIdentityId)).Select(x => x.InitiatorIdentityId)!]);
+
+        await SetBusyAsync(false, token);
+        SnackBarRepo.ShowMessagesResponse(res.Status.Messages);
+        return new TableData<DialogWebChatModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };
+    }
+
+    /// <inheritdoc/>
+    public override void Dispose()
+    {
+        StateEchoWebChatEventRepo.UnregisterAction();
+        NewMessageWebChatEventRepo.UnregisterAction();
+        base.Dispose();
+    }
+}

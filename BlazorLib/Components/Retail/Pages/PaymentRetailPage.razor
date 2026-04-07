@@ -1,0 +1,23 @@
+﻿@page "/retail/payment-document/{PaymentId:int}"
+
+@using BlazorLib.Components.Retail.Orders
+@using BlazorLib.Components.Retail.Payments
+
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@attribute [Authorize]
+
+<div style="display: grid; grid-template-columns: 1fr auto; align-items: center; width: 100%">
+    <h4 style="justify-self: start;">Платёж/оплата # @PaymentId</h4>
+    <div style="justify-self: end;">
+        <a class="btn btn-link bi bi-arrow-90deg-up"
+           title="Перейти в журнал документов"
+           href="/retail?tab=@nameof(PaymentsManageComponent)"
+           role="button"> В журнал</a>
+    </div>
+</div>
+<PaymentDocumentComponent PaymentId="PaymentId" />
+
+@code {
+    [Parameter]
+    public int PaymentId { get; set; }
+}

@@ -1,0 +1,19 @@
+﻿@using BlazorLib.Components.Shared.Layouts
+@using MudBlazor
+
+@layout MainLayout
+@inherits LayoutComponentBase
+
+<MudCard>
+    <MudCardContent>
+        <MudText>Editing user account settings</MudText>
+        <div class="row">
+            <div class="col-md-3">
+                <UsersManageNavMenu />
+            </div>
+            <div class="col-md-9">
+                @Body
+            </div>
+        </div>
+    </MudCardContent>
+</MudCard>

@@ -1,0 +1,32 @@
+﻿@page "/Users/Profiles/view-{UserId:guid}"
+
+@using BlazorLib.Components.Users
+@using BlazorLib.Components.Users.Pages
+@using MudBlazor
+
+@attribute [Authorize(Roles = GlobalStaticConstantsRoles.Roles.Admin)]
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+@inject IUsersProfilesService UsersProfilesRepo
+
+<PageTitle>Пользователь</PageTitle>
+
+<h3>Пользователь</h3>
+
+<MudCard>
+    <MudCardContent>
+        <div class="row">
+            <div class="col">
+                <RolesPage OwnerUserId="@UserId.ToString()" />
+            </div>
+            <div class="col">
+                <ClaimsManageComponent ClaimArea="ClaimAreasEnum.ForUser" OwnerId="@UserId.ToString()" />
+            </div>
+        </div>
+    </MudCardContent>
+</MudCard>
+
+@code {
+    [Parameter]
+    public Guid UserId { get; set; }
+}

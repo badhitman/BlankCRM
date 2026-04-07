@@ -1,0 +1,61 @@
+﻿@using MudBlazor
+@inherits BlazorBusyComponentBaseModel
+
+<MudDialog>
+    <DialogContent>
+        @if (Instruments is null)
+        {
+            <MudText>Instruments is null</MudText>
+        }
+        else if (Instruments.Count == 0)
+        {
+            <MudText>Instruments not selected</MudText>
+        }
+        else
+        {
+            <MudStack Justify="@Justify.Center"
+                      Class="mud-width-full">
+                <MudChipSet T="InstrumentTradeStockSharpViewModel"
+                            SelectionMode="@SelectionMode.MultiSelection"                            >
+                    @for (var i = 0; i < Instruments.Count; i++)
+                    {
+                        var localIndex = i;
+                        <MudChip T="InstrumentTradeStockSharpViewModel" Value="@Instruments[localIndex]" OnClose="OnChipClosed" />
+                    }
+                </MudChipSet>
+            </MudStack>
+        }        
+        <MudTable @ref="_table"
+                  Loading="IsBusyProgress"
+                  T="InstrumentTradeStockSharpViewModel"
+                  ServerData="ServerReload"
+                  Striped
+                  Hover>
+            <HeaderContent>
+                <MudTh>Name</MudTh>
+                <MudTh>ID</MudTh>
+                <MudTh>Board</MudTh>
+                <MudTh>Currency</MudTh>
+                <MudTh>Type</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Name">
+                    <div class="@(Instruments?.Any(x => x.Id == context.Id) == true ? "text-info" : "")">
+                        @context.Name
+                        <sup @onclick="async () => await InstrumentToggle(context)" style="cursor:pointer;" class="bi bi-bookmark@(Instruments?.Any(x => x.Id == context.Id) == true ? "-check-fill" : "")"></sup>
+                    </div>
+                </MudTd>
+                <MudTd DataLabel="ID">@context.IdRemote</MudTd>
+                <MudTd DataLabel="Board">@context.Board</MudTd>
+                <MudTd DataLabel="Currency">@((CurrenciesTypesEnum?)context.Currency)</MudTd>
+                <MudTd DataLabel="Type">@((InstrumentsStockSharpTypesEnum?)context.TypeInstrument)</MudTd>
+            </RowTemplate>
+            <PagerContent>
+                <MudTablePager PageSizeOptions="new int[] { 10, 25, 50, 100 }" />
+            </PagerContent>
+        </MudTable>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+    </DialogActions>
+</MudDialog>

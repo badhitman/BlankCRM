@@ -1,0 +1,69 @@
+﻿////////////////////////////////////////////////
+// © https://github.com/badhitman - @FakeGov
+////////////////////////////////////////////////
+
+using Microsoft.AspNetCore.Components;
+using SharedLib;
+using BlazorLib;
+using MudBlazor;
+
+namespace BlazorLib.Components.Helpdesk.issue;
+
+/// <summary>
+/// NotificationTelegramIssueConfigComponent
+/// </summary>
+public partial class NotificationTelegramIssueConfigComponent : BlazorBusyComponentBaseModel
+{
+    [Inject]
+    IParametersStorageTransmission StorageRepo { get; set; } = default!;
+
+
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required string Title { get; set; }
+
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required string Hint { get; set; }
+
+    /// <inheritdoc/>
+    [CascadingParameter, EditorRequired]
+    public required List<ChatTelegramStandardModel> ChatsTelegram { get; set; }
+
+    /// <summary>
+    /// Имя приложения, которое обращается к службе облачного хранения параметров
+    /// </summary>
+    [Parameter, EditorRequired]
+    public required StorageMetadataModel KeyStorage { get; set; }
+
+
+    long initValue;
+
+    bool IsEdited => initValue != SelectedChatSet.ChatTelegramId;
+
+    private ChatTelegramStandardModel SelectedChatSet { get; set; } = default!;
+
+    async Task SaveConfig()
+    {
+        await SetBusyAsync();
+        TResponseModel<int> rest = await StorageRepo.SaveParameterAsync(SelectedChatSet.ChatTelegramId, KeyStorage, false);
+        SnackBarRepo.ShowMessagesResponse(rest.Messages);
+
+        initValue = SelectedChatSet.ChatTelegramId;
+
+        await SetBusyAsync(false);
+    }
+
+    /// <inheritdoc/>
+    protected override async Task OnInitializedAsync()
+    {
+        await SetBusyAsync();
+        TResponseModel<long?> rest = await StorageRepo.ReadParameterAsync<long?>(KeyStorage);
+
+        SnackBarRepo.ShowMessagesResponse(rest.Messages);
+        initValue = rest.Response ?? 0;
+        SelectedChatSet = ChatsTelegram.First(x => x.ChatTelegramId == initValue);
+
+        await SetBusyAsync(false);
+    }
+}

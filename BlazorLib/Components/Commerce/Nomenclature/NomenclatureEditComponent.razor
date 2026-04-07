@@ -1,0 +1,98 @@
+﻿@using MudBlazor
+@using static SharedLib.GlobalStaticConstantsRoutes
+@inherits BlazorBusyComponentBaseAuthModel
+
+<div class="card">
+    @if (editNomenclature is null)
+    {
+        <MudProgressLinear Color="Color.Primary" Indeterminate Class="my-3" />
+    }
+    else
+    {
+        <div class="card-header">
+            <div class="input-group mb-2">
+                <span class="input-group-text">Конфигурация номенклатуры</span>
+                <input @bind-value="editNomenclature.Name" disabled="@(CurrentUserSession?.IsAdmin != true)"
+                       @bind-value:event="oninput"
+                       type="text"
+                       aria-label="First name"
+                       class="form-control" />
+                <div class="input-group-text">
+                    <input @bind="editNomenclature.IsDisabled"
+                           class="form-check-input mt-0"
+                           id="checkDefault"
+                           type="checkbox"
+                           value=""
+                           aria-label="Checkbox for following text input" />
+                    <label class="form-check-label ms-2" for="checkDefault">
+                        @(editNomenclature.IsDisabled ? "disabled (enable?)" : "enabled (disable?)")
+                    </label>
+                </div>
+                <select disabled="@(CurrentUserSession?.IsAdmin != true)" @bind="editNomenclature.BaseUnit" class="form-select">
+                    @foreach (UnitsOfMeasurementEnum uom in Enum.GetValues(typeof(UnitsOfMeasurementEnum)).Cast<UnitsOfMeasurementEnum>())
+                    {
+                        <option value="@uom">@uom.DescriptionInfo()</option>
+                    }
+                </select>
+                @if (CurrentUserSession?.IsAdmin == true)
+                {
+                    <button @onclick="SaveNomenclature" disabled="@(!CanSave)" class="btn btn-outline-@(CanSave ? "success" : "secondary")" type="button" id="button-addon2">Сохранить</button>
+                    @if (CanSave)
+                    {
+                        <button @onclick="() => editNomenclature = GlobalTools.CreateDeepCopy(CurrentNomenclature)" class="btn btn-outline-light" type="button" id="button-addon2">Отмена</button>
+                    }
+                }
+            </div>
+        </div>
+        <div class="card-body">
+            <MudTabs Elevation="2" Rounded ApplyEffectsToContainer TabPanelsClass="pa-2">
+                <MudTabPanel Text="Оферы">
+                    <DynamicComponent Type="GetType(ViewSet.DescriptionInfo())" Parameters="Parameters" />
+                </MudTabPanel>
+                <AuthorizeView Roles="@GlobalStaticConstantsRoles.Roles.Admin">
+                    <Authorized>
+                        <MudTabPanel Text="Описание" Disabled="@(NomenclatureId < 1)">
+                            <TinyMCE.Blazor.Editor @bind-Value="editNomenclature.Description" ScriptSrc="@GlobalStaticConstants.TinyMCEditorScriptSrc" Conf="@editorConf" />
+                        </MudTabPanel>
+                        <MudTabPanel Text="Файлы" Disabled="@(NomenclatureId < 1)">
+                            <MudTabs Elevation="2" Rounded ApplyEffectsToContainer TabPanelsClass="pa-1">
+                                <MudTabPanel Text="Хранилище">
+                                    <FilesContextViewComponent ApplicationsNames="@([Routes.NOMENCLATURE_CONTROLLER_NAME])"
+                                                               Title="Файлы"
+                                                               PropertyName="@Routes.ATTACHMENT_CONTROLLER_NAME"
+                                                               PrefixPropertyName="@Routes.USER_CONTROLLER_NAME"
+                                                               OwnerPrimaryKey="NomenclatureId"
+                                                               @ref="filesViewRef"
+                                                               ManageMode />
+                                </MudTabPanel>
+                                @if (filesViewRef is not null)
+                                {
+                                    <MudTabPanel Text="Установки">
+                                        <GoodsFilesConfigsComponent OwnerTypeName="@nameof(NomenclatureModelDB)"
+                                                                    FilesContextViewComponent="filesViewRef"
+                                                                    OwnerId="NomenclatureId" />
+                                    </MudTabPanel>
+                                }
+                            </MudTabs>
+                        </MudTabPanel>
+                        <MudTabPanel Text="Теги" Disabled="@(NomenclatureId < 1)">
+                            <MudText>
+                                <TagsViewComponent ApplicationsNames="@([Routes.NOMENCLATURE_CONTROLLER_NAME])"
+                                                   ManageMode
+                                                   PrefixPropertyName="@Routes.DEFAULT_CONTROLLER_NAME"
+                                                   PropertyName="@Routes.METADATA_CONTROLLER_NAME"
+                                                   Title="Теги"
+                                                   OwnerPrimaryKey="@NomenclatureId" />
+                            </MudText>
+                        </MudTabPanel>
+                    </Authorized>
+                    <NotAuthorized>
+                        <MudTabPanel Text="Описание">
+                            @((MarkupString)(editNomenclature.Description ?? ""))
+                        </MudTabPanel>
+                    </NotAuthorized>
+                </AuthorizeView>
+            </MudTabs>
+        </div>
+    }
+</div>

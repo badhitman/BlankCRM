@@ -1,0 +1,37 @@
+﻿@using Microsoft.Extensions.Options
+@using MudBlazor
+@inherits LayoutComponentBase
+
+<MudThemeProvider Theme="@_theme" IsDarkMode="IsDarkMode" @rendermode="new InteractiveServerRenderMode(prerender: false)" />
+<MudDialogProvider @rendermode="new InteractiveServerRenderMode(prerender: false)" />
+<MudSnackbarProvider @rendermode="new InteractiveServerRenderMode(prerender: false)" />
+<MudPopoverProvider @rendermode="new InteractiveServerRenderMode(prerender: false)" />
+
+<div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <main>
+        <div class="navbar d-flex flex-row-reverse px-4">
+            <RealtimeCoreComponent />
+        </div>
+        <article class="content px-2">
+            @Body
+        </article>
+    </main>
+    @if (NavMainMenu.BottomNavMenuItems?.Any() == true)
+    {
+        <nav class="navbar fixed-bottom bg-body-tertiary">
+            <div class="container-fluid">
+                <NavMainMenuComponent NavMenuItems="NavMainMenu.BottomNavMenuItems" />
+            </div>
+        </nav>
+    }
+</div>
+
+<div id="blazor-error-ui">
+    An unhandled error occurred.
+    <a href="" class="reload">Reload</a>
+    <a class="dismiss">🗙</a>
+</div>
