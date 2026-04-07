@@ -162,7 +162,10 @@ public partial class MessagesForWebChatComponent : BlazorBusyComponentUsersCache
             Payload = new()
             {
                 DialogId = DialogWebChat.Id,
-            }
+            },
+            PageNum = state.Page,
+            PageSize = state.PageSize,
+            SortingDirection = state.SortDirection.Convert(),
         }, token);
 
         if (res.Response is not null && res.Response.Count != 0)

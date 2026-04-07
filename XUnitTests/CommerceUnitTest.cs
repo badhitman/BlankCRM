@@ -20,8 +20,8 @@ public class CommerceUnitTest
     readonly IHistoryIndexing HistoryIndexingRepo;
 
     readonly CommerceImplementService CommerceService;
-    readonly RetailService RetailService;
     readonly RubricsImplementService RubricsService;
+    readonly RetailService RetailService;
 
     public CommerceUnitTest()
     {
@@ -84,31 +84,18 @@ public class CommerceUnitTest
         RubricModelDB whRubric_2 = await CreateWarehouseRubric();
 
         WarehouseDocumentModelDB whDoc = await CreateWarehouseDocument(whRubric_1.Id);
-
-        // Assert
-        Assert.True(true);
-    }
-
-    async Task<RubricModelDB> CreateWarehouseRubric()
-    {
-        using HelpDeskContext context = await HelpdeskContextFactoryDb.CreateDbContextAsync();
-        int countOffers = (await context.Rubrics.Where(x => x.ContextName == Routes.WAREHOUSE_CONTROLLER_NAME).CountAsync()) + 1;
-        string name = $"Test Warehouse rubric: {countOffers}";
-        RubricModelDB WarehouseRubric = new()
-        {
-            ContextName = Routes.WAREHOUSE_CONTROLLER_NAME,
-            SortIndex = (uint)countOffers,
-            CreatedAtUTC = DateTime.UtcNow,
-            Name = name,
-            NormalizedNameUpper = name.ToUpper(),
-        };
-        TResponseModel<int> whCreate = await RubricsService.RubricCreateOrUpdateAsync(WarehouseRubric);
-
-        Assert.NotEqual(0, whCreate.Response);
-        Assert.True(whCreate.Success());
-        WarehouseRubric.Id = whCreate.Response;
-
-        return WarehouseRubric;
+        //RowOfWarehouseDocumentModelDB rowOfWarehouseDocument = new()
+        //{
+        //    OfferId = offer_1.Id,
+        //    Quantity = 100,
+        //    WarehouseDocumentId = whDoc.Id,
+        //    WeightOffer = 100
+        //};
+        //var v = await CommerceService.RowForWarehouseDocumentUpdateOrCreateAsync(new()
+        //{
+        //    Payload = rowOfWarehouseDocument,
+        //    SenderActionUserId = Routes.SYSTEM_CONTROLLER_NAME
+        //});
     }
 
     async Task<WarehouseDocumentModelDB> CreateWarehouseDocument(int warehouseRubricId)
@@ -123,7 +110,11 @@ public class CommerceUnitTest
             Name = $"Test WH document: {countDocs}",
             WarehouseId = warehouseRubricId,
         };
-        TAuthRequestStandardModel<WarehouseDocumentModelDB> warehouseDocCreateRequest = new() { Payload = WarehouseDocumentDb, SenderActionUserId = GlobalStaticConstantsRoutes.Routes.SYSTEM_CONTROLLER_NAME };
+        TAuthRequestStandardModel<WarehouseDocumentModelDB> warehouseDocCreateRequest = new()
+        {
+            Payload = WarehouseDocumentDb,
+            SenderActionUserId = Routes.SYSTEM_CONTROLLER_NAME,
+        };
 
         DocumentNewVersionResponseModel warehouseDocNew = await CommerceService.WarehouseDocumentUpdateOrCreateAsync(warehouseDocCreateRequest);
 
@@ -182,5 +173,27 @@ public class CommerceUnitTest
         NomenclatureDb.Id = nomenclatureCreate.Response;
 
         return NomenclatureDb;
+    }
+
+    async Task<RubricModelDB> CreateWarehouseRubric(string contextName = Routes.WAREHOUSE_CONTROLLER_NAME)
+    {
+        using HelpDeskContext context = await HelpdeskContextFactoryDb.CreateDbContextAsync();
+        int countOffers = (await context.Rubrics.Where(x => x.ContextName == contextName).CountAsync()) + 1;
+        string name = $"Test rubric: {countOffers}";
+        RubricModelDB WarehouseRubric = new()
+        {
+            Name = name,
+            SortIndex = (uint)countOffers,
+            CreatedAtUTC = DateTime.UtcNow,
+            NormalizedNameUpper = name.ToUpper(),
+            ContextName = Routes.WAREHOUSE_CONTROLLER_NAME,
+        };
+        TResponseModel<int> whCreate = await RubricsService.RubricCreateOrUpdateAsync(WarehouseRubric);
+
+        Assert.NotEqual(0, whCreate.Response);
+        Assert.True(whCreate.Success());
+        WarehouseRubric.Id = whCreate.Response;
+
+        return WarehouseRubric;
     }
 }
