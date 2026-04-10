@@ -52,10 +52,21 @@ window.FirebaseSDK = {
                     setTokenSentToServer(false);
                 });
             }
+            else {
+                $.toast({
+                    heading: 'Полезная информация',
+                    text: 'Включите разрешение уведомлений с сайта, пожалуйста.',
+                    showHideTransition: 'slide',
+                    icon: 'info',
+                    loaderBg: '#9EC600',
+                    hideAfter: 25000,
+                    allowToastClose: true
+                });
+            }
         })
-            .catch(function (err) {
-                console.warn('Не удалось получить разрешение на показ уведомлений.', err);
-            });
+        .catch(function (err) {
+            console.warn('Не удалось получить разрешение на показ уведомлений.', err);
+        });
     },
     ReadPermission: async function () {
         if (!FirebaseIsSupported())
