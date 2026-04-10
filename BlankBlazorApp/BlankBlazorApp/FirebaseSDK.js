@@ -36,8 +36,6 @@ window.FirebaseSDK = {
         Notification.requestPermission().then((permission) => {
             if (permission === 'granted') {
                 console.info('Notification permission granted.');
-                // const notification = new Notification("Приветсвую!");
-
                 let messagingTokenGet = getToken(firebaseMessaging, { vapidKey: window.PublicMessagingToken }).then((currentToken) => {
                     logEvent(firebaseAnalytics, 'token_received');
                     if (currentToken) {
