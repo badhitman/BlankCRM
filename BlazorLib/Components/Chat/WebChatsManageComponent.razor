@@ -46,18 +46,18 @@
     </HeaderContent>
     <RowTemplate>
         @{
-            DateTime _dc = context.CreatedAtUTC.GetCustomTime();
             DateTime _dlo = context.LastOnlineAtUTC.GetCustomTime();
+            DateTime? _lm = context.LastMessageAtUTC?.GetCustomTime();
         }
         <MudTd DataLabel="Сообщение" title="Дата/Время последнего сообщения">
             <MudLink Href="@($"/web-chats/room-{context.Id}")">
-                @_dc.ToString("d", GlobalStaticConstants.RU) <sup>@_dc.ToString("t", GlobalStaticConstants.RU)</sup>
+                @_lm?.ToString("d", GlobalStaticConstants.RU) <sup>@_lm?.ToString("t", GlobalStaticConstants.RU)</sup>
             </MudLink>
         </MudTd>
         <MudTd DataLabel="Вход" title="Дата/Время последнего посещения">
             <div class="hstack">
                 <MudLink Href="@($"/web-chats/room-{context.Id}")" Class="me-2">
-                    @_dlo.ToString("d", GlobalStaticConstants.RU) <sup>@_dc.ToString("t", GlobalStaticConstants.RU)</sup>
+                    @_dlo.ToString("d", GlobalStaticConstants.RU) <sup>@_dlo.ToString("t", GlobalStaticConstants.RU)</sup>
                 </MudLink>
                 @if (!IsBusyProgress)
                 {
