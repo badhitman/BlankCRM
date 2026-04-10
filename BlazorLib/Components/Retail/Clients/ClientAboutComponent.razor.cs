@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////
-// © https://github.com/badhitman - @FakeGov
+// В© https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
@@ -84,7 +84,7 @@ public partial class ClientAboutComponent : BlazorBusyComponentBaseAuthModel
 
         if (!string.IsNullOrWhiteSpace(phoneNum) && !GlobalTools.IsPhoneNumber(phoneNum))
         {
-            SnackBarRepo.Error("Телефон должен быть в формате: +79994440011 (можно без +)");
+            SnackBarRepo.Error("РўРµР»РµС„РѕРЅ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РІ С„РѕСЂРјР°С‚Рµ: +79994440011 (РјРѕР¶РЅРѕ Р±РµР· +)");
             return;
         }
 

@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////
-// © https://github.com/badhitman - @FakeGov
+// В© https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
@@ -39,7 +39,7 @@ public partial class ClientsRetailComponent : BlazorBusyComponentBaseAuthModel
             newUser.PhoneNumber = newUser.PhoneNumber.Trim();
             if (!GlobalTools.IsPhoneNumber(newUser.PhoneNumber))
             {
-                errPhoneNum = "Не верный формат телефона";
+                errPhoneNum = "РќРµ РІРµСЂРЅС‹Р№ С„РѕСЂРјР°С‚ С‚РµР»РµС„РѕРЅР°";
                 return true;
             }
 
