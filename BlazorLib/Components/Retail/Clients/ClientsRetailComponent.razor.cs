@@ -27,6 +27,8 @@ public partial class ClientsRetailComponent : BlazorBusyComponentBaseAuthModel
         UserName = ""
     };
 
+    string? errPhoneNum;
+
     bool DisableCreatingUser
     {
         get
@@ -34,13 +36,14 @@ public partial class ClientsRetailComponent : BlazorBusyComponentBaseAuthModel
             if (string.IsNullOrWhiteSpace(newUser.PhoneNumber) || string.IsNullOrWhiteSpace(newUser.GivenName) || string.IsNullOrWhiteSpace(newUser.Surname))
                 return true;
 
-            if (!string.IsNullOrWhiteSpace(newUser.PhoneNumber))
+            newUser.PhoneNumber = newUser.PhoneNumber.Trim();
+            if (!GlobalTools.IsPhoneNumber(newUser.PhoneNumber))
             {
-                newUser.PhoneNumber = newUser.PhoneNumber.Trim();
-                if (!GlobalTools.IsPhoneNumber(newUser.PhoneNumber))
-                    return true;
+                errPhoneNum = "Не верный формат телефона";
+                return true;
             }
 
+            errPhoneNum = null;
             return false;
         }
     }

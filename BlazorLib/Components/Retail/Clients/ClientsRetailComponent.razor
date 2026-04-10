@@ -122,6 +122,12 @@
                 <div class="d-grid gap-2">
                     <button @onclick="CreateNewUser" class="btn btn-primary" disabled="@DisableCreatingUser">Создать</button>
                 </div>
+                @if (!string.IsNullOrWhiteSpace(errPhoneNum))
+                {
+                    <div class="alert alert-danger mt-2" role="alert">
+                        @errPhoneNum
+                    </div>
+                }
             </div>
         </div>
     </MudExpansionPanel>
