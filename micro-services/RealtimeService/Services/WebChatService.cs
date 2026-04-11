@@ -83,19 +83,19 @@ public partial class WebChatService(
             await context.Dialogs.AddAsync(readSession, cancellationToken);
             await context.SaveChangesAsync(cancellationToken);
             TResponseModel<long?> notifyTg = await StorageRepo.ReadParameterAsync<long?>(GlobalStaticCloudStorageMetadata.WebChatNotificationTelegramForNewDialog, cancellationToken);
-            if (notifyTg.Success() && notifyTg.Response.HasValue)
-            {
-                SendTextMessageTelegramBotModel tgMsgSend = new()
-                {
-                    From = "Уведомление",
-                    Message = $"Создан новый чат: {req.BaseUri}web-chats/room-{readSession.Id}",
-                    UserTelegramId = notifyTg.Response.Value,
-                };
+            //if (notifyTg.Success() && notifyTg.Response.HasValue)
+            //{
+            //    SendTextMessageTelegramBotModel tgMsgSend = new()
+            //    {
+            //        From = "Уведомление",
+            //        Message = $"Создан новый чат: {req.BaseUri}web-chats/room-{readSession.Id}",
+            //        UserTelegramId = notifyTg.Response.Value,
+            //    };
 
-                await Task.WhenAll([
-                    Task.Run(async () => { await tgRepo.SendTextMessageTelegramAsync(tgMsgSend, waitResponse: false, token: cancellationToken); }, cancellationToken),
-                    Task.Run(async () => { await mailRepo.SendEmailAsync(new SendEmailRequestModel(){ Email = "*", Subject = "Уведомление", TextMessage = $"Создан новый чат: {req.BaseUri}web-chats/room-{readSession.Id}" }, waitResponse: false, token: cancellationToken ); }, cancellationToken)]);
-            }
+            //    await Task.WhenAll([
+            //        Task.Run(async () => { await tgRepo.SendTextMessageTelegramAsync(tgMsgSend, waitResponse: false, token: cancellationToken); }, cancellationToken),
+            //        Task.Run(async () => { await mailRepo.SendEmailAsync(new SendEmailRequestModel(){ Email = "*", Subject = "Уведомление", TextMessage = $"Создан новый чат: {req.BaseUri}web-chats/room-{readSession.Id}" }, waitResponse: false, token: cancellationToken ); }, cancellationToken)]);
+            //}
         }
         else
         {
