@@ -134,7 +134,10 @@
             {
                 <MudLink Href="@($"/retail/delivery-document/{context.Id}")">
                     <span>
-                        @cdt.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@cdt.ToString("t", GlobalStaticConstants.RU)</sup>
+                        <span class="hstack">
+                            <span>@cdt.ToString("d", GlobalStaticConstants.RU)</span>
+                            <sup class="text-secondary">@cdt.ToString("t", GlobalStaticConstants.RU)</sup>
+                        </span>                         
                     </span>
                 </MudLink>
             }

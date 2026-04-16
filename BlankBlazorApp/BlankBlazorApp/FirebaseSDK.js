@@ -53,7 +53,7 @@ window.FirebaseSDK = {
             else {
                 $.toast({
                     heading: 'Полезная информация',
-                    text: 'Включите разрешение уведомлений с сайта, пожалуйста.',
+                    text: 'Включите в вашем web-браузере разрешение уведомлений с сайта.',
                     showHideTransition: 'slide',
                     icon: 'info',
                     loaderBg: '#9EC600',
