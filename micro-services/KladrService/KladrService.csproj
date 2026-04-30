@@ -19,6 +19,7 @@
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.7" />
 		<PackageReference Include="NLog" Version="6.1.2" />
 		<PackageReference Include="NLog.Extensions.Logging" Version="6.1.2" />
+		<PackageReference Include="NLog.Targets.Mail" Version="6.1.1" />
 		<PackageReference Include="NLog.Web.AspNetCore" Version="6.1.2" />
 		<PackageReference Include="NLog.Database" Version="6.0.3" />
 		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="10.0.7" />
