@@ -348,7 +348,7 @@ public partial class RetailService : IRetailService
         string prepareInfo = $"`{nameof(reserveForRetailOrder)}`:{reserveForRetailOrder};\n`{nameof(isEnableDocument)}`:{isEnableDocument};\n`{nameof(retailOrderDb)}`:{JsonConvert.SerializeObject(retailOrderDb, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)};";
         foreach (RowOfRetailOrderDocumentModelDB row in rows)
         {
-            string extMsg = $"\n`{nameof(row)}`:{JsonConvert.SerializeObject(row, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)};";
+            string extMsg = $"\n`{nameof(row)}`:{JsonConvert.SerializeObject(row, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)};\n{prepareInfo}";
             OfferAvailabilityModelDB? regOfferAv = offerAvailabilityDB
                 .FirstOrDefault(x => x.OfferId == row.OfferId && x.WarehouseId == retailOrderDb.WarehouseId);
             string msg;
