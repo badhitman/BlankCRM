@@ -24,7 +24,6 @@
 		<PackageReference Include="Microsoft.Extensions.Options" Version="10.0.7" />
 		<PackageReference Include="MongoDB.Driver.Core" Version="2.30.0" />
 		<PackageReference Include="MongoDB.Driver.GridFS" Version="2.30.0" />
-		<PackageReference Include="NetMQ" Version="4.0.4" />
 		<PackageReference Include="RabbitMQ.Client" Version="7.2.1" />
 		<PackageReference Include="StackExchange.Redis" Version="2.12.14" />
 		<ProjectReference Include="..\..\..\HtmlGenerator\HtmlGenerator.csproj" />
