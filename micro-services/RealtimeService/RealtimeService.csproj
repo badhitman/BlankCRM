@@ -8,11 +8,11 @@
 
 	<ItemGroup>
 		<PackageReference Include="MQTTnet.AspNetCore" Version="5.1.0.1559" />
-		<PackageReference Include="NLog" Version="6.1.2" />
-		<PackageReference Include="NLog.Extensions.Logging" Version="6.1.2" />
+		<PackageReference Include="NLog" Version="6.1.3" />
+		<PackageReference Include="NLog.Extensions.Logging" Version="6.1.3" />
 		<PackageReference Include="NLog.MailKit" Version="6.1.3" />
 		<PackageReference Include="NLog.Targets.Mail" Version="6.1.1" />
-		<PackageReference Include="NLog.Web.AspNetCore" Version="6.1.2" />
+		<PackageReference Include="NLog.Web.AspNetCore" Version="6.1.3" />
 		<PackageReference Include="NLog.Database" Version="6.0.3" />
 		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="10.0.7" />
 		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.1" />
