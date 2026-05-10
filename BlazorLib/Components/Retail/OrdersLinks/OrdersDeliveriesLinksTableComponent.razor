@@ -107,17 +107,8 @@
                 {
                     @if (paymentsForOrders is not null)
                     {
-                        foreach (PaymentOrderRetailLinkModelDB _op in paymentsForOrders.Where(y => y.OrderDocumentId == context.OrderDocumentId))
-                        {
-                            string _st = "secondary";
-                            if (_op.PaymentDocument?.StatusPayment == PaymentsRetailStatusesEnum.Paid)
-                                _st = "success";
-                            if (_op.PaymentDocument?.StatusPayment == PaymentsRetailStatusesEnum.Awaiting)
-                                _st = "primary";
-                            <span class="me-1 badge text-bg-@_st">
-                                @($"{AllPaymentsTypes.FirstOrDefault(x => x.Id == _op.PaymentDocument?.TypePaymentId)?.Name}: {_op.AmountPayment}")
-                            </span>
-                        }
+                        <OrderPaymentsInfoComponent AllPaymentsTypes="AllPaymentsTypes"
+                                                    PaymentsOrdersLinks="paymentsForOrders.Where(y => y.OrderDocumentId == context.OrderDocumentId)" />
                     }
                 }
             </MudTd>
@@ -157,17 +148,8 @@
             <MudTd DataLabel="Оплата">
                 @if (paymentsForOrders is not null)
                 {
-                    foreach (PaymentOrderRetailLinkModelDB _op in paymentsForOrders.Where(y => y.OrderDocumentId == context.OrderDocumentId))
-                    {
-                        string _st = "secondary";
-                        if (_op.PaymentDocument?.StatusPayment == PaymentsRetailStatusesEnum.Paid)
-                            _st = "success";
-                        if (_op.PaymentDocument?.StatusPayment == PaymentsRetailStatusesEnum.Awaiting)
-                            _st = "primary";
-                        <span class="me-1 badge text-bg-@_st">
-                            @($"{AllPaymentsTypes.FirstOrDefault(x => x.Id == _op.PaymentDocument?.TypePaymentId)?.Name}: {_op.AmountPayment}")
-                        </span>
-                    }
+                    <OrderPaymentsInfoComponent AllPaymentsTypes="AllPaymentsTypes"
+                                                PaymentsOrdersLinks="paymentsForOrders.Where(y => y.OrderDocumentId == context.OrderDocumentId)" />
                 }
             </MudTd>
         }
