@@ -56,8 +56,9 @@
         {
             <col />
         }
-        @if (OrderParent is null || OrderParent.Id <= 0)
+        @if (OrderParentNotSet)
         {
+            <col />
             <col />
         }
         else
@@ -73,9 +74,10 @@
         {
             <MudTh>Доставка</MudTh>
         }
-        @if (OrderParent is null || OrderParent.Id <= 0)
+        @if (OrderParentNotSet)
         {
             <MudTh>Заказ</MudTh>
+            <MudTh>Оплата</MudTh>
         }
         else
         {
@@ -93,12 +95,31 @@
                 </MudLink>
             </MudTd>
         }
-        @if (OrderParent is null || OrderParent.Id <= 0)
+        @if (OrderParentNotSet)
         {
             <MudTd DataLabel="Заказ">
                 <MudLink Href="@($"/retail/order-document/{context.OrderDocumentId}")">
                     @context.OrderDocument?.ToString()
                 </MudLink>
+            </MudTd>
+            <MudTd DataLabel="Оплата">
+                @if (paymentsForOrders is not null)
+                {
+                    @if (paymentsForOrders is not null)
+                    {
+                        foreach (PaymentOrderRetailLinkModelDB _op in paymentsForOrders.Where(y => y.OrderDocumentId == context.OrderDocumentId))
+                        {
+                            string _st = "secondary";
+                            if (_op.PaymentDocument?.StatusPayment == PaymentsRetailStatusesEnum.Paid)
+                                _st = "success";
+                            if (_op.PaymentDocument?.StatusPayment == PaymentsRetailStatusesEnum.Awaiting)
+                                _st = "primary";
+                            <span class="me-1 badge text-bg-@_st">
+                                @($"{AllPaymentsTypes.FirstOrDefault(x => x.Id == _op.PaymentDocument?.TypePaymentId)?.Name}: {_op.AmountPayment}")
+                            </span>
+                        }
+                    }
+                }
             </MudTd>
         }
         else
@@ -113,19 +134,42 @@
         <MudTd>
             @if (initDeleteRow?.orderId == context.OrderDocumentId && initDeleteRow?.otherDocId == context.DeliveryDocumentId)
             {
-                <span title="кликните для подтверждения удаления" class="me-2 badge text-bg-danger cursor-pointer" @onclick="() => DeleteRow((context.OrderDocumentId, context.DeliveryDocumentId))">Подтвердить удаление</span>
-                <span title="кликните для отмены удаления" class="text-bg-secondary cursor-pointer badge" @onclick="() => initDeleteRow = null">отмена</span>
+                <span title="кликните для подтверждения удаления"
+                      class="me-2 badge text-bg-danger cursor-pointer"
+                      @onclick="() => DeleteRow((context.OrderDocumentId, context.DeliveryDocumentId))">Подтвердить удаление</span>
+                <span title="кликните для отмены удаления"
+                      class="text-bg-secondary cursor-pointer badge" @onclick="() => initDeleteRow = null">отмена</span>
             }
             else
             {
-                <MudIconButton OnClick="() => DeleteRow((context.OrderDocumentId, context.DeliveryDocumentId))" title="Удалить строку" Icon="@Icons.Material.Filled.Delete" aria-label="delete" Size="Size.Small" />
+                <MudIconButton OnClick="() => DeleteRow((context.OrderDocumentId, context.DeliveryDocumentId))"
+                               title="Удалить строку"
+                               Icon="@Icons.Material.Filled.Delete"
+                               aria-label="delete"
+                               Size="Size.Small" />
             }
         </MudTd>
     </RowTemplate>
     <RowEditingTemplate>
-        @if (OrderParent is null || OrderParent.Id <= 0)
+        @if (OrderParentNotSet)
         {
             <MudTd DataLabel="Заказ">@context.OrderDocument?.ToString()</MudTd>
+            <MudTd DataLabel="Оплата">
+                @if (paymentsForOrders is not null)
+                {
+                    foreach (PaymentOrderRetailLinkModelDB _op in paymentsForOrders.Where(y => y.OrderDocumentId == context.OrderDocumentId))
+                    {
+                        string _st = "secondary";
+                        if (_op.PaymentDocument?.StatusPayment == PaymentsRetailStatusesEnum.Paid)
+                            _st = "success";
+                        if (_op.PaymentDocument?.StatusPayment == PaymentsRetailStatusesEnum.Awaiting)
+                            _st = "primary";
+                        <span class="me-1 badge text-bg-@_st">
+                            @($"{AllPaymentsTypes.FirstOrDefault(x => x.Id == _op.PaymentDocument?.TypePaymentId)?.Name}: {_op.AmountPayment}")
+                        </span>
+                    }
+                }
+            </MudTd>
         }
         @if (DeliveryId <= 0)
         {

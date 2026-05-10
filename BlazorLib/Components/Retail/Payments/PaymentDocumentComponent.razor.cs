@@ -144,7 +144,7 @@ public partial class PaymentDocumentComponent : BlazorBusyComponentBaseAuthModel
             SnackBarRepo.ShowMessagesResponse(res.Messages);
             if (res.Success())
             {
-                TResponseModel<PaymentRetailDocumentModelDB[]>? getDoc = await RetailRepo.GetPaymentsDocumentsAsync(new() { Ids = [editDoc.Id] });
+                TResponseModel<PaymentRetailDocumentModelDB[]>? getDoc = await RetailRepo.GetPaymentsDocumentsAsync(new() { IdsPayments = [editDoc.Id] });
                 SnackBarRepo.ShowMessagesResponse(getDoc.Messages);
                 if (getDoc.Success() && getDoc.Response is not null && getDoc.Response.Length == 1)
                 {
@@ -180,7 +180,7 @@ public partial class PaymentDocumentComponent : BlazorBusyComponentBaseAuthModel
         }
         else
         {
-            TResponseModel<PaymentRetailDocumentModelDB[]> resDoc = await RetailRepo.GetPaymentsDocumentsAsync(new() { Ids = [PaymentId] });
+            TResponseModel<PaymentRetailDocumentModelDB[]> resDoc = await RetailRepo.GetPaymentsDocumentsAsync(new() { IdsPayments = [PaymentId] });
             SnackBarRepo.ShowMessagesResponse(resDoc.Messages);
             if (resDoc.Response is not null && resDoc.Response.Length == 1)
             {

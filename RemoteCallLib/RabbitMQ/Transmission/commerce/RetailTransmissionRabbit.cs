@@ -186,7 +186,7 @@ public class RetailTransmissionRabbit([FromKeyedServices(nameof(RabbitClient))] 
        => await rabbitClient.MqRemoteCallAsync<TPaginationResponseStandardModel<PaymentOrderRetailLinkModelDB>>(TransmissionQueues.SelectPaymentsOrdersDocumentsLinksRetailReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<PaymentOrderRetailLinkModelDB[]>> PaymentsOrdersDocumentsLinksGetAsync(int[] req, CancellationToken token = default)
+    public async Task<TResponseModel<PaymentOrderRetailLinkModelDB[]>> PaymentsOrdersDocumentsLinksGetAsync(GetPaymentsOrdersLinksRetailDocumentsRequestModel req, CancellationToken token = default)
        => await rabbitClient.MqRemoteCallAsync<TResponseModel<PaymentOrderRetailLinkModelDB[]>>(TransmissionQueues.PaymentsOrdersDocumentsLinksGetReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>

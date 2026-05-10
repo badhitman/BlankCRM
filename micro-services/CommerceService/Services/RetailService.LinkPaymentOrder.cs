@@ -49,7 +49,7 @@ public partial class RetailService : IRetailService
             .ExecuteUpdateAsync(set => set
                 .SetProperty(p => p.Name, req.Payload.Name)
                 .SetProperty(p => p.AmountPayment, req.Payload.AmountPayment), cancellationToken: token);
-        
+
         return ResponseBaseModel.CreateSuccess("Ok");
     }
 
@@ -118,15 +118,22 @@ public partial class RetailService : IRetailService
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<PaymentOrderRetailLinkModelDB[]>> PaymentsOrdersDocumentsLinksGetAsync(int[] req, CancellationToken token = default)
+    public async Task<TResponseModel<PaymentOrderRetailLinkModelDB[]>> PaymentsOrdersDocumentsLinksGetAsync(GetPaymentsOrdersLinksRetailDocumentsRequestModel req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        IQueryable<PaymentOrderRetailLinkModelDB> q = context.PaymentsOrdersLinks.AsQueryable();
+
+        if (req.LinksIds is not null && req.LinksIds.Length != 0)
+            q = q.Where(x => req.LinksIds.Contains(x.Id));
+
+        if (req.OrdersIds is not null && req.OrdersIds.Length != 0)
+            q = q.Where(x => req.OrdersIds.Contains(x.OrderDocumentId));
+
         return new()
         {
-            Response = await context.PaymentsOrdersLinks
+            Response = await q
                 .Include(x => x.OrderDocument)
                 .Include(x => x.PaymentDocument)
-                .Where(x => req.Contains(x.Id))
                 .ToArrayAsync(cancellationToken: token)
         };
     }

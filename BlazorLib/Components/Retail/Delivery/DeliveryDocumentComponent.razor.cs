@@ -56,7 +56,7 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
     {
         get
         {
-            if (IsBusyProgress || currentDoc is null || editDoc is null)
+            if (IsBusyProgress || currentDoc is null || editDoc is null || editDoc.DeliveryTypeId <= 0)
                 return true;
 
             if (editDoc.DeliveryTypeId != rubricDeliveryTypePickup && string.IsNullOrWhiteSpace(editDoc.KladrCode) && string.IsNullOrWhiteSpace(editDoc.AddressUserComment))

@@ -5,6 +5,7 @@
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using SharedLib;
+using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace BlazorLib.Components.Retail.OrdersLinks;
 
@@ -13,6 +14,9 @@ namespace BlazorLib.Components.Retail.OrdersLinks;
 /// </summary>
 public partial class OrdersDeliveriesLinksTableComponent : OrderLinkBaseComponent<RetailOrderDeliveryLinkModelDB>
 {
+    [Inject]
+    IRubricsService RubricsRepo { get; set; } = default!;
+
     /// <inheritdoc/>
     [Parameter]
     public int DeliveryId { get; set; }
@@ -38,6 +42,10 @@ public partial class OrdersDeliveriesLinksTableComponent : OrderLinkBaseComponen
             StatusesDocumentsEnum.Check
         ];
 
+    PaymentOrderRetailLinkModelDB[]? paymentsForOrders;
+    List<RubricNestedModel> AllPaymentsTypes = [];
+
+    bool OrderParentNotSet => OrderParent is null || OrderParent.Id <= 0;
 
     async Task DeleteRow((int orderId, int otherDocId) rowLinkId)
     {
@@ -220,10 +228,15 @@ public partial class OrdersDeliveriesLinksTableComponent : OrderLinkBaseComponen
 
         await SetBusyAsync(token: token);
         TPaginationResponseStandardModel<RetailOrderDeliveryLinkModelDB> res = await RetailRepo.SelectDeliveriesOrdersLinksDocumentsAsync(req, token);
-        //fullWeight = res.Response is null || res.Response.Count == 0 ? 0 : res.Response.Sum(x => x.WeightShipping);
 
         if (res.Response is not null && OrderParent is not null && OrderParent.Id > 0)
             await CacheUsersUpdate([.. res.Response.Select(x => x.DeliveryDocument!.RecipientIdentityUserId)]);
+
+        if (OrderParentNotSet && res.Response is not null && res.Response.Count != 0)
+        {
+            TResponseModel<PaymentOrderRetailLinkModelDB[]> getPayments = await RetailRepo.PaymentsOrdersDocumentsLinksGetAsync(new() { OrdersIds = [.. res.Response.Select(x => x.OrderDocumentId).Distinct()] }, token);
+            paymentsForOrders = getPayments.Response;
+        }
 
         await SetBusyAsync(false, token);
 
@@ -246,5 +259,13 @@ public partial class OrdersDeliveriesLinksTableComponent : OrderLinkBaseComponen
         searchString = text;
         if (tableRef is not null)
             InvokeAsync(tableRef.ReloadServerData);
+    }
+
+    /// <inheritdoc/>
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        string ctx = Path.Combine(Routes.PAYMENTS_CONTROLLER_NAME, Routes.TYPES_CONTROLLER_NAME);
+        AllPaymentsTypes = await RubricsRepo.RubricsChildListAsync(new() { ContextName = ctx });
     }
 }

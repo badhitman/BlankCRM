@@ -152,7 +152,11 @@
                     <KladrInputComponent @bind-KladrObject="DeliveryAddressSelectedKladrObject" />
                     <div class="mb-3">
                         <label for="detailsAddressControlTextarea" class="form-label">уточнение адреса (если требуется)</label>
-                        <textarea disabled="@IsBusyProgress" class="form-control" id="detailsAddressControlTextarea" rows="3" @oninput="AddressUserCommentHandleOnChange">@editDoc.AddressUserComment</textarea>
+                        <textarea disabled="@IsBusyProgress"
+                                  class="form-control"
+                                  id="detailsAddressControlTextarea"
+                                  rows="3"
+                                  @oninput="AddressUserCommentHandleOnChange">@editDoc.AddressUserComment</textarea>
                     </div>
                 </div>
             </div>
@@ -164,7 +168,8 @@
                         <DeliveryTableRowsRetailComponent ForceAdding Document="editDoc" @ref=tableRowsRef />
                     </MudTabPanel>
                     <MudTabPanel Text="Заказы">
-                        <OrdersDeliveriesLinksTableComponent DeliveryId="DeliveryDocumentId" ReloadOrdersLinks="ReloadDeliveriesOrdersLinksAction" />
+                        <OrdersDeliveriesLinksTableComponent DeliveryId="DeliveryDocumentId"
+                                                             ReloadOrdersLinks="ReloadDeliveriesOrdersLinksAction" />
                     </MudTabPanel>
                     <MudTabPanel Text="Статусы">
                         <DeliveryStatusesTableComponent Document="editDoc" />

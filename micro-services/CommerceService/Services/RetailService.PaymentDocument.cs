@@ -331,15 +331,20 @@ public partial class RetailService : IRetailService
     public async Task<TResponseModel<PaymentRetailDocumentModelDB[]>> GetPaymentsDocumentsAsync(GetPaymentsRetailOrdersDocumentsRequestModel req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        if (req.Ids is null || req.Ids.Length == 0)
-            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Ошибка запроса: Ids is null || Ids.Length == 0" }] };
+        if ((req.IdsPayments is null || req.IdsPayments.Length == 0) && (req.IdsOrders is null || req.IdsOrders.Length == 0))
+            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Ошибка запроса: Ids not set" }] };
+
+        IQueryable<PaymentRetailDocumentModelDB> q = context.PaymentsRetailDocuments.AsQueryable();
+
+        if (req.IdsPayments is not null && req.IdsPayments.Length != 0)
+            q = q.Where(x => req.IdsPayments.Contains(x.Id));
+
+        if (req.IdsOrders is not null && req.IdsOrders.Length != 0)
+            q = q.Where(x => context.PaymentsOrdersLinks.Any(y => y.PaymentDocumentId == x.Id && req.IdsOrders.Contains(y.OrderDocumentId)));
 
         return new()
         {
-            Response = await context.PaymentsRetailDocuments
-            .Where(x => req.Ids.Contains(x.Id))
-            .Include(x => x.Wallet)
-            .ToArrayAsync(cancellationToken: token)
+            Response = await q.Include(x => x.Wallet).ToArrayAsync(cancellationToken: token)
         };
     }
 }
