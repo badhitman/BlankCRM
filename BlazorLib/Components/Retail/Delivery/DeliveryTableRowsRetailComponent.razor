@@ -85,7 +85,7 @@
             @(context!.Quantity * context.Offer!.Price)
             @if ((context!.Quantity * context.Offer!.Price) != context.Amount)
             {
-                <sup>@context.Amount</sup>
+                <sup class="ms-2">@context.Amount</sup>
                 <MudIconButton Icon="@Icons.Material.Filled.EmojiSymbols" Color="Color.Primary" OnClick="async () => await NormalizeSumma(context)">Исправить сумму</MudIconButton>
             }
         </MudTd>

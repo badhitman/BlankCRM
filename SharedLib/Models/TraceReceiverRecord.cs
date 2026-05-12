@@ -2,8 +2,8 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace SharedLib;
 
@@ -12,6 +12,13 @@ namespace SharedLib;
 /// </summary>
 public class TraceReceiverRecord : TraceReceiverBaseRecord
 {
+    static readonly JsonSerializer opt = new()
+    {
+        ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+        NullValueHandling = NullValueHandling.Ignore,
+        Formatting = Formatting.Indented
+    };
+
     /// <summary>
     /// Завершение обработчика
     /// </summary>
@@ -34,8 +41,8 @@ public class TraceReceiverRecord : TraceReceiverBaseRecord
         {
             UTCTimestampInitReceive = DateTime.UtcNow,
             PayloadBody = _requestBody is null ? null : (GlobalToolsStandard.IsCollection(_requestBody)
-                ? JArray.FromObject(_requestBody, new JsonSerializer() { NullValueHandling = NullValueHandling.Ignore, ReferenceLoopHandling = ReferenceLoopHandling.Ignore, Formatting = Formatting.Indented })
-                : JObject.FromObject(_requestBody, new JsonSerializer() { NullValueHandling = NullValueHandling.Ignore, ReferenceLoopHandling = ReferenceLoopHandling.Ignore, Formatting = Formatting.Indented })),
+                ? JArray.FromObject(_requestBody, opt)
+                : JObject.FromObject(_requestBody, opt)),
             ReceiverName = _receiverName.WithoutTransmissionQueueNamePrefix(),
             SenderActionUserId = _authorId,
         };
