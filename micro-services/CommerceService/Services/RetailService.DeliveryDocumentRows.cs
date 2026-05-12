@@ -212,7 +212,18 @@ public partial class RetailService : IRetailService
             .OffersAvailability
             .Where(x => x.OfferId == req.Payload.OfferId || x.OfferId == rowOfDeliveryRetailDocument.OfferId);
         List<OfferAvailabilityModelDB> offerAvailabilityDB = await offerAvailabilityQuery.ToListAsync(cancellationToken: token);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(MethodBase.GetCurrentMethod()!.Name, docDb.Id.ToString(), offerAvailabilityDB);
+        TraceReceiverRecord trace;
+        try
+        {
+            trace = TraceReceiverRecord.Build(MethodBase.GetCurrentMethod()!.Name, docDb.Id.ToString(), offerAvailabilityDB);
+        }
+        catch (Exception ex)
+        {
+            loggerRepo.LogError(ex, "trace error");
+            res.Messages.InjectException(ex);
+            return res;
+        }
+
         OfferAvailabilityModelDB? regOfferAv;
         if (rowOfDeliveryRetailDocument.OfferId != req.Payload.OfferId)
         {
