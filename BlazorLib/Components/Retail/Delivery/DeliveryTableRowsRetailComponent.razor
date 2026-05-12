@@ -83,6 +83,10 @@
         </MudTd>
         <MudTd DataLabel="Сумма">
             @(context!.Quantity * context.Offer!.Price)
+            @if ((context!.Quantity * context.Offer!.Price) != context.Amount)
+            {
+                <MudIconButton Icon="@Icons.Material.Filled.EmojiSymbols" Color="Color.Primary" OnClick="async () => await NormalizeSumma(context)">Исправить сумму</MudIconButton>
+            }
         </MudTd>
         <MudTd><MudIconButton OnClick="() => DeleteRow(context.OfferId)" title="Удалить строку" Icon="@Icons.Material.Filled.Delete" aria-label="delete" Size="Size.Small" /></MudTd>
     </RowTemplate>

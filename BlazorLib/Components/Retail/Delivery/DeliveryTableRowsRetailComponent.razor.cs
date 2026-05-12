@@ -409,6 +409,36 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
         }
     }
 
+    async Task NormalizeSumma(RowOfDeliveryRetailDocumentModelDB rowElement)
+    {
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
+        rowElement.Amount = rowElement.Quantity * rowElement.Offer!.Price;
+
+        if (rowElement.Id == 0)
+            return;
+
+        await SetBusyAsync();
+
+        TResponseModel<Guid?> res = await RetailRepo.UpdateRowOfDeliveryDocumentRetailAsync(new()
+        {
+            Payload = rowElement,
+            SenderActionUserId = CurrentUserSession.UserId,
+        });
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
+        if (res.Response is not null)
+            Document.Version = res.Response.Value;
+
+        await ElementsReload();
+        if (tableRef is not null)
+            await tableRef.ReloadServerData();
+
+        await SetBusyAsync(false);
+    }
+
     /// <inheritdoc/>
     protected override void RowEditPreviewHandler(object element)
         => elementBeforeEdit = GlobalTools.CreateDeepCopy((RowOfDeliveryRetailDocumentModelDB)element);
