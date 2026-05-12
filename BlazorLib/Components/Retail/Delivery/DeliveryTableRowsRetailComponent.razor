@@ -85,8 +85,8 @@
             @(context!.Quantity * context.Offer!.Price)
             @if ((context!.Quantity * context.Offer!.Price) != context.Amount)
             {
-                <sup class="ms-2">@context.Amount</sup>
-                <MudIconButton Icon="@Icons.Material.Filled.EmojiSymbols" Color="Color.Primary" OnClick="async () => await NormalizeSumma(context)">Исправить сумму</MudIconButton>
+                <sup class="ms-2" title="Сумма не совпадает с расчётной">@context.Amount</sup>
+                <MudIconButton title="Исправить сумму в соответствии с расчётной?" Icon="@Icons.Material.Filled.EmojiSymbols" Color="Color.Primary" OnClick="async () => await NormalizeSumma(context)">Исправить сумму</MudIconButton>
             }
         </MudTd>
         <MudTd><MudIconButton OnClick="() => DeleteRow(context.OfferId)" title="Удалить строку" Icon="@Icons.Material.Filled.Delete" aria-label="delete" Size="Size.Small" /></MudTd>
