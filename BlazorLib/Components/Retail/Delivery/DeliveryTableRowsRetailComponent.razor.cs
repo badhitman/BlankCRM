@@ -2,12 +2,12 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
-using BlazorLib.Components.Commerce;
 using Microsoft.AspNetCore.Components;
+using BlazorLib.Components.Commerce;
+using System.Reflection.Metadata;
 using Microsoft.JSInterop;
 using MudBlazor;
 using SharedLib;
-using System.Reflection.Metadata;
 
 namespace BlazorLib.Components.Retail.Delivery;
 
@@ -342,6 +342,7 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
 
         if (element is RowOfDeliveryRetailDocumentModelDB off)
         {
+            off.Amount = off.Quantity * off.Offer!.Price;
             int exist_row = Document.Rows!.FindIndex(x => x.OfferId == off.Id);
             if (exist_row < 0)
             {

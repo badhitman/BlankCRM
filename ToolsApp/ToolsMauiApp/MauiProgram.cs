@@ -10,6 +10,7 @@ using SharedLib;
 using System.Net;
 using System.Text;
 using ToolsMauiLib;
+using ZXing.Net.Maui.Controls;
 
 namespace ToolsMauiApp;
 
@@ -31,6 +32,7 @@ public static class MauiProgram
         });
 
         builder.UseMauiApp<App>()
+            .UseBarcodeReader()
             .UseMauiCommunityToolkit()
             .ConfigureFonts(fonts =>
             {

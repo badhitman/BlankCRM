@@ -102,7 +102,6 @@
             }
             @if (_allowedValues is null || _allowedValues.Count == 0 || ForceAdding)
             {
-                @* <MudNumericField @bind-Value="context!.Quantity" Required Min="1" Max="GetMaxValue(context)" /> *@
                 <input type="number" class="form-control" @bind="context!.Quantity" />
             }
             else
