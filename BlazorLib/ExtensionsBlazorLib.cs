@@ -114,7 +114,7 @@ public static class ExtensionsBlazorLib
         Severity _style;
         lock (MessagesHistory)
         {
-            foreach (ResultMessage m in messages)
+            foreach (ResultMessage m in messages.Where(x => !string.IsNullOrWhiteSpace(x.Text)))
             {
                 _style = m.TypeMessage switch
                 {
