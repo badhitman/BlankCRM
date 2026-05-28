@@ -89,27 +89,6 @@ public partial class PaymentDocumentComponent : BlazorBusyComponentBaseAuthModel
         await recipientWalletRef.SetWallet(editDoc.Wallet);
     }
 
-    async Task UpdateRecipient()
-    {
-        if (editDoc?.Wallet is null)
-            throw new Exception("editDoc is null");
-
-        await SetBusyAsync();
-        TResponseModel<UserInfoModel[]> getUser = await IdentityRepo.GetUsersOfIdentityAsync([editDoc.Wallet.UserIdentityId]);
-        SnackBarRepo.ShowMessagesResponse(getUser.Messages);
-        if (getUser.Success() && getUser.Response is not null && getUser.Response.Any(x => x.UserId == editDoc.Wallet.UserIdentityId))
-        {
-            userRecipient = getUser.Response.First(x => x.UserId == editDoc.Wallet.UserIdentityId);
-
-            if (userRecipient.TelegramId.HasValue)
-            {
-                List<ChatTelegramStandardModel> chats = await TelegramRepo.ChatsReadTelegramAsync([userRecipient.TelegramId.Value]);
-                currentChatTelegram = chats.FirstOrDefault();
-            }
-        }
-        await SetBusyAsync(false);
-    }
-
     async Task SaveDoc()
     {
         if (editDoc is null)
@@ -206,5 +185,26 @@ public partial class PaymentDocumentComponent : BlazorBusyComponentBaseAuthModel
     void SelectUserRecipientAction(UserInfoModel? user)
     {
         userRecipient = user;
+    }
+
+    async Task UpdateRecipient()
+    {
+        if (editDoc?.Wallet is null)
+            throw new Exception("editDoc is null");
+
+        await SetBusyAsync();
+        TResponseModel<UserInfoModel[]> getUser = await IdentityRepo.GetUsersOfIdentityAsync([editDoc.Wallet.UserIdentityId]);
+        SnackBarRepo.ShowMessagesResponse(getUser.Messages);
+        if (getUser.Success() && getUser.Response is not null && getUser.Response.Any(x => x.UserId == editDoc.Wallet.UserIdentityId))
+        {
+            userRecipient = getUser.Response.First(x => x.UserId == editDoc.Wallet.UserIdentityId);
+
+            if (userRecipient.TelegramId.HasValue)
+            {
+                List<ChatTelegramStandardModel> chats = await TelegramRepo.ChatsReadTelegramAsync([userRecipient.TelegramId.Value]);
+                currentChatTelegram = chats.FirstOrDefault();
+            }
+        }
+        await SetBusyAsync(false);
     }
 }

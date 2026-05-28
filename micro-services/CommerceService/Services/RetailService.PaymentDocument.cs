@@ -135,6 +135,11 @@ public partial class RetailService : IRetailService
                     Text = "Документ ранее был кем-то изменён. Обновите документ (F5) перед его редактированием.",
                 }]
             };
+
+        string _walletChange = paymentDb.WalletId == req.Payload.WalletId
+            ? ""
+            : $"изменение кошелька: [{paymentDb.WalletId}] -> [{req.Payload.WalletId}]";
+
         using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
 
         Guid _ng = Guid.NewGuid();
@@ -158,10 +163,11 @@ public partial class RetailService : IRetailService
             return new()
             {
                 Response = _ng,
-                Messages = [new()
-                {
-                    TypeMessage = MessagesTypesEnum.Success,
-                    Text = "Ok" }]
+                Messages =
+                [
+                    new() { TypeMessage = MessagesTypesEnum.Success, Text = "Ok" },
+                    new() { TypeMessage = MessagesTypesEnum.Info, Text = _walletChange }
+                ]
             };
         }
 
@@ -197,10 +203,10 @@ public partial class RetailService : IRetailService
                 return new()
                 {
                     Messages = [new()
-                     {
+                    {
                          TypeMessage = MessagesTypesEnum.Error,
                          Text = $"В следствии изменения документа - сумма баланса [wallet:{paymentDb.Wallet.WalletType}] станет отрицательной"
-                     }]
+                    }]
                 };
             }
             else
@@ -264,11 +270,11 @@ public partial class RetailService : IRetailService
         return new()
         {
             Response = _ng,
-            Messages = [new()
-            {
-                Text = "Ok",
-                TypeMessage = MessagesTypesEnum.Success,
-            }]
+            Messages =
+            [
+                new() { Text = "Ok", TypeMessage = MessagesTypesEnum.Success },
+                new() { TypeMessage = MessagesTypesEnum.Info, Text = _walletChange }
+            ]
         };
     }
 
