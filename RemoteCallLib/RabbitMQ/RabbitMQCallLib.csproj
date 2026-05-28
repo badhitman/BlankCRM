@@ -24,7 +24,7 @@
 		<PackageReference Include="Microsoft.Extensions.Options" Version="10.0.8" />
 		<PackageReference Include="MongoDB.Driver.GridFS" Version="2.30.0" />
 		<PackageReference Include="RabbitMQ.Client" Version="7.2.1" />
-		<PackageReference Include="StackExchange.Redis" Version="2.13.1" />
+		<PackageReference Include="StackExchange.Redis" Version="2.13.17" />
 		<ProjectReference Include="..\..\..\HtmlGenerator\HtmlGenerator.csproj" />
 		<ProjectReference Include="..\..\SharedLib\SharedLib.csproj" />
 		<ProjectReference Include="..\MQTTCallLib\MQTTCallLib.csproj" />

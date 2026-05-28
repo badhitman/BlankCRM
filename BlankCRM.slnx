@@ -61,10 +61,10 @@
     <File Path="devops/build-win.ps1" />
     <File Path="devops/debug.clone-and-build.sh" />
     <File Path="devops/docker-compose.yml" />
+    <File Path="devops/draft.stage.txt" />
     <File Path="devops/dumps.sh" />
     <File Path="devops/prod-builds.update.sh" />
     <File Path="devops/README.md" />
-    <File Path="devops/readme.stage.txt" />
     <File Path="devops/stage-builds.update.sh" />
   </Folder>
   <Folder Name="/Solution Items/devops/etc/" />

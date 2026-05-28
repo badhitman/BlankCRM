@@ -49,3 +49,13 @@ class DOMCleanup {
 }
 
 window.DOMCleanup = DOMCleanup;
+// in app.js imported we have viewPort calculation function
+window.calculateBoundingBox = function (viewfinderWidth, viewfinderHeight) {
+    let minEdgePercentage = 0.999;
+    let minEdgeSize = Math.min(viewfinderWidth, viewfinderHeight);
+    let qrboxSize = Math.floor(minEdgeSize * minEdgePercentage);
+    return {
+        width: qrboxSize,
+        height: 150,
+    };
+};

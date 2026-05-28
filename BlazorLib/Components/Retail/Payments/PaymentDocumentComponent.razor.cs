@@ -2,10 +2,10 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
+using static SharedLib.GlobalStaticConstantsRoutes;
 using BlazorLib.Components.Retail.Wallet;
 using Microsoft.AspNetCore.Components;
 using SharedLib;
-using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace BlazorLib.Components.Retail.Payments;
 

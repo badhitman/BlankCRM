@@ -2,15 +2,14 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
+using BlazorQrCodeScanner.Maui;
 using CommunityToolkit.Maui;
 using DbcLib;
 using Microsoft.Extensions.Logging;
 using MudBlazor.Services;
 using SharedLib;
-using System.Net;
 using System.Text;
 using ToolsMauiLib;
-using ZXing.Net.Maui.Controls;
 
 namespace ToolsMauiApp;
 
@@ -32,12 +31,13 @@ public static class MauiProgram
         });
 
         builder.UseMauiApp<App>()
-            .UseBarcodeReader()
             .UseMauiCommunityToolkit()
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-            });
+            })
+            .ConfigureMauiQrCodeScanner();
+
         builder.Services.AddMauiBlazorWebView();
         builder.Services.AddMudServices();
 
