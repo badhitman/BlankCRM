@@ -4,13 +4,15 @@
     <Project Path="BlankBlazorApp/BlankBlazorApp/BlankBlazorApp.csproj" />
   </Folder>
   <Folder Name="/libs/">
-    <Project Path="BlazorLib/BlazorLib.csproj" />
-    <Project Path="BlazorServerLib/BlazorWebLib.csproj" />
     <Project Path="CodegeneratorLib/CodegeneratorLib.csproj" />
     <Project Path="IdentityLib/IdentityLib.csproj" />
     <Project Path="ServerLib/ServerLib.csproj" />
     <Project Path="SharedLib/SharedLib.csproj" />
     <Project Path="SharedLibStandard21/SharedLibStandard21.csproj" />
+  </Folder>
+  <Folder Name="/libs/blazor/">
+    <Project Path="Blazor/BlazorLib/BlazorLib.csproj" />
+    <Project Path="Blazor/BlazorServerLib/BlazorWebLib.csproj" />
   </Folder>
   <Folder Name="/libs/bus/">
     <File Path="RemoteCallLib/README.md" />

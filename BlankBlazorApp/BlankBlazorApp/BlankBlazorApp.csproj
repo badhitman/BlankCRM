@@ -62,7 +62,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\BlazorServerLib\BlazorWebLib.csproj" />
+		<ProjectReference Include="..\..\Blazor\BlazorServerLib\BlazorWebLib.csproj" />
 		<ProjectReference Include="..\..\BlankCRM.ServiceDefaults\BlankCRM.ServiceDefaults.csproj" />
 		<ProjectReference Include="..\..\RemoteCallLib\MQTTCallLib\MQTTCallLib.csproj" />
 		<ProjectReference Include="..\..\ServerLib\ServerLib.csproj" />

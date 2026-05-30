@@ -34,7 +34,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\CodegeneratorLib\CodegeneratorLib.csproj" />
+		<ProjectReference Include="..\..\CodegeneratorLib\CodegeneratorLib.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
