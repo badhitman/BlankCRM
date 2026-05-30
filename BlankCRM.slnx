@@ -14,6 +14,9 @@
     <Project Path="Blazor/BlazorLib/BlazorLib.csproj" />
     <Project Path="Blazor/BlazorServerLib/BlazorWebLib.csproj" />
   </Folder>
+  <Folder Name="/libs/blazor/implements/">
+    <Project Path="Blazor/Implements/BlazorOutersLib/BlazorOutersLib.csproj" />
+  </Folder>
   <Folder Name="/libs/bus/">
     <File Path="RemoteCallLib/README.md" />
     <Project Path="RemoteCallLib/MQTTCallLib/MQTTCallLib.csproj" />

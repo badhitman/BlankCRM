@@ -1,0 +1,51 @@
+﻿@page "/"
+
+@inherits BlazorBusyComponentBaseAuthModel
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+@using SharedLib
+@using Microsoft.AspNetCore.Components.Web
+@using BlazorLib
+@using MudBlazor
+
+<PageTitle>Home</PageTitle>
+
+@if (IsBusyProgress)
+{
+    <MudProgressLinear Color="Color.Primary" Indeterminate Class="my-3" />
+}
+else
+{
+    @ms
+}
+
+@code {
+    [Inject]
+    IParametersStorageTransmission StoreRepo { get; set; } = default!;
+
+
+    MarkupString ms => (MarkupString)(_textValue ?? "<h1>Hello, world!</h1> Welcome to your new app.");
+
+    string? _textValue;
+    protected override async Task OnInitializedAsync()
+    {
+        await SetBusyAsync();
+        await ReadCurrentUser();
+
+        TResponseModel<string?> res = string.IsNullOrWhiteSpace(CurrentUserSession?.Email)
+        ? await StoreRepo.ReadParameterAsync<string?>(GlobalStaticCloudStorageMetadata.HomePagePublic)
+        : await StoreRepo.ReadParameterAsync<string?>(GlobalStaticCloudStorageMetadata.HomePagePrivate);
+
+        await SetBusyAsync(false);
+        if (!res.Success())
+            SnackBarRepo.ShowMessagesResponse(res.Messages);
+
+        _textValue = res.Response;
+    }
+
+#if DEBUG
+    bool IsDebug => true;
+#else
+    bool IsDebug => false;
+#endif
+}

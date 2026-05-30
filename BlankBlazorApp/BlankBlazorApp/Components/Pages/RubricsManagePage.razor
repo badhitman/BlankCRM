@@ -1,0 +1,10 @@
+@page "/rubrics-tools"
+
+@using BlazorLib.Components.Rubrics
+@using Microsoft.AspNetCore.Authorization
+@using SharedLib
+
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@attribute [Authorize(Roles = GlobalStaticConstantsRoles.Roles.Admin)]
+
+<RubricsParametersComponent />

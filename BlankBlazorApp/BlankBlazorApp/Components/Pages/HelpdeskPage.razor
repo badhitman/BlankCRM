@@ -1,0 +1,23 @@
+﻿@page "/help-desk/main-page"
+
+@using BlazorLib.Components.Helpdesk
+@using Microsoft.AspNetCore.Authorization
+@using SharedLib
+@using MudBlazor
+
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@attribute [Authorize]
+
+<MudTabs Outlined TabPanelsClass="pa-1">
+    <MudTabPanel ToolTip="Your personal requests" Text="My Issues" Icon="@Icons.Material.Filled.AllInbox">
+        <MyHelpdeskComponent />
+    </MudTabPanel>
+
+    <AuthorizeView Roles="@($"{string.Join(",", GlobalStaticConstantsRoles.Roles.AllHelpDeskRoles)},{GlobalStaticConstantsRoles.Roles.Admin}")">
+        <MudTabPanel ToolTip="Servicing incoming requests" Text="Customer requests" Icon="@Icons.Material.Filled.BugReport">
+            <MudPaper Class="ma-2" Elevation="3">
+                <HelpdeskJobComponent />
+            </MudPaper>
+        </MudTabPanel>
+    </AuthorizeView>
+</MudTabs>

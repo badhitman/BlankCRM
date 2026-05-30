@@ -1,0 +1,9 @@
+﻿@page "/help-desk/console"
+@using BlazorLib.Components.Helpdesk
+@using Microsoft.AspNetCore.Authorization
+@using SharedLib
+
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@attribute [Authorize(Roles = $"{GlobalStaticConstantsRoles.Roles.HelpDeskRubricsManage},{GlobalStaticConstantsRoles.Roles.Admin}")]
+
+<ConsoleHelpdeskComponent />

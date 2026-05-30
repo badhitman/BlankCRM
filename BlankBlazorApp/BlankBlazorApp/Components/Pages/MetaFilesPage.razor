@@ -1,0 +1,34 @@
+﻿@page "/meta-files/home/{SelectedAreas}"
+@page "/meta-files/home"
+
+@using BlazorLib.Components.MetaFiles
+@using Newtonsoft.Json
+@using Microsoft.AspNetCore.Authorization
+@using SharedLib
+
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@attribute [Authorize(Roles = $"{GlobalStaticConstantsRoles.Roles.Admin},{GlobalStaticConstantsRoles.Roles.Debug}")]
+
+<MetaFilesComponent SelectedAreas="SelectedAreasArr" />
+
+@code{
+    [Parameter]
+    public string? SelectedAreas { get; set; }
+
+    string[]? SelectedAreasArr;
+
+    protected override void OnInitialized()
+    {
+        if (!string.IsNullOrWhiteSpace(SelectedAreas))
+        {
+            try
+            {
+                SelectedAreasArr = JsonConvert.DeserializeObject<string[]>(SelectedAreas);
+            }
+            catch
+            {
+                
+            }
+        }
+    }
+}

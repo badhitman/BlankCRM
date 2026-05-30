@@ -1,0 +1,9 @@
+﻿@page "/articles"
+
+@using BlazorLib.Components.Articles
+@using Microsoft.AspNetCore.Authorization
+
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@attribute [Authorize]
+
+<ArticlesListComponent />

@@ -64,6 +64,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\Blazor\BlazorServerLib\BlazorWebLib.csproj" />
 		<ProjectReference Include="..\..\BlankCRM.ServiceDefaults\BlankCRM.ServiceDefaults.csproj" />
+		<ProjectReference Include="..\..\Blazor\Implements\BlazorOutersLib\BlazorOutersLib.csproj" />
 		<ProjectReference Include="..\..\RemoteCallLib\MQTTCallLib\MQTTCallLib.csproj" />
 		<ProjectReference Include="..\..\ServerLib\ServerLib.csproj" />
 		<ProjectReference Include="..\BlankBlazorApp.Client\BlankBlazorApp.Client.csproj" />
