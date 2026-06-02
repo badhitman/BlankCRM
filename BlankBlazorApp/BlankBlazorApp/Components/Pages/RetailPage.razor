@@ -6,13 +6,14 @@
 @using BlazorRetailLib.Components.Payments
 @using BlazorRetailLib.Components.Clients
 @using BlazorRetailLib.Components.Orders
+@using BlazorRetailLib.Components.Wallet
 @using MudBlazor
 @using Microsoft.AspNetCore.Authorization
 
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 @attribute [Authorize(Roles = $"{GlobalStaticConstantsRoles.Roles.Admin},{GlobalStaticConstantsRoles.Roles.Debug},{GlobalStaticConstantsRoles.Roles.RetailManage}")]
 
-<MudTabs @ref="_tabs" Elevation="2" Rounded ApplyEffectsToContainer TabPanelsClass="pa-1" ActivePanelIndexChanged="ActivePanelIndexChangedHandler">
+<MudTabs @ref="_tabs" Elevation="2" ApplyEffectsToContainer TabPanelsClass="pa-1" ActivePanelIndexChanged="ActivePanelIndexChangedHandler">
     <MudTabPanel Text="Заказы" ID="@nameof(RetailOrdersListComponent)">
         <RetailOrdersListComponent />
     </MudTabPanel>
@@ -32,6 +33,9 @@
         <Authorized>
             <MudTabPanel Text="Отчёты" ID="@nameof(MMMWrapperComponent)">
                 <MMMWrapperComponent />
+            </MudTabPanel>
+            <MudTabPanel Text="Типы кошельков" ID="@nameof(WalletRetailTypesComponent)">
+                <WalletRetailTypesComponent />
             </MudTabPanel>
         </Authorized>
     </AuthorizeView>
