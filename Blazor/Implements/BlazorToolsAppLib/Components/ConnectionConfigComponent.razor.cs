@@ -2,11 +2,12 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
+using BlazorLib;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using SharedLib;
 
-namespace BlazorLib.Components.ToolsApp;
+namespace BlazorToolsAppLib.Components;
 
 /// <summary>
 /// ConnectionConfigComponent

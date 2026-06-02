@@ -9,7 +9,7 @@ using MudBlazor;
 using Microsoft.Extensions.Options;
 using static MudBlazor.CategoryTypes;
 
-namespace BlazorLib.Components.ToolsApp;
+namespace BlazorToolsAppLib.Components;
 
 /// <summary>
 /// RowCommandComponent

@@ -26,6 +26,7 @@
     <Project Path="Blazor/Implements/BlazorRubricsLib/BlazorRubricsLib.csproj" />
     <Project Path="Blazor/Implements/BlazorStockSharpLib/BlazorStockSharpLib.csproj" />
     <Project Path="Blazor/Implements/BlazorTelegramLib/BlazorTelegramLib.csproj" />
+    <Project Path="Blazor/Implements/BlazorToolsAppLib/BlazorToolsAppLib.csproj" />
     <Project Path="Blazor/Implements/BlazorTraceHistoryViewLib/BlazorTraceHistoryViewLib.csproj" />
     <Project Path="Blazor/Implements/BlazorUsersLib/BlazorUsersLib.csproj" />
     <Project Path="Blazor/Implements/BlazorWarehouseLib/BlazorWarehouseLib.csproj" />

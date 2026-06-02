@@ -8,8 +8,9 @@ using Microsoft.Extensions.Logging;
 using System.Runtime.Versioning;
 using System.IO.Compression;
 using SharedLib;
+using BlazorLib;
 
-namespace BlazorLib.Components.ToolsApp;
+namespace BlazorToolsAppLib.Components;
 
 /// <summary>
 /// SyncManageComponent
