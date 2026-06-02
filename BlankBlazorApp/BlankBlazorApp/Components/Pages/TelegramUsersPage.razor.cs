@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components.QuickGrid;
 using Microsoft.AspNetCore.Components;
 using SharedLib;
 
-namespace BlazorLib.Components.Users.Pages;
+namespace BlankBlazorApp.Components.Pages;
 
 /// <summary>
 /// TelegramUsersPage

@@ -16,7 +16,10 @@
                     <MudChip Value="@pt.Id" Text="@pt.Name" />
                 }
             </MudChipSet>
-            <MudChip T="string" Icon="@(includeUnset? @Icons.Material.Filled.Check : "")" Selected=includeUnset OnClick="OnChipClicked" Color="Color.Default">Переводы</MudChip>
+            <MudChip T="string" Icon="@(includeUnset ? @Icons.Material.Filled.Check : "")"
+                     Selected=includeUnset
+                     OnClick="OnChipClicked"
+                     Color="Color.Default">Переводы</MudChip>
         </div>
     </div>
     <MudSpacer />
@@ -35,7 +38,8 @@
         <MudTh>Кошелёк</MudTh>
         <MudTh>Пользователь</MudTh>
         <MudTh>
-            <MudTableSortLabel T="WalletRetailReportRowModel" SortLabel="@(nameof(WalletRetailReportRowModel.Amount))">Сумма</MudTableSortLabel>
+            <MudTableSortLabel T="WalletRetailReportRowModel"
+                               SortLabel="@(nameof(WalletRetailReportRowModel.Amount))">Сумма</MudTableSortLabel>
         </MudTh>
     </HeaderContent>
     <RowTemplate>

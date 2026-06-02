@@ -23,7 +23,7 @@ public partial class MMMReportsComponent : BlazorBusyComponentBaseModel
     public MMMWrapperComponent? Owner { get; set; }
 
 
-    //PaymentsRetailReportComponent? _finReport;
+    PaymentsRetailReportComponent? _finReport;
     OffersOfOrdersRetailReportComponent? _retailReport;
     OffersOfDeliveriesRetailReportComponent? _delReport;
     MainRetailReportComponent? _mainReport;
