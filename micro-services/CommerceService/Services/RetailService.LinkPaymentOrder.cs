@@ -33,6 +33,19 @@ public partial class RetailService : IRetailService
         await context.PaymentsOrdersLinks.AddAsync(req.Payload, token);
         await context.SaveChangesAsync(token);
 
+
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(GlobalStaticConstantsTransmission.TransmissionQueues.CreatePaymentOrderLinkDocumentRetailReceive, req.SenderActionUserId, req.Payload);
+        TResponseModel<int> res = new()
+        {
+            Response = req.Payload.Id,
+            Messages = [new()
+             {
+                 TypeMessage = MessagesTypesEnum.Info,
+                 Text =$"Автоматическое создание для [order #{req.Payload.Id}]"
+             }]
+        };
+        await indexingRepo.SaveHistoryForReceiverAsync(trace.SetResponse(res), token);
+
         return new() { Response = req.Payload.Id };
     }
 
