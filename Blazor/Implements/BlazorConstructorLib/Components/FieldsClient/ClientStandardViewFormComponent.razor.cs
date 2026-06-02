@@ -51,7 +51,7 @@ public partial class ClientStandardViewFormComponent : BlazorBusyComponentBaseMo
     /// <summary>
     /// Доступ к перечню полей формы. Каждое поле формы добавляет себя к этому перечню при инициализации (в <c>OnInitialized()</c>) базового <cref name="FieldBaseClientComponent">компонента</cref>
     /// </summary>
-    protected List<FieldComponentBaseModel?> FieldsReferring = [];
+    protected List<FieldComponentRootModel?> FieldsReferring = [];
 
     /// <inheritdoc/>
     protected IEnumerable<EntryNestedModel> Directories = default!;

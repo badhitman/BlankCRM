@@ -60,3 +60,25 @@
         </ChildContent>
     </MudExpansionPanel>
 </MudExpansionPanels>
+@code {
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required ObjectKLADRModelDB ObjectKLADR { get; set; }
+
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required QueryNavKladrComponent Parent { get; set; }
+
+
+    bool Expanded = false;
+    CodeKladrModel? MetaData;
+
+    /// <inheritdoc/>
+    protected override Task OnInitializedAsync()
+    {
+        MetaData = CodeKladrModel.Build(ObjectKLADR.CODE);
+        return base.OnInitializedAsync();
+    }
+
+    void OnExpandedChanged(bool newVal) => Expanded = newVal;
+}

@@ -3,9 +3,9 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
-using BlazorLib.Components.Kladr;
 using BlazorLib;
 using SharedLib;
+using BlazorKladrLib.Components;
 
 namespace ToolsMauiApp.Components;
 

@@ -126,6 +126,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\Blazor\BlazorLib\BlazorLib.csproj" />
+		<ProjectReference Include="..\..\Blazor\Implements\BlazorKladrLib\BlazorKladrLib.csproj" />
 		<ProjectReference Include="..\..\Blazor\Implements\BlazorToolsAppLib\BlazorToolsAppLib.csproj" />
 		<ProjectReference Include="..\..\DBContextLibs\DbSqliteLib\DbSqliteLib.csproj" />
 		<ProjectReference Include="..\ToolsMauiLib\ToolsMauiLib.csproj" />

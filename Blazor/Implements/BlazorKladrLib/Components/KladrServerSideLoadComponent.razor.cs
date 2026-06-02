@@ -5,7 +5,7 @@
 using Microsoft.AspNetCore.Components;
 using SharedLib;
 
-namespace BlazorLib.Components.Kladr;
+namespace BlazorKladrLib.Components;
 
 /// <summary>
 /// KladrServerSideLoadComponent

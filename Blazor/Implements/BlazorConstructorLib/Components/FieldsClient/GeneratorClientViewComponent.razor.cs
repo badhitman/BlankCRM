@@ -12,7 +12,7 @@ namespace BlazorConstructorLib.Components.FieldsClient;
 /// <summary>
 /// Generator client view
 /// </summary>
-public partial class GeneratorClientViewComponent : FieldComponentBaseModel
+public partial class GeneratorClientViewComponent : FieldComponentRootModel
 {
     /// <inheritdoc/>
     [Parameter, EditorRequired]

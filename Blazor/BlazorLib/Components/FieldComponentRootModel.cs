@@ -6,14 +6,13 @@ using Microsoft.AspNetCore.Components;
 using BlazorLib.Components;
 using MudBlazor;
 using SharedLib;
-using BlazorLib;
 
-namespace BlazorConstructorLib.Components.FieldsClient;
+namespace BlazorLib;
 
 /// <summary>
 /// Базовая модель поля формы
 /// </summary>
-public abstract class FieldComponentBaseModel : BlazorBusyComponentBaseModel, IDomBaseComponent
+public abstract class FieldComponentRootModel : BlazorBusyComponentBaseModel, IDomBaseComponent
 {
     /// <inheritdoc/>
     [Inject]
@@ -55,7 +54,7 @@ public abstract class FieldComponentBaseModel : BlazorBusyComponentBaseModel, ID
     /// Доступ к перечню полей формы. Каждое поле формы добавляет себя к этому перечню при инициализации (в <c>OnInitialized()</c>) базового <cref name="FieldBaseClientComponent">компонента</cref>
     /// </summary>
     [Parameter]
-    public List<FieldComponentBaseModel?>? FieldsReferring { get; set; }
+    public List<FieldComponentRootModel?>? FieldsReferring { get; set; }
 
     /// <summary>
     /// Номер строки таблицы от 1 и больше.

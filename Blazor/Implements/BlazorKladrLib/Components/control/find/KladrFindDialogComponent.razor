@@ -13,3 +13,15 @@
         <MudButton OnClick="Cancel">Cancel</MudButton>
     </DialogActions>
 </MudDialog>
+@code {
+    /// <inheritdoc/>
+    [CascadingParameter]
+    IMudDialogInstance MudDialog { get; set; } = default!;
+
+    /// <inheritdoc/>
+    [Parameter]
+    public string? FindText { get; set; }
+
+
+    private void Cancel() => MudDialog.Cancel();
+}

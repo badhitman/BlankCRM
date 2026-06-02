@@ -12,7 +12,7 @@ namespace BlazorConstructorLib.Components.FieldsClient;
 /// <summary>
 /// Field directory client
 /// </summary>
-public partial class FieldDirectoryClientComponent : FieldComponentBaseModel
+public partial class FieldDirectoryClientComponent : FieldComponentRootModel
 {
     /// <inheritdoc/>
     [Parameter, EditorRequired]

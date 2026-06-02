@@ -1,3 +1,4 @@
+@using BlazorKladrLib.Components.main
 @using MudBlazor
 
 @inherits KladrNavBaseNodeComponent
@@ -26,3 +27,30 @@
         <span title="Код ИФНС" class="badge text-bg-success me-1">@($"{nameof(RootKLADRModelDB.GNINMB)}: {Payload.GNINMB}")</span>
     }
 </div>
+@code{
+    [Inject]
+    IJSRuntime JSRepo { get; set; } = default!;
+
+
+    /// <inheritdoc/>
+    [Parameter]
+    public bool HideMapLink { get; set; }
+
+    /// <summary>
+    /// Почтовый индекс
+    /// </summary>
+    [Parameter, EditorRequired]
+    public string? PostIndex { get; set; }
+
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required QueryNavKladrComponent Owner { get; set; }
+
+    /// <inheritdoc/>
+    [CascadingParameter, EditorRequired]
+    public required IReadOnlyCollection<string>? SelectedFieldsView { get; set; }
+
+
+    async Task GoToMap()
+        => await JSRepo.InvokeVoidAsync("open", $"https://yandex.ru/maps?text={string.Join(", ", GetNamesScheme(Owner).Select(x => x.ToString()))}", "_blank");
+}

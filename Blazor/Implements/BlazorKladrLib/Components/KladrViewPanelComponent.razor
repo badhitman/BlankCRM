@@ -1,5 +1,5 @@
-@using BlazorLib.Components.Kladr.control.find
-@using BlazorLib.Components.Kladr.main
+@using BlazorKladrLib.Components.control.find
+@using BlazorKladrLib.Components.main
 @using MudBlazor
 
 <div class="card mb-2">
@@ -24,3 +24,20 @@
 <CascadingValue Value="SelectedFieldsView">
     <QueryNavKladrComponent @ref="kladrRef" Parent="null" />
 </CascadingValue>
+@code {
+    IReadOnlyCollection<string>? _selectedFieldsView;
+    /// <summary>
+    /// Отображаемы поля/колонки
+    /// </summary>
+    IReadOnlyCollection<string>? SelectedFieldsView
+    {
+        get => _selectedFieldsView;
+        set
+        {
+            _selectedFieldsView = value;
+            kladrRef?.StateHasChangedCall();
+        }
+    }
+
+    QueryNavKladrComponent? kladrRef;
+}

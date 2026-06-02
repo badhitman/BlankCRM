@@ -2,10 +2,11 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
+using BlazorLib;
 using Microsoft.AspNetCore.Components;
 using SharedLib;
 
-namespace BlazorLib.Components.Kladr.main;
+namespace BlazorKladrLib.Components.main;
 
 /// <summary>
 /// KladrNavBaseNodeComponent

@@ -2,9 +2,10 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
+using BlazorLib;
 using SharedLib;
 
-namespace BlazorLib.Components.Kladr;
+namespace BlazorKladrLib.Components;
 
 /// <summary>
 /// KladrAboutAbstractComponent
