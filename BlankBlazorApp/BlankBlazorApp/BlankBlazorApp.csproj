@@ -73,6 +73,7 @@
 		<ProjectReference Include="..\..\Blazor\Implements\BlazorRubricsLib\BlazorRubricsLib.csproj" />
 		<ProjectReference Include="..\..\Blazor\Implements\BlazorStockSharpLib\BlazorStockSharpLib.csproj" />
 		<ProjectReference Include="..\..\Blazor\Implements\BlazorTelegramLib\BlazorTelegramLib.csproj" />
+		<ProjectReference Include="..\..\Blazor\Implements\BlazorTraceHistoryViewLib\BlazorTraceHistoryViewLib.csproj" />
 		<ProjectReference Include="..\..\Blazor\Implements\BlazorUsersLib\BlazorUsersLib.csproj" />
 		<ProjectReference Include="..\..\Blazor\Implements\BlazorWarehouseLib\BlazorWarehouseLib.csproj" />
 		<ProjectReference Include="..\..\RemoteCallLib\MQTTCallLib\MQTTCallLib.csproj" />

@@ -2,20 +2,21 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
+using BlazorLib;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using SharedLib;
 
-namespace BlazorLib.Components.TraceHistoryView;
+namespace BlazorTraceHistoryViewLib.Components;
 
 /// <summary>
-/// HistoryOrdersWrapperComponent
+/// HistoryDeliveriesWrapperComponent
 /// </summary>
-public partial class HistoryOrdersWrapperComponent : HistoryOwnerBaseComponent
+public partial class HistoryDeliveriesWrapperComponent : HistoryOwnerBaseComponent
 {
     /// <inheritdoc/>
     [Parameter]
-    public int OrderId { get; set; }
+    public int DeliveryId { get; set; }
 
     /// <inheritdoc/>
     public override async Task<TableData<TraceReceiverRecord>> ServerReload(DateRange? dateRangePeriod, TableState state, CancellationToken token)
@@ -29,11 +30,11 @@ public partial class HistoryOrdersWrapperComponent : HistoryOwnerBaseComponent
             {
                 Start = dateRangePeriod?.Start,
                 End = dateRangePeriod?.End,
-                FilterId = OrderId,
+                FilterId = DeliveryId,
             }
         };
         await SetBusyAsync(token: token);
-        TPaginationResponseStandardModel<TraceReceiverRecord> res = await IndexingRepo.SelectHistoryForOrdersRetailAsync(req, token);
+        TPaginationResponseStandardModel<TraceReceiverRecord> res = await IndexingRepo.SelectHistoryForDeliveriesRetailAsync(req, token);
         await SetBusyAsync(false, token: token);
         return new TableData<TraceReceiverRecord>()
         {

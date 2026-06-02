@@ -33,7 +33,6 @@ public partial class RetailService : IRetailService
         await context.PaymentsOrdersLinks.AddAsync(req.Payload, token);
         await context.SaveChangesAsync(token);
 
-
         TraceReceiverRecord trace = TraceReceiverRecord.Build(GlobalStaticConstantsTransmission.TransmissionQueues.CreatePaymentOrderLinkDocumentRetailReceive, req.SenderActionUserId, req.Payload);
         TResponseModel<int> res = new()
         {

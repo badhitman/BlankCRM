@@ -2,25 +2,21 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
-using Microsoft.AspNetCore.Components;
+using BlazorLib;
 using MudBlazor;
 using SharedLib;
 
-namespace BlazorLib.Components.TraceHistoryView;
+namespace BlazorTraceHistoryViewLib.Components;
 
 /// <summary>
-/// HistoryDeliveriesWrapperComponent
+/// HistoryMainWrapperComponent
 /// </summary>
-public partial class HistoryDeliveriesWrapperComponent : HistoryOwnerBaseComponent
+public partial class HistoryMainWrapperComponent : HistoryOwnerBaseComponent
 {
-    /// <inheritdoc/>
-    [Parameter]
-    public int DeliveryId { get; set; }
-
     /// <inheritdoc/>
     public override async Task<TableData<TraceReceiverRecord>> ServerReload(DateRange? dateRangePeriod, TableState state, CancellationToken token)
     {
-        TPaginationRequestStandardModel<SelectHistoryElementsRequestModel> req = new()
+        TPaginationRequestStandardModel<SelectHistoryReceivesRequestModel> req = new()
         {
             PageNum = state.Page,
             PageSize = state.PageSize,
@@ -29,11 +25,10 @@ public partial class HistoryDeliveriesWrapperComponent : HistoryOwnerBaseCompone
             {
                 Start = dateRangePeriod?.Start,
                 End = dateRangePeriod?.End,
-                FilterId = DeliveryId,
             }
         };
         await SetBusyAsync(token: token);
-        TPaginationResponseStandardModel<TraceReceiverRecord> res = await IndexingRepo.SelectHistoryForDeliveriesRetailAsync(req, token);
+        TPaginationResponseStandardModel<TraceReceiverRecord> res = await IndexingRepo.SelectHistoryBaseAsync(req, token);
         await SetBusyAsync(false, token: token);
         return new TableData<TraceReceiverRecord>()
         {
