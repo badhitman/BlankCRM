@@ -3,11 +3,11 @@
 ////////////////////////////////////////////////
 
 using BlazorLib;
-using BlazorRetailLib.Components.Reports.test;
+using BlazorRetailGTCLib.Components.Reports.test;
 using Microsoft.AspNetCore.Components;
 using SharedLib;
 
-namespace BlazorRetailLib.Components.Reports.mmm;
+namespace BlazorRetailGTCLib.Components.Reports.mmm;
 
 /// <summary>
 /// MMMReportsComponent

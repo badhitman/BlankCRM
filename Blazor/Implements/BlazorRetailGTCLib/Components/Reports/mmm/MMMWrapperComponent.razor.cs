@@ -7,7 +7,7 @@ using System.Globalization;
 using SharedLib;
 using BlazorLib;
 
-namespace BlazorRetailLib.Components.Reports.mmm;
+namespace BlazorRetailGTCLib.Components.Reports.mmm;
 
 /// <summary>
 /// MMMWrapperComponent

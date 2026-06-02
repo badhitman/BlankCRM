@@ -20,6 +20,7 @@
     <Project Path="Blazor/Implements/BlazorConstructorLib/BlazorConstructorLib.csproj" />
     <Project Path="Blazor/Implements/BlazorHelpdeskLib/BlazorHelpdeskLib.csproj" />
     <Project Path="Blazor/Implements/BlazorOutersLib/BlazorOutersLib.csproj" />
+    <Project Path="Blazor/Implements/BlazorRetailGTCLib/BlazorRetailGTCLib.csproj" />
     <Project Path="Blazor/Implements/BlazorRetailLib/BlazorRetailLib.csproj" />
     <Project Path="Blazor/Implements/BlazorRubricsLib/BlazorRubricsLib.csproj" />
     <Project Path="Blazor/Implements/BlazorStockSharpLib/BlazorStockSharpLib.csproj" />

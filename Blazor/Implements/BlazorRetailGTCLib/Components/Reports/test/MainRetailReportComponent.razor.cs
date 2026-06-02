@@ -3,14 +3,14 @@
 ////////////////////////////////////////////////
 
 using static SharedLib.GlobalStaticConstantsRoutes;
-using BlazorRetailLib.Components.Reports.mmm;
+using BlazorRetailGTCLib.Components.Reports.mmm;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using MudBlazor;
 using SharedLib;
 using BlazorLib;
 
-namespace BlazorRetailLib.Components.Reports.test;
+namespace BlazorRetailGTCLib.Components.Reports.test;
 
 /// <summary>
 /// MainRetailReportComponent

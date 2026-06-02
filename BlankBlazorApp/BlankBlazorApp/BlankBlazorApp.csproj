@@ -69,7 +69,7 @@
 		<ProjectReference Include="..\..\Blazor\Implements\BlazorConstructorLib\BlazorConstructorLib.csproj" />
 		<ProjectReference Include="..\..\Blazor\Implements\BlazorHelpdeskLib\BlazorHelpdeskLib.csproj" />
 		<ProjectReference Include="..\..\Blazor\Implements\BlazorOutersLib\BlazorOutersLib.csproj" />
-		<ProjectReference Include="..\..\Blazor\Implements\BlazorRetailLib\BlazorRetailLib.csproj" />
+		<ProjectReference Include="..\..\Blazor\Implements\BlazorRetailGTCLib\BlazorRetailGTCLib.csproj" />
 		<ProjectReference Include="..\..\Blazor\Implements\BlazorRubricsLib\BlazorRubricsLib.csproj" />
 		<ProjectReference Include="..\..\Blazor\Implements\BlazorStockSharpLib\BlazorStockSharpLib.csproj" />
 		<ProjectReference Include="..\..\Blazor\Implements\BlazorTelegramLib\BlazorTelegramLib.csproj" />

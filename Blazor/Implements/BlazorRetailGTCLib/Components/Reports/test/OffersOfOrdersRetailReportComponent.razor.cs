@@ -3,12 +3,12 @@
 ////////////////////////////////////////////////
 
 using BlazorLib;
-using BlazorRetailLib.Components.Reports.mmm;
+using BlazorRetailGTCLib.Components.Reports.mmm;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using SharedLib;
 
-namespace BlazorRetailLib.Components.Reports.test;
+namespace BlazorRetailGTCLib.Components.Reports.test;
 
 /// <summary>
 /// OffersOfOrdersRetailReportComponent
