@@ -16,6 +16,7 @@
   </Folder>
   <Folder Name="/libs/blazor/implements/">
     <Project Path="Blazor/Implements/BlazorArticlesLib/BlazorArticlesLib.csproj" />
+    <Project Path="Blazor/Implements/BlazorBankLib/BlazorBankLib.csproj" />
     <Project Path="Blazor/Implements/BlazorCommerceLib/BlazorCommerceLib.csproj" />
     <Project Path="Blazor/Implements/BlazorConstructorLib/BlazorConstructorLib.csproj" />
     <Project Path="Blazor/Implements/BlazorHelpdeskLib/BlazorHelpdeskLib.csproj" />

@@ -2,11 +2,13 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
+using BlazorLib;
+using BlazorLib.Components;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using SharedLib;
 
-namespace BlazorLib.Components.Bank;
+namespace BlazorBankLib.Components;
 
 /// <summary>
 /// CustomersBanksTableComponent

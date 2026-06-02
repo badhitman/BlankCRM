@@ -2,22 +2,23 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
+using BlazorLib;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using SharedLib;
 
-namespace BlazorLib.Components.Bank;
+namespace BlazorBankLib.Components;
 
 /// <summary>
-/// TBankAccountsComponent
+/// TransfersBanksTableComponent
 /// </summary>
-public partial class TBankAccountsComponent
+public partial class TransfersBanksTableComponent
 {
     [Inject]
     IBankService BankRepo { get; set; } = default!;
 
 
-    MudTable<TBankAccountModelDB>? table;
+    MudTable<BankTransferModelDB>? table;
     string? searchString;
 
 
@@ -28,12 +29,13 @@ public partial class TBankAccountsComponent
             await table.ReloadServerData();
     }
 
+
     /// <summary>
     /// Here we simulate getting the paged, filtered and ordered data from the server, with a token for canceling this request
     /// </summary>
-    private async Task<TableData<TBankAccountModelDB>> ServerReload(TableState state, CancellationToken token)
+    private async Task<TableData<BankTransferModelDB>> ServerReload(TableState state, CancellationToken token)
     {
-        TPaginationRequestStandardModel<SelectAccountsRequestModel> req = new()
+        TPaginationRequestStandardModel<SelectTransfersBanksRequestModel> req = new()
         {
             FindQuery = searchString,
             PageNum = state.Page,
@@ -41,7 +43,7 @@ public partial class TBankAccountsComponent
             SortBy = state.SortLabel,
             SortingDirection = state.SortDirection.Convert()
         };
-        TPaginationResponseStandardModel<TBankAccountModelDB> res = await BankRepo.AccountsTBankSelectAsync(req, token);
-        return new TableData<TBankAccountModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };
+        TPaginationResponseStandardModel<BankTransferModelDB> res = await BankRepo.BanksTransfersSelectAsync(req, token);
+        return new TableData<BankTransferModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };
     }
 }

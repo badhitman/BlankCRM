@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<WarningsAsErrors>$(WarningsAsErrors);NU1605;</WarningsAsErrors>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<WarningsAsErrors>$(WarningsAsErrors);NU1605;</WarningsAsErrors>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<SupportedPlatform Include="browser" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.8" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="10.0.8" />
+		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="10.0.8" />
+		<PackageReference Include="MudBlazor" Version="9.5.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid" Version="10.0.8" />
+		<PackageReference Include="TinyMCE.Blazor" Version="2.2.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\CodegeneratorLib\CodegeneratorLib.csproj" />
+		<ProjectReference Include="..\..\BlazorLib\BlazorLib.csproj" />
+	</ItemGroup>
+
+</Project>
