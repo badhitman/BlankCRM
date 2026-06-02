@@ -1,0 +1,64 @@
+﻿@using BlazorRubricsLib.Components
+@using Microsoft.Extensions.Options
+@using MudBlazor
+@using static SharedLib.GlobalStaticConstantsRoutes
+@inherits BlazorBusyComponentBaseAuthModel
+
+<MudTabs Elevation="2" Rounded ApplyEffectsToContainer @bind-ActivePanelIndex="WrapperActiveIndex" Style="width: 100%;" TabPanelsClass="pa-1">
+    <MudTabPanel Text="Настройки">
+        <CascadingValue Value="GetMode">
+            <NomenclatureEditComponent NomenclatureId="NomenclatureId" />
+        </CascadingValue>
+    </MudTabPanel>
+    <AuthorizeView Roles="@GlobalStaticConstantsRoles.Roles.Admin">
+        <Authorized>
+            <MudTabPanel Text="Заказы">
+                <OrdersJournalComponent NomenclatureFilter="NomenclatureId" />
+            </MudTabPanel>
+            <MudTabPanel Disabled="@(NomenclatureId < 1 || IsBusyProgress)" Text="Категории" Style="width: 100%;">
+                <div class="card">
+                    <div class="card-body">
+                        <h6 class="card-title">Категории</h6>
+                        @if (CommerceConf.Value.NomenclaturesRubricsPrefixes?.Any(x => !string.IsNullOrWhiteSpace(x)) != true)
+                        {
+                            <RubricsManageComponent TEntity="RubricNodeBodyNomenclatureComponent"
+                                                    FullChildsLoad
+                                                    @ref="rmRef"
+                                                    ContextName="@($"{Routes.GOODS_CONTROLLER_NAME}-{Routes.CATEGORIES_CONTROLLER_NAME}")"
+                                                    SelectedValuesChanged="@(new TreeViewOptionsHandler() { SelectedNodes = SelectedNodesRead(), SelectedValuesChangedHandler = SelectedRubricsChange })" />
+                        }
+                        else
+                        {
+                            <MudTabs Outlined
+                                     Position="@Position.Left"
+                                     Rounded Border ApplyEffectsToContainer
+                                     @bind-ActivePanelIndex="GoodsRubricsActiveIndex"
+                                     @ref="panelRef"
+                                     Style="width: 100%;"
+                                     TabPanelsClass="pa-1">
+                                <MudTabPanel Text="По умолчанию" Style="width: 100%;">
+                                    <RubricsManageComponent TEntity="RubricNodeBodyNomenclatureComponent"
+                                                            FullChildsLoad
+                                                            @ref="rmRef"
+                                                            ContextName="@($"{Routes.GOODS_CONTROLLER_NAME}-{Routes.CATEGORIES_CONTROLLER_NAME}")"
+                                                            SelectedValuesChanged="@(new TreeViewOptionsHandler() { SelectedNodes = SelectedNodesRead(), SelectedValuesChangedHandler = SelectedRubricsChange })" />
+                                </MudTabPanel>
+                                @foreach (string _prefixName in CommerceConf.Value.NomenclaturesRubricsPrefixes)
+                                {
+                                    <MudTabPanel Text="@_prefixName" ID="_prefixName" Style="width: 100%;">
+                                        <RubricsManageComponent TEntity="RubricNodeBodyNomenclatureComponent"
+                                                                FullChildsLoad
+                                                                @ref="rmRef"
+                                                                ContextName="@($"{Routes.GOODS_CONTROLLER_NAME}-{Routes.CATEGORIES_CONTROLLER_NAME}")"
+                                                                PrefixName="@_prefixName"
+                                                                SelectedValuesChanged="@(new TreeViewOptionsHandler() { SelectedNodes = SelectedNodesRead(), SelectedValuesChangedHandler = SelectedRubricsChange })" />
+                                    </MudTabPanel>
+                                }
+                            </MudTabs>
+                        }
+                    </div>
+                </div>
+            </MudTabPanel>
+        </Authorized>
+    </AuthorizeView>
+</MudTabs>

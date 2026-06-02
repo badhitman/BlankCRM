@@ -1,0 +1,23 @@
+﻿
+@page "/questionnaire/session/protected/{DocumentId:int}"
+@using BlazorConstructorLib.Components
+
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@inherits BlazorBusyComponentBaseAuthModel
+
+@attribute [Authorize]
+
+<span>Опрос/анкета</span>
+
+@if (IsBusyProgress)
+{
+    <div class="text-center">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+}
+else
+{
+    <DocumentClientViewComponent SessionOfDocumentData="SessionDocument" CanEdit ReloadSessionHandler="ReloadHandler" />
+}

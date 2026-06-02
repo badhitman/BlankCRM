@@ -64,7 +64,17 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\Blazor\BlazorServerLib\BlazorWebLib.csproj" />
 		<ProjectReference Include="..\..\BlankCRM.ServiceDefaults\BlankCRM.ServiceDefaults.csproj" />
+		<ProjectReference Include="..\..\Blazor\Implements\BlazorArticlesLib\BlazorArticlesLib.csproj" />
+		<ProjectReference Include="..\..\Blazor\Implements\BlazorCommerceLib\BlazorCommerceLib.csproj" />
+		<ProjectReference Include="..\..\Blazor\Implements\BlazorConstructorLib\BlazorConstructorLib.csproj" />
+		<ProjectReference Include="..\..\Blazor\Implements\BlazorHelpdeskLib\BlazorHelpdeskLib.csproj" />
 		<ProjectReference Include="..\..\Blazor\Implements\BlazorOutersLib\BlazorOutersLib.csproj" />
+		<ProjectReference Include="..\..\Blazor\Implements\BlazorRetailLib\BlazorRetailLib.csproj" />
+		<ProjectReference Include="..\..\Blazor\Implements\BlazorRubricsLib\BlazorRubricsLib.csproj" />
+		<ProjectReference Include="..\..\Blazor\Implements\BlazorStockSharpLib\BlazorStockSharpLib.csproj" />
+		<ProjectReference Include="..\..\Blazor\Implements\BlazorTelegramLib\BlazorTelegramLib.csproj" />
+		<ProjectReference Include="..\..\Blazor\Implements\BlazorUsersLib\BlazorUsersLib.csproj" />
+		<ProjectReference Include="..\..\Blazor\Implements\BlazorWarehouseLib\BlazorWarehouseLib.csproj" />
 		<ProjectReference Include="..\..\RemoteCallLib\MQTTCallLib\MQTTCallLib.csproj" />
 		<ProjectReference Include="..\..\ServerLib\ServerLib.csproj" />
 		<ProjectReference Include="..\BlankBlazorApp.Client\BlankBlazorApp.Client.csproj" />

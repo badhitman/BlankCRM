@@ -1,0 +1,360 @@
+﻿@inherits BlazorBusyComponentBaseModel
+
+@using BlazorLib.Components.ParametersShared
+@using BlazorRubricsLib.Components
+@using MudBlazor
+
+<style>
+    #pre-paid-order label {
+        margin-bottom: unset;
+    }
+</style>
+
+<div class="row row-cols-1 row-cols-md-3 g-1 mb-2">
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <MudDateRangePicker PickerVariant="@PickerVariant.Inline"
+                                    @bind-DateRange="@DateRangeProp"
+                                    Variant="Variant.Outlined"
+                                    Label="Период"
+                                    Disabled=@(Owner is not null)
+                                    Clearable=@(Owner is null) />
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <AuthorizeView Context="col" Roles="@($"{GlobalStaticConstantsRoles.Roles.Admin}")">
+                    <Authorized>
+                        <DecimalParameterStorageComponent Label="Офисные"
+                                                          InitValueIfNotExist=540
+                                                          KeyStorage="GlobalStaticCloudStorageMetadata.BonusAmountStorageMetadata" />
+                    </Authorized>
+                    <NotAuthorized>
+                        <DecimalParameterStorageComponent Label="Офисные"
+                                                          InitValueIfNotExist=540
+                                                          IsDisabledInput
+                                                          KeyStorage="GlobalStaticCloudStorageMetadata.BonusAmountStorageMetadata" />
+                    </NotAuthorized>
+                </AuthorizeView>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card">
+            <div class="card-body" id="pre-paid-order">
+                <AuthorizeView Context="col" Roles="@($"{GlobalStaticConstantsRoles.Roles.Admin}")">
+                    <Authorized>
+                        <RubricParameterStorageComponent Label="Предоплаченные"
+                                                         SetValueEvent="PrePaidTypePaymentSetHandle"
+                                                         KeyStorage="GlobalStaticCloudStorageMetadata.RubricPaymentTypeOuter" />
+                    </Authorized>
+                    <NotAuthorized>
+                        <RubricParameterStorageComponent Label="Предоплаченные"
+                                                         SetValueEvent="PrePaidTypePaymentSetHandle"
+                                                         IsDisabledInput
+                                                         KeyStorage="GlobalStaticCloudStorageMetadata.RubricPaymentTypeOuter" />
+                    </NotAuthorized>
+                </AuthorizeView>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (IsBusyProgress || ReportData is null)
+{
+    <MudProgressLinear Color="Color.Primary" Indeterminate Class="my-3" data-cn="@this.GetType().Name" />
+}
+else
+{
+    <MudTabs Elevation="2" Rounded ApplyEffectsToContainer TabPanelsClass="pa-1">
+        <MudTabPanel Text="Сводка">
+            <MudCard>
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.h6">
+                            Всего заказов выполнено [@ReportData.DoneOrdersCount шт.] на сумму [@ReportData.DoneOrdersSumAmount.ToString("C")]
+                            <span class="ms-2">(@(Math.Round((ReportData.DoneOrdersSumAmount / 120), 2).ToString("C")))</span>
+                        </MudText>
+                    </CardHeaderContent>
+                    <CardHeaderActions>
+                        <MudIconButton Icon="@Icons.Material.Filled.Cached" Color="Color.Default" OnClick="ReloadServerData" title="Перезагрузить данные с сервера" />
+                        <MudIconButton Icon="@Icons.Material.Filled.Save" Color="Color.Default" OnClick="SaveReport" title="Скачать отчёт как файл" />
+                    </CardHeaderActions>
+                </MudCardHeader>
+                <MudCardContent>
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <th scope="row">Оплачено "На сайте"</th>
+                                <td>
+                                    @PaidOnSitePaymentsSumAmount.ToString("C")
+                                    [<code>x @PaidOnSitePaymentsCount шт.</code>]
+                                    <span class="ms-2">(@(Math.Round((PaidOnSitePaymentsSumAmount / 120), 2).ToString("C")))</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Другое</th>
+                                <td>
+                                    @((PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount).ToString("C"))
+                                    [<code>x @(PaidNoSitePaymentsCount + ReportData.ConversionsCount) шт.</code>]
+                                    <span class="ms-2">(@(Math.Round(((PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount) / 120), 2).ToString("C")))</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">&nbsp;&nbsp;&nbsp;&nbsp;Перевод/конвертация (поступило)</th>
+                                <td>
+                                    @ReportData.ConversionsSumAmount.ToString("C")
+                                    [<code>x @ReportData.ConversionsCount шт.</code>]
+                                    <span class="me-2">(@(Math.Round((ReportData.ConversionsSumAmount / 120), 2)))</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">&nbsp;&nbsp;&nbsp;&nbsp;Платежи</th>
+                                <td>
+                                    @PaidNoSitePaymentsSumAmount.ToString("C")
+                                    [<code>x @PaidNoSitePaymentsCount шт.</code>]
+                                    <span class="ms-2">(@(Math.Round((PaidNoSitePaymentsSumAmount / 120), 2).ToString("C")))</span>
+                                </td>
+                            </tr>
+                            @foreach (IGrouping<int, PaymentOrderRetailModel> _gp in PaidNoSitePayments.GroupBy(x => x.TypePayment))
+                            {
+                                decimal _sum = _gp.Sum(y => y.AmountPayment);
+                                <tr>
+                                    <th scope="row">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@AllPaymentsTypes.First(x => x.Id == _gp.Key).Name</th>
+                                    <td>
+                                        @_sum.ToString("C")
+                                        [<code>x @_gp.Count() шт.</code>]
+                                        <span class="ms-2">(@(Math.Round((_sum / 120), 2).ToString("C")))</span>
+                                    </td>
+                                </tr>
+                            }
+                            <tr>
+                                <th scope="row">
+                                    <div class="d-flex flex-row-reverse">
+                                        Итого:
+                                    </div>
+                                </th>
+                                <td>
+                                    @(Math.Round(PaidOnSitePaymentsSumAmount + PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount, 2).ToString("C"))
+                                    [<code class="me-2">x @(PaidOnSitePaymentsCount + PaidNoSitePaymentsCount + ReportData.ConversionsCount) шт.</code>]
+                                    <span>
+                                        (@(Math.Round((PaidOnSitePaymentsSumAmount + PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount) / 120, 2).ToString("C")))
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <hr />
+                    @if (_bonusAmount > 0)
+                    {
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <th scope="row">Офисные за онлайн контракты</th>
+                                    <td>
+                                        @Math.Round((decimal)(_bonusAmount * (decimal)0.1) * (PaidOnSitePaymentsSumAmount * (decimal)0.1) / 120, 2).ToString("C")
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Офисные при оплате на складе (+переводы/конвертации)</th>
+                                    <td>
+                                        @Math.Round(((decimal)(_bonusAmount * (decimal)0.1) * ((((ReportData.DoneOrdersSumAmount - PaidOnSitePaymentsSumAmount))) * (decimal)0.1) / 120), 2).ToString("C")
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row"><div class="d-flex flex-row-reverse">Итого:</div></th>
+                                    <td>
+                                        @Math.Round(((decimal)(_bonusAmount * (decimal)0.1) * (PaidOnSitePaymentsSumAmount * (decimal)0.1) / 120) + (((decimal)(_bonusAmount * (decimal)0.1) * ((((ReportData.DoneOrdersSumAmount - PaidOnSitePaymentsSumAmount))) * (decimal)0.1) / 120)), 2).ToString("C")
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <hr />
+                        <p class="lead">К оплате:</p>
+                        <MudSimpleTable Dense Hover Bordered Striped Style="overflow-x: auto;">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Сумма заявок:</td>
+                                    <td>@(Math.Round((ReportData.DoneOrdersSumAmount - PaidOnSitePaymentsSumAmount), 2).ToString("C"))</td>
+                                </tr>
+                                <tr>
+                                    <td>минус [офисные при оплате на складе]</td>
+                                    <td>@((Math.Round((decimal)(_bonusAmount * (decimal)0.1) * (((ReportData.DoneOrdersSumAmount - PaidOnSitePaymentsSumAmount) * (decimal)0.1) / 120), 2)).ToString("C"))</td>
+                                </tr>
+                                <tr>
+                                    <td>минус [офисные за онлайн контракты]</td>
+                                    <td>@((Math.Round((decimal)(_bonusAmount * (decimal)0.1) * (PaidOnSitePaymentsSumAmount * (decimal)0.1) / 120, 2)).ToString("C"))</td>
+                                </tr>
+                                <tr>
+                                    <td>минус [перевод в компанию бонусов]</td>
+                                    <td>@(TransferBonusesCompany * 42)</td>
+                                </tr>
+                                <tr>
+                                    <td>минус [перевод в компанию на расчетный счет]</td>
+                                    <td>@TransferToCompanyBankAccount.ToString("C")</td>
+                                </tr>
+                                <tr>
+                                    <td>плюс [долг]</td>
+                                    <td>@Debt.ToString("C")</td>
+                                </tr>
+                                <tr>
+                                    <td>минус [оплата наличными]</td>
+                                    <td>@CashPayment.ToString("C")</td>
+                                </tr>
+                                <tr>
+                                    <td>Итого:</td>
+                                    <td>@(Math.Round(((ReportData.DoneOrdersSumAmount - PaidOnSitePaymentsSumAmount) - (((decimal)(_bonusAmount * (decimal)0.1) * ((((ReportData.DoneOrdersSumAmount - PaidOnSitePaymentsSumAmount))) * (decimal)0.1) / 120))) - ((decimal)(_bonusAmount * (decimal)0.1) * (PaidOnSitePaymentsSumAmount * (decimal)0.1) / 120) - (TransferBonusesCompany * 42) - TransferToCompanyBankAccount + Debt - CashPayment, 2).ToString("C"))</td>
+                                </tr>
+                            </tbody>
+                        </MudSimpleTable>
+                        <hr />
+                    }
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Value</th>
+                                <th scope="col">Note</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">Перевод в компанию на расчетный счет</th>
+                                <td>
+                                    <input type="number"
+                                           class="form-control"
+                                           @bind-value:event="oninput"
+                                           @bind-value="TransferToCompanyBankAccount" />
+                                </td>
+                                <td>
+                                    <input type="text"
+                                           class="form-control"
+                                           @bind-value:event="oninput"
+                                           @bind-value="TransferToCompanyBankAccountFootNote" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Перевод в компанию бонусов</th>
+                                <td>
+
+                                    <div class="input-group">
+                                        <input type="number"
+                                               class="form-control"
+                                               @bind-value:event="oninput"
+                                               @bind-value="TransferBonusesCompany" />
+                                        <span class="input-group-text" id="basic-addon2">(@(TransferBonusesCompany * 42))</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <input type="text"
+                                           class="form-control"
+                                           @bind-value:event="oninput"
+                                           @bind-value="TransferBonusesCompanyFootNote" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Оплата наличными</th>
+                                <td>
+                                    <input type="number"
+                                           class="form-control"
+                                           @bind-value:event="oninput"
+                                           @bind-value="CashPayment" />
+                                </td>
+                                <td>
+                                    <input type="text"
+                                           class="form-control"
+                                           @bind-value:event="oninput"
+                                           @bind-value="CashPaymentFootNote" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Долг</th>
+                                <td>
+                                    <input type="number"
+                                           class="form-control"
+                                           @bind-value:event="oninput"
+                                           @bind-value="Debt" />
+                                </td>
+                                <td>
+                                    <input type="text"
+                                           class="form-control"
+                                           @bind-value:event="oninput"
+                                           @bind-value="DebtFootNote" />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </MudCardContent>
+            </MudCard>
+        </MudTabPanel>
+        <MudTabPanel Text="Данные">
+            <MudTable Dense Hover ServerData="ServerReload"
+                      SortLabel="@(nameof(RowOfOrderDocumentModelDB.Nomenclature.Name))"
+                      Loading="IsBusyProgress">
+                <ToolBarContent>
+
+                    <MudSpacer />
+
+                </ToolBarContent>
+                <HeaderContent>
+                    <MudTh>Document</MudTh>
+                    <MudTh>Rows</MudTh>
+                    <MudTh>Conversions</MudTh>
+                    <MudTh>Payments</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Document">
+                        @context.ToString()
+                    </MudTd>
+                    <MudTd DataLabel="Rows">
+                        x @context.Rows?.Count() = @context.Rows?.Sum(x => x.Amount)
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Offer</th>
+                                    <th scope="col">Count/Price</th>
+                                    <th scope="col">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (RowOfRetailOrderDocumentModelDB row in context.Rows!)
+                                {
+                                    <tr>
+                                        <th scope="row">@row.Offer!.GetName()</th>
+                                        <td>@row.Quantity / @(Math.Round(row.Amount / row.Quantity, 2).ToString("C"))</td>
+                                        <td>@row.Amount</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </MudTd>
+                    <MudTd DataLabel="Conversions">
+                        x @context.Conversions?.Count() = @context.Conversions?.Sum(x => x.AmountPayment)
+                    </MudTd>
+                    <MudTd DataLabel="Payments">
+                        x @context.Payments?.Count() = @context.Payments?.Sum(x => x.AmountPayment)
+                    </MudTd>
+                </RowTemplate>
+                <NoRecordsContent>
+                    <MudText>Соответствующих записей не найдено</MudText>
+                </NoRecordsContent>
+                <LoadingContent>
+                    <MudText>Loading...</MudText>
+                </LoadingContent>
+                <PagerContent>
+                    <MudTablePager />
+                </PagerContent>
+            </MudTable>
+        </MudTabPanel>
+    </MudTabs>
+}

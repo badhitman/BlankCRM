@@ -1,0 +1,177 @@
+﻿@inherits OrderLinkBaseComponent<PaymentOrderRetailLinkModelDB>
+
+@using BlazorRetailLib.Components.Delivery
+@using BlazorRetailLib.Components.Payments
+@using MudBlazor
+
+<MudTable @ref=tableRef
+          ApplyButtonPosition="TableApplyButtonPosition.End"
+          EditButtonPosition="TableEditButtonPosition.End"
+          ServerData="ServerReload"
+          EditTrigger="TableEditTrigger.EditButton"
+          CanCancelEdit Dense Hover
+          RowEditPreview="BackupItem"
+          RowEditCommit="ItemHasBeenCommitted"
+          RowEditCancel="ResetItemToOriginalValues">
+    <ToolBarContent>
+        <MudSpacer />
+        @if (PaymentId > 0)
+        {
+            <MudButton OnClick="() => _visibleCreateNewOrder = true"
+                       Class="me-2"
+                       Variant="Variant.Outlined"
+                       StartIcon="@Icons.Material.Filled.Add"
+                       IconColor="Color.Secondary">Новый заказ</MudButton>
+
+            <MudTooltip Text="Добавить созданный ранее заказ в текущую доставку">
+                <MudButton OnClick=IncludeExistOrderOpenDialog
+                           Variant="Variant.Outlined"
+                           EndIcon="@Icons.Material.Filled.DeviceHub"
+                           IconColor="Color.Secondary">Включить в существующий заказ</MudButton>
+            </MudTooltip>
+        }
+        @if (OrderParent is not null && OrderParent.Id > 0)
+        {
+            <MudButton OnClick="() => _visibleCreateNewPayment = true"
+                       Class="me-2"
+                       Variant="Variant.Outlined"
+                       EndIcon="@Icons.Material.Filled.Add"
+                       IconColor="Color.Secondary">Новый платёж</MudButton>
+
+            <MudTooltip Text="Добавить заказ в созданный ранее платёж">
+                <MudButton OnClick=IncludeExistPaymentOpenDialog
+                           Variant="Variant.Outlined"
+                           EndIcon="@Icons.Material.Filled.DeviceHub"
+                           IconColor="Color.Secondary">Включить в платёж</MudButton>
+            </MudTooltip>
+        }
+    </ToolBarContent>
+    <ColGroup>
+        @if (OrderParent is null || OrderParent.Id <= 0)
+        {
+            <col />
+        }
+        @if (PaymentId <= 0)
+        {
+            <col />
+        }
+        <col />
+        <col style="@(initDeleteRow is not null ? "width:250px;" : "width:50px;")" />
+        <col style="width:50px;" />
+    </ColGroup>
+    <HeaderContent>
+        @if (OrderParent is null || OrderParent.Id <= 0)
+        {
+            <MudTh>Заказ</MudTh>
+        }
+        @if (PaymentId <= 0)
+        {
+            <MudTh>Платёж</MudTh>
+        }
+        <MudTh>Сумма</MudTh>
+        <MudTh></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        @if (OrderParent is null || OrderParent.Id <= 0)
+        {
+            <MudTd DataLabel="Заказ">
+                <MudLink Href="@($"/retail/order-document/{context.OrderDocumentId}")">
+                    @context.OrderDocument?.ToString()
+                </MudLink>
+                [@(UsersCache.FirstOrDefault(x => x.UserId == context.PaymentDocument!.Wallet!.UserIdentityId)?.ToString())]
+            </MudTd>
+        }
+        @if (PaymentId <= 0)
+        {
+            <MudTd DataLabel="Платёж">
+                <MudLink Href="@($"/retail/payment-document/{context.PaymentDocumentId}")">
+                    @context.PaymentDocument?.ToString()
+                </MudLink>
+            </MudTd>
+        }
+        <MudTd Class="@(context.AmountPayment <= 0 ? "text-bg-danger" : "")" DataLabel="Сумма">@context.AmountPayment</MudTd>
+        <MudTd>
+            @if (initDeleteRow?.orderId == context.OrderDocumentId && initDeleteRow.Value.otherDocId == context.PaymentDocumentId)
+            {
+                <span title="кликните для подтверждения удаления" class="me-2 badge text-bg-danger cursor-pointer" @onclick="() => DeleteRow((context.OrderDocumentId, context.PaymentDocumentId))">Подтвердить удаление</span>
+                <span title="кликните для отмены удаления" class="text-bg-secondary cursor-pointer badge" @onclick="() => initDeleteRow = null">отмена</span>
+            }
+            else
+            {
+                <MudIconButton OnClick="() => DeleteRow((context.OrderDocumentId, context.PaymentDocumentId))" title="Удалить строку" Icon="@Icons.Material.Filled.Delete" aria-label="delete" Size="Size.Small" />
+            }
+        </MudTd>
+    </RowTemplate>
+    <RowEditingTemplate>
+        @if (OrderParent is null || OrderParent.Id <= 0)
+        {
+            <MudTd DataLabel="Заказ">@context.OrderDocument?.ToString()</MudTd>
+        }
+        @if (PaymentId <= 0)
+        {
+            <MudTd DataLabel="Доставка">@context.PaymentDocument?.ToString()</MudTd>
+        }
+        <MudTd DataLabel="Сумма" colspan=2>
+            <input type="number" class="form-control" @bind="context.AmountPayment" />
+        </MudTd>
+    </RowEditingTemplate>
+    <NoRecordsContent>
+        <MudText>Соответствующих записей не найдено</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
+
+<MudDialog @bind-Visible="_visibleCreateNewOrder" Options="_dialogOptions">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" /> Новый заказ (розница)
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <CascadingValue Value="ClientId" Name="ClientId">
+            <OrderDocumentCardComponent InjectToPaymentId="PaymentId" />
+        </CascadingValue>
+    </DialogContent>
+</MudDialog>
+<MudDialog @bind-Visible="_visibleCreateNewPayment" Options="_dialogOptions">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" />Новый платёж для заказа (розница)
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <CascadingValue Name="ClientId" Value="ClientId">
+            <PaymentDocumentComponent InjectToOrder="OrderParent" />
+        </CascadingValue>
+    </DialogContent>
+</MudDialog>
+
+<MudDialog @bind-Visible="_visibleIncludeExistPayment" Options="_dialogOptions">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" />Укажите платёж для связи его заказом
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <CascadingValue Name="ClientId" Value="ClientId">
+            <PaymentsManageComponent RowClickEventHandler="SelectPaymentRowAction" ExcludeOrder="OrderParent" />
+        </CascadingValue>
+    </DialogContent>
+</MudDialog>
+<MudDialog @bind-Visible="_visibleIncludeOrder" Options="_dialogOptions">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" />Укажите заказ (для добавления к доставке)
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <CascadingValue Name="ClientId" Value="ClientId">
+            <RetailOrdersListComponent RowClickEventHandler="SelectOrderRowAction" ExcludePaymentId="PaymentId" />
+        </CascadingValue>
+    </DialogContent>
+</MudDialog>

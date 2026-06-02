@@ -1,0 +1,175 @@
+﻿@inherits OrderLinkBaseComponent<ConversionOrderRetailLinkModelDB>
+
+@using BlazorRetailLib.Components.Conversions
+@using BlazorRetailLib.Components.Delivery
+@using BlazorRetailLib.Components.Payments
+@using MudBlazor
+
+<MudTable @ref=tableRef
+          ApplyButtonPosition="TableApplyButtonPosition.End"
+          EditButtonPosition="TableEditButtonPosition.End"
+          ServerData="ServerReload"
+          EditTrigger="TableEditTrigger.EditButton"
+          CanCancelEdit Dense Hover
+          RowEditPreview="BackupItem"
+          RowEditCommit="ItemHasBeenCommitted"
+          RowEditCancel="ResetItemToOriginalValues">
+    <ToolBarContent>
+        <MudSpacer />
+        @if (ConversionId > 0)
+        {
+            <MudButton OnClick="() => _visibleCreateNewOrder = true"
+                       Class="me-2"
+                       Variant="Variant.Outlined"
+                       StartIcon="@Icons.Material.Filled.Add"
+                       IconColor="Color.Primary">Новый заказ</MudButton>
+
+            <MudTooltip Text="Добавить созданный ранее заказ в текущую доставку">
+                <MudButton OnClick=IncludeExistOrderOpenDialog
+                           Variant="Variant.Outlined"
+                           EndIcon="@Icons.Material.Filled.DeviceHub"
+                           IconColor="Color.Secondary">Включить в существующий заказ</MudButton>
+            </MudTooltip>
+        }
+        @if (OrderParent is not null && OrderParent.Id > 0)
+        {
+            <MudButton OnClick="() => _visibleCreateNewConversion = true"
+                       Class="me-2"
+                       Variant="Variant.Outlined"
+                       EndIcon="@Icons.Material.Filled.Add"
+                       IconColor="Color.Secondary">Новый перевод</MudButton>
+
+            <MudTooltip Text="Добавить заказ в созданный ранее платёж">
+                <MudButton OnClick=IncludeExistConversionOpenDialog
+                           Variant="Variant.Outlined"
+                           EndIcon="@Icons.Material.Filled.DeviceHub"
+                           IconColor="Color.Secondary">Включить в перевод</MudButton>
+            </MudTooltip>
+        }
+    </ToolBarContent>
+    <ColGroup>
+        @if (OrderParent is null || OrderParent.Id <= 0)
+        {
+            <col />
+        }
+        @if (ConversionId <= 0)
+        {
+            <col />
+        }
+        <col />
+        <col style="@(initDeleteRow is not null ? "width:250px;" : "width:50px;")" />
+        <col style="width:50px;" />
+    </ColGroup>
+    <HeaderContent>
+        @if (OrderParent is null || OrderParent.Id <= 0)
+        {
+            <MudTh>Заказ</MudTh>
+        }
+        @if (ConversionId <= 0)
+        {
+            <MudTh>Перевод</MudTh>
+        }
+        <MudTh>Сумма</MudTh>
+        <MudTh></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        @if (OrderParent is null || OrderParent.Id <= 0)
+        {
+            <MudTd DataLabel="Заказ">
+                <MudLink Href="@($"/retail/order-document/{context.OrderDocumentId}")">@context.OrderDocument?.ToString()</MudLink>
+            </MudTd>
+        }
+        @if (ConversionId <= 0)
+        {
+            <MudTd DataLabel="Перевод">
+                <MudLink Href="@($"/retail/conversion-document/{context.ConversionDocumentId}")">@context.ConversionDocument?.ToString()</MudLink>
+                [@(UsersCache.FirstOrDefault(x => x.UserId == context.ConversionDocument!.FromWallet!.UserIdentityId)?.ToString()) -> @(UsersCache.FirstOrDefault(x => x.UserId == context.ConversionDocument!.ToWallet!.UserIdentityId)?.ToString())]
+            </MudTd>
+        }
+        <MudTd Class="@(context.AmountPayment <= 0 ? "text-bg-danger" : "")" DataLabel="Сумма">@context.AmountPayment</MudTd>
+        <MudTd>
+            @if (initDeleteRow?.orderId == context.OrderDocumentId && initDeleteRow?.otherDocId == context.ConversionDocumentId)
+            {
+                <span title="кликните для подтверждения удаления" class="me-2 badge text-bg-danger cursor-pointer" @onclick="() => DeleteRow((context.OrderDocumentId, context.ConversionDocumentId))">Подтвердить удаление</span>
+                <span title="кликните для отмены удаления" class="text-bg-secondary cursor-pointer badge" @onclick="() => initDeleteRow = null">отмена</span>
+            }
+            else
+            {
+                <MudIconButton OnClick="() => DeleteRow((context.OrderDocumentId, context.ConversionDocumentId))" title="Удалить строку" Icon="@Icons.Material.Filled.Delete" aria-label="delete" Size="Size.Small" />
+            }
+        </MudTd>
+    </RowTemplate>
+    <RowEditingTemplate>
+        @if (OrderParent is null || OrderParent.Id <= 0)
+        {
+            <MudTd DataLabel="Заказ">@context.OrderDocument?.ToString()</MudTd>
+        }
+        @if (ConversionId <= 0)
+        {
+            <MudTd DataLabel="Доставка">@context.ConversionDocument?.ToString()</MudTd>
+        }
+        <MudTd DataLabel="Вес" colspan=2>
+            <input type="number" class="form-control" @bind="context.AmountPayment" />
+        </MudTd>
+    </RowEditingTemplate>
+    <NoRecordsContent>
+        <MudText>Соответствующих записей не найдено</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
+
+<MudDialog @bind-Visible="_visibleCreateNewOrder" Options="_dialogOptions">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" /> Новый заказ (розница)
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <CascadingValue Value="ClientId" Name="ClientId">
+            <OrderDocumentCardComponent InjectToConversionId="ConversionId" />
+        </CascadingValue>
+    </DialogContent>
+</MudDialog>
+
+<MudDialog @bind-Visible="_visibleCreateNewConversion" Options="_dialogOptions">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" />Новая перевод/конвертация (розница)
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <CascadingValue Name="ClientId" Value="ClientId">
+            <ConversionDocumentComponent InjectToOrder="OrderParent" />
+        </CascadingValue>
+    </DialogContent>
+</MudDialog>
+
+<MudDialog @bind-Visible="_visibleIncludeExistConversion" Options="_dialogOptions">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" />Укажите перевод/конвертацию
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <CascadingValue Name="ClientId" Value="ClientId">
+            <ConversionsTableManageComponent RowClickEventHandler="SelectConversionRowAction" ExcludeOrder="OrderParent" />
+        </CascadingValue>
+    </DialogContent>
+</MudDialog>
+<MudDialog @bind-Visible="_visibleIncludeOrder" Options="_dialogOptions">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" />Укажите заказ (для добавления к доставке)
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <CascadingValue Name="ClientId" Value="ClientId">
+            <RetailOrdersListComponent RowClickEventHandler="SelectOrderRowAction" ExcludePaymentId="ConversionId" />
+        </CascadingValue>
+    </DialogContent>
+</MudDialog>

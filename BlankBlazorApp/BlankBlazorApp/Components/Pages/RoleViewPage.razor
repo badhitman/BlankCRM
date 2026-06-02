@@ -1,0 +1,25 @@
+﻿@page "/Users/Roles/view-{RoleId:guid}"
+@using BlazorLib.Components.Users
+@using BlazorUsersLib.Components
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@attribute [Authorize(Roles = GlobalStaticConstantsRoles.Roles.Admin)]
+
+@inject IUsersProfilesService UsersProfilesRepo
+
+<PageTitle>Роль</PageTitle>
+
+<h3>Роль</h3>
+
+<div class="row">
+    <div class="col">
+        <UsersTableComponent OwnerRoleId="@RoleId.ToString()" />
+    </div>
+    <div class="col">
+        <ClaimsManageComponent ClaimArea="ClaimAreasEnum.ForRole" OwnerId="@RoleId.ToString()" />
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Guid RoleId { get; set; }
+}

@@ -1,0 +1,131 @@
+﻿////////////////////////////////////////////////
+// © https://github.com/badhitman - @FakeGov
+////////////////////////////////////////////////
+
+using BlazorLib;
+using Microsoft.AspNetCore.Components;
+using MudBlazor;
+using SharedLib;
+
+namespace BlazorConstructorLib.Components.Document;
+
+/// <summary>
+/// Documents view
+/// </summary>
+public partial class DocumentsSchemesTableComponent : BlazorBusyComponentBaseAuthModel
+{
+    /// <inheritdoc/>
+    [Inject]
+    protected IDialogService DialogServiceRepo { get; set; } = default!;
+
+    /// <inheritdoc/>
+    [Inject]
+    protected IConstructorTransmission ConstructorRepo { get; set; } = default!;
+
+
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public int ProjectId { get; set; }
+
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public bool CanEdit { get; set; }
+
+
+    MudTable<DocumentSchemeConstructorModelDB>? table;
+
+    /// <inheritdoc/>
+    protected string? searchString;
+    TPaginationResponseStandardModel<DocumentSchemeConstructorModelDB> data = new() { Response = [] };
+
+    /// <inheritdoc/>
+    protected static MarkupString Descr(string? html) => (MarkupString)(html ?? "");
+
+    /// <inheritdoc/>
+    protected async Task DeleteDocument(int questionnaire_id)
+    {
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
+        await SetBusyAsync();
+
+        ResponseBaseModel rest = await ConstructorRepo.DeleteDocumentSchemeAsync(new()
+        {
+            Payload = new()
+            {
+                DeleteDocumentSchemeId = questionnaire_id
+            },
+            SenderActionUserId = CurrentUserSession.UserId
+        });
+
+        await SetBusyAsync(false);
+
+        SnackBarRepo.ShowMessagesResponse(rest.Messages);
+        if (!rest.Success())
+        {
+            SnackBarRepo.Error($"Ошибка F1AADB25-31FF-4305-90A9-4B71184434CC Action: {rest.Message()}");
+            return;
+        }
+
+        if (table is not null)
+            await table.ReloadServerData();
+    }
+
+    /// <summary>
+    /// Here we simulate getting the paged, filtered and ordered data from the server
+    /// </summary>
+    protected async Task<TableData<DocumentSchemeConstructorModelDB>> ServerReload(TableState state, CancellationToken token)
+    {
+        if (ProjectId < 1)
+            throw new Exception("Основной/используемый проект не выбран");
+
+        SimplePaginationRequestStandardModel req = new();
+        await SetBusyAsync(token: token);
+
+        data = await ConstructorRepo.RequestDocumentsSchemesAsync(new() { RequestPayload = req, ProjectId = ProjectId }, token);
+        await SetBusyAsync(false, token);
+
+        if (data.Response is null)
+        {
+            SnackBarRepo.Error($"rest.Content.Documents is null. error 62D3109B-7349-48E8-932B-762D5B0EA585");
+            return new TableData<DocumentSchemeConstructorModelDB>() { TotalItems = data.TotalRowsCount, Items = data.Response };
+        }
+
+        return new TableData<DocumentSchemeConstructorModelDB>() { TotalItems = data.TotalRowsCount, Items = data.Response };
+    }
+
+    /// <inheritdoc/>
+    protected async Task DocumentOpenDialog(DocumentSchemeConstructorModelDB? document_scheme = null)
+    {
+        if (ProjectId < 1)
+            throw new Exception("Основной/используемый проект не выбран");
+
+        document_scheme ??= DocumentSchemeConstructorModelDB.BuildEmpty(ProjectId);
+        DialogParameters<EditDocumentSchemeDialogComponent> parameters = new()
+        {
+            { x => x.DocumentScheme, document_scheme },
+            { x => x.ProjectId, ProjectId },
+            { x => x.CanEdit, CanEdit },
+            { x => x.ReloadHandler, () => InvokeAsync(ReloadTable) },
+        };
+
+        DialogOptions options = new() { MaxWidth = MaxWidth.ExtraExtraLarge, FullWidth = true, CloseOnEscapeKey = true };
+        IDialogReference result = await DialogServiceRepo.ShowAsync<EditDocumentSchemeDialogComponent>(document_scheme.Id < 1 ? "Создание новой анкеты/опросника" : $"Редактирование анкеты/опросника #{document_scheme.Id}", parameters, options);
+        if (table is not null)
+            await table.ReloadServerData();
+    }
+
+    async Task ReloadTable()
+    {
+        if (table is not null)
+            await table.ReloadServerData();
+    }
+
+    /// <inheritdoc/>
+    protected async Task OnSearch(string text)
+    {
+        searchString = text;
+        if (table is not null)
+            await table.ReloadServerData();
+    }
+}

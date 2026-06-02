@@ -1,0 +1,28 @@
+﻿@using BlazorConstructorLib.Components.FieldsClient
+@inherits BlazorBusyComponentBaseModel
+
+<MudDialog>
+    <DialogContent>
+        @if (IsBusyProgress)
+        {
+            <div class="text-center">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        }
+        else
+        {
+            <ClientStandardViewFormComponent SessionOfDocumentData="SessionOfDocumentData"
+                                             PageJoinForm="PageJoinForm"
+                                             DocumentPage="DocumentPage"
+                                             Form="PageJoinForm.Form"
+                                             RowNum="RowNum" />
+        }
+    </DialogContent>
+    <DialogActions>
+        <MudButton Disabled="@IsBusyProgress"
+                   Color="Color.Primary"
+                   OnClick="Close">@(IsBusyProgress ? "Отправка данных..." : "Применить")</MudButton>
+    </DialogActions>
+</MudDialog>

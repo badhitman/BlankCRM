@@ -1,0 +1,11 @@
+﻿@page "/organizations/edit/{OrganizationId:int}"
+
+@using BlazorCommerceLib.Components.Organizations
+@using MudBlazor
+
+@inherits BlazorBusyComponentBaseModel
+
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@attribute [Authorize]
+
+<OrganizationEditComponent OrganizationId="OrganizationId ?? 0" />

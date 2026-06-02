@@ -1,0 +1,26 @@
+﻿@using BlazorRetailLib.Components.Reports.test
+@using MudBlazor
+
+@inherits BlazorBusyComponentBaseModel
+
+@if (IsBusyProgress)
+{
+    <MudProgressLinear Color="Color.Primary" Indeterminate Class="my-3" data-cn="@this.GetType().Name" />
+}
+else
+{
+    <MudTabs Elevation="2" Rounded ApplyEffectsToContainer TabPanelsClass="pa-1">
+        <MudTabPanel Text="Сводный">
+            <MainRetailReportComponent @ref=_mainReport />
+        </MudTabPanel>
+        <MudTabPanel Text="Торговый">
+            <OffersOfOrdersRetailReportComponent @ref=_retailReport />
+        </MudTabPanel>
+        <MudTabPanel Text="Отгрузка" BadgeDot BadgeColor="@Color.Secondary">
+            <OffersOfDeliveriesRetailReportComponent @ref=_delReport />
+        </MudTabPanel>
+        @* <MudTabPanel Text="Финансовый" BadgeDot BadgeColor="@Color.Secondary">
+            <PaymentsRetailReportComponent @ref=_finReport />
+        </MudTabPanel> *@
+    </MudTabs>
+}

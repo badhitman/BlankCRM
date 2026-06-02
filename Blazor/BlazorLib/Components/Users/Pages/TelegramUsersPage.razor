@@ -1,7 +1,6 @@
 ﻿@page "/Users/TelegramUsers"
 
 @using System.Net.Mail
-@using BlazorLib.Components.Telegram
 @using Microsoft.AspNetCore.Components.QuickGrid
 @attribute [Authorize(Roles = GlobalStaticConstantsRoles.Roles.Admin)]
 
@@ -28,14 +27,14 @@
             </TemplateColumn>
             <TemplateColumn Align="Align.Right">
                 <div class="hstack">
-                    @if (context.IsBot)
+                    @* @if (context.IsBot)
                     {
                         <span class="bi bi-robot text-danger-emphasis"> TelegramBot</span>
                     }
                     else if (context.TelegramId != default)
                     {
                         <TelegramSendMessageComponent TelegramId="@context.TelegramId" />
-                    }
+                    } *@
                     @if (!string.IsNullOrEmpty(context.Email))
                     {
                         if (!MailAddress.TryCreate(context.Email, out MailAddress? resMail) || resMail.Host.Equals(GlobalStaticConstants.FakeHost) == true)

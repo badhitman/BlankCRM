@@ -1,0 +1,148 @@
+﻿////////////////////////////////////////////////
+// © https://github.com/badhitman - @FakeGov
+////////////////////////////////////////////////
+
+using Microsoft.AspNetCore.Components;
+using BlazorLib;
+using SharedLib;
+using MudBlazor;
+
+namespace BlazorCommerceLib.Components.Offers;
+
+/// <summary>
+/// OffersGoodsListComponent
+/// </summary>
+public partial class OffersGoodsListComponent : BlazorRegistersComponent
+{
+    [Inject]
+    IParametersStorageTransmission StorageTransmissionRepo { get; set; } = default!;
+
+
+    /// <summary>
+    /// CurrentNomenclature
+    /// </summary>
+    [Parameter, EditorRequired]
+    public required NomenclatureModelDB CurrentNomenclature { get; set; }
+
+
+    bool
+        _showMultiplicity,
+        _showWorth,
+        loadTableReady;
+
+    private MudTable<OfferModelDB> table = default!;
+
+    bool _visibleChangeConfig;
+    bool VisibleChangeConfig
+    {
+        get => _visibleChangeConfig;
+        set
+        {
+            _visibleChangeConfig = value;
+            if (!_visibleChangeConfig && table is not null)
+                InvokeAsync(async () =>
+                {
+                    await table.ReloadServerData();
+                    await ReadConfig();
+                });
+        }
+    }
+
+    readonly DialogOptions _dialogOptions = new()
+    {
+        FullWidth = true,
+        CloseButton = true,
+        CloseOnEscapeKey = true,
+    };
+
+    async Task ReadConfig()
+    {
+        await SetBusyAsync();
+        List<Task> tasks = [
+            Task.Run(async () =>
+            {
+                TResponseModel<bool?> res1 = await StorageTransmissionRepo.ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.HideWorthOffers);
+                if (!res1.Success())
+                    SnackBarRepo.ShowMessagesResponse(res1.Messages);
+                else
+                    _showWorth = res1.Response != true;
+            }),
+            Task.Run(async () =>
+            {
+                TResponseModel<bool?> res2 = await StorageTransmissionRepo.ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.HideMultiplicityOffers);
+                if (!res2.Success())
+                    SnackBarRepo.ShowMessagesResponse(res2.Messages);
+                else
+                    _showMultiplicity = res2.Response != true;})];
+
+        await Task.WhenAll(tasks);
+        await SetBusyAsync(false);
+    }
+
+    /// <inheritdoc/>
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await SetBusyAsync();
+        await ReadConfig();
+
+        loadTableReady = true;
+
+        if (table is not null)
+            await table.ReloadServerData();
+
+        await SetBusyAsync(false);
+    }
+
+    void CancelChangeConfig()
+    {
+        VisibleChangeConfig = !VisibleChangeConfig;
+    }
+
+    async void CreateOfferAction(OfferModelDB sender)
+    {
+        await table.ReloadServerData();
+        OnExpandCollapseClick();
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Here we simulate getting the paged, filtered and ordered data from the server
+    /// </summary>
+    private async Task<TableData<OfferModelDB>> ServerReload(TableState state, CancellationToken token)
+    {
+        if (!loadTableReady || CurrentUserSession is null)
+            return new TableData<OfferModelDB>() { TotalItems = 0, Items = [] };
+
+        TPaginationRequestStandardModel<OffersSelectRequestModel> req = new()
+        {
+            Payload = new()
+            {
+                NomenclatureFilter = [CurrentNomenclature.Id],
+                ContextName = CurrentNomenclature.ContextName,
+            },
+            PageNum = state.Page,
+            PageSize = state.PageSize,
+            SortBy = state.SortLabel,
+            SortingDirection = state.SortDirection.Convert(),
+        };
+        await SetBusyAsync(token: token);
+        TResponseModel<TPaginationResponseStandardModel<OfferModelDB>> res = await CommerceRepo.OffersSelectAsync(new() { Payload = req, SenderActionUserId = CurrentUserSession.UserId }, token);
+
+        if (res.Response?.Response is not null)
+        {
+            await CacheRegistersUpdate(_offers: res.Response.Response.Select(x => x.Id).ToArray(), _goods: []);
+            await SetBusyAsync(false, token);
+            return new TableData<OfferModelDB>() { TotalItems = res.Response.TotalRowsCount, Items = res.Response.Response };
+        }
+
+        await SetBusyAsync(false, token);
+        return new TableData<OfferModelDB>() { TotalItems = 0, Items = [] };
+    }
+
+    bool _expanded;
+    private void OnExpandCollapseClick()
+    {
+        _expanded = !_expanded;
+    }
+}

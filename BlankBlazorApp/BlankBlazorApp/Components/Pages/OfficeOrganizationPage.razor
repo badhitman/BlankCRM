@@ -1,0 +1,10 @@
+﻿@page "/organizations/edit/office/{AddressForOrganization:int}"
+@using BlazorCommerceLib.Components.Organizations
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+<OfficeOrganizationComponent AddressForOrganization="AddressForOrganization" />
+
+@code {
+    [Parameter]
+    public int AddressForOrganization { get; set; }
+}

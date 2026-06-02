@@ -1,0 +1,215 @@
+////////////////////////////////////////////////
+// © https://github.com/badhitman - @FakeGov
+////////////////////////////////////////////////
+
+using BlazorLib;
+using Microsoft.AspNetCore.Components;
+using MudBlazor;
+using SharedLib;
+using System.Reflection.Metadata;
+
+namespace BlazorRetailLib.Components.Delivery;
+
+/// <summary>
+/// DeliveryStatusesTableComponent
+/// </summary>
+public partial class DeliveryStatusesTableComponent : BlazorBusyComponentBaseAuthModel
+{
+    [Inject]
+    IRetailService RetailRepo { get; set; } = default!;
+
+
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required DeliveryDocumentRetailModelDB Document { get; set; }
+
+
+    DateTime? createdDate, editDate;
+    DeliveryStatusesEnum? newStatus;
+    DeliveryStatusesEnum editStatus;
+    string? createdName, editName;
+    int? editRowId;
+
+    MudTable<DeliveryStatusRetailDocumentModelDB>? tableRef;
+    DeliveryStatusRetailDocumentModelDB? elementBeforeEdit;
+
+    int? initDeleteRowStatusId;
+    async Task DeleteRow(int rowStatusId)
+    {
+        if (initDeleteRowStatusId is null)
+        {
+            initDeleteRowStatusId = rowStatusId;
+            return;
+        }
+        if (initDeleteRowStatusId != rowStatusId)
+        {
+            initDeleteRowStatusId = null;
+            return;
+        }
+
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
+
+        await SetBusyAsync();
+
+        DeleteDeliveryStatusDocumentResponseModel res = await RetailRepo.DeleteDeliveryStatusDocumentRetailAsync(new()
+        {
+            Payload = new() { DeleteDeliveryStatusDocumentId = initDeleteRowStatusId.Value },
+            SenderActionUserId = CurrentUserSession.UserId
+        });
+
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
+        Document.Version = res.DocumentNewVersion;
+
+        initDeleteRowStatusId = null;
+        if (tableRef is not null)
+            await tableRef.ReloadServerData();
+
+        await SetBusyAsync(false);
+    }
+
+    async void ItemHasBeenCommitted(object element)
+    {
+        initDeleteRowStatusId = null;
+
+        if (!editDate.HasValue || editDate == default || !editRowId.HasValue)
+            return;
+
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
+
+        if (element is DeliveryStatusRetailDocumentModelDB other)
+        {
+            DeliveryStatusRetailDocumentModelDB req = new()
+            {
+                DateOperation = editDate.Value,
+                DeliveryDocumentId = Document.Id,
+                Name = editName ?? "",
+                DeliveryStatus = editStatus,
+                Id = editRowId.Value,
+            };
+            await SetBusyAsync();
+            ResponseBaseModel res = await RetailRepo.UpdateDeliveryStatusDocumentRetailAsync(new()
+            {
+                Payload = req,
+                SenderActionUserId = CurrentUserSession.UserId
+            });
+
+            SnackBarRepo.ShowMessagesResponse(res.Messages);
+            if (!res.Success())
+            {
+                await SetBusyAsync(false);
+                return;
+            }
+
+            if (tableRef is not null)
+                await tableRef.ReloadServerData();
+
+            editStatus = default;
+            editDate = null;
+            editName = null;
+            await SetBusyAsync(false);
+        }
+    }
+
+    void BackupItem(object element)
+    {
+        initDeleteRowStatusId = null;
+
+        if (element is DeliveryStatusRetailDocumentModelDB other)
+        {
+            editDate = other.DateOperation;
+            editStatus = other.DeliveryStatus;
+            editName = other.Name;
+            editRowId = other.Id;
+
+            elementBeforeEdit = new()
+            {
+                DateOperation = other.DateOperation,
+                Name = other.Name,
+                DeliveryStatus = other.DeliveryStatus,
+            };
+        }
+    }
+
+    void ResetItemToOriginalValues(object element)
+    {
+        initDeleteRowStatusId = null;
+
+        if (elementBeforeEdit is null)
+            return;
+
+        if (element is DeliveryStatusRetailDocumentModelDB other)
+        {
+            other.DateOperation = elementBeforeEdit.DateOperation;
+            other.Name = elementBeforeEdit.Name;
+            other.DeliveryStatus = elementBeforeEdit.DeliveryStatus;
+
+            elementBeforeEdit = null;
+        }
+
+        editDate = null;
+    }
+
+    async Task AddNewStatus()
+    {
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
+
+        initDeleteRowStatusId = null;
+
+        if (!createdDate.HasValue || createdDate == default || !newStatus.HasValue)
+            return;
+
+        DeliveryStatusRetailDocumentModelDB req = new()
+        {
+            DateOperation = createdDate.Value,
+            DeliveryDocumentId = Document.Id,
+            Name = createdName ?? "",
+            DeliveryStatus = newStatus.Value,
+            DeliveryDocument = Document
+        };
+        await SetBusyAsync();
+        DocumentNewVersionResponseModel res = await RetailRepo.CreateDeliveryStatusDocumentRetailAsync(new() { Payload = req, SenderActionUserId = CurrentUserSession.UserId });
+        if (!res.Success())
+        {
+            SnackBarRepo.ShowMessagesResponse(res.Messages);
+            await SetBusyAsync(false);
+            return;
+        }
+        if (res.DocumentNewVersion.HasValue)
+            Document.Version = res.DocumentNewVersion.Value;
+
+        if (tableRef is not null)
+            await tableRef.ReloadServerData();
+
+        newStatus = null;
+        createdDate = null;
+        createdName = null;
+        await SetBusyAsync(false);
+    }
+
+    async Task<TableData<DeliveryStatusRetailDocumentModelDB>> ServerReload(TableState state, CancellationToken token)
+    {
+        TPaginationRequestStandardModel<SelectDeliveryStatusesRetailDocumentsRequestModel> req = new()
+        {
+            Payload = new()
+            {
+                DeliveryDocumentId = Document.Id
+            }
+        };
+        await SetBusyAsync(token: token);
+        TPaginationResponseStandardModel<DeliveryStatusRetailDocumentModelDB> res = await RetailRepo.SelectDeliveryStatusesDocumentsAsync(req, token);
+        await SetBusyAsync(false, token);
+        return new TableData<DeliveryStatusRetailDocumentModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };
+    }
+}

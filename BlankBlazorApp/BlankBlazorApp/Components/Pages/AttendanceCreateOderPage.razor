@@ -1,0 +1,8 @@
+﻿@page "/attendance/create-order"
+
+@using BlazorCommerceLib.Components.Attendances
+
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@attribute [Authorize]
+
+<CreateOrderAttendancesComponent />

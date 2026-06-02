@@ -1,0 +1,10 @@
+﻿@page "/Users/Profiles"
+@page "/Users"
+@using BlazorUsersLib.Components
+
+@attribute [Authorize(Roles = GlobalStaticConstantsRoles.Roles.Admin)]
+
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+<PageTitle>Пользователи</PageTitle>
+<UsersTableComponent />

@@ -1,8 +1,4 @@
 ﻿@using BlazorLib.Components.ParametersShared
-@using BlazorLib.Components.Retail.Conversions
-@using BlazorLib.Components.Retail.Delivery
-@using BlazorLib.Components.Retail.Orders
-@using BlazorLib.Components.Retail.Payments
 @using MudBlazor
 
 @inherits BlazorBusyComponentUsersCachedModel
@@ -149,7 +145,7 @@
                     <CKEditorParameterStorageComponent Label="Комментарий"
                                                        KeyStorage="@GlobalStaticCloudStorageMetadata.WebChatCommentary(DialogId)" />
                 </MudTabPanel>
-                @if (!string.IsNullOrWhiteSpace(dialogEdit.InitiatorIdentityId))
+                @* @if (!string.IsNullOrWhiteSpace(dialogEdit.InitiatorIdentityId))
                 {
                     <CascadingValue Value="dialogEdit.InitiatorIdentityId" Name="ClientId">
                         <MudTabPanel Text="Заказы">
@@ -165,7 +161,7 @@
                             <ConversionsTableManageComponent />
                         </MudTabPanel>
                     </CascadingValue>
-                }
+                } *@
                 <MudTabPanel Text="FCM" Disabled="string.IsNullOrWhiteSpace(dialogEdit.FirebaseCloudMessagingToken)">
                     <FirebaseCloudMessagingComponent ChatDialog="dialogEdit" />
                 </MudTabPanel>

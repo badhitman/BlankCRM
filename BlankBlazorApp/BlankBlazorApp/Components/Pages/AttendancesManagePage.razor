@@ -1,0 +1,34 @@
+﻿@page "/attendances"
+
+@using BlazorCommerceLib.Components.Attendances
+@using BlazorUsersLib.Components
+@using MudBlazor
+
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@attribute [Authorize(Roles = $"{GlobalStaticConstantsRoles.Roles.Admin},{GlobalStaticConstantsRoles.Roles.Debug}")]
+@inherits BlazorBusyComponentBaseModel
+
+<PageTitle>Услуги</PageTitle>
+
+@if (IsBusyProgress)
+{
+    <MudProgressLinear Color="Color.Primary" Indeterminate Class="my-3" />
+}
+
+<MudTabs Elevation="2" Rounded ApplyEffectsToContainer TabPanelsClass="pa-1">
+    <MudTabPanel Text="Справочник">
+        <AttendancesCatalogComponent />
+    </MudTabPanel>
+    <AuthorizeView Roles="@($"{GlobalStaticConstantsRoles.Roles.Admin},{GlobalStaticConstantsRoles.Roles.Debug}")">
+        <Authorized>
+            <MudTabPanel Text="Управление">
+                <AttendancesManageComponent />
+            </MudTabPanel>
+            <MudTabPanel Text="Права">
+                <UsersTableComponent HideClaimsColumn HideRolesColumn
+                                     RolesMarkers="@showMarkersRoles"
+                                     RolesManageKit="@showMarkersRoles.Select(x => x.Id).Union([GlobalStaticConstantsRoles.Roles.CommerceManager, GlobalStaticConstantsRoles.Roles.CommerceClient, GlobalStaticConstantsRoles.Roles.Debug])" />
+            </MudTabPanel>
+        </Authorized>
+    </AuthorizeView>
+</MudTabs>

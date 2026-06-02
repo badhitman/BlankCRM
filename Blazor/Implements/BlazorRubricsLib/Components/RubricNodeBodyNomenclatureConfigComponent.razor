@@ -1,0 +1,25 @@
+﻿@using BlazorRubricsLib.Components.Properties
+@using MudBlazor
+
+@inherits RubricNodeBodyComponent
+
+<span class="font-monospace"
+      style="justify-self: start;"
+      @onclick:stopPropagation="true"
+      @onclick:preventDefault="true"
+      @ondblclick:stopPropagation="true"
+      @ondblclick:preventDefault="true">
+    @Node.Text
+    @if (IsBusyProgress)
+    {
+        <span class="loader ms-2"></span>
+    }
+</span>
+<MudSpacer />
+<div style="justify-self: end;"
+     @onclick:stopPropagation="true"
+     @onclick:preventDefault="true"
+     @ondblclick:stopPropagation="true"
+     @ondblclick:preventDefault="true">
+    <RubricPropertiesManageComponent ProjectId="ProjectId" />
+</div>

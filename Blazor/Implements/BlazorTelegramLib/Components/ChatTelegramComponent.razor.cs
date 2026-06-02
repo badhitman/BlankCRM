@@ -1,0 +1,39 @@
+﻿////////////////////////////////////////////////
+// © https://github.com/badhitman - @FakeGov
+////////////////////////////////////////////////
+
+using BlazorLib;
+using Microsoft.AspNetCore.Components;
+using SharedLib;
+
+namespace BlazorTelegramLib.Components;
+
+/// <summary>
+/// ChatTelegramComponent
+/// </summary>
+public partial class ChatTelegramComponent : BlazorBusyComponentBaseModel
+{
+    [Inject]
+    ITelegramBotStandardService TelegramRepo { get; set; } = default!;
+
+
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public int ChatId { get; set; }
+
+
+    ChatTelegramStandardModel? currentChat;
+
+    /// <inheritdoc/>
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        if (ChatId < 1)
+            return;
+
+        await SetBusyAsync();
+        currentChat = await TelegramRepo.ChatTelegramReadAsync(ChatId);
+        await SetBusyAsync(false);
+    }
+}

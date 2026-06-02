@@ -1,0 +1,52 @@
+﻿////////////////////////////////////////////////
+// © https://github.com/badhitman - @FakeGov
+////////////////////////////////////////////////
+
+using BlazorLib;
+using Microsoft.AspNetCore.Components;
+using SharedLib;
+
+namespace BlazorConstructorLib.Components;
+
+/// <summary>
+/// Done client view
+/// </summary>
+public partial class DoneClientViewComponent : BlazorBusyComponentBaseModel
+{
+    /// <inheritdoc/>
+    [Inject]
+    protected IConstructorTransmission ConstructorRepo { get; set; } = default!;
+
+
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required SessionOfDocumentDataModelDB SessionDocument { get; set; }
+
+
+
+    bool InitSend = false;
+
+    /// <inheritdoc/>
+    protected async Task SetAsDone()
+    {
+        if (string.IsNullOrWhiteSpace(SessionDocument.SessionToken))
+        {
+            SnackBarRepo.Error("string.IsNullOrWhiteSpace(SessionDocument.SessionToken). error 5E2D7979-53E7-4130-8DF2-53C00D378BEA");
+            return;
+        }
+
+        if (!InitSend)
+        {
+            InitSend = true;
+            return;
+        }
+
+        await SetBusyAsync();
+        ResponseBaseModel rest = await ConstructorRepo.SetDoneSessionDocumentDataAsync(SessionDocument.SessionToken);
+        
+        SnackBarRepo.ShowMessagesResponse(rest.Messages);
+        if (rest.Success())
+            SessionDocument.SessionStatus = SessionsStatusesEnum.Sended;
+        await SetBusyAsync(false);
+    }
+}

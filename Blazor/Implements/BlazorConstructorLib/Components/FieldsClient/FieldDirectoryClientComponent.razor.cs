@@ -1,0 +1,85 @@
+﻿////////////////////////////////////////////////
+// © https://github.com/badhitman - @FakeGov
+////////////////////////////////////////////////
+
+using BlazorLib;
+using Microsoft.AspNetCore.Components;
+using Newtonsoft.Json;
+using SharedLib;
+
+namespace BlazorConstructorLib.Components.FieldsClient;
+
+/// <summary>
+/// Field directory client
+/// </summary>
+public partial class FieldDirectoryClientComponent : FieldComponentBaseModel
+{
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required FieldFormAkaDirectoryConstructorModelDB Field { get; set; }
+
+    /// <summary>
+    /// Объект справочника/списка (вместе с его элементами)
+    /// </summary>
+    [Parameter, EditorRequired]
+    public required EntryNestedModel DirectoryObject { get; set; }
+
+    EntryStandardModel? _detect_value;
+    EntryStandardModel? DetectValue
+    {
+        get => _detect_value;
+        set
+        {
+            _detect_value = value;
+        }
+    }
+
+    IEnumerable<EntryStandardModel> _options = [];
+    IReadOnlyCollection<EntryStandardModel> Options
+    {
+        get => [.. _options];
+        set
+        {
+            _options = value;
+            InvokeAsync(async () =>
+            {
+                if (!_options.Any())
+                    await SetValue(null, Field.Name);
+                else
+                    await SetValue($"[{string.Join(",", _options.Select(x => x.Id))}]", Field.Name);
+            });
+        }
+    }
+
+    Func<EntryStandardModel?, string> converter = p => p?.Name ?? "";
+
+    string? FieldValue => SessionOfDocumentData?.DataSessionValues?.FirstOrDefault(x => x.Name.Equals(Field.Name, StringComparison.OrdinalIgnoreCase) && x.JoinFormToTabId == PageJoinForm?.Id && x.RowNum == GroupByRowNum)?.Value;
+
+    /// <inheritdoc/>
+    public override string DomID => $"form-{Form.Id}_{Field.GetType().FullName}-{DocumentPage?.Id}-{Field.Id}";
+
+
+    /// <inheritdoc/>
+    protected override void OnInitialized()
+    {
+        if (!string.IsNullOrWhiteSpace(FieldValue))
+        {
+            int[] selectedIds = JsonConvert.DeserializeObject<int[]>(FieldValue) ?? [];
+            if (selectedIds.Length != 0)
+            {
+                if (Field.IsMultiSelect)
+                {
+                    _options = DirectoryObject.Childs.Where(x => selectedIds.Contains(x.Id)).ToArray();
+                }
+                else
+                {
+                    DetectValue = DirectoryObject.Childs.Any() ? DirectoryObject.Childs.FirstOrDefault(x => selectedIds.Contains(x.Id)) : null;
+
+                    if (DetectValue is null)
+                        SnackBarRepo.Error($"{nameof(DetectValue)} is null for '{FieldValue}'. error 2357552A-D878-4849-ADC5-98C070EC279F");
+                }
+            }
+        }
+        FieldsReferring?.Add(this);
+    }
+}

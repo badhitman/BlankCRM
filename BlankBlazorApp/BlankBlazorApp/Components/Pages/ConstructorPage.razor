@@ -1,0 +1,8 @@
+﻿@page "/constructor"
+@using BlazorConstructorLib.Components
+
+@attribute [Authorize]
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+<PageTitle>Конструктор</PageTitle>
+<ConstructorMainManageComponent />

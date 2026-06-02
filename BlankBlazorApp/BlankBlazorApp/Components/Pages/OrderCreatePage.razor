@@ -1,0 +1,7 @@
+﻿@page "/create-order"
+@using BlazorCommerceLib.Components
+
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@attribute [Authorize]
+
+<OrderCreateComponent />

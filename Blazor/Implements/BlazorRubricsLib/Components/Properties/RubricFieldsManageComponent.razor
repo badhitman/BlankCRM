@@ -1,0 +1,43 @@
+﻿@using BlazorConstructorLib.Components.Form
+@using MudBlazor
+@inherits BlazorBusyComponentBaseAuthModel
+
+<MudCard>
+    <MudCardContent>
+        <select @bind="SelectedFormId" class="form-select mb-2" aria-label="Формы">
+            @if (allForms.Count == 0)
+            {
+                <option disabled selected>Форм нет</option>
+            }
+            else
+            {
+                foreach (FormConstructorModelDB _e in allForms)
+                {
+                    <option value="@_e.Id">@_e.Name (@_e.Name)</option>
+                }
+            }
+        </select>
+
+        @if (Form is not null)
+        {
+            <FieldsFormViewComponent ReloadHandler="ReloadHandleAction"
+                                     PresetTypes="simpleTypesFields"
+                                     SessionOfDocumentData="null"
+                                     DocumentPage="null"
+                                     PageJoinForm="null"
+                                     Form="Form"
+                                     CanEdit />
+        }
+        else
+        {
+            <figure class="text-center">
+                <blockquote class="blockquote">
+                    <p>Не выбран вариант.</p>
+                </blockquote>
+                <figcaption class="blockquote-footer">
+                    Укажите <cite title="вариант формы">вариант формы</cite>
+                </figcaption>
+            </figure>
+        }
+    </MudCardContent>
+</MudCard>
