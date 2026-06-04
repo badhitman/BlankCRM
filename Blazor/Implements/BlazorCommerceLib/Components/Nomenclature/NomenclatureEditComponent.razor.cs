@@ -9,6 +9,7 @@ using BlazorCommerceLib.Components.Attendances;
 using static SharedLib.GlobalStaticConstantsRoutes;
 using BlazorLib;
 using BlazorLib.Components;
+using BlazorFilesLib.Components;
 
 namespace BlazorCommerceLib.Components.Nomenclature;
 

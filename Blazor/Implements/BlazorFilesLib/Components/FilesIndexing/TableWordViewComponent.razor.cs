@@ -5,7 +5,7 @@
 using Microsoft.AspNetCore.Components;
 using SharedLib;
 
-namespace BlazorLib.Components.FilesIndexing;
+namespace BlazorFilesLib.Components.FilesIndexing;
 
 /// <summary>
 /// TableWordViewComponent

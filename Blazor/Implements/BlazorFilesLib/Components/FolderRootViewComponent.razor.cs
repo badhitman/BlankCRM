@@ -2,13 +2,14 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
-using BlazorLib.Components.FileView;
+using BlazorFilesLib.Components.FileView;
+using BlazorLib;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using MudBlazor;
 using SharedLib;
 
-namespace BlazorLib.Components.Storage;
+namespace BlazorFilesLib.Components;
 
 /// <summary>
 /// FolderRootViewComponent

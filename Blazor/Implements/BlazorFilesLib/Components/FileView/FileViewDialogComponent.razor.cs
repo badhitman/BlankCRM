@@ -2,12 +2,13 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
+using BlazorLib;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using SharedLib;
 using System.Text;
 
-namespace BlazorLib.Components.FileView;
+namespace BlazorFilesLib.Components.FileView;
 
 /// <summary>
 /// FileViewDialogComponent

@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 using BlazorLib;
 using SharedLib;
 
-namespace BlazorLib.Components.MetaFiles;
+namespace BlazorFilesLib.Components.MetaFiles;
 
 /// <summary>
 /// MetaFilesComponent

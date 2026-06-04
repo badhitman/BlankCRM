@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
+using BlazorFilesLib.Components;
 using BlazorLib;
 using BlazorLib.Components;
 using Microsoft.AspNetCore.Components;

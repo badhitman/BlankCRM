@@ -36,6 +36,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\BlazorLib\BlazorLib.csproj" />
 		<ProjectReference Include="..\..\..\CodegeneratorLib\CodegeneratorLib.csproj" />
+		<ProjectReference Include="..\BlazorFilesLib\BlazorFilesLib.csproj" />
 		<ProjectReference Include="..\BlazorRubricsLib\BlazorRubricsLib.csproj" />
 	</ItemGroup>
 

@@ -2,9 +2,10 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
+using BlazorLib;
 using SharedLib;
 
-namespace BlazorLib.Components.FilesIndexing;
+namespace BlazorFilesLib.Components.FilesIndexing;
 
 /// <summary>
 /// FilesIndexingXLSX

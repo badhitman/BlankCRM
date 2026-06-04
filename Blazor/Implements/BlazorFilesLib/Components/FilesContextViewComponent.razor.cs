@@ -6,9 +6,10 @@ using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using SharedLib;
+using BlazorLib;
 using MudBlazor;
 
-namespace BlazorLib.Components;
+namespace BlazorFilesLib.Components;
 
 /// <summary>
 /// FilesContextViewComponent

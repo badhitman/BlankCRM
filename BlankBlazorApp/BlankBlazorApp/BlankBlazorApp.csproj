@@ -68,6 +68,7 @@
 		<ProjectReference Include="..\..\Blazor\Implements\BlazorBankLib\BlazorBankLib.csproj" />
 		<ProjectReference Include="..\..\Blazor\Implements\BlazorCommerceLib\BlazorCommerceLib.csproj" />
 		<ProjectReference Include="..\..\Blazor\Implements\BlazorConstructorLib\BlazorConstructorLib.csproj" />
+		<ProjectReference Include="..\..\Blazor\Implements\BlazorFilesLib\BlazorFilesLib.csproj" />
 		<ProjectReference Include="..\..\Blazor\Implements\BlazorHelpdeskLib\BlazorHelpdeskLib.csproj" />
 		<ProjectReference Include="..\..\Blazor\Implements\BlazorKladrLib\BlazorKladrLib.csproj" />
 		<ProjectReference Include="..\..\Blazor\Implements\BlazorOutersLib\BlazorOutersLib.csproj" />

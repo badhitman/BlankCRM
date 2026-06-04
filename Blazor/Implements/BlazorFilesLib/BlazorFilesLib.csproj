@@ -31,13 +31,6 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\CodegeneratorLib\CodegeneratorLib.csproj" />
 		<ProjectReference Include="..\..\BlazorLib\BlazorLib.csproj" />
-		<ProjectReference Include="..\BlazorFilesLib\BlazorFilesLib.csproj" />
-		<ProjectReference Include="..\BlazorRubricsLib\BlazorRubricsLib.csproj" />
-		<ProjectReference Include="..\BlazorWarehouseLib\BlazorWarehouseLib.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Components\Nomenclature\RubricsProperties\" />
 	</ItemGroup>
 
 </Project>
