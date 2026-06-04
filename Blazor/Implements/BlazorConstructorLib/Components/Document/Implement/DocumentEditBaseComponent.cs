@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging;
 using MudBlazor;
 
-namespace BlazorLib;
+namespace BlazorConstructorLib.Components.Document.Implement;
 
 /// <summary>
 /// Document edit

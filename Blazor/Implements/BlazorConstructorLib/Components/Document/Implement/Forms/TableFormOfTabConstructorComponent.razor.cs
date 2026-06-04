@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using SharedLib;
 
-namespace BlazorLib.Components.Documents.Forms;
+namespace BlazorConstructorLib.Components.Document.Implement.Forms;
 
 /// <summary>
 /// TableFormOfTabConstructorComponent

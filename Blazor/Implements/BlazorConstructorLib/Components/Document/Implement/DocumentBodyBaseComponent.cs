@@ -5,9 +5,8 @@
 using Microsoft.AspNetCore.Components;
 using BlazorLib;
 using SharedLib;
-using MudBlazor;
 
-namespace BlazorLib;
+namespace BlazorConstructorLib.Components.Document.Implement;
 
 /// <summary>
 /// DocumentBodyBaseComponent

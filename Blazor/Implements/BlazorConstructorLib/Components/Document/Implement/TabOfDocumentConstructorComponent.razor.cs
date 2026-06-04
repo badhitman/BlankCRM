@@ -5,7 +5,7 @@
 using Microsoft.AspNetCore.Components;
 using SharedLib;
 
-namespace BlazorLib.Components.Documents;
+namespace BlazorConstructorLib.Components.Document.Implement;
 
 /// <summary>
 /// TabOfDocumentConstructorComponent

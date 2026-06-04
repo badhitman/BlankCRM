@@ -5,7 +5,7 @@
 using BlazorLib;
 using Microsoft.AspNetCore.Components;
 
-namespace BlazorLib;
+namespace BlazorConstructorLib.Components.Document.Implement.Forms.fields;
 
 /// <summary>
 /// FieldBaseComponent

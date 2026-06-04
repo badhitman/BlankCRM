@@ -5,7 +5,7 @@
 using Microsoft.AspNetCore.Components;
 using SharedLib;
 
-namespace BlazorLib;
+namespace BlazorConstructorLib.Components.Document.Implement.Forms;
 
 /// <summary>
 /// FormBaseCore
