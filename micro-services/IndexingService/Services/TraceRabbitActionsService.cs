@@ -40,32 +40,18 @@ public class TraceRabbitActionsService(IOptions<MongoConfigModel> mongoConf) : I
         object? _rb;
         if (req.PayloadBody is not null)
         {
-            try
-            {
-                if (req.PayloadBody is Newtonsoft.Json.Linq.JObject)
-                    _rb = MongoDB.Bson.Serialization.BsonSerializer.Deserialize<BsonDocument>(JsonConvert.SerializeObject(req.PayloadBody));
-                else if (req.PayloadBody is string)
-                    _rb = req.PayloadBody;
-                else if (req.PayloadBody is System.Collections.IEnumerable || req.PayloadBody.GetType().IsArray)
-                    _rb = MongoDB.Bson.Serialization.BsonSerializer.Deserialize<BsonArray>(JsonConvert.SerializeObject(req.PayloadBody));
-                else
-                    _rb = MongoDB.Bson.Serialization.BsonSerializer.Deserialize<BsonDocument>(JsonConvert.SerializeObject(req.PayloadBody));
+            if (req.PayloadBody is Newtonsoft.Json.Linq.JObject)
+                _rb = MongoDB.Bson.Serialization.BsonSerializer.Deserialize<BsonDocument>(JsonConvert.SerializeObject(req.PayloadBody));
+            else if (req.PayloadBody is string)
+                _rb = req.PayloadBody;
+            else if (req.PayloadBody is System.Collections.IEnumerable || req.PayloadBody.GetType().IsArray)
+                _rb = MongoDB.Bson.Serialization.BsonSerializer.Deserialize<BsonArray>(JsonConvert.SerializeObject(req.PayloadBody));
+            else
+                _rb = MongoDB.Bson.Serialization.BsonSerializer.Deserialize<BsonDocument>(JsonConvert.SerializeObject(req.PayloadBody));
 
-                req.PayloadBody = _rb;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-            }
+            req.PayloadBody = _rb;
         }
-        try
-        {
-            await traceReceiverRecords.InsertOneAsync(TraceRabbitActionRequestModel.Build(req), cancellationToken: token);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
-        }
+        await traceReceiverRecords.InsertOneAsync(TraceRabbitActionRequestModel.Build(req), cancellationToken: token);
         return ResponseBaseModel.CreateSuccess("Ok");
     }
 }

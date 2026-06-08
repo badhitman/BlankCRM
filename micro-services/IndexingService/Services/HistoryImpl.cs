@@ -16,15 +16,38 @@ namespace IndexingService;
 /// HistoryImpl
 /// </summary>
 public class HistoryImpl(IOptions<MongoConfigModel> mongoConf) : IHistoryIndexing
-{//ITraceRabbitActionsService
+{
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> SaveHistoryForReceiverAsync(TraceReceiverRecord req, CancellationToken token = default)
     {
+        object? _rb;
         if (req.PayloadBody is not null)
-            req.PayloadBody = MongoDB.Bson.Serialization.BsonSerializer.Deserialize<BsonDocument>(JsonConvert.SerializeObject(req.PayloadBody));
+        {
+            if (req.PayloadBody is Newtonsoft.Json.Linq.JObject)
+                _rb = MongoDB.Bson.Serialization.BsonSerializer.Deserialize<BsonDocument>(JsonConvert.SerializeObject(req.PayloadBody));
+            else if (req.PayloadBody is string)
+                _rb = req.PayloadBody;
+            else if (req.PayloadBody is System.Collections.IEnumerable || req.PayloadBody.GetType().IsArray)
+                _rb = MongoDB.Bson.Serialization.BsonSerializer.Deserialize<BsonArray>(JsonConvert.SerializeObject(req.PayloadBody));
+            else
+                _rb = MongoDB.Bson.Serialization.BsonSerializer.Deserialize<BsonDocument>(JsonConvert.SerializeObject(req.PayloadBody));
+
+            req.PayloadBody = _rb;
+        }
 
         if (req.ResponseBody is not null)
-            req.ResponseBody = MongoDB.Bson.Serialization.BsonSerializer.Deserialize<BsonDocument>(JsonConvert.SerializeObject(req.ResponseBody));
+        {
+            if (req.ResponseBody is JObject)
+                _rb = MongoDB.Bson.Serialization.BsonSerializer.Deserialize<BsonDocument>(JsonConvert.SerializeObject(req.ResponseBody));
+            else if (req.ResponseBody is string)
+                _rb = req.ResponseBody;
+            else if (req.ResponseBody is System.Collections.IEnumerable || req.ResponseBody.GetType().IsArray)
+                _rb = MongoDB.Bson.Serialization.BsonSerializer.Deserialize<BsonArray>(JsonConvert.SerializeObject(req.ResponseBody));
+            else
+                _rb = MongoDB.Bson.Serialization.BsonSerializer.Deserialize<BsonDocument>(JsonConvert.SerializeObject(req.ResponseBody));
+
+            req.ResponseBody = _rb;
+        }
 
         IMongoDatabase mongoFs = new MongoClient(mongoConf.Value.ToString()).GetDatabase($"{mongoConf.Value.BusHistorySystemName}{GlobalStaticConstantsTransmission.GetModePrefix}");
         IMongoCollection<HistoryReceive> traceReceiverRecords = mongoFs.GetCollection<HistoryReceive>(nameof(HistoryReceive));

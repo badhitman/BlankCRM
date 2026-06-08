@@ -10,19 +10,30 @@
     <MudStack Row Class="mb-4">
         @if (_metaData.ContextsPrefixesAvailable?.Any() == true)
         {
-            <FiltersUniversalComponent FiltersAvailable="_metaData.ContextsPrefixesAvailable" Title="Prefix/Contour Name" @ref="ContextsPrefixesAvailable" CheckedChangedHandle="CheckedChangedAction" />
+            <FiltersUniversalComponent FiltersAvailable="_metaData.ContextsPrefixesAvailable"
+                                       Title="Prefix/Contour Name" @ref="ContextsPrefixesAvailable"
+                                       CheckedChangedHandle="CheckedChangedAction" />
         }
         @if (_metaData.ApplicationsAvailable?.Any() == true)
         {
-            <FiltersUniversalComponent FiltersAvailable="_metaData.ApplicationsAvailable" Title="App`s" @ref="ApplicationsAvailable" CheckedChangedHandle="CheckedChangedAction" />
+            <FiltersUniversalComponent FiltersAvailable="_metaData.ApplicationsAvailable"
+                                       Title="App`s"
+                                       @ref="ApplicationsAvailable"
+                                       CheckedChangedHandle="CheckedChangedAction" />
         }
         @if (_metaData.LevelsAvailable?.Any() == true)
         {
-            <FiltersUniversalComponent FiltersAvailable="_metaData.LevelsAvailable" Title="Levels" @ref="LevelsAvailable" CheckedChangedHandle="CheckedChangedAction" />
+            <FiltersUniversalComponent FiltersAvailable="_metaData.LevelsAvailable"
+                                       Title="Levels"
+                                       @ref="LevelsAvailable"
+                                       CheckedChangedHandle="CheckedChangedAction" />
         }
         @if (_metaData.LoggersAvailable?.Any() == true)
         {
-            <FiltersUniversalComponent FiltersAvailable="_metaData.LoggersAvailable" Title="Loggers" @ref="LoggersAvailable" CheckedChangedHandle="CheckedChangedAction" />
+            <FiltersUniversalComponent FiltersAvailable="_metaData.LoggersAvailable"
+                                       Title="Loggers"
+                                       @ref="LoggersAvailable"
+                                       CheckedChangedHandle="CheckedChangedAction" />
         }
     </MudStack>
 }
