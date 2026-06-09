@@ -16,6 +16,10 @@ public class LogsService(IStorageTransmission storeRepo) : ILogsService
         => await storeRepo.GoToPageForRowLogsAsync(req, token);
 
     /// <inheritdoc/>
+    public async Task<LogsClearResponseModel> LogsClearAsync(LogsClearRequestModel req, CancellationToken token = default)
+        => await storeRepo.LogsClearAsync(req, token);
+
+    /// <inheritdoc/>
     public async Task<TPaginationResponseStandardModel<NLogRecordModelDB>> LogsSelectAsync(TPaginationRequestStandardModel<LogsSelectRequestModel> req, CancellationToken token = default)
         => await storeRepo.LogsSelectAsync(req, token);
 

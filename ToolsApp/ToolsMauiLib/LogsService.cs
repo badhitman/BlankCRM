@@ -41,6 +41,20 @@ public class LogsService(ApiRestConfigModelDB _conf, IHttpClientFactory HttpClie
     }
 
     /// <inheritdoc/>
+    public async Task<LogsClearResponseModel> LogsClearAsync(LogsClearRequestModel req, CancellationToken cancellationToken = default)
+    {
+        using HttpClient _client = HttpClientFactory.CreateClient(HttpClientsNamesEnum.Kladr.ToString());
+
+        string json = System.Text.Json.JsonSerializer.Serialize(req, _serializerOptions);
+        StringContent content = new(json, Encoding.UTF8, "application/json");
+
+        using HttpResponseMessage response = await _client.PostAsync(new Uri($"{_conf.AddressBaseUri.NormalizedUriEnd()}{Routes.API_CONTROLLER_NAME}/{Routes.TOOLS_CONTROLLER_NAME}/{Routes.LOGS_ACTION_NAME}/{Routes.CLEAR_ACTION_NAME}"), content, cancellationToken);
+        string rj = await response.Content.ReadAsStringAsync(cancellationToken);
+
+        return JsonConvert.DeserializeObject<LogsClearResponseModel>(rj)!;
+    }
+
+    /// <inheritdoc/>
     public async Task<TPaginationResponseStandardModel<NLogRecordModelDB>> LogsSelectAsync(TPaginationRequestStandardModel<LogsSelectRequestModel> req, CancellationToken cancellationToken = default)
     {
         using HttpClient _client = HttpClientFactory.CreateClient(HttpClientsNamesEnum.Kladr.ToString());
@@ -48,7 +62,7 @@ public class LogsService(ApiRestConfigModelDB _conf, IHttpClientFactory HttpClie
         string json = System.Text.Json.JsonSerializer.Serialize(req, _serializerOptions);
         StringContent content = new(json, Encoding.UTF8, "application/json");
 
-        using HttpResponseMessage response = await _client.PostAsync(new Uri($"{_conf.AddressBaseUri.NormalizedUriEnd()}{Routes.API_CONTROLLER_NAME}/{Routes.TOOLS_CONTROLLER_NAME}/{Routes.LOGS_ACTION_NAME}-{Routes.SELECT_ACTION_NAME}"), content, cancellationToken);
+        using HttpResponseMessage response = await _client.PostAsync(new Uri($"{_conf.AddressBaseUri.NormalizedUriEnd()}{Routes.API_CONTROLLER_NAME}/{Routes.TOOLS_CONTROLLER_NAME}/{Routes.LOGS_ACTION_NAME}/{Routes.SELECT_ACTION_NAME}"), content, cancellationToken);
         string rj = await response.Content.ReadAsStringAsync(cancellationToken);
 
         return JsonConvert.DeserializeObject<TPaginationResponseStandardModel<NLogRecordModelDB>>(rj)!;

@@ -25,6 +25,10 @@ public class StorageTransmissionRabbit([FromKeyedServices(nameof(RabbitClient))]
         => await rabbitClient.MqRemoteCallAsync<TPaginationResponseStandardModel<NLogRecordModelDB>>(GlobalStaticConstantsTransmission.TransmissionQueues.LogsSelectStorageReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
+    public async Task<LogsClearResponseModel> LogsClearAsync(LogsClearRequestModel req, CancellationToken token = default)
+          => await rabbitClient.MqRemoteCallAsync<LogsClearResponseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.LogsClearStorageReceive, req, token: token) ?? new();
+
+    /// <inheritdoc/>
     public async Task<TResponseModel<StorageFileModelDB>> SaveFileAsync(TAuthRequestStandardModel<StorageFileMetadataModel>? req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<StorageFileModelDB>>(GlobalStaticConstantsTransmission.TransmissionQueues.SaveFileReceive, req, token: token) ?? new();
 

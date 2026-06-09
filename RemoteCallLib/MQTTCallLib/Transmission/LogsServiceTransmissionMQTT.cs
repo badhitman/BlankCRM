@@ -18,6 +18,10 @@ public partial class LogsServiceTransmissionMQTT(IMQStandardClientExtRPC mqClien
         => await mqClient.MqRemoteCallAsync<TPaginationResponseStandardModel<NLogRecordModelDB>>(GlobalStaticConstantsTransmission.TransmissionQueues.GoToPageForRowLogsReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
+    public async Task<LogsClearResponseModel> LogsClearAsync(LogsClearRequestModel req, CancellationToken token = default)
+         => await mqClient.MqRemoteCallAsync<LogsClearResponseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.LogsClearStorageReceive, req, token: token) ?? new();
+
+    /// <inheritdoc/>
     public async Task<TPaginationResponseStandardModel<NLogRecordModelDB>> LogsSelectAsync(TPaginationRequestStandardModel<LogsSelectRequestModel> req, CancellationToken token = default)
         => await mqClient.MqRemoteCallAsync<TPaginationResponseStandardModel<NLogRecordModelDB>>(GlobalStaticConstantsTransmission.TransmissionQueues.LogsSelectStorageReceive, req, token: token) ?? new();
 

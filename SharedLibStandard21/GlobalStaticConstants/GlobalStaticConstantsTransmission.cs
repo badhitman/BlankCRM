@@ -1108,6 +1108,9 @@ public static partial class GlobalStaticConstantsTransmission
         public readonly static string LogsSelectStorageReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.TOOLS_CONTROLLER_NAME, Routes.LOGS_ACTION_NAME, Routes.SELECT_ACTION_NAME);
 
         /// <inheritdoc/>
+        public readonly static string LogsClearStorageReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.TOOLS_CONTROLLER_NAME, Routes.LOGS_ACTION_NAME, Routes.CLEAR_ACTION_NAME);
+
+        /// <inheritdoc/>
         public readonly static string GoToPageForRowLogsReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.TOOLS_CONTROLLER_NAME, $"{Routes.LOGS_ACTION_NAME}-{Routes.PAGE_CONTROLLER_NAME}", $"{Routes.GOTO_ACTION_NAME}-for-{Routes.RECORD_CONTROLLER_NAME}");
 
         /// <inheritdoc/>

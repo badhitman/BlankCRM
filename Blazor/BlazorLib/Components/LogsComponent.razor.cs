@@ -140,14 +140,14 @@ public partial class LogsComponent : BlazorBusyComponentBaseModel
     #endregion
 
     MudTable<NLogRecordModelDB>? table;
-    MudPagination? paginationRef;
+    //MudPagination? paginationRef;
     readonly HashSet<NLogRecordModelDB> favoritesRecords = [];
     List<NLogRecordModelDB>? tableItems;
     FiltersUniversalComponent? ContextsPrefixesAvailable = default!;
     FiltersUniversalComponent? ApplicationsAvailable = default!;
     FiltersUniversalComponent? LevelsAvailable = default!;
     FiltersUniversalComponent? LoggersAvailable = default!;
-
+    string? confirmLogsClearQuery;
     int selectedRecord;
     string? navigatedRowId;
     /// <inheritdoc/>
@@ -261,11 +261,6 @@ public partial class LogsComponent : BlazorBusyComponentBaseModel
         await SetBusyAsync(false);
     }
 
-    private void PageChanged(int i)
-    {
-        table?.NavigateTo(i - 1);
-    }
-
     static string GetClassLevel(string? recordLevel)
     {
         if (string.IsNullOrWhiteSpace(recordLevel))
@@ -299,6 +294,28 @@ public partial class LogsComponent : BlazorBusyComponentBaseModel
         }
     }
 
+    async Task LogsClearAsync()
+    {
+        LogsClearRequestModel req = new()
+        {
+            StartAt = DateRangeBind?.Start,
+            FinalOff = DateRangeBind?.End,
+            ApplicationsFilter = ApplicationsFilter,
+            ContextsPrefixesFilter = ContextsPrefixesAvailable is null ? null : [.. ContextsPrefixesAvailable.GetSelected()],
+            LevelsFilter = LevelsAvailable is null ? null : [.. LevelsAvailable.GetSelected()],
+            LoggersFilter = LoggersAvailable is null ? null : [.. LoggersAvailable.GetSelected()],
+            ConfirmQuery = confirmLogsClearQuery
+        };
+        await SetBusyAsync();
+        LogsClearResponseModel res = await LogsRepo.LogsClearAsync(req);
+        confirmLogsClearQuery = res.ConfirmQuery;
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
+        if (table is not null)
+            await table.ReloadServerData();
+
+        await SetBusyAsync(false);
+    }
+
     /// <summary>
     /// Here we simulate getting the paged, filtered and ordered data from the server
     /// </summary>
@@ -308,8 +325,8 @@ public partial class LogsComponent : BlazorBusyComponentBaseModel
         {
             Payload = new()
             {
-                StartAt = DateRangeBind.Start,
-                FinalOff = DateRangeBind.End,
+                StartAt = DateRangeBind?.Start,
+                FinalOff = DateRangeBind?.End,
                 ApplicationsFilter = ApplicationsFilter,
                 ContextsPrefixesFilter = ContextsPrefixesAvailable is null ? null : [.. ContextsPrefixesAvailable.GetSelected()],
                 LevelsFilter = LevelsAvailable is null ? null : [.. LevelsAvailable.GetSelected()],
@@ -325,7 +342,7 @@ public partial class LogsComponent : BlazorBusyComponentBaseModel
         await SetBusyAsync(token: token);
 
         await Task.WhenAll([Task.Run(async () => selector = await LogsRepo.LogsSelectAsync(req, token)),
-                            Task.Run(async () => md = await LogsRepo.MetadataLogsAsync(new() { StartAt = DateRangeBind.Start, FinalOff = DateRangeBind.End }))]);
+                            Task.Run(async () => md = await LogsRepo.MetadataLogsAsync(new() { StartAt = DateRangeBind?.Start, FinalOff = DateRangeBind?.End }))]);
 
         _metaData = md.Response;
 

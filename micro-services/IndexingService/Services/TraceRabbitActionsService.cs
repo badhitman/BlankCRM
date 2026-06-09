@@ -55,6 +55,3 @@ public class TraceRabbitActionsService(IOptions<MongoConfigModel> mongoConf) : I
         return ResponseBaseModel.CreateSuccess("Ok");
     }
 }
-/*
- Newtonsoft.Json.Linq.JObject
- */

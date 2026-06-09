@@ -26,4 +26,9 @@ public interface ILogsService
     /// MetadataLogs
     /// </summary>
     public Task<TResponseModel<LogsMetadataResponseModel>> MetadataLogsAsync(PeriodDatesTimesModel req, CancellationToken token = default);
+
+    /// <summary>
+    /// LogsClearAsync
+    /// </summary>
+    public Task<LogsClearResponseModel> LogsClearAsync(LogsClearRequestModel req, CancellationToken token = default);
 }

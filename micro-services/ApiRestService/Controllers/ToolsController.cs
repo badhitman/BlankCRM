@@ -41,10 +41,19 @@ public class ToolsController(
     /// <summary>
     /// Чтение логов
     /// </summary>
-    [HttpPost($"/{Routes.API_CONTROLLER_NAME}/{Routes.TOOLS_CONTROLLER_NAME}/{Routes.LOGS_ACTION_NAME}-{Routes.SELECT_ACTION_NAME}"), LoggerNolog]
+    [HttpPost($"/{Routes.API_CONTROLLER_NAME}/{Routes.TOOLS_CONTROLLER_NAME}/{Routes.LOGS_ACTION_NAME}/{Routes.SELECT_ACTION_NAME}"), LoggerNolog]
     public async Task<TPaginationResponseStandardModel<NLogRecordModelDB>> LogsSelect(TPaginationRequestStandardModel<LogsSelectRequestModel> req)
     {
         return await storeRepo.LogsSelectAsync(req);
+    }
+
+    /// <summary>
+    /// Чтение логов
+    /// </summary>
+    [HttpPost($"/{Routes.API_CONTROLLER_NAME}/{Routes.TOOLS_CONTROLLER_NAME}/{Routes.LOGS_ACTION_NAME}/{Routes.CLEAR_ACTION_NAME}"), LoggerNolog]
+    public async Task<LogsClearResponseModel> LogsClearAsync(LogsClearRequestModel req)
+    {
+        return await storeRepo.LogsClearAsync(req);
     }
 
     /// <summary>

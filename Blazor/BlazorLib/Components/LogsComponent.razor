@@ -204,16 +204,28 @@
     <PagerContent>
         <MudTablePager PageSizeOptions="new int[] { 25, 50, 100 }"
                        HorizontalAlignment="@HorizontalAlignment.Center" />
-        @if (selectedRecord == 0)
-        {
-            <div class="d-flex flex-column align-center">
-                <MudPagination @ref="paginationRef"
-                               MiddleCount="5"
-                               BoundaryCount="5"
-                               SelectedChanged="PageChanged"
-                               Count="@((table is null ? 0 : ((table.GetFilteredItemsCount() + table.RowsPerPage - 1) / table.RowsPerPage)))"
-                               Class="pa-4" />
-            </div>
-        }
+        <AuthorizeView Roles="@($"{GlobalStaticConstantsRoles.Roles.Admin},{GlobalStaticConstantsRoles.Roles.Debug}")">
+            <Authorized>
+                <div class="d-grid gap-2 mt-2">
+                    @if (!string.IsNullOrWhiteSpace(confirmLogsClearQuery))
+                    {
+                        <button class="btn btn-primary" type="button" @onclick="() => confirmLogsClearQuery = null">Отмена</button>
+                        <button class="btn btn-outline-danger" type="button" @onclick="LogsClearAsync">Подтвердить очистку логов</button>
+
+                    }
+                    else if (ApplicationsFilter is not null && ApplicationsFilter.Length != 0)
+                    {
+
+                        <button class="btn btn-warning" type="button" @onclick="LogsClearAsync">Очистка логов</button>
+                    }
+                    @if (!string.IsNullOrWhiteSpace(confirmLogsClearQuery))
+                    {
+                        <pre class="alert alert-warning" role="alert">
+                            @confirmLogsClearQuery
+                        </pre>
+                    }
+                </div>
+            </Authorized>
+        </AuthorizeView>
     </PagerContent>
 </MudTable>

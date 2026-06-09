@@ -30,6 +30,7 @@ public static class RegisterMqListenerExtension
             .RegisterListenerRabbitMQ<MetadataLogsReceive, PeriodDatesTimesModel, TResponseModel<LogsMetadataResponseModel>>()
             .RegisterListenerRabbitMQ<LogsSelectReceive, TPaginationRequestStandardModel<LogsSelectRequestModel>, TPaginationResponseStandardModel<NLogRecordModelDB>>()
             .RegisterListenerRabbitMQ<SetWebConfigReceive, WebConfigModel, ResponseBaseModel>()
+            .RegisterListenerRabbitMQ<LogsClearReceive, LogsClearRequestModel, LogsClearResponseModel>()
 
             .RegisterListenerRabbitMQ<SaveFileReceive, TAuthRequestStandardModel<StorageFileMetadataModel>, TResponseModel<StorageFileModelDB>>()
             .RegisterListenerRabbitMQ<ReadFileReceive, TAuthRequestStandardModel<RequestFileReadModel>, TResponseModel<FileContentModel>>()

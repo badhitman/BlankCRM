@@ -154,4 +154,52 @@ public class LogsNavigationImpl(IDbContextFactory<NLogsContext> logsDbFactory) :
             Response = [.. await oq.Skip(req.PageNum * req.PageSize).Take(req.PageSize).ToArrayAsync(cancellationToken: token)]
         };
     }
+
+    /// <inheritdoc/>
+    public async Task<LogsClearResponseModel> LogsClearAsync(LogsClearRequestModel req, CancellationToken token = default)
+    {
+        using NLogsContext context = await logsDbFactory.CreateDbContextAsync(token);
+        IQueryable<NLogRecordModelDB> q = context.Logs.AsQueryable();
+
+        if (req.StartAt.HasValue)
+        {
+            DateTime _dt = req.StartAt.Value.SetKindUtc();
+            q = q.Where(x => x.RecordTime >= _dt);
+        }
+        if (req.FinalOff.HasValue)
+        {
+            DateTime _dt = req.FinalOff.Value.SetKindUtc().Date.AddHours(23).AddMinutes(59).AddSeconds(59);
+            q = q.Where(x => x.RecordTime <= _dt);
+        }
+
+        if (req.LevelsFilter is not null && req.LevelsFilter.Length != 0)
+            q = q.Where(x => req.LevelsFilter.Contains(x.RecordLevel));
+
+        if (req.LoggersFilter is not null && req.LoggersFilter.Length != 0)
+            q = q.Where(x => req.LoggersFilter.Contains(x.Logger));
+
+        if (req.ContextsPrefixesFilter is not null && req.ContextsPrefixesFilter.Length != 0)
+            q = q.Where(x => req.ContextsPrefixesFilter.Contains(x.ContextPrefix));
+
+        if (req.ApplicationsFilter is not null && req.ApplicationsFilter.Length != 0)
+            q = q.Where(x => req.ApplicationsFilter.Contains(x.ApplicationName));
+
+        int trc = await q.CountAsync(cancellationToken: token);
+
+        if (req.ConfirmQuery != q.ToQueryString())
+        {
+            return new()
+            {
+                Messages = [new() { Text = $"Подтвердите удаление логов: {trc} строк", TypeMessage = MessagesTypesEnum.Warning }],
+                ConfirmQuery = q.ToQueryString()
+            };
+        }
+        await q.ExecuteDeleteAsync(token);
+        await context.Database.ExecuteSqlAsync($"VACUUM (FULL, VERBOSE);", cancellationToken: token);
+
+        return new()
+        {
+            Messages = [new() { Text = $"Удалено {trc} строк логов!", TypeMessage = MessagesTypesEnum.Info }]
+        };
+    }
 }
