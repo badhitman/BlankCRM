@@ -145,8 +145,9 @@
     <File Path="../secrets-BlankCRM.AppHost/excenge-conf.Development.json" />
     <File Path="../secrets-BlankCRM.AppHost/mongo-conf.json" />
     <File Path="../secrets-BlankCRM.AppHost/rabbitmq-conf.Development.json" />
-    <File Path="../secrets-BlankCRM.AppHost/server-config.Development.json" />
     <File Path="../secrets-BlankCRM.AppHost/telegram-bot.Development.json" />
+    <File Path="devops/secrets/firebase-sdk.Development.json" />
+    <File Path="devops/secrets/server-config.Development.json" />
   </Folder>
   <Folder Name="/Solution Items/secrets/custom/">
     <File Path="../secrets/api-access.json" />

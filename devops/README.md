@@ -124,6 +124,8 @@ wget https://raw.githubusercontent.com/badhitman/BlankCRM/refs/heads/main/devops
 wget https://raw.githubusercontent.com/badhitman/BlankCRM/refs/heads/main/devops/secrets/rabbitmq-conf.Development.json
 wget https://raw.githubusercontent.com/badhitman/BlankCRM/refs/heads/main/devops/secrets/telegram-bot.Development.json
 wget https://raw.githubusercontent.com/badhitman/BlankCRM/refs/heads/main/devops/secrets/top-menu.Development.json
+wget https://raw.githubusercontent.com/badhitman/BlankCRM/refs/heads/main/devops/secrets/firebase-sdk.Development.json
+wget https://raw.githubusercontent.com/badhitman/BlankCRM/refs/heads/main/devops/secrets/server-config.Development.json
 ```
 edit these files for your infrastructure - logins, passwords, etc.
 
