@@ -159,6 +159,7 @@
     <File Path="../secrets/telegram-bot.Development.json" />
     <File Path="../secrets/top-menu.Development.json" />
     <File Path="../secrets/web-conf.json" />
+    <File Path="../secrets/firebase-sdk.Development.json" />
   </Folder>
   <Project Path="BlankCRM.AppHost/BlankCRM.AppHost.csproj" />
   <Project Path="BlankCRM.ServiceDefaults/BlankCRM.ServiceDefaults.csproj" />
