@@ -23,8 +23,23 @@ public partial class WebChatService : IWebChatService
         RealtimeContext context = await mainDbFactory.CreateDbContextAsync(token);
         await context.Messages.AddAsync(req, token);
         await context.SaveChangesAsync(token);
+
         IQueryable<DialogWebChatModelDB> q = context.Dialogs
             .Where(x => x.Id == req.DialogOwnerId);
+
+        DialogWebChatModelDB? currentDialog = q
+            .FirstOrDefault(x => x.Id == req.DialogOwnerId);
+
+        if (currentDialog is null)
+        {
+            string msg = $"Диалог {req.DialogOwnerId} не найден";
+            loggerRepo.LogError(msg);
+            return new()
+            {
+                Messages = [new() { Text = msg, TypeMessage = MessagesTypesEnum.Error }]
+            };
+        }
+
         await q.ExecuteUpdateAsync(set => set
                 .SetProperty(p => p.LastMessageAtUTC, DateTime.UtcNow), cancellationToken: token);
 
@@ -32,12 +47,28 @@ public partial class WebChatService : IWebChatService
             await notifyWebChatRepo.NewMessageWebChatAsync(new() { DialogId = req.DialogOwnerId, TextMessage = req.Text }, token);
 
         string _baseUri = await q.Select(x => x.BaseUri).FirstAsync(cancellationToken: token);
-        IQueryable<UserJoinDialogWebChatModelDB> q2 = context.UsersDialogsJoins
-            .Where(x => x.DialogJoinId == req.DialogOwnerId && (x.OutDateUTC == null || x.OutDateUTC == default));
+        UserJoinDialogWebChatModelDB[] usersJoins = await context.UsersDialogsJoins
+            .Where(x => x.DialogJoinId == req.DialogOwnerId && (x.OutDateUTC == null || x.OutDateUTC == default))
+            .Include(x => x.DialogJoin)
+            .ToArrayAsync(cancellationToken: token);
+
+        List<string> notifyFCM = [];
+
+        IQueryable<UserJoinDialogWebChatModelDB> fcmQuery() => usersJoins
+            .Where(x => !string.IsNullOrWhiteSpace(x.DialogJoin?.FirebaseCloudMessagingToken))
+            .AsQueryable();
+
+        string clearTextMessage() => req.Text.Replace("<", " ").Replace(">", " ");
+
+        //IQueryable<UserJoinDialogWebChatModelDB> fcmQuery = usersJoins
+        //    .Where(x => !string.IsNullOrWhiteSpace(x.DialogJoin?.FirebaseCloudMessagingToken))
+        //    .AsQueryable();
+
+        List<Task> notifiesTasks = [];
 
         if (req.InitiatorMessageSender)
         {
-            if (!await q2.AnyAsync(cancellationToken: token))
+            if (usersJoins.Length == 0)
             {
                 TResponseModel<long?> notifyTg = await StorageRepo.ReadParameterAsync<long?>(GlobalStaticCloudStorageMetadata.WebChatNotificationTelegramForNewMessage, token);
                 if (notifyTg.Success() && notifyTg.Response.HasValue)
@@ -49,15 +80,18 @@ public partial class WebChatService : IWebChatService
                         UserTelegramId = notifyTg.Response.Value,
                     };
 
-                    await Task.WhenAll([
+                    notifiesTasks.AddRange([
                         Task.Run(async () => { await tgRepo.SendTextMessageTelegramAsync(tgMsgSend, waitResponse: false, token: token); }, token),
                         Task.Run(async () => { await mailRepo.SendEmailAsync(new SendEmailRequestModel(){ Email = "*", Subject = "Уведомление", TextMessage = $"Сообщение в [без-хозном] чате: {_baseUri}web-chats/room-{req.DialogOwnerId}\n`{req.Text}`" }, waitResponse: false, token: token ); }, token)]);
                 }
             }
             else
             {
+                if (fcmQuery().Any())
+                    notifyFCM.AddRange(fcmQuery().Select(x => x.DialogJoin!.FirebaseCloudMessagingToken)!);
+
                 TResponseModel<UserInfoModel[]> usersGet = await identityRepo
-                    .GetUsersOfIdentityAsync(await q2.Select(x => x.UserIdentityId).ToArrayAsync(cancellationToken: token), token);
+                    .GetUsersOfIdentityAsync([.. usersJoins.Select(x => x.UserIdentityId)], token);
 
                 if (usersGet.Response is not null && usersGet.Response.Length != 0)
                     foreach (UserInfoModel usr in usersGet.Response.Where(x => x.TelegramId.HasValue))
@@ -65,16 +99,36 @@ public partial class WebChatService : IWebChatService
                         SendTextMessageTelegramBotModel tgMsgSend = new()
                         {
                             From = "Уведомление",
-                            Message = $"Сообщение в [наблюдаемом] чате: {_baseUri}web-chats/room-{req.DialogOwnerId}\n`{req.Text.Replace("<", " ").Replace(">", " ")}`",
+                            Message = $"Сообщение в [наблюдаемом] чате: {_baseUri}web-chats/room-{req.DialogOwnerId}\n`{clearTextMessage()}`",
                             UserTelegramId = usr.TelegramId!.Value,
                         };
 
-                        await Task.WhenAll([
+                        notifiesTasks.AddRange([
                             Task.Run(async () => { await tgRepo.SendTextMessageTelegramAsync(tgMsgSend, waitResponse: false, token: token); }, token),
-                            Task.Run(async () => { await mailRepo.SendEmailAsync(new SendEmailRequestModel(){ Email = usr.UserName, Subject = "Уведомление", TextMessage = $"Сообщение в [наблюдаемом] чате: {_baseUri}web-chats/room-{req.DialogOwnerId}\n`{req.Text.Replace("<", " ").Replace(">", " ")}`" }, waitResponse: false, token: token ); }, token)]);
+                            Task.Run(async () => { await mailRepo.SendEmailAsync(new SendEmailRequestModel(){ Email = usr.UserName, Subject = "Уведомление", TextMessage = $"Сообщение в [наблюдаемом] чате: {_baseUri}web-chats/room-{req.DialogOwnerId}\n`{clearTextMessage()}`" }, waitResponse: false, token: token ); }, token)]);
                     }
             }
         }
+        else
+        {
+            usersJoins = [.. usersJoins.Where(x => x.UserIdentityId != req.SenderUserIdentityId)];
+
+            if (fcmQuery().Any())
+                notifyFCM.AddRange(fcmQuery().Select(x => x.DialogJoin!.FirebaseCloudMessagingToken)!);
+        }
+
+        if (notifyFCM.Count != 0)
+            notifiesTasks.Add(Task.Run(async () =>
+            {
+                await firebaseRepo.SendFirebaseNotificationAsync(new()
+                {
+                    SenderActionUserId = GlobalStaticConstantsRoles.Roles.System,
+                    Payload = new() { TokensFCM = notifyFCM, TextBody = clearTextMessage(), Title = "Сообщение в чате", }
+                });
+            }, token));
+
+        if (notifiesTasks.Count != 0)
+            await Task.WhenAll(notifiesTasks);
 
         return new()
         {

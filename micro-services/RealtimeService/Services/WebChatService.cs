@@ -18,6 +18,8 @@ public partial class WebChatService(
     IEventsWebChatsNotifies notifyWebChatRepo,
     ITelegramTransmission tgRepo,
     IIdentityTransmission mailRepo,
+    IFirebaseService firebaseRepo,
+    ILogger<WebChatService> loggerRepo,
     IParametersStorageTransmission StorageRepo,
     MqttServer mqttServerRepo)
     : IWebChatService

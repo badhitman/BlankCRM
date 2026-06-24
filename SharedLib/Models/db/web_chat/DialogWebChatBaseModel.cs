@@ -32,8 +32,5 @@ public class DialogWebChatBaseModel
     /// <summary>
     /// Опция связи с реальным пользователем системы
     /// </summary>
-    /// <remarks>
-    /// Например, для связи с телегой
-    /// </remarks>
     public string? InitiatorIdentityId { get; set; }
 }
