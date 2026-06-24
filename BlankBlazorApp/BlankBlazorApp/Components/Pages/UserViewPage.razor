@@ -24,6 +24,9 @@
             <div class="col">
                 <ClaimsManageComponent ClaimArea="ClaimAreasEnum.ForUser" OwnerId="@UserId.ToString()" />
             </div>
+            <div class="col">
+                <ChangePasswordForUser OwnerId="@UserId.ToString()" />
+            </div>
         </div>
     </MudCardContent>
 </MudCard>

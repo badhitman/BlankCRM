@@ -216,6 +216,7 @@ public class Program
             .AddScoped<IKladrService, KladrServiceTransmissionRabbit>()
             .AddScoped<IBankService, BankTransmissionRabbit>()
             .AddScoped<IMerchantService, MerchantTransmissionRabbit>()
+            .AddScoped<IFirebaseServiceTransmission, FirebaseTransmissionRabbit>()
             ;
         #endregion
 
