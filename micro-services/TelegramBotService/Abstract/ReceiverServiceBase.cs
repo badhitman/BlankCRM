@@ -36,11 +36,19 @@ public abstract class ReceiverServiceBase<TUpdateHandler> : IReceiverService
         {
             AllowedUpdates = [],
             //ThrowPendingUpdates = true,
-             DropPendingUpdates = true,
+            DropPendingUpdates = true,
         };
 
-        Telegram.Bot.Types.User me = await _botClient.GetMe(stoppingToken);
-        _logger.LogInformation("Start receiving updates for {BotName}", me.Username ?? "My Awesome Bot");
+        try
+        {
+            Telegram.Bot.Types.User me = await _botClient.GetMe(stoppingToken);
+            _logger.LogInformation("Start receiving updates for {BotName}", me.Username ?? "My Awesome Bot");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogDebug($"Exception start receiving updates for Bot: {ex.Message}");
+            return;
+        }
 
         // Start receiving updates
         await _botClient.ReceiveAsync(
