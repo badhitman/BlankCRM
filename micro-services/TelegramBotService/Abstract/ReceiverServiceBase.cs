@@ -44,10 +44,14 @@ public abstract class ReceiverServiceBase<TUpdateHandler> : IReceiverService
             Telegram.Bot.Types.User me = await _botClient.GetMe(stoppingToken);
             _logger.LogInformation("Start receiving updates for {BotName}", me.Username ?? "My Awesome Bot");
         }
+        catch (Polly.Timeout.TimeoutRejectedException ex)
+        {
+            _logger.LogDebug($"TimeoutRejectedException start receiving updates for Bot: {ex.Message}");
+            return;
+        }
         catch (Exception ex)
         {
-            _logger.LogDebug($"Exception start receiving updates for Bot: {ex.Message}");
-            return;
+            _logger.LogError(ex, nameof(ReceiveAsync));
         }
 
         // Start receiving updates
