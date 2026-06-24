@@ -38,7 +38,7 @@ public partial class ChangePasswordPage
         }
     }
 
-    private async Task OnValidSubmitAsync()
+    async Task OnValidSubmitAsync()
     {
         if (Input is null)
             throw new ArgumentNullException(nameof(Input));
