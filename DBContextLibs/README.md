@@ -25,10 +25,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.5" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <ProjectReference Include="..\SharedLib\SharedLib.csproj" />
 	</ItemGroup>
 
@@ -79,11 +75,6 @@ Update-Database -Context IdentityAppDbContext -Project IdentityLib -StartupProje
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.5" />
-		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.4" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <ProjectReference Include="..\SharedLib\SharedLib.csproj" />
 	</ItemGroup>
 
@@ -124,7 +115,6 @@ builder.Services.AddDbContextFactory<MainAppContext>(opt =>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.5" />
 		<PackageReference Include="MySql.EntityFrameworkCore" Version="8.0.2" />
 	</ItemGroup>
 

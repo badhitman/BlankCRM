@@ -43,8 +43,8 @@
 		<PublishTrimmed>False</PublishTrimmed>
 	</PropertyGroup>
 
-	
-	
+
+
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net10.0-android|AnyCPU'">
 		<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
 		<WarningsNotAsErrors>NU1605;</WarningsNotAsErrors>
@@ -60,8 +60,8 @@
 		<RunAOTCompilation>False</RunAOTCompilation>
 	</PropertyGroup>
 
-	
-	
+
+
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net10.0-ios|AnyCPU'">
 		<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
 		<WarningsNotAsErrors>NU1605;</WarningsNotAsErrors>
@@ -115,13 +115,13 @@
 	<ItemGroup>
 		<PackageReference Include="BlazorQrCodeScanner" Version="1.0.0.3" />
 		<PackageReference Include="BlazorQrCodeScanner.Maui" Version="1.0.0.3" />
-		<PackageReference Include="Microsoft.Maui.Controls" Version="10.0.71" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="10.0.71" />
-		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.71" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.9" />
-		<PackageReference Include="Microsoft.Extensions.Http" Version="10.0.9" />
-		<PackageReference Include="CommunityToolkit.Maui" Version="14.2.0" />
-		<PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="3.0.71" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="10.0.80" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="10.0.80" />
+		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.80" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.10" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="10.0.10" />
+		<PackageReference Include="CommunityToolkit.Maui" Version="14.2.2" />
+		<PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="3.0.114" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -141,5 +141,7 @@
 			<CopyToPublishDirectory>Always</CopyToPublishDirectory>
 		</Content>
 	</ItemGroup>
-
+	<ItemGroup>
+		<NuGetAuditSuppress Include="https://github.com/advisories/GHSA-2m69-gcr7-jv3q" />
+	</ItemGroup>
 </Project>
