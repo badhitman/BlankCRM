@@ -118,8 +118,8 @@
 		<PackageReference Include="Microsoft.Maui.Controls" Version="10.0.90" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="10.0.90" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.90" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.10" />
-		<PackageReference Include="Microsoft.Extensions.Http" Version="10.0.10" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.11" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="10.0.11" />
 		<PackageReference Include="CommunityToolkit.Maui" Version="15.0.0" />
 		<PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="3.0.114" />
 	</ItemGroup>
@@ -140,8 +140,5 @@
 		<Content Update="wwwroot\js\site.js">
 			<CopyToPublishDirectory>Always</CopyToPublishDirectory>
 		</Content>
-	</ItemGroup>
-	<ItemGroup>
-		<NuGetAuditSuppress Include="https://github.com/advisories/GHSA-2m69-gcr7-jv3q" />
 	</ItemGroup>
 </Project>

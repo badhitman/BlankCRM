@@ -66,7 +66,7 @@ public partial class FirebaseCloudMessagingComponent : BlazorBusyComponentBaseAu
             Payload = new()
             {
                 TextBody = textBodyMsg,
-                TokensFCM = [ChatDialog.FirebaseCloudMessagingToken],
+                FidsFCM = [ChatDialog.FirebaseCloudMessagingToken],
                 Title = titleMsg,
                 Name = nameMsg,
                 ExpandViewMode = true,

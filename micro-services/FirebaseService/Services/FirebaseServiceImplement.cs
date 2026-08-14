@@ -28,7 +28,7 @@ public class FirebaseServiceImplement() : IFirebaseService
 
         MulticastMessage messages = new()
         {
-            Tokens = req.Payload.TokensFCM,
+            Fids = req.Payload.FidsFCM,
             Data = req.Payload.Data,
             Notification = new()
             {
@@ -69,10 +69,10 @@ public class FirebaseServiceImplement() : IFirebaseService
         for (int i = 0; i < response.Responses.Count; i++)
         {
             if (response.Responses[i].IsSuccess)
-                res.Response.SuccessfulMessagesIds.Add(req.Payload.TokensFCM[i]);
+                res.Response.SuccessfulMessagesIds.Add(req.Payload.FidsFCM[i]);
         }
 
-        if (res.Response.SuccessfulMessagesIds.Count == req.Payload.TokensFCM.Count)
+        if (res.Response.SuccessfulMessagesIds.Count == req.Payload.FidsFCM.Count)
             res.AddSuccess("Отправка успешно выполнена");
 
         return res;

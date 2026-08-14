@@ -123,7 +123,12 @@ public partial class WebChatService : IWebChatService
                 await firebaseRepo.SendFirebaseNotificationAsync(new()
                 {
                     SenderActionUserId = GlobalStaticConstantsRoles.Roles.System,
-                    Payload = new() { TokensFCM = notifyFCM, TextBody = clearTextMessage(), Title = "Сообщение в чате", }
+                    Payload = new()
+                    {
+                        FidsFCM = notifyFCM,
+                        TextBody = clearTextMessage(),
+                        Title = "Сообщение в чате",
+                    }
                 });
             }, token));
 

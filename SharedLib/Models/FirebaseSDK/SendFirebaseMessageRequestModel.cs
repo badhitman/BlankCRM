@@ -10,7 +10,7 @@ namespace SharedLib;
 public class SendFirebaseMessageRequestModel
 {
     /// <inheritdoc/>
-    public required List<string> TokensFCM { get; set; }
+    public required List<string> FidsFCM { get; set; }
 
     /// <inheritdoc/>
     public required string Title { get; set; }
@@ -35,8 +35,8 @@ public class SendFirebaseMessageRequestModel
 
     /// <inheritdoc/>
     public bool IsValid =>
-        TokensFCM.Count != 0 &&
-        TokensFCM.All(x => !string.IsNullOrWhiteSpace(x)) &&
+        FidsFCM.Count != 0 &&
+        FidsFCM.All(x => !string.IsNullOrWhiteSpace(x)) &&
         !string.IsNullOrWhiteSpace(Title) &&
         !string.IsNullOrWhiteSpace(TextBody);
 }
