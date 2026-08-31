@@ -302,8 +302,11 @@ public partial class ChatWrapperComponent : BlazorBusyComponentUsersCachedModel
             SnackBarRepo.Error("initSessionTicket.Response is null");
             return;
         }
-
-        await JsRuntime.InvokeVoidAsync("methods.CreateCookie", _sessionCookieName, initSessionTicket.Response.SessionTicketId, (initSessionTicket.Response.DeadlineUTC - DateTime.UtcNow).TotalSeconds, "/");
+        try
+        {
+            await JsRuntime.InvokeVoidAsync("methods.CreateCookie", _sessionCookieName, initSessionTicket.Response.SessionTicketId, (initSessionTicket.Response.DeadlineUTC - DateTime.UtcNow).TotalSeconds, "/");
+        }
+        finally { }
     }
 
     /// <inheritdoc/>
