@@ -156,6 +156,9 @@ public partial class CommerceImplementService : ICommerceService
             ? context.Nomenclatures.Where(x => x.ContextName == null || x.ContextName == "").AsQueryable()
             : context.Nomenclatures.Where(x => x.ContextName == req.Payload.ContextName).AsQueryable();
 
+        if (req.Payload.EnabledOnly.HasValue)
+            q = q.Where(x => x.IsDisabled != req.Payload.EnabledOnly);
+
         if (req.Payload.AfterDateUpdate is not null)
             q = q.Where(x => x.LastUpdatedAtUTC >= req.Payload.AfterDateUpdate);
 

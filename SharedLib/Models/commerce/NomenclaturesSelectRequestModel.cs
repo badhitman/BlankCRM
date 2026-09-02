@@ -18,4 +18,9 @@ public class NomenclaturesSelectRequestModel
     /// Имя контекста для разделения различных селекторов независимо друг от друга
     /// </summary>
     public string? ContextName { get; set; }
+
+    /// <summary>
+    /// Только "включённые" элементы
+    /// </summary>
+    public bool? EnabledOnly { get; set; }
 }

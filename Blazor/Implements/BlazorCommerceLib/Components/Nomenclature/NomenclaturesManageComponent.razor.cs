@@ -25,6 +25,16 @@ public partial class NomenclaturesManageComponent : BlazorRegistersComponent
     [Parameter]
     public string? ContextName { get; set; }
 
+    bool? enabledOnlyFilter;
+    bool? EnabledOnlyFilter
+    {
+        get => enabledOnlyFilter;
+        set
+        {
+            enabledOnlyFilter = value;
+            InvokeAsync(tableRef.ReloadServerData);
+        }
+    }
 
     bool _expanded;
     MudTable<NomenclatureModelDB> tableRef = default!;
@@ -78,7 +88,11 @@ public partial class NomenclaturesManageComponent : BlazorRegistersComponent
     {
         TPaginationRequestStandardModel<NomenclaturesSelectRequestModel> req = new()
         {
-            Payload = new() { ContextName = ContextName },
+            Payload = new()
+            {
+                ContextName = ContextName,
+                EnabledOnly = EnabledOnlyFilter
+            },
             PageNum = state.Page,
             PageSize = state.PageSize,
             SortBy = state.SortLabel,

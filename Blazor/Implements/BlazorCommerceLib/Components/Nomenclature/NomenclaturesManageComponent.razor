@@ -16,6 +16,9 @@
         <ToolBarContent>
             <MudText Typo="Typo.h6">Номенклатура (каталог)</MudText>
             <MudSpacer />
+            <MudCheckBox @bind-Value="EnabledOnlyFilter" Color="@Color.Secondary" TriState>
+                Состояние. @(enabledOnlyFilter == null ? "все" : enabledOnlyFilter == true ? "активные" : "отключённые")
+            </MudCheckBox>
         </ToolBarContent>
         <HeaderContent>
             <MudTh>Имя</MudTh>
