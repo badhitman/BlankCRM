@@ -25,27 +25,19 @@ public partial class LogsComponent : BlazorBusyComponentBaseModel
     IJSRuntime JsRuntimeRepo { get; set; } = default!;
 
 
-    /// <summary>
-    /// HidePanels
-    /// </summary>
+    /// <inheritdoc/>
     [Parameter]
     public bool HidePanels { get; set; }
 
-    /// <summary>
-    /// HideAppColumn
-    /// </summary>
+    /// <inheritdoc/>
     [Parameter]
     public bool HideAppColumn { get; set; }
 
-    /// <summary>
-    /// ApplicationsFilterSet
-    /// </summary>
+    /// <inheritdoc/>
     [Parameter]
     public string[]? ApplicationsFilterSet { get; set; }
 
-    /// <summary>
-    /// 
-    /// </summary>
+    /// <inheritdoc/>
     [SupplyParameterFromQuery(Name = "id")]
     public string? RowId { get; set; }
 
@@ -60,6 +52,7 @@ public partial class LogsComponent : BlazorBusyComponentBaseModel
         set
         {
             _dateRangeBind = value;
+            confirmLogsClearQuery = null;
             if (table is not null)
                 InvokeAsync(table.ReloadServerData);
         }
@@ -73,6 +66,7 @@ public partial class LogsComponent : BlazorBusyComponentBaseModel
         set
         {
             _AllEventProperties = value;
+            confirmLogsClearQuery = null;
             if (table is not null)
                 InvokeAsync(table.ReloadServerData);
         }
@@ -85,6 +79,7 @@ public partial class LogsComponent : BlazorBusyComponentBaseModel
         set
         {
             _ExceptionMessage = value;
+            confirmLogsClearQuery = null;
             if (table is not null)
                 InvokeAsync(table.ReloadServerData);
         }
@@ -97,6 +92,7 @@ public partial class LogsComponent : BlazorBusyComponentBaseModel
         set
         {
             _Logger = value;
+            confirmLogsClearQuery = null;
             if (table is not null)
                 InvokeAsync(table.ReloadServerData);
         }
@@ -109,6 +105,7 @@ public partial class LogsComponent : BlazorBusyComponentBaseModel
         set
         {
             _CallSite = value;
+            confirmLogsClearQuery = null;
             if (table is not null)
                 InvokeAsync(table.ReloadServerData);
         }
@@ -121,6 +118,7 @@ public partial class LogsComponent : BlazorBusyComponentBaseModel
         set
         {
             _StackTrace = value;
+            confirmLogsClearQuery = null;
             if (table is not null)
                 InvokeAsync(table.ReloadServerData);
         }
