@@ -48,7 +48,10 @@
             @foreach (NLogRecordModelDB _chipEl in favoritesRecords.OrderBy(x => x.RecordTime))
             {
                 string _classLevel = GetClassLevel(_chipEl.RecordLevel);
-                <MudChip OnClick="async () => await OnChipClick(_chipEl)" Value="@_chipEl" Text="@($"{_chipEl.RecordLevel}: {_chipEl.RecordTime.GetHumanDateTime()}")" Class="@_classLevel" />
+                <MudChip OnClick="async () => await OnChipClick(_chipEl)"
+                         Value="@_chipEl"
+                         Text="@($"{_chipEl.RecordLevel}: {_chipEl.RecordTime.GetHumanDateTime()}")"
+                         Class="@_classLevel" />
             }
         </MudChipSet>
     </MudStack>
@@ -67,7 +70,10 @@
             }
             else
             {
-                <sup title="Обновить" @onclick="ReloadTable" style="cursor:pointer;" class="bi bi-arrow-clockwise text-success-emphasis"></sup>
+                <sup title="Обновить"
+                     @onclick="ReloadTable"
+                     style="cursor:pointer;"
+                     class="bi bi-arrow-clockwise text-success-emphasis"></sup>
             }
         </MudText>
         <MudSpacer />
@@ -209,14 +215,26 @@
                 <div class="d-grid gap-2 mt-2">
                     @if (!string.IsNullOrWhiteSpace(confirmLogsClearQuery))
                     {
-                        <button class="btn btn-primary" type="button" @onclick="() => confirmLogsClearQuery = null">Отмена</button>
-                        <button class="btn btn-outline-danger" type="button" @onclick="LogsClearAsync">Подтвердить очистку логов</button>
+                        <button class="btn btn-primary"
+                                type="button"
+                                @onclick="() => confirmLogsClearQuery = null">
+                            Отмена
+                        </button>
+                        <button class="btn btn-outline-danger"
+                                type="button"
+                                @onclick="LogsClearAsync">
+                            Подтвердить очистку логов
+                        </button>
 
                     }
                     else if (ApplicationsFilter is not null && ApplicationsFilter.Length != 0)
                     {
 
-                        <button class="btn btn-warning" type="button" @onclick="LogsClearAsync">Очистка логов</button>
+                        <button class="btn btn-warning"
+                                type="button"
+                                @onclick="LogsClearAsync">
+                            Очистка логов
+                        </button>
                     }
                     @if (!string.IsNullOrWhiteSpace(confirmLogsClearQuery))
                     {

@@ -27,7 +27,10 @@
                aria-label="Text input user with dropdown button" />
 
         <ul class="chat-selector-input dropdown-menu @ShowIfEditing" id="@dropdownId" style="@StyleIfEditing" data-meta="@HeightDropdown">
-            <i title="Отмена (закрыть меню выбора)" @onclick="EditToggle" class="bi bi-x-lg position-absolute top-0 end-0" style="cursor:pointer; padding-right:3px;"></i>
+            <i title="Отмена (закрыть меню выбора)"
+               @onclick="EditToggle"
+               class="bi bi-x-lg position-absolute top-0 end-0"
+               style="cursor:pointer; padding-right:3px;"></i>
             @foreach (UserInfoModel uinf in LoadedData)
             {
                 <li @onclick="() => SelectElementEvent(uinf)"><span class="dropdown-item">@uinf.ToString()</span></li>
