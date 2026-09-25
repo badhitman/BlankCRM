@@ -17,7 +17,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="FirebaseAdmin" Version="3.6.0" />
+		<PackageReference Include="FirebaseAdmin" Version="3.7.0" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.12" />
 		<PackageReference Include="NLog" Version="6.2.1" />
 		<PackageReference Include="NLog.Extensions.Logging" Version="6.2.1" />
