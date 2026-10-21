@@ -2,9 +2,9 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
-using BlazorLib;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using BlazorLib;
 using MudBlazor;
 using SharedLib;
 
@@ -24,6 +24,7 @@ public partial class NomenclaturesManageComponent : BlazorRegistersComponent
     /// </summary>
     [Parameter]
     public string? ContextName { get; set; }
+
 
     bool? enabledOnlyFilter;
     bool? EnabledOnlyFilter
@@ -48,9 +49,9 @@ public partial class NomenclaturesManageComponent : BlazorRegistersComponent
     }
 
     /// <summary>
-    /// Скачать полный прайс
+    /// Скачать полный прайс (Excel)
     /// </summary>
-    async Task DownloadFullPrice()
+    async Task DownloadFullPriceExcel()
     {
         await SetBusyAsync();
         FileAttachModel res = await CommerceRepo.PriceFullFileGetExcelAsync();
@@ -65,7 +66,7 @@ public partial class NomenclaturesManageComponent : BlazorRegistersComponent
     }
 
     /// <summary>
-    /// Скачать полный прайс
+    /// Скачать полный прайс (JSON)
     /// </summary>
     async Task DownloadFullPriceJSON()
     {
@@ -81,9 +82,7 @@ public partial class NomenclaturesManageComponent : BlazorRegistersComponent
         }
     }
 
-    /// <summary>
-    /// Here we simulate getting the paged, filtered and ordered data from the server
-    /// </summary>
+    /// <inheritdoc/>
     private async Task<TableData<NomenclatureModelDB>> ServerReload(TableState state, CancellationToken token)
     {
         TPaginationRequestStandardModel<NomenclaturesSelectRequestModel> req = new()

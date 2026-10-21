@@ -18,11 +18,11 @@
 		<PackageReference Include="NLog" Version="6.2.2" />
 		<PackageReference Include="NLog.Extensions.Logging" Version="6.2.2" />
 		<PackageReference Include="NLog.Database" Version="6.0.3" />
-		<PackageReference Include="NLog.MailKit" Version="6.1.5" />
+		<PackageReference Include="NLog.MailKit" Version="6.1.6" />
 		<PackageReference Include="NLog.Targets.Mail" Version="6.1.1" />
 		<PackageReference Include="NLog.Web.AspNetCore" Version="6.2.2" />
-		<PackageReference Include="Swashbuckle.AspNetCore" Version="10.3.0" />
-		<PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="10.3.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="10.3.1" />
+		<PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="10.3.1" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.13" />
 	</ItemGroup>
 
