@@ -69,6 +69,16 @@ public partial class BankImplementService(IDbContextFactory<BankContext> bankDbF
         if (req.PageSize < 10)
             req.PageSize = 10;
 
+        IQueryable<BankConnectionModelDB> sortQuery()
+        {
+            return req.SortingDirection switch
+            {
+                DirectionsEnum.Up => q.OrderBy(x => x.Id),
+                DirectionsEnum.Down => q.OrderByDescending(x => x.Id),
+                _ => q.OrderBy(x => x.Id),
+            };
+        }
+
         return new()
         {
             PageSize = req.PageSize,
@@ -76,7 +86,10 @@ public partial class BankImplementService(IDbContextFactory<BankContext> bankDbF
             SortBy = req.SortBy,
             SortingDirection = req.SortingDirection,
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
-            Response = await q.Skip(req.PageSize * req.PageNum).Take(req.PageSize).ToListAsync(cancellationToken: token)
+            Response = await sortQuery()
+                                .Skip(req.PageSize * req.PageNum)
+                                .Take(req.PageSize)
+                                .ToListAsync(cancellationToken: token)
         };
     }
 
@@ -140,6 +153,16 @@ public partial class BankImplementService(IDbContextFactory<BankContext> bankDbF
         if (req.PageSize < 10)
             req.PageSize = 10;
 
+        IQueryable<TBankAccountModelDB> sortQuery()
+        {
+            return req.SortingDirection switch
+            {
+                DirectionsEnum.Up => q.OrderBy(x => x.Id),
+                DirectionsEnum.Down => q.OrderByDescending(x => x.Id),
+                _ => q.OrderBy(x => x.Id),
+            };
+        }
+
         return new()
         {
             PageSize = req.PageSize,
@@ -147,7 +170,10 @@ public partial class BankImplementService(IDbContextFactory<BankContext> bankDbF
             SortBy = req.SortBy,
             SortingDirection = req.SortingDirection,
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
-            Response = await q.Skip(req.PageSize * req.PageNum).Take(req.PageSize).ToListAsync(cancellationToken: token)
+            Response = await sortQuery()
+                                .Skip(req.PageSize * req.PageNum)
+                                .Take(req.PageSize)
+                                .ToListAsync(cancellationToken: token)
         };
     }
 
@@ -273,6 +299,16 @@ public partial class BankImplementService(IDbContextFactory<BankContext> bankDbF
         if (req.PageSize < 10)
             req.PageSize = 10;
 
+        IQueryable<BankTransferModelDB> sortQuery()
+        {
+            return req.SortingDirection switch
+            {
+                DirectionsEnum.Up => q.OrderBy(x => x.Id),
+                DirectionsEnum.Down => q.OrderByDescending(x => x.Id),
+                _ => q.OrderBy(x => x.Id),
+            };
+        }
+
         return new()
         {
             PageSize = req.PageSize,
@@ -280,7 +316,10 @@ public partial class BankImplementService(IDbContextFactory<BankContext> bankDbF
             SortBy = req.SortBy,
             SortingDirection = req.SortingDirection,
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
-            Response = await q.Skip(req.PageSize * req.PageNum).Take(req.PageSize).ToListAsync(cancellationToken: token)
+            Response = await sortQuery()
+                                .Skip(req.PageSize * req.PageNum)
+                                .Take(req.PageSize)
+                                .ToListAsync(cancellationToken: token)
         };
     }
 
@@ -298,7 +337,7 @@ public partial class BankImplementService(IDbContextFactory<BankContext> bankDbF
             return res;
         }
 
-        var conMd = bankConnectionDb.BankInterface.ConnectionMetadata();
+        (string BaseUrl, string GetStatementRequest, string? AccListRequest)? conMd = bankConnectionDb.BankInterface.ConnectionMetadata();
         if (conMd is null || string.IsNullOrWhiteSpace(conMd.Value.AccListRequest) || string.IsNullOrWhiteSpace(conMd.Value.BaseUrl))
         {
             res.AddError("Not found any bank connection metadata.");
