@@ -137,7 +137,7 @@ public partial class NomenclaturesManageComponent : BlazorRegistersComponent
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
-        await OnInitializedAsync();
+        await base.OnInitializedAsync();
         if (CurrentUserSession is null)
         {
             SnackBarRepo.Error("CurrentUserSession is null");
