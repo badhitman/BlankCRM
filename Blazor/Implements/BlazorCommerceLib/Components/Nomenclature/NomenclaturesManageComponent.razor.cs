@@ -19,6 +19,10 @@ public partial class NomenclaturesManageComponent : BlazorRegistersComponent
     IJSRuntime JsRuntimeRepo { get; set; } = default!;
 
 
+    [Inject]
+    IParametersStorageTransmission StorageRepo { get; set; } = default!;
+
+
     /// <summary>
     /// ContextName
     /// </summary>
@@ -34,12 +38,24 @@ public partial class NomenclaturesManageComponent : BlazorRegistersComponent
         {
             enabledOnlyFilter = value;
             InvokeAsync(tableRef.ReloadServerData);
+            InvokeAsync(SaveFilters);
         }
     }
 
     bool _expanded;
     MudTable<NomenclatureModelDB> tableRef = default!;
 
+
+    async Task SaveFilters()
+    {
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
+
+        await StorageRepo.SaveParameterAsync(EnabledOnlyFilter, GlobalStaticCloudStorageMetadata.RetailNomenclaturesEnabledOnlyFilter(CurrentUserSession.UserId), true, false);
+    }
 
     async void CreateNomenclatureAction(NomenclatureModelDB nom)
     {
@@ -116,5 +132,23 @@ public partial class NomenclaturesManageComponent : BlazorRegistersComponent
     private void OnExpandCollapseClick()
     {
         _expanded = !_expanded;
+    }
+
+    /// <inheritdoc/>
+    protected override async Task OnInitializedAsync()
+    {
+        await OnInitializedAsync();
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
+        TResponseModel<bool?> _readEnabledOnlyFilter = await StorageRepo.ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.RetailNomenclaturesEnabledOnlyFilter(CurrentUserSession.UserId));
+        if (_readEnabledOnlyFilter.Success() && _readEnabledOnlyFilter.Response is not null)
+        {
+            enabledOnlyFilter = _readEnabledOnlyFilter.Response;
+            if (tableRef is not null)
+                await tableRef.ReloadServerData();
+        }
     }
 }

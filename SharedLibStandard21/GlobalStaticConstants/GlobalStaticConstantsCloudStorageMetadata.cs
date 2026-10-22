@@ -538,6 +538,15 @@ public static partial class GlobalStaticCloudStorageMetadata
         OwnerPrimaryKey = webChatId,
     };
 
+    /// <inheritdoc/>
+    public static StorageMetadataModel RetailNomenclaturesEnabledOnlyFilter(string user_id)
+       => new()
+       {
+           ApplicationName = Path.Combine(Routes.RETAIL_CONTROLLER_NAME, Routes.NOMENCLATURES_CONTROLLER_NAME, Routes.MODE_CONTROLLER_NAME),
+           PropertyName = Path.Combine(Routes.FILTER_CONTROLLER_NAME, Routes.STATUSES_CONTROLLER_NAME),
+           PrefixPropertyName = user_id,
+       };
+
     /// <summary>
     /// Настройки фильтрации в журнале заказов (розница)
     /// </summary>
