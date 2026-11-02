@@ -9,7 +9,6 @@ using NLog.Extensions.Logging;
 using ConstructorService;
 using RemoteCallLib;
 using SharedLib;
-using NLog.Web;
 using DbcLib;
 using NLog;
 using OpenTelemetry;
@@ -22,7 +21,7 @@ using Newtonsoft.Json;
 RealtimeMQTTClientConfigModel _confMQTT = RealtimeMQTTClientConfigModel.BuildEmpty();
 Console.OutputEncoding = Encoding.UTF8;
 // Early init of NLog to allow startup and exception logging, before host is built
-Logger logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
+Logger logger = LogManager.Setup().LoadConfigurationFromFile().GetCurrentClassLogger();
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 
 builder.AddServiceDefaults();

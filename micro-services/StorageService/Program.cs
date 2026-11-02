@@ -13,7 +13,6 @@ using OpenTelemetry;
 using RemoteCallLib;
 using System.Text;
 using SharedLib;
-using NLog.Web;
 using DbcLib;
 using NLog;
 using Newtonsoft.Json;
@@ -33,7 +32,7 @@ public class Program
     {
         Console.OutputEncoding = Encoding.UTF8;
         HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
-        Logger logger = LogManager.GetCurrentClassLogger();
+        Logger logger = LogManager.Setup().LoadConfigurationFromFile().GetCurrentClassLogger();
         builder.AddServiceDefaults();
 
         // NLog: Setup NLog for Dependency injection

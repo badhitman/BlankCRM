@@ -9,6 +9,7 @@
 		<Nullable>enable</Nullable>
 		<IsAspireHost>true</IsAspireHost>
 		<UserSecretsId>d3e3ff85-6538-49dd-9b17-37187beac77e</UserSecretsId>
+		<AspireUseCliBundle>true</AspireUseCliBundle>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

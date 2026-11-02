@@ -15,7 +15,6 @@ using OpenTelemetry;
 using RemoteCallLib;
 using System.Text;
 using SharedLib;
-using NLog.Web;
 using DbcLib;
 using NLog;
 
@@ -23,7 +22,7 @@ namespace RealtimeService;
 
 public class Program
 {
-    static Logger logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
+    static Logger logger = LogManager.Setup().LoadConfigurationFromFile().GetCurrentClassLogger();
     static readonly RealtimeMQTTClientConfigModel _confMQTT = RealtimeMQTTClientConfigModel.BuildEmpty();
     public static async Task Main(string[] args)
     {
@@ -177,7 +176,8 @@ public class Program
                 Password = rabbitConf.Value.Password
             };
         });
-        builder.Services.AddSingleton(sp => {
+        builder.Services.AddSingleton(sp =>
+        {
 
             RabbitMQ.Client.ConnectionFactory factory = sp.GetRequiredService<RabbitMQ.Client.ConnectionFactory>();
             return factory.CreateConnectionAsync().Result;
