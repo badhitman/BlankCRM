@@ -6,7 +6,7 @@
   <Folder Name="/libs/">
     <Project Path="CodegeneratorLib/CodegeneratorLib.csproj" />
     <Project Path="IdentityLib/IdentityLib.csproj" />
-    <Project Path="ServerLib/ServerLib.csproj" />
+    <Project Path="WebServerLib/WebServerLib.csproj" />
     <Project Path="SharedLib/SharedLib.csproj" />
     <Project Path="SharedLibStandard21/SharedLibStandard21.csproj" />
   </Folder>
