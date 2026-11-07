@@ -16,11 +16,12 @@ using Newtonsoft.Json;
 using ApiRestService;
 using OpenTelemetry;
 using RemoteCallLib;
+using ServicesLib;
 using System.Text;
 using SharedLib;
 using NLog.Web;
-using NLog;
 using DbcLib;
+using NLog;
 
 RealtimeMQTTClientConfigModel _confMQTT = RealtimeMQTTClientConfigModel.BuildEmpty();
 Console.OutputEncoding = Encoding.UTF8;
@@ -72,33 +73,9 @@ if (Path.Exists(path_load))
 else
     logger.Debug($"отсутствует: {path_load}");
 
-// Secrets
-void ReadSecrets(string dirName)
-{
-    string secretPath = Path.Combine("..", dirName);
-    DirectoryInfo di = new(secretPath);
-    for (int i = 0; i < 5 && !di.Exists; i++)
-    {
-        logger.Debug($"файл секретов не найден (продолжение следует...): {di.FullName}");
-        secretPath = Path.Combine("..", secretPath);
-        di = new(secretPath);
-    }
-
-    if (Directory.Exists(di.FullName))
-    {
-        foreach (string secret in Directory.GetFiles(secretPath, $"*.json"))
-        {
-            path_load = Path.GetFullPath(secret);
-            logger.Debug($"!secret load: {path_load}");
-            builder.Configuration.AddJsonFile(path_load, optional: true, reloadOnChange: false);
-        }
-    }
-    else
-        logger.Debug($"Секреты `{dirName}` не найдены (совсем)");
-}
-ReadSecrets("secrets");
+builder.Configuration.ReadSecrets("secrets");
 if (!string.IsNullOrWhiteSpace(_modePrefix))
-    ReadSecrets($"secrets{_modePrefix}");
+    builder.Configuration.ReadSecrets($"secrets{_modePrefix}");
 
 builder.Configuration.AddEnvironmentVariables();
 builder.Configuration.AddCommandLine(args);
@@ -154,7 +131,8 @@ builder.Services.AddSingleton<RabbitMQ.Client.ConnectionFactory>(sp =>
         Password = rabbitConf.Value.Password
     };
 });
-builder.Services.AddSingleton(sp => {
+builder.Services.AddSingleton(sp =>
+{
 
     RabbitMQ.Client.ConnectionFactory factory = sp.GetRequiredService<RabbitMQ.Client.ConnectionFactory>();
     return factory.CreateConnectionAsync().Result;
@@ -220,8 +198,8 @@ otel.WithTracing(tracing =>
 builder.Services.AddScoped<IServerToolsService, ToolsSystemService>();
 
 builder.Services
-    .AddControllers(options => options.Filters.Add(typeof(LoggerActionFilter)))
-    .AddNewtonsoftJson(options => { options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore; options.SerializerSettings.Converters.Add(new StringEnumConverter() { }); });
+    .AddControllers(options => options.Filters.Add<LoggerActionFilter>())
+    .AddNewtonsoftJson(options => { options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore; options.SerializerSettings.Converters.Add(new StringEnumConverter() { }); });
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme,

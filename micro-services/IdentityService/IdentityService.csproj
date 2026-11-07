@@ -23,6 +23,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\BlankCRM.ServiceDefaults\BlankCRM.ServiceDefaults.csproj" />
+		<ProjectReference Include="..\..\ServicesLib\ServicesLib.csproj" />
 		<ProjectReference Include="..\..\WebServerLib\WebServerLib.csproj" />
 	</ItemGroup>
 

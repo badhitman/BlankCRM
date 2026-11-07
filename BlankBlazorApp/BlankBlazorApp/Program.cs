@@ -20,6 +20,7 @@ using OpenTelemetry;
 using BlazorWebLib;
 using IdentityLib;
 using System.Text;
+using ServicesLib;
 using ServerLib;
 using SharedLib;
 using BlazorLib;
@@ -101,33 +102,9 @@ if (Path.Exists(path_load))
 else
     logger.Debug($"отсутствует: {path_load}");
 
-// Secrets
-void ReadSecrets(string dirName)
-{
-    string secretPath = Path.Combine("..", dirName);
-    DirectoryInfo di = new(secretPath);
-    for (int i = 0; i < 5 && !di.Exists; i++)
-    {
-        logger.Debug($"файл секретов не найден (продолжение следует...): {di.FullName}");
-        secretPath = Path.Combine("..", secretPath);
-        di = new(secretPath);
-    }
-
-    if (Directory.Exists(secretPath))
-    {
-        foreach (string secret in Directory.GetFiles(secretPath, $"*.json"))
-        {
-            path_load = Path.GetFullPath(secret);
-            logger.Debug($"!secret load: {path_load}");
-            builder.Configuration.AddJsonFile(path_load, optional: true, reloadOnChange: false);
-        }
-    }
-    else
-        logger.Debug($"Секреты `{dirName}` не найдены (совсем)");
-}
-ReadSecrets("secrets");
+builder.Configuration.ReadSecrets("secrets");
 if (!string.IsNullOrWhiteSpace(_modePrefix))
-    ReadSecrets($"secrets{_modePrefix}");
+    builder.Configuration.ReadSecrets($"secrets{_modePrefix}");
 
 builder.Configuration.AddEnvironmentVariables();
 builder.Services.AddOptions();

@@ -29,6 +29,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\ServicesLib\ServicesLib.csproj" IsAspireProjectResource="false" />
 		<ProjectReference Include="..\SharedLib\SharedLib.csproj" IsAspireProjectResource="false" />
 		<ProjectReference Include="..\BlankBlazorApp\BlankBlazorApp\BlankBlazorApp.csproj" />
 		<ProjectReference Include="..\micro-services\RealtimeService\RealtimeService.csproj" />

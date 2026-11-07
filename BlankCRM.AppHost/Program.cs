@@ -1,5 +1,5 @@
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+using ServicesLib;
 using SharedLib;
 using System.Text;
 
@@ -36,29 +36,9 @@ public class Program
         if (Path.Exists(path_load))
             builder.Configuration.AddJsonFile(path_load, optional: true, reloadOnChange: false);
 
-        void ReadSecrets(string dirName)
-        {
-            string secretPath = Path.Combine("..", dirName);
-            DirectoryInfo di = new(secretPath);
-            for (int i = 0; i < 5 && !di.Exists; i++)
-            {
-                secretPath = Path.Combine("..", secretPath);
-                di = new(secretPath);
-            }
-
-            if (Directory.Exists(secretPath))
-            {
-                foreach (string secret in Directory.GetFiles(secretPath, $"*.json"))
-                {
-                    path_load = Path.GetFullPath(secret);
-                    builder.Configuration.AddJsonFile(path_load, optional: true, reloadOnChange: false);
-                }
-            }
-        }
-
-        ReadSecrets($"secrets-{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}");
+        builder.Configuration.ReadSecrets($"secrets-{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}");
         if (!string.IsNullOrWhiteSpace(_modePrefix))
-            ReadSecrets($"secrets{_modePrefix}");
+            builder.Configuration.ReadSecrets($"secrets{_modePrefix}");
 
         builder.Configuration.AddEnvironmentVariables();
         builder.Configuration.AddCommandLine(args);

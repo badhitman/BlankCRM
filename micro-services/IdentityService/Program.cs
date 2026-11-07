@@ -14,6 +14,7 @@ using System.Globalization;
 using OpenTelemetry.Trace;
 using OpenTelemetry;
 using RemoteCallLib;
+using ServicesLib;
 using IdentityLib;
 using System.Text;
 using ServerLib;
@@ -62,7 +63,6 @@ public class Program
 
         string curr_dir = Directory.GetCurrentDirectory();
 
-
         builder.Configuration.SetBasePath(curr_dir);
         string path_load = Path.Combine(curr_dir, "appsettings.json");
         if (Path.Exists(path_load))
@@ -74,33 +74,9 @@ public class Program
         else
             logger.Debug($"отсутствует: {path_load}");
 
-        // Secrets
-        void ReadSecrets(string dirName)
-        {
-            string secretPath = Path.Combine("..", dirName);
-            DirectoryInfo di = new(secretPath);
-            for (int i = 0; i < 5 && !di.Exists; i++)
-            {
-                logger.Debug($"файл секретов не найден (продолжение следует...): {di.FullName}");
-                secretPath = Path.Combine("..", secretPath);
-                di = new(secretPath);
-            }
-
-            if (Directory.Exists(secretPath))
-            {
-                foreach (string secret in Directory.GetFiles(secretPath, $"*.json"))
-                {
-                    path_load = Path.GetFullPath(secret);
-                    logger.Debug($"!secret load: {path_load}");
-                    builder.Configuration.AddJsonFile(path_load, optional: true, reloadOnChange: false);
-                }
-            }
-            else
-                logger.Debug($"Секреты `{dirName}` не найдены (совсем)");
-        }
-        ReadSecrets("secrets");
+        builder.Configuration.ReadSecrets("secrets");
         if (!string.IsNullOrWhiteSpace(_modePrefix))
-            ReadSecrets($"secrets{_modePrefix}");
+            builder.Configuration.ReadSecrets($"secrets{_modePrefix}");
 
         builder.Configuration.AddEnvironmentVariables();
         builder.Configuration.AddCommandLine(args);

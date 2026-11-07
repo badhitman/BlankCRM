@@ -22,6 +22,7 @@
 		<ProjectReference Include="..\..\DBContextLibs\DbPostgreLib\DbPostgreLib.csproj" />
 		<ProjectReference Include="..\..\RemoteCallLib\MQTTCallLib\MQTTCallLib.csproj" />
 		<ProjectReference Include="..\..\RemoteCallLib\RabbitMQ\RabbitMQCallLib.csproj" />
+		<ProjectReference Include="..\..\ServicesLib\ServicesLib.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
