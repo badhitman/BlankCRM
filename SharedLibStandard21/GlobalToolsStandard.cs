@@ -118,7 +118,6 @@ public static partial class GlobalToolsStandard
     public static bool IsEmpty(this string sender)
         => string.IsNullOrWhiteSpace(sender);
 
-
     /// <summary>
     /// Добавить информация об исключении
     /// </summary>

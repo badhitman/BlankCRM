@@ -39,6 +39,31 @@ public static partial class GlobalTools
     }
 
 
+    /*public static  void ReadSecrets(this IConfigurationBuilder builder, string dirName)
+    {
+     //string secretPath = Path.Combine("..", dirName);
+     //DirectoryInfo di = new(secretPath);
+     //for (int i = 0; i < 5 && !di.Exists; i++)
+     //{
+     //    logger.Debug($"файл секретов не найден (продолжение следует...): {di.FullName}");
+     //    secretPath = Path.Combine("..", secretPath);
+     //    di = new(secretPath);
+     //}
+
+        //if (Directory.Exists(secretPath))
+        //{
+        //    foreach (string secret in Directory.GetFiles(secretPath, $"*.json"))
+        //    {
+        //        path_load = Path.GetFullPath(secret);
+        //        logger.Debug($"!secret load: {path_load}");
+        //        builder.Configuration.AddJsonFile(path_load, optional: true, reloadOnChange: false);
+        //    }
+        //}
+        //else
+        //    logger.Debug($"секреты `{dirName}` не найдены (совсем)");
+    }*/
+
+
     static readonly Regex cn_rx = new(@"^cn=([^,]*.*?)(?=,[^,])", RegexOptions.IgnoreCase | RegexOptions.Compiled);
     /// <summary>
     /// Извлечь 'comon name'

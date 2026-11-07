@@ -1,0 +1,18 @@
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+RUN apt update -y && apt upgrade -y && apt dist-upgrade -y
+WORKDIR /src
+RUN apt install -y git
+RUN git clone https://github.com/badhitman/BlankCRM.git
+RUN git clone https://github.com/badhitman/HtmlGenerator.git
+RUN git clone https://github.com/badhitman/TinkofClientApi.git
+WORKDIR "/src/BlankCRM/micro-services/ApiRestService/"
+RUN dotnet restore "ApiRestService.csproj"
+RUN dotnet publish -c Release -o /app/publish #/p:UseAppHost=false
+
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
+WORKDIR /app
+#EXPOSE 8080
+#EXPOSE 8081
+
+COPY --from=build /app/publish .
+ENTRYPOINT ["dotnet", "ApiRestService.dll"]

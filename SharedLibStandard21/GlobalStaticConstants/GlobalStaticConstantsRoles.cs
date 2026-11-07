@@ -2,94 +2,93 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
-namespace SharedLib
+namespace SharedLib;
+
+/// <summary>
+/// Константы
+/// </summary>
+public static partial class GlobalStaticConstantsRoles
 {
     /// <summary>
-    /// Константы
+    /// Roles
     /// </summary>
-    public static partial class GlobalStaticConstantsRoles
+    public static class Roles
     {
+        /// <inheritdoc/>
+        public const string Admin = "admin";
+
+        /// <inheritdoc/>
+        public const string Debug = "debug";
+
+        /// <inheritdoc/>
+        public const string System = GlobalStaticConstantsRoutes.Routes.SYSTEM_CONTROLLER_NAME;
+
+        /// <inheritdoc/>
+        public const string GoodsManage = "GoodsManage";
+
+        /// <inheritdoc/>
+        public const string WebChatManage = "WebChatManage";
+
+        #region retail
         /// <summary>
-        /// Roles
+        /// RetailManage
         /// </summary>
-        public static class Roles
+        public const string RetailManage = "RetailManage";
+
+        /// <summary>
+        /// RetailReports
+        /// </summary>
+        public const string RetailReports = "RetailReports";
+        #endregion
+
+        #region HelpDesk
+        static string[]? _allHelpDeskRoles = null;
+        /// <summary>
+        /// Все роли HelpDesk
+        /// </summary>
+        public static string[] AllHelpDeskRoles
         {
-            /// <inheritdoc/>
-            public const string Admin = "admin";
-
-            /// <inheritdoc/>
-            public const string Debug = "debug";
-
-            /// <inheritdoc/>
-            public const string System = GlobalStaticConstantsRoutes.Routes.SYSTEM_CONTROLLER_NAME;
-
-            /// <inheritdoc/>
-            public const string GoodsManage = "GoodsManage";
-
-            /// <inheritdoc/>
-            public const string WebChatManage = "WebChatManage";
-
-            #region retail
-            /// <summary>
-            /// RetailManage
-            /// </summary>
-            public const string RetailManage = "RetailManage";
-
-            /// <summary>
-            /// RetailReports
-            /// </summary>
-            public const string RetailReports = "RetailReports";
-            #endregion
-
-            #region HelpDesk
-            static string[]? _allHelpDeskRoles = null;
-            /// <summary>
-            /// Все роли HelpDesk
-            /// </summary>
-            public static string[] AllHelpDeskRoles
+            get
             {
-                get
-                {
-                    _allHelpDeskRoles ??= [HelpDeskManager, HelpDeskUnit, HelpDeskRubricsManage, HelpDeskChatsManage];
-                    return _allHelpDeskRoles;
-                }
+                _allHelpDeskRoles ??= [HelpDeskManager, HelpDeskUnit, HelpDeskRubricsManage, HelpDeskChatsManage];
+                return _allHelpDeskRoles;
             }
-
-            /// <summary>
-            /// Рубрики + <see cref="HelpDeskUnit"/> (таблица заявок клиентов связанных с текущим сотрудником)
-            /// </summary>
-            public const string HelpDeskRubricsManage = "HelpDeskRubricsManage";
-
-            /// <summary>
-            /// Чаты + <see cref="HelpDeskUnit"/> (таблица заявок клиентов связанных с текущим сотрудником)
-            /// </summary>
-            public const string HelpDeskChatsManage = "HelpDeskChatsManage";
-
-            /// <summary>
-            /// Консоль + <see cref="HelpDeskUnit"/> (таблица заявок клиентов связанных с текущим сотрудником)
-            /// </summary>
-            public const string HelpDeskManager = "HelpDeskManager";
-
-            /// <summary>
-            /// Таблица заявок клиентов связанных с текущим сотрудником
-            /// </summary>
-            public const string HelpDeskUnit = "HelpDeskUnit";
-
-            /// <summary>
-            /// CommerceManager
-            /// </summary>
-            public const string CommerceManager = "CommerceManager";
-
-            /// <summary>
-            /// CommerceClient
-            /// </summary>
-            public const string CommerceClient = "CommerceClient";
-
-            /// <summary>
-            /// AttendancesExecutor
-            /// </summary>
-            public const string AttendancesExecutor = "AttendancesExecutor";
-            #endregion
         }
+
+        /// <summary>
+        /// Рубрики + <see cref="HelpDeskUnit"/> (таблица заявок клиентов связанных с текущим сотрудником)
+        /// </summary>
+        public const string HelpDeskRubricsManage = "HelpDeskRubricsManage";
+
+        /// <summary>
+        /// Чаты + <see cref="HelpDeskUnit"/> (таблица заявок клиентов связанных с текущим сотрудником)
+        /// </summary>
+        public const string HelpDeskChatsManage = "HelpDeskChatsManage";
+
+        /// <summary>
+        /// Консоль + <see cref="HelpDeskUnit"/> (таблица заявок клиентов связанных с текущим сотрудником)
+        /// </summary>
+        public const string HelpDeskManager = "HelpDeskManager";
+
+        /// <summary>
+        /// Таблица заявок клиентов связанных с текущим сотрудником
+        /// </summary>
+        public const string HelpDeskUnit = "HelpDeskUnit";
+
+        /// <summary>
+        /// CommerceManager
+        /// </summary>
+        public const string CommerceManager = "CommerceManager";
+
+        /// <summary>
+        /// CommerceClient
+        /// </summary>
+        public const string CommerceClient = "CommerceClient";
+
+        /// <summary>
+        /// AttendancesExecutor
+        /// </summary>
+        public const string AttendancesExecutor = "AttendancesExecutor";
+        #endregion
     }
 }
