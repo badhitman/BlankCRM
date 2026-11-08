@@ -9,7 +9,8 @@ namespace ServicesLib;
 
 public static partial class SystemExtensions
 {
-    static Logger logger = LogManager.GetCurrentClassLogger();
+    static readonly Logger logger = LogManager.GetCurrentClassLogger();
+
     public static void ReadSecrets(this ConfigurationManager builder, string dirName)
     {
         string secretPath = Path.Combine("..", dirName);

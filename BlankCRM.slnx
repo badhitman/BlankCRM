@@ -6,9 +6,10 @@
   <Folder Name="/libs/">
     <Project Path="CodegeneratorLib/CodegeneratorLib.csproj" />
     <Project Path="IdentityLib/IdentityLib.csproj" />
-    <Project Path="WebServerLib/WebServerLib.csproj" />
+    <Project Path="ServicesLib/ServicesLib.csproj" Id="d4dd422e-126f-499b-99e3-2b021d56cc69" />
     <Project Path="SharedLib/SharedLib.csproj" />
     <Project Path="SharedLibStandard21/SharedLibStandard21.csproj" />
+    <Project Path="WebServerLib/WebServerLib.csproj" />
   </Folder>
   <Folder Name="/libs/blazor/">
     <Project Path="Blazor/BlazorLib/BlazorLib.csproj" />
@@ -163,7 +164,6 @@
   </Folder>
   <Project Path="BlankCRM.AppHost/BlankCRM.AppHost.csproj" />
   <Project Path="BlankCRM.ServiceDefaults/BlankCRM.ServiceDefaults.csproj" />
-  <Project Path="ServicesLib/ServicesLib.csproj" Id="d4dd422e-126f-499b-99e3-2b021d56cc69" />
   <Project Path="XUnitTests/XUnitTests.csproj" Id="16eb44b5-28e2-4607-8b51-4aba2568c88f" />
   
 </Solution>
