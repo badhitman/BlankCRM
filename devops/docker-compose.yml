@@ -75,21 +75,23 @@ services:
     networks:
       - app-main-network
 
-  # mongo-express:
-  #   image: mongo-express
-  #   restart: always    
-  #   depends_on:
-  #     - mongo
-  #   links:
-  #     - mongo
-  #   ports:
-  #     - 8081:8081
-  #   environment:
-  #     ME_CONFIG_MONGODB_ADMINUSERNAME: dev
-  #     ME_CONFIG_MONGODB_ADMINPASSWORD: dev
-  #     ME_CONFIG_BASICAUTH_USERNAME: dev
-  #     ME_CONFIG_BASICAUTH_PASSWORD: dev
-  #     ME_CONFIG_MONGODB_URL: "mongodb://dev:dev@mongo:27017/"
+  mongo-express:
+    image: mongo-express
+    restart: always    
+    depends_on:
+      - mongo
+    links:
+      - mongo
+    networks:
+      - app-main-network
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: dev
+      ME_CONFIG_MONGODB_ADMINPASSWORD: dev
+      ME_CONFIG_BASICAUTH_USERNAME: dev
+      ME_CONFIG_BASICAUTH_PASSWORD: dev
+      ME_CONFIG_MONGODB_URL: "mongodb://dev:dev@mongo_main_host:27017/"
 
 
 networks:
