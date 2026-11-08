@@ -1,7 +1,8 @@
 services:
   rabbitmq:
     image: rabbitmq:management
-    hostname: rabbitmq
+    container_name: rabbitmq_main_container
+    hostname: rabbitmq_main_host
     restart: always
     environment:
       - RABBITMQ_DEFAULT_USER=debug
@@ -18,6 +19,8 @@ services:
       - 4369:4369
       - 5671:5671
       - 5670:5670
+    networks:
+      - app-main-network
     ulimits:
       nofile:
         soft: 65536
@@ -25,7 +28,9 @@ services:
 
   postgres:
     image: postgres
-    hostname: postgres
+    container_name: postgres_main_container
+    hostname: postgres_main_host
+    restart: always
     environment:
       POSTGRES_USER: "pg-user"
       POSTGRES_PASSWORD: "pg-pass"
@@ -36,9 +41,27 @@ services:
       - /srv/tmp/dumps:/srv/tmp/dumps
     ports:
       - 5432:5432
+    networks:
+      - app-main-network
+
+  redis:
+    image: redis
+    container_name: redis_main_container
+    hostname: redis_main_host
+    restart: always
+    volumes:
+      - ./docker-volumes/redisdata:/data
+      - /srv/tmp/dumps:/srv/tmp/dumps
+      - /srv/db-backups:/srv/db-backups
+    ports:
+      - 6379:6379
+    networks:
+      - app-main-network
 
   mongo:
     image: mongo
+    container_name: mongo_main_container
+    hostname: mongo_main_host
     restart: always
     environment:
       - MONGO_INITDB_ROOT_USERNAME=dev
@@ -49,6 +72,8 @@ services:
       - /srv/tmp/dumps:/srv/tmp/dumps
     ports:
       - 27017:27017
+    networks:
+      - app-main-network
 
   # mongo-express:
   #   image: mongo-express
@@ -66,12 +91,7 @@ services:
   #     ME_CONFIG_BASICAUTH_PASSWORD: dev
   #     ME_CONFIG_MONGODB_URL: "mongodb://dev:dev@mongo:27017/"
 
-  redis:
-    image: redis
-    restart: always
-    volumes:
-      - ./docker-volumes/redisdata:/data
-      - /srv/tmp/dumps:/srv/tmp/dumps
-      - /srv/db-backups:/srv/db-backups
-    ports:
-      - 6379:6379
+
+networks:
+  app-main-network:
+    driver: bridge
