@@ -8,6 +8,7 @@ using System.Diagnostics.Metrics;
 using NLog.Extensions.Logging;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
+using Newtonsoft.Json;
 using MongoDB.Driver;
 using OpenTelemetry;
 using RemoteCallLib;
@@ -16,7 +17,6 @@ using ServicesLib;
 using SharedLib;
 using DbcLib;
 using NLog;
-using Newtonsoft.Json;
 
 namespace StorageService;
 

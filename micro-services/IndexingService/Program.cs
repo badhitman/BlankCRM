@@ -9,6 +9,7 @@ using NLog.Extensions.Logging;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
 using FileIndexingService;
+using Newtonsoft.Json;
 using OpenTelemetry;
 using RemoteCallLib;
 using ServicesLib;
@@ -16,7 +17,6 @@ using System.Text;
 using SharedLib;
 using DbcLib;
 using NLog;
-using Newtonsoft.Json;
 
 namespace IndexingService;
 

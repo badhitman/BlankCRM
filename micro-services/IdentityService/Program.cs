@@ -12,6 +12,7 @@ using NLog.Extensions.Logging;
 using OpenTelemetry.Metrics;
 using System.Globalization;
 using OpenTelemetry.Trace;
+using Newtonsoft.Json;
 using OpenTelemetry;
 using RemoteCallLib;
 using ServicesLib;
@@ -20,7 +21,6 @@ using System.Text;
 using ServerLib;
 using SharedLib;
 using NLog;
-using Newtonsoft.Json;
 
 namespace IdentityService;
 

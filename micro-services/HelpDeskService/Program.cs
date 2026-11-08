@@ -9,6 +9,7 @@ using System.Diagnostics.Metrics;
 using NLog.Extensions.Logging;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
+using Newtonsoft.Json;
 using RemoteCallLib;
 using OpenTelemetry;
 using ServicesLib;
@@ -16,7 +17,6 @@ using System.Text;
 using SharedLib;
 using DbcLib;
 using NLog;
-using Newtonsoft.Json;
 
 namespace HelpdeskService;
 
