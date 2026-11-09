@@ -1,4 +1,5 @@
-﻿<div class="mt-2">
+﻿@using MudBlazor
+<div class="mt-2">
     <div class="mb-3">
         <label for="basic-url" class="form-label">Путь к папке с файлами</label>
         <div class="input-group">
@@ -29,7 +30,7 @@
                 @_ol @(uploadedFiles.Contains(_ol) ? "[done]" : "")
                 @if (currentFilePart == _ol)
                 {
-                    <sup class="ms-2">@(Math.Round((double)Parser.CurrentNumRecord / (totalRecordsParts / 100), 2))% of @totalRecordsParts records</sup>
+                    <sup class="ms-2 text-primary-emphasis">@(Math.Round((double)Parser.CurrentNumRecord / (totalRecordsParts / 100), 2))% of @totalRecordsParts records</sup>
                 }
             </li>
         }
@@ -45,4 +46,9 @@
             </button>
         </div>
     }
+    @if (_isLoading)
+    {
+        <MudProgressLinear Color="Color.Primary" Indeterminate Class="my-7" />
+    }
+
 }
