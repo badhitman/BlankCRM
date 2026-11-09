@@ -111,10 +111,9 @@ public class RabbitClient : IMQStandardClientRPC
         activity?.Start();
         string? correlationId = waitResponse ? Guid.NewGuid().ToString() : null;
 
-#if FULL_SAVE_TRACES
         try
         {
-            if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
+            if (ITraceRabbitActionsService.TracesRequiredQueues?.Any(x => queue.Equals(x)) == true)
                 await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
                 {
                     Sender = $"{GetType().Name}.{nameof(MqRemoteCallAsync)} /{nameof(waitResponse)}:{waitResponse}",
@@ -128,7 +127,6 @@ public class RabbitClient : IMQStandardClientRPC
         {
 
         }
-#endif
 
         string _replyQueueName = waitResponse ? $"{AppName}.{RabbitConfigRepo.QueueMqNamePrefixForResponse}{queue}_{correlationId}".Replace("\\", "/") : "";
         activity?.SetTag(nameof(_replyQueueName), _replyQueueName);
@@ -151,7 +149,7 @@ public class RabbitClient : IMQStandardClientRPC
         {
             _channel?.Dispose();
 
-            if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
+            if (ITraceRabbitActionsService.TracesRequiredQueues?.Any(x => queue.Equals(x)) == true)
                 await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
                 {
                     Sender = $"{GetType().Name}.{nameof(MqRemoteCallAsync)} /{nameof(waitResponse)}:{waitResponse}",
@@ -167,7 +165,7 @@ public class RabbitClient : IMQStandardClientRPC
         {
             _channel?.Dispose();
 
-            if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
+            if (ITraceRabbitActionsService.TracesRequiredQueues?.Any(x => queue.Equals(x)) == true)
                 await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
                 {
                     Sender = $"{GetType().Name}.{nameof(MqRemoteCallAsync)} /{nameof(waitResponse)}:{waitResponse}",
@@ -187,7 +185,7 @@ public class RabbitClient : IMQStandardClientRPC
             _channel?.Dispose();
             try
             {
-                if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
+                if (ITraceRabbitActionsService.TracesRequiredQueues?.Any(x => queue.Equals(x)) == true)
                     await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
                     {
                         Sender = $"{GetType().Name}.{nameof(MqRemoteCallAsync)} /{nameof(waitResponse)}:{waitResponse}",
@@ -226,10 +224,10 @@ public class RabbitClient : IMQStandardClientRPC
                 activity?.SetBaggage(nameof(content), content);
             else
                 activity?.SetBaggage(nameof(content), $"[hide data]: `{Routes.PASSWORD_CONTROLLER_NAME}` - contains");
-#if FULL_SAVE_TRACES
+
             try
             {
-                if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
+                if (ITraceRabbitActionsService.TracesRequiredQueues?.Any(x => queue.Equals(x)) == true)
                     await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
                     {
                         Sender = $"{GetType().Name}.{nameof(MqRemoteCallAsync)}.{nameof(MessageReceivedEvent)}",
@@ -243,7 +241,7 @@ public class RabbitClient : IMQStandardClientRPC
             {
 
             }
-#endif
+
             if (res_io is not null)
                 countGreetings.Add(res_io.Duration().Milliseconds);
 
@@ -276,7 +274,7 @@ public class RabbitClient : IMQStandardClientRPC
             await mqttClient.DisconnectAsync(cancellationToken: CancellationToken.None);
             try
             {
-                if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
+                if (ITraceRabbitActionsService.TracesRequiredQueues?.Any(x => queue.Equals(x)) == true)
                     await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
                     {
                         Sender = $"[{GetType().Name}]-[{nameof(TaskCanceledException)}]",
@@ -298,7 +296,7 @@ public class RabbitClient : IMQStandardClientRPC
             await mqttClient.DisconnectAsync(cancellationToken: CancellationToken.None);
             try
             {
-                if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
+                if (ITraceRabbitActionsService.TracesRequiredQueues?.Any(x => queue.Equals(x)) == true)
                     await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
                     {
                         Sender = $"[{GetType().Name}]-[{nameof(OperationCanceledException)}]",
@@ -322,7 +320,7 @@ public class RabbitClient : IMQStandardClientRPC
             _channel.Dispose();
             try
             {
-                if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
+                if (ITraceRabbitActionsService.TracesRequiredQueues?.Any(x => queue.Equals(x)) == true)
                     await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
                     {
                         Sender = $"[{GetType().Name}]-[{nameof(Exception)}]",
@@ -373,7 +371,7 @@ public class RabbitClient : IMQStandardClientRPC
             await mqttClient.DisconnectAsync(cancellationToken: CancellationToken.None);
             try
             {
-                if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
+                if (ITraceRabbitActionsService.TracesRequiredQueues?.Any(x => queue.Equals(x)) == true)
                     await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
                     {
                         Sender = $"[{GetType().Name}]-[{nameof(TaskCanceledException)}]",
@@ -395,7 +393,7 @@ public class RabbitClient : IMQStandardClientRPC
             await mqttClient.DisconnectAsync(cancellationToken: CancellationToken.None);
             try
             {
-                if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
+                if (ITraceRabbitActionsService.TracesRequiredQueues?.Any(x => queue.Equals(x)) == true)
                     await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
                     {
                         Sender = $"[{GetType().Name}]-[{nameof(OperationCanceledException)}]",
@@ -418,7 +416,7 @@ public class RabbitClient : IMQStandardClientRPC
             await mqttClient.DisconnectAsync(cancellationToken: CancellationToken.None);
             try
             {
-                if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
+                if (ITraceRabbitActionsService.TracesRequiredQueues?.Any(x => queue.Equals(x)) == true)
                     await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
                     {
                         Sender = $"[{GetType().Name}]-[{nameof(Exception)}]",
@@ -442,10 +440,10 @@ public class RabbitClient : IMQStandardClientRPC
             _ = Task.Run(async () =>
             {
                 await Task.Delay(RabbitConfigRepo.RemoteCallTimeoutMs, token);
-#if FULL_SAVE_TRACES
+
                 try
                 {
-                    if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
+                    if (ITraceRabbitActionsService.TracesRequiredQueues?.Any(x => queue.Equals(x)) == true)
                         await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
                         {
                             Sender = nameof(RabbitConfigRepo.RemoteCallTimeoutMs),
@@ -459,7 +457,7 @@ public class RabbitClient : IMQStandardClientRPC
                 {
 
                 }
-#endif
+
                 cts.Cancel();
                 await mqttClient.DisconnectAsync(cancellationToken: CancellationToken.None);
                 //cts.Dispose();
@@ -475,7 +473,7 @@ public class RabbitClient : IMQStandardClientRPC
                 await mqttClient.DisconnectAsync(cancellationToken: CancellationToken.None);
                 try
                 {
-                    if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
+                    if (ITraceRabbitActionsService.TracesRequiredQueues?.Any(x => queue.Equals(x)) == true)
                         await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
                         {
                             Sender = $"[{GetType().Name}]-[{nameof(TaskCanceledException)}]",
@@ -490,14 +488,14 @@ public class RabbitClient : IMQStandardClientRPC
 
                 }
             }
-            catch (OperationCanceledException ex)
+            catch (OperationCanceledException)
             {
                 //loggerRepo.LogDebug($"response for {_replyQueueName}");
                 //_channel.Dispose();
                 //await mqttClient.DisconnectAsync(cancellationToken: CancellationToken.None);
                 //try
                 //{
-                //    if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
+                //    if (ITraceRabbitActionsService.TracesRequiredQueues?.Any(x => queue.Equals(x)) == true)
                 //        await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
                 //        {
                 //            Sender = $"[{GetType().Name}]-[{nameof(OperationCanceledException)}]",
@@ -521,7 +519,7 @@ public class RabbitClient : IMQStandardClientRPC
                 await mqttClient.DisconnectAsync(cancellationToken: CancellationToken.None);
                 try
                 {
-                    if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
+                    if (ITraceRabbitActionsService.TracesRequiredQueues?.Any(x => queue.Equals(x)) == true)
                         await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
                         {
                             Sender = $"[{GetType().Name}]-[{nameof(Exception)}]",
@@ -560,7 +558,7 @@ public class RabbitClient : IMQStandardClientRPC
 
             try
             {
-                if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
+                if (ITraceRabbitActionsService.TracesRequiredQueues?.Any(x => queue.Equals(x)) == true)
                     await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
                     {
                         Sender = typeof(T).Name,
@@ -579,24 +577,17 @@ public class RabbitClient : IMQStandardClientRPC
         }
         else if (res_io is null)
             return default;
-#if FULL_SAVE_TRACES
-        try
-        {
-            if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => queue.Contains(x)))
-                await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
-                {
-                    Sender = "Success",
-                    GuidSession = correlationId ?? "~",
-                    ReceiverName = queue,
-                    PayloadBody = res_io,
-                    UTCTimestampInitReceive = DateTime.UtcNow,
-                }, tokenOuter);
-        }
-        catch
-        {
 
-        }
-#endif
+        if (ITraceRabbitActionsService.TracesRequiredQueues?.Any(x => queue.Equals(x)) == true)
+            await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
+            {
+                Sender = "Success",
+                GuidSession = correlationId ?? "~",
+                ReceiverName = queue,
+                PayloadBody = res_io,
+                UTCTimestampInitReceive = DateTime.UtcNow,
+            }, tokenOuter);
+
         return res_io.Response;
 
         MqttClientOptions GetMqttClientOptionsBuilder(KeyValuePair<string, byte[]>? propertyValue)
@@ -613,5 +604,4 @@ public class RabbitClient : IMQStandardClientRPC
             return res.Build();
         }
     }
-
 }

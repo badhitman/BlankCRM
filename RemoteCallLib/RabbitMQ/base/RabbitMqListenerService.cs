@@ -40,7 +40,7 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
     /// Параметры ответной очереди
     /// </summary>
 
-    IOptions<RabbitMQConfigModel> rabbitConf;
+    readonly IOptions<RabbitMQConfigModel> rabbitConf;
     static Dictionary<string, object>? QueueListenerArguments;
 
     Type? _queueType;
@@ -144,10 +144,10 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
                 {
                     await _channel.BasicAckAsync(ea.DeliveryTag, false, cancellationToken: stoppingToken);
                 }
-#if FULL_SAVE_TRACES
+
                 try
                 {
-                    if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => QueueName.Contains(x)))
+                    if (ITraceRabbitActionsService.TracesRequiredQueues?.Any(x => QueueName.Equals(x)) == true)
                         await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
                         {
                             Sender = $"{GetType().Name}.{nameof(ExecuteAsync)}.{nameof(consumer.ReceivedAsync)}",
@@ -161,15 +161,14 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
                 {
 
                 }
-#endif
             }
             else
             {
                 await _channel.BasicAckAsync(ea.DeliveryTag, false, cancellationToken: stoppingToken);
-#if FULL_SAVE_TRACES
+
                 try
                 {
-                    if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => QueueName.Contains(x)))
+                    if (ITraceRabbitActionsService.TracesRequiredQueues?.Any(x => QueueName.Equals(x)) == true)
                         await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
                         {
                             Sender = $"{nameof(_channel.BasicAckAsync)}: {GetType().Name}.{nameof(ExecuteAsync)}.{nameof(consumer.ReceivedAsync)}",
@@ -183,7 +182,7 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
                 {
 
                 }
-#endif
+
             }
 #else
                 try
