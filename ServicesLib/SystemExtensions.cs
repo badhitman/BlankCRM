@@ -7,10 +7,12 @@ using NLog;
 
 namespace ServicesLib;
 
+/// <inheritdoc/>
 public static partial class SystemExtensions
 {
     static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
+    /// <inheritdoc/>
     public static void ReadSecrets(this ConfigurationManager builder, string dirName)
     {
         string secretPath = Path.Combine("..", dirName);

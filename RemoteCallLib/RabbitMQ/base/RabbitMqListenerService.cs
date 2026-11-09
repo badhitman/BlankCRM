@@ -39,7 +39,7 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
     /// <summary>
     /// Параметры ответной очереди
     /// </summary>
-    
+
     IOptions<RabbitMQConfigModel> rabbitConf;
     static Dictionary<string, object>? QueueListenerArguments;
 
@@ -126,7 +126,7 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
             answer.FinalizedServer = DateTime.UtcNow;
 
             if (!string.IsNullOrWhiteSpace(ea.BasicProperties.ReplyTo))
-            {                
+            {
                 try
                 {
                     string jsonRawAnswer = JsonConvert.SerializeObject(answer, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings);
@@ -144,6 +144,7 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
                 {
                     await _channel.BasicAckAsync(ea.DeliveryTag, false, cancellationToken: stoppingToken);
                 }
+#if FULL_SAVE_TRACES
                 try
                 {
                     if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => QueueName.Contains(x)))
@@ -160,10 +161,12 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
                 {
 
                 }
+#endif
             }
             else
             {
                 await _channel.BasicAckAsync(ea.DeliveryTag, false, cancellationToken: stoppingToken);
+#if FULL_SAVE_TRACES
                 try
                 {
                     if (ITraceRabbitActionsService.TracesFilter is null || ITraceRabbitActionsService.TracesFilter.Any(x => QueueName.Contains(x)))
@@ -180,10 +183,11 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
                 {
 
                 }
+#endif
             }
 #else
-            try
-            {
+                try
+                {
                 sr = System.Text.Json.JsonSerializer.Deserialize<TRequest?>(ea.Body.ToArray());
                 answer.Response = await receiveService.ResponseHandleActionAsync(sr);
             }

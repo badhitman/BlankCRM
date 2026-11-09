@@ -7,12 +7,13 @@
                    type="text"
                    class="form-control"
                    id="basic-url"
-                   aria-describedby="basic-addon3 basic-addon4" />
+                   aria-describedby="basic-addon3 basic-addon4"
+                   readonly="@_isLoading" />
             <button @onclick=ScanDirectory
                     class="btn btn-outline-secondary"
                     type="button"
                     id="button-addon2"
-                    disabled="@(IsValidList || string.IsNullOrWhiteSpace(dirData) || !Directory.Exists(dirData))">
+                    disabled="@(IsValidList || string.IsNullOrWhiteSpace(dirData) || !Directory.Exists(dirData) || _isLoading)">
                 Scan
             </button>
         </div>
@@ -36,7 +37,12 @@
     @if (IsValidList)
     {
         <div class="d-grid gap-2">
-            <button disabled="@_isLoading" @onclick=Load class="btn btn-primary" type="button">Load</button>
+            <button disabled="@_isLoading"
+                    @onclick=Load
+                    class="btn btn-primary"
+                    type="button">
+                @(_isLoading ? "Loading in progress ..." : "Load")
+            </button>
         </div>
     }
 }
