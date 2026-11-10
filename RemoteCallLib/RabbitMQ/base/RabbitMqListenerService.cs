@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @FakeGov
 ////////////////////////////////////////////////
 
-using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -145,44 +144,43 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
                     await _channel.BasicAckAsync(ea.DeliveryTag, false, cancellationToken: stoppingToken);
                 }
 
-                try
-                {
-                    if (ITraceRabbitActionsService.TracesRequiredQueues?.Any(x => QueueName.Equals(x)) == true)
-                        await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
-                        {
-                            Sender = $"{GetType().Name}.{nameof(ExecuteAsync)}.{nameof(consumer.ReceivedAsync)}",
-                            GuidSession = ea.BasicProperties.ReplyTo[^36..],
-                            ReceiverName = QueueName,
-                            PayloadBody = answer.Response,
-                            UTCTimestampInitReceive = DateTime.UtcNow,
-                        }, stoppingToken);
-                }
-                catch (Exception)
-                {
+                //try
+                //{
+                //    if (ITraceRabbitActionsService.TracesRequiredQueues?.Any(x => QueueName.Equals(x)) == true)
+                //        await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
+                //        {
+                //            Sender = $"{GetType().Name}.{nameof(ExecuteAsync)}.{nameof(consumer.ReceivedAsync)}",
+                //            GuidSession = ea.BasicProperties.ReplyTo[^36..],
+                //            ReceiverName = QueueName,
+                //            PayloadBody = answer.Response,
+                //            UTCTimestampInitReceive = DateTime.UtcNow,
+                //        }, stoppingToken);
+                //}
+                //catch (Exception)
+                //{
 
-                }
+                //}
             }
             else
             {
                 await _channel.BasicAckAsync(ea.DeliveryTag, false, cancellationToken: stoppingToken);
 
-                try
-                {
-                    if (ITraceRabbitActionsService.TracesRequiredQueues?.Any(x => QueueName.Equals(x)) == true)
-                        await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
-                        {
-                            Sender = $"{nameof(_channel.BasicAckAsync)}: {GetType().Name}.{nameof(ExecuteAsync)}.{nameof(consumer.ReceivedAsync)}",
-                            GuidSession = "~",
-                            ReceiverName = QueueName,
-                            PayloadBody = answer.Response,
-                            UTCTimestampInitReceive = DateTime.UtcNow,
-                        }, stoppingToken);
-                }
-                catch (Exception)
-                {
+                //try
+                //{
+                //    if (ITraceRabbitActionsService.TracesRequiredQueues?.Any(x => QueueName.Equals(x)) == true)
+                //        await traceRepo.SaveActionAsync(new TraceRabbitActionRequestModel()
+                //        {
+                //            Sender = $"{nameof(_channel.BasicAckAsync)}: {GetType().Name}.{nameof(ExecuteAsync)}.{nameof(consumer.ReceivedAsync)}",
+                //            GuidSession = "~",
+                //            ReceiverName = QueueName,
+                //            PayloadBody = answer.Response,
+                //            UTCTimestampInitReceive = DateTime.UtcNow,
+                //        }, stoppingToken);
+                //}
+                //catch (Exception)
+                //{
 
-                }
-
+                //}
             }
 #else
                 try

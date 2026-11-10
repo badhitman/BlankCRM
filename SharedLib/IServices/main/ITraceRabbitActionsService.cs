@@ -9,10 +9,10 @@ namespace SharedLib;
 /// </summary>
 public interface ITraceRabbitActionsService
 {
-    /// <summary>
+    /*/// <summary>
     /// Перечень очередей, которые следует подробно фиксировать (сохранять все этапы обработки каждого вызова)
     /// </summary>
-    public static string[]? TracesRequiredQueues { get; set; }
+    public static string[]? TracesRequiredQueues { get; set; }*/
 
     /// <inheritdoc/>
     public Task<ResponseBaseModel> SaveActionAsync(TraceRabbitActionRequestModel req, CancellationToken token = default);
