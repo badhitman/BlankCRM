@@ -18,30 +18,8 @@ public class Program
         Console.OutputEncoding = Encoding.UTF8;
         IDistributedApplicationBuilder builder = DistributedApplication.CreateBuilder(args);
 
-        string _modePrefix = Environment.GetEnvironmentVariable(nameof(GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix)) ?? "";
-        if (!string.IsNullOrWhiteSpace(_modePrefix) && !GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix.EndsWith(_modePrefix))
-        {
-            GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix += _modePrefix.Trim();
-            GlobalStaticConstantsTransmission.TransmissionQueueNamePrefixMQTT += _modePrefix.Trim();
-        }
-
-        string curr_dir = Directory.GetCurrentDirectory();
-        builder.Configuration.SetBasePath(curr_dir);
-        string path_load = Path.Combine(curr_dir, "appsettings.json");
-        if (Path.Exists(path_load))
-            builder.Configuration.AddJsonFile(path_load, optional: true, reloadOnChange: false);
-
         string _environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? builder.Environment.EnvironmentName;
-        path_load = Path.Combine(curr_dir, $"appsettings.{_environmentName}.json");
-        if (Path.Exists(path_load))
-            builder.Configuration.AddJsonFile(path_load, optional: true, reloadOnChange: false);
-
-        builder.Configuration.ReadSecrets($"secrets-{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}");
-        if (!string.IsNullOrWhiteSpace(_modePrefix))
-            builder.Configuration.ReadSecrets($"secrets{_modePrefix}");
-
-        builder.Configuration.AddEnvironmentVariables();
-        builder.Configuration.AddCommandLine(args);
+        string _modePrefix = builder.Configuration.ReadBaseOptions(args, _environmentName);
 
         List<KeyValuePair<string, string?>> smtpConfig = [.. builder.Configuration
             .GetChildren()

@@ -16,4 +16,8 @@
 		<PackageReference Include="NLog.Targets.Mail" Version="6.2.2" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\SharedLibStandard21\SharedLibStandard21.csproj" />
+	</ItemGroup>
+
 </Project>

@@ -52,37 +52,10 @@ public class Program
             });
 
         string _environmentName = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT") ?? "Other";
-        logger.Warn($"init main: {_environmentName}");
-        string _modePrefix = Environment.GetEnvironmentVariable(nameof(GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix)) ?? "";
-        if (!string.IsNullOrWhiteSpace(_modePrefix) && !GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix.EndsWith(_modePrefix))
-        {
-            GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix += _modePrefix.Trim();
-            GlobalStaticConstantsTransmission.TransmissionQueueNamePrefixMQTT += _modePrefix.Trim();
-        }
-        logger.Warn($"{nameof(GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix)}: {Environment.GetEnvironmentVariable(nameof(GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix))}");
-
-        string curr_dir = Directory.GetCurrentDirectory();
-
-        builder.Configuration.SetBasePath(curr_dir);
-        string path_load = Path.Combine(curr_dir, "appsettings.json");
-        if (Path.Exists(path_load))
-            builder.Configuration.AddJsonFile(path_load, optional: true, reloadOnChange: false);
-
-        path_load = Path.Combine(curr_dir, $"appsettings.{_environmentName}.json");
-        if (Path.Exists(path_load))
-            builder.Configuration.AddJsonFile(path_load, optional: true, reloadOnChange: false);
-        else
-            logger.Debug($"отсутствует: {path_load}");
-
-        builder.Configuration.ReadSecrets("secrets");
-        if (!string.IsNullOrWhiteSpace(_modePrefix))
-            builder.Configuration.ReadSecrets($"secrets{_modePrefix}");
-
-        builder.Configuration.AddEnvironmentVariables();
-        builder.Configuration.AddCommandLine(args);
+        string _modePrefix = builder.Configuration.ReadBaseOptions(args, _environmentName);
         builder.Services.AddOptions();
 
-        ITraceRabbitActionsService.TracesRequiredQueues = builder.Configuration.GetSection(nameof(ITraceRabbitActionsService.TracesRequiredQueues)).Get<string[]>();
+        //ITraceRabbitActionsService.TracesRequiredQueues = builder.Configuration.GetSection(nameof(ITraceRabbitActionsService.TracesRequiredQueues)).Get<string[]>();
         _confMQTT.Reload(builder.Configuration.GetSection(RealtimeMQTTClientConfigModel.Configuration).Get<RealtimeMQTTClientConfigModel>()!);
         logger.Warn($"mqtt config: {JsonConvert.SerializeObject(_confMQTT)}");
         builder.Services.AddSingleton(sp => _confMQTT);

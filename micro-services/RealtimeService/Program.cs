@@ -40,44 +40,7 @@ public class Program
             });
 
         string _environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? builder.Environment.EnvironmentName;
-        logger.Warn($"init main: {_environmentName}");
-
-        string _modePrefix = Environment.GetEnvironmentVariable(nameof(GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix)) ?? "";
-        if (!string.IsNullOrWhiteSpace(_modePrefix) && !GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix.EndsWith(_modePrefix))
-        {
-            GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix += _modePrefix.Trim();
-            GlobalStaticConstantsTransmission.TransmissionQueueNamePrefixMQTT += _modePrefix.Trim();
-        }
-        logger.Warn($"{nameof(GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix)}: {Environment.GetEnvironmentVariable(nameof(GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix))}");
-
-        logger.Warn($"Префикс рабочего контура/контекста: {(string.IsNullOrWhiteSpace(_modePrefix) ? "НЕ ИСПОЛЬЗУЕТСЯ" : $"`{_modePrefix}`")}");
-
-        string curr_dir = Directory.GetCurrentDirectory();
-        builder.Configuration.SetBasePath(curr_dir);
-        string path_load = Path.Combine(curr_dir, "appsettings.json");
-        if (Path.Exists(path_load))
-        {
-            logger.Debug($"config load: {path_load}\n{File.ReadAllText(path_load)}");
-            builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: false);
-        }
-        else
-            logger.Debug($"отсутствует: {path_load}");
-
-        path_load = Path.Combine(curr_dir, $"appsettings.{_environmentName}.json");
-        if (Path.Exists(path_load))
-        {
-            logger.Debug($"config load: {path_load}\n{File.ReadAllText(path_load)}");
-            builder.Configuration.AddJsonFile(path_load, optional: true, reloadOnChange: false);
-        }
-        else
-            logger.Debug($"отсутствует: {path_load}");
-
-        builder.Configuration.ReadSecrets("secrets");
-        if (!string.IsNullOrWhiteSpace(_modePrefix))
-            builder.Configuration.ReadSecrets($"secrets{_modePrefix}");
-
-        builder.Configuration.AddEnvironmentVariables();
-        builder.Configuration.AddCommandLine(args);
+        string _modePrefix = builder.Configuration.ReadBaseOptions(args, _environmentName);
         builder.Services.AddOptions();
 
         //ITraceRabbitActionsService.TracesRequiredQueues = builder.Configuration.GetSection(nameof(ITraceRabbitActionsService.TracesRequiredQueues)).Get<string[]>();
