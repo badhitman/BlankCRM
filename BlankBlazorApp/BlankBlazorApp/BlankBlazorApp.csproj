@@ -74,6 +74,7 @@
 		<ProjectReference Include="..\..\Blazor\Implements\BlazorTraceHistoryViewLib\BlazorTraceHistoryViewLib.csproj" />
 		<ProjectReference Include="..\..\Blazor\Implements\BlazorUsersLib\BlazorUsersLib.csproj" />
 		<ProjectReference Include="..\..\Blazor\Implements\BlazorWarehouseLib\BlazorWarehouseLib.csproj" />
+		<ProjectReference Include="..\..\Blazor\Implements\BlazorYaMapLib\BlazorYaMapLib.csproj" />
 		<ProjectReference Include="..\..\RemoteCallLib\MQTTCallLib\MQTTCallLib.csproj" />
 		<ProjectReference Include="..\..\ServicesLib\ServicesLib.csproj" />
 		<ProjectReference Include="..\..\WebServerLib\WebServerLib.csproj" />

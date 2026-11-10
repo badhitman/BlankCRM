@@ -257,7 +257,7 @@ public class RabbitClient : IMQStandardClientRPC
         {
             mqttClient.ApplicationMessageReceivedAsync += MessageReceivedEvent;
 
-            await mqttClient.ConnectAsync(GetMqttClientOptionsBuilder(new(GlobalStaticConstantsRoutes.Routes.MUTE_CONTROLLER_NAME, [1])), token);
+            await mqttClient.ConnectAsync(GetMqttClientOptionsBuilder(new(Routes.MUTE_CONTROLLER_NAME, [1])), token);
             await mqttClient.SubscribeAsync(_replyQueueName, cancellationToken: token);
 
             properties.ReplyTo = string.IsNullOrEmpty(_replyQueueName) ? null : _replyQueueName;

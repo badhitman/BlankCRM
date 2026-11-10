@@ -20,15 +20,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.14" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="10.0.14" />
-		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="10.0.14" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid" Version="10.0.14" />
-		<PackageReference Include="TinyMCE.Blazor" Version="2.2.2" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<ProjectReference Include="..\..\..\CodegeneratorLib\CodegeneratorLib.csproj" />
 		<ProjectReference Include="..\..\BlazorLib\BlazorLib.csproj" />
 	</ItemGroup>
 

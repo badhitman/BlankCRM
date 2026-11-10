@@ -1,0 +1,19 @@
+﻿@using Microsoft.JSInterop
+
+@inject IJSRuntime JSRuntime
+
+<h3>MapBasicsComponent</h3>
+
+<body>
+    <div id="map" style="width: 100%; height: 400px"></div>
+</body>
+
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("startYaMap");
+        }
+    }
+}

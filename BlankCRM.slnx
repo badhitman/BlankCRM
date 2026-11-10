@@ -33,6 +33,7 @@
     <Project Path="Blazor/Implements/BlazorTraceHistoryViewLib/BlazorTraceHistoryViewLib.csproj" />
     <Project Path="Blazor/Implements/BlazorUsersLib/BlazorUsersLib.csproj" />
     <Project Path="Blazor/Implements/BlazorWarehouseLib/BlazorWarehouseLib.csproj" />
+    <Project Path="Blazor/Implements/BlazorYaMapLib/BlazorYaMapLib.csproj" Id="60de21d4-6379-482c-bcae-405b2cc224a8" />
   </Folder>
   <Folder Name="/libs/bus/">
     <File Path="RemoteCallLib/README.md" />
