@@ -30,8 +30,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid" Version="10.0.14" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.14" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.*" />
 	</ItemGroup>
 
 </Project>
