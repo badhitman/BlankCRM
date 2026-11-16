@@ -1,5 +1,6 @@
 ﻿@using Microsoft.JSInterop
-
+@using SharedLib
+@implements IDisposable
 @inject IJSRuntime JSRuntime
 
 <h3>MapBasicsComponent</h3>
@@ -9,11 +10,21 @@
 </body>
 
 @code {
+    DotNetObjectReference<MapBasicsComponent>? objRef;
+    [JSInvokable]
+    public static async Task<ResponseBaseModel> InitPlacemarkYaMapsAsync()
+    {
+        return ResponseBaseModel.CreateInfo("initPlacemark");
+    }
+     
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            await JSRuntime.InvokeVoidAsync("startYaMap");
+            objRef = DotNetObjectReference.Create(this);
+            await JSRuntime.InvokeVoidAsync("startYaMap", objRef);
         }
     }
+
+    public void Dispose() => objRef?.Dispose();
 }

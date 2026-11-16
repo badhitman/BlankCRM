@@ -8,6 +8,7 @@ using MailKit.Net.Smtp;
 using MimeKit.Text;
 using SharedLib;
 using MimeKit;
+using MailKit;
 
 namespace ServerLib;
 
@@ -69,11 +70,11 @@ public class MailProviderService(IOptions<SmtpConfigModel> _config, ILogger<Mail
             return ResponseBaseModel.CreateError(ex);
         }
 
-        string? res;
+        SendResult? res;
         try
         {
             res = await client.SendAsync(emailMessage);
-            loggerRepo.LogWarning($"sending email: {res}");
+            loggerRepo.LogWarning($"sending email: {res.ResponseText}");
         }
         catch (Exception ex)
         {
@@ -82,7 +83,7 @@ public class MailProviderService(IOptions<SmtpConfigModel> _config, ILogger<Mail
         }
 
         await client.DisconnectAsync(true, token);
-        return ResponseBaseModel.CreateSuccess(res);
+        return ResponseBaseModel.CreateSuccess(res.ResponseText);
     }
 
     /// <inheritdoc/>
